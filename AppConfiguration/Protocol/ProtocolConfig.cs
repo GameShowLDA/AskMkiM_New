@@ -1,0 +1,244 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Documents;
+using AppConfiguration.Base;
+
+namespace AppConfiguration.Protocol
+{
+  /// <summary>
+  /// Класс конфигурации для <see cref="ProtocolConfig"/>.
+  /// </summary>
+  public static class ProtocolConfig
+  {
+    static public Action<SettingsProtocolModel> SaveProtocolEvent;
+
+    static SettingsProtocolModel ProtocolModel = new SettingsProtocolModel();
+
+    #region Set.
+
+    /// <summary>
+    /// Устанавливает отображение информации об устройствах в протоколе.
+    /// </summary>
+    /// <param name="enable">true для отображения, false для скрытия.</param>
+    public static async Task SetDeviceInfo(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.ShowDeviceInfo = enable;
+      });
+    }
+
+    /// <summary>
+    /// Устанавливает режим подробного вывода информации в протокол.
+    /// </summary>
+    /// <param name="enable">true для включения, false для выключения.</param>
+    static public async Task SetShowDetailedProtocol(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.ShowDetailedProtocol = enable;
+      });
+    }
+
+    /// <summary>
+    /// Устанавливает автосохранение протокола.
+    /// </summary>
+    /// <param name="enable">true для включения, false для выключения.</param>
+    public static async Task SetSaveProtocol(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.AutoSaveProtocol = enable;
+      });
+    }
+
+    /// <summary>
+    /// Устанавливает автоматическую печать протокола.
+    /// </summary>
+    /// <param name="enable">true для включения, false для выключения.</param>
+    public static async Task SetPrintProtocol(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.AutoPrintProtocol = enable;
+      });
+    }
+
+    /// <summary>
+    /// Устанавливает отображение времени выполнения операций.
+    /// </summary>
+    /// <param name="enable">true для отображения, false для скрытия.</param>
+    public static async Task SetTimeStart(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.DisplayOperationTime = enable;
+      });
+    }
+
+    /// <summary>
+    /// Устанавливает отображение времени выполнения операций.
+    /// </summary>
+    /// <param name="enable">true для отображения, false для скрытия.</param>
+    public static async Task SetShowProtocolInSoftware(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.ShowProtocolInSoftware = enable;
+      });
+    }
+
+    /// <summary>
+    /// Устанавливает отображение времени выполнения операций.
+    /// </summary>
+    /// <param name="enable">true для отображения, false для скрытия.</param>
+    public static async Task SetGenerateProtocol(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.GenerateProtocol = enable;
+      });
+    }
+
+    public static async Task SetCleanTextProtocol(string text)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.CleanTextProtocol = text;
+      });
+    }
+
+    public static async Task SetErrorTextProtocol(string text)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.ErrorTextProtocol = text;
+      });
+    }
+
+    public static async Task SetProtocolModel(SettingsProtocolModel protocolModel)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel = protocolModel;
+
+      });
+    }
+
+    #endregion
+
+    #region Get.
+
+    /// <summary>
+    /// Возвращает статус отображения информации об устройствах в протоколе.
+    /// </summary>
+    /// <returns>true, если отображается; false, если скрывается.</returns>
+    public static async Task<bool> GetDeviceInfo() => await Task.Run(() => ProtocolModel.ShowDeviceInfo);
+
+    /// <summary>
+    /// Возвращает статус отображения подробной информации в протоколе.
+    /// </summary>
+    /// <returns>true, если отображается; false, если скрывается.</returns>
+    public static async Task<bool> GetShowDetailedProtocol() => await Task.Run(() => ProtocolModel.ShowDetailedProtocol);
+
+    /// <summary>
+    /// Возвращает статус автосохранения протокола.
+    /// </summary>
+    /// <returns>true, если включено; false, если выключено.</returns>
+    public static async Task<bool> GetSaveProtocol() => await Task.Run(() => ProtocolModel.AutoSaveProtocol);
+
+    /// <summary>
+    /// Возвращает статус авто печати протокола.
+    /// </summary>
+    /// <returns>true, если включено; false, если выключено.</returns>
+    public static async Task<bool> GetPrintProtocol() => await Task.Run(() => ProtocolModel.AutoPrintProtocol);
+
+    /// <summary>
+    /// Возвращает статус отображения времени в протоколе.
+    /// </summary>
+    /// <returns>true, если отображается; false, если скрывается.</returns>
+    public static async Task<bool> GetTimeStart() => await Task.Run(() => ProtocolModel.DisplayOperationTime);
+    public static async Task<bool> GetShowProtocolInSoftware() => await Task.Run(() => ProtocolModel.ShowProtocolInSoftware);
+    public static async Task<bool> GetGenerateProtocol() => await Task.Run(() => ProtocolModel.GenerateProtocol);
+    public static async Task<string> GetCleanTextProtocol() => await Task.Run(() => ProtocolModel.CleanTextProtocol);
+
+    public static async Task<string> GetErrorTextProtocol() => await Task.Run(() => ProtocolModel.ErrorTextProtocol);
+
+    public static async Task<SettingsProtocolModel> GetProtocolModel()
+    {
+      return await Task.Run(() =>
+      {
+        SettingsProtocolModel protocolModel = new SettingsProtocolModel();
+        protocolModel.ShowDeviceInfo = ProtocolModel.ShowDeviceInfo;
+        protocolModel.ShowDetailedProtocol = ProtocolModel.ShowDetailedProtocol;
+        protocolModel.AutoSaveProtocol = ProtocolModel.AutoSaveProtocol;
+        protocolModel.AutoPrintProtocol = ProtocolModel.AutoPrintProtocol;
+        protocolModel.DisplayOperationTime = ProtocolModel.DisplayOperationTime;
+        protocolModel.ShowProtocolInSoftware = ProtocolModel.ShowProtocolInSoftware;
+        protocolModel.ShowProtocolInSoftware = ProtocolModel.ShowProtocolInSoftware;
+        protocolModel.GenerateProtocol = ProtocolModel.GenerateProtocol;
+        protocolModel.CleanTextProtocol = ProtocolModel.CleanTextProtocol;
+        return protocolModel;
+      });
+    }
+
+    #endregion
+    public static async Task SaveProtocolModel(SettingsProtocolModel protocolModel)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.ShowDeviceInfo = protocolModel.ShowDeviceInfo;
+        ProtocolModel.ShowDetailedProtocol = protocolModel.ShowDetailedProtocol;
+        ProtocolModel.AutoSaveProtocol = protocolModel.AutoSaveProtocol;
+        ProtocolModel.AutoPrintProtocol = protocolModel.AutoPrintProtocol;
+        ProtocolModel.DisplayOperationTime = protocolModel.DisplayOperationTime;
+        ProtocolModel.ShowProtocolInSoftware = protocolModel.ShowProtocolInSoftware;
+        ProtocolModel.GenerateProtocol = protocolModel.GenerateProtocol;
+        ProtocolModel.CleanTextProtocol = protocolModel.CleanTextProtocol;
+      });
+
+      SaveProtocolEvent?.Invoke(protocolModel);
+    }
+
+
+    public static async Task<string> GetBaseTextProtocol() => await Task.Run(() =>
+@"Протокол($РЕЖИМ) от $ДАТА
+проверки электрических параметров сборочной единицы $ОБОЗНАЧЕНИЕ Зав.N $НОМЕР
+Цель проверки: проверка электрических параметров сборочной единицы на соответствие техническим условиям
+Оборудование: установка контроля электромонтажа АСК-МКИ
+Программа проверки: $ПРОГРАММА
+  Время начала измерений: $НАЧАЛО
+  Время окончания измерений: $КОНЕЦ
+  Время выполнения: $ВРЕМЯ
+
+Обрывов: не обнаружено
+Замыканий: не обнаружено
+Нарушений изоляции: не обнаружено
+
+Заключение: Изделие $ОБОЗНАЧЕНИЕ Зав.N $НОМЕР
+            соответствует требованиям КД
+
+Исполнитель: $ИСПОЛНИТЕЛЬ
+
+Представитель ОК: $ПРЕДСТАВИТЕЛЬ
+
+Представитель заказчика (ВП): $ЗАКАЗЧИК");
+
+    public static async Task<string> GetBaseTextErrorsProtocol() => await Task.Run(() =>
+@"Протокол($РЕЖИМ) от $ДАТА
+
+Зав.N сборочной единицы: $НОМЕР
+
+Заключение: Изделие $ОБОЗНАЧЕНИЕ $НАИМЕНОВАНИЕ
+            Зав.N $НОМЕР $БРАК(не )соответствует требованиям КД
+
+Исполнитель: $ИСПОЛНИТЕЛЬ
+
+Представитель ОТК: $ПРЕДСТАВИТЕЛЬ
+
+Представитель заказчика (ВП): $ЗАКАЗЧИК");
+  }
+}

@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="UI.Components.InputField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="720" d:DesignWidth="250">
+    <!--Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PR}, Path=Value}"-->
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border  Margin="5" Grid.Row="0" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Name="headerFirstData" FontFamily="{DynamicResource WinstonMedium}" TextWrapping="Wrap" TextTrimming="None" 
+                           Text="{Binding Source={StaticResource LS_Input_First_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}"  Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
+                <local:TextBoxPlaceholder Grid.Row="1" FontFamily="{DynamicResource WinstonLight}" x:Name="FirstTextBox" 
+                                          Placeholder="{Binding Source={StaticResource LS_Input_Placeholder}, Path=Value}" Text="1.1.1" Height="40" Background="{StaticResource LightPrimarySolidColorBrush}"/>
+
+            </Grid>
+        </Border>
+
+        <Border  Margin="5" Grid.Row="1" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    Name="headerSecondData" 
+                    FontFamily="{DynamicResource WinstonMedium}" 
+                    TextWrapping="Wrap" TextTrimming="None" 
+                    Text="{Binding Source={StaticResource LS_Input_Second_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}" Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
+                <local:TextBoxPlaceholder x:Name="SecondTextBox" FontFamily="{DynamicResource WinstonLight}" Grid.Row="1" 
+                                          Placeholder="{Binding Source={StaticResource LS_Input_Placeholder}, Path=Value}" Text="1.1.100" Height="40" Background="{StaticResource LightPrimarySolidColorBrush}"/>
+            </Grid>
+        </Border>
+
+
+        <Border  Margin="5" Grid.Row="2" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Name="headerElectricalData" 
+                           FontFamily="{DynamicResource WinstonMedium}" 
+                           TextWrapping="Wrap" TextTrimming="None" 
+                           Text="{Binding Source={StaticResource LS_Input_Electrical_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}" Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
+                <local:TextBoxPlaceholder x:Name="ElectricalTextBox" Grid.Row="2" 
+                                          Placeholder="{Binding Source={StaticResource LS_Input_Placeholder}, Path=Value}" Height="40" FontFamily="{DynamicResource WinstonLight}"
+                                           Unit="{Binding UnitElectrical, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="{StaticResource LightPrimarySolidColorBrush}"/>
+            </Grid>
+        </Border>
+
+        <Border  Margin="5" Grid.Row="3" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10"
+                 Visibility="{Binding IsTimeVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"
+                 >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="headerTimeData" 
+                           FontFamily="{DynamicResource WinstonMedium}" 
+                           TextWrapping="Wrap" TextTrimming="None" 
+                           Text="{Binding Source={StaticResource LS_Input_Time_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}" Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
+                <local:TextBoxPlaceholder x:Name="TimeTextBox" Grid.Row="1" 
+                                          Placeholder="{Binding Source={StaticResource LS_Input_Placeholder_Time}, Path=Value}"  Height="40" FontFamily="{DynamicResource WinstonLight}" Background="{StaticResource LightPrimarySolidColorBrush}" Unit=",сек."/>
+            </Grid>
+        </Border>
+
+
+        <Border  Margin="5" Grid.Row="4" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10"
+                 Visibility="{Binding IsTimeRampVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"
+                 >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="headerTimeRampData" 
+                           FontFamily="{DynamicResource WinstonMedium}" 
+                           TextWrapping="Wrap" TextTrimming="None" 
+                           Text="{Binding Source={StaticResource LS_Input_TimeRamp_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}" Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" />
+                <local:TextBoxPlaceholder x:Name="TimeRampTextBox" Grid.Row="4" 
+                                          Placeholder="{Binding Source={StaticResource LS_Input_Placeholder_Time}, Path=Value}" Unit=",сек." Height="40" FontFamily="{DynamicResource WinstonLight}" Background="{StaticResource LightPrimarySolidColorBrush}"/>
+            </Grid>
+        </Border>
+
+
+        <Border  Margin="5" Grid.Row="5" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10"
+                  Visibility="{Binding IsVoltageVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"
+                 >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    x:Name="headerVoltageData" 
+                    FontFamily="{DynamicResource WinstonMedium}" 
+                    TextWrapping="Wrap" TextTrimming="None" 
+                    Text="{Binding Source={StaticResource LS_Input_Voltage_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}" Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
+                <local:TextBoxPlaceholder x:Name="VoltageTextBox" 
+                                          Grid.Row="5" 
+                                          Placeholder="{Binding Source={StaticResource LS_Input_Placeholder}, Path=Value}" 
+                                          Unit="{Binding Source={StaticResource LS_Unit_Volts}}" Height="40" FontFamily="{DynamicResource WinstonLight}" Background="{StaticResource LightPrimarySolidColorBrush}"/>
+            </Grid>
+        </Border>
+
+        <Border Margin="5" Grid.Row="6" Background="{StaticResource ActiveBorderSolidColorBrush}" CornerRadius="10"
+                  Visibility="{Binding IsBusVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    Name="headerBusData" 
+                    FontFamily="{DynamicResource WinstonMedium}"  
+                    TextWrapping="Wrap" TextTrimming="None"  
+                    Text="{Binding Source={StaticResource LS_Input_Bus_Title}, Path=Value}" FontSize="18" Foreground="{StaticResource ForegroundSolidColorBrush}" Margin="0,5" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5"/>
+                <Border Name="BusBorder" Grid.Row="1" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="10" Margin="0,5,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <CheckBox x:Name="ShinaACheckBox" VerticalAlignment="Center" Style="{StaticResource AnimatedSwitch}" HorizontalAlignment="Left" Width="20" Checked="Switch_Checked" Unchecked="Switch_Unchecked" Margin="5" />
+                        <TextBlock Text="{Binding Source={StaticResource LS_Input_Bus_A}, Path=Value}" FontFamily="{DynamicResource WinstonMedium}" Grid.Column="1" Foreground="{StaticResource ForegroundSolidColorBrush}" VerticalAlignment="Center" FontSize="18" Padding="5"/>
+
+                        <CheckBox x:Name="ShinaBCheckBox" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource AnimatedSwitch}" HorizontalAlignment="Left" Width="20" Checked="Switch_Checked" Unchecked="Switch_Unchecked" Margin="5"/>
+                        <TextBlock Grid.Row="1" FontFamily="{DynamicResource WinstonMedium}" 
+                                   Text="{Binding Source={StaticResource LS_Input_Bus_B}, Path=Value}" Grid.Column="1" VerticalAlignment="Center" Foreground="{StaticResource ForegroundSolidColorBrush}" FontSize="18" Padding="5"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

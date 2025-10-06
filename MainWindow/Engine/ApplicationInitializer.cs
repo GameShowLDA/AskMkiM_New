@@ -1,0 +1,97 @@
+﻿using AppConfiguration.Execution;
+using AppConfiguration.MeasurementError;
+using AppConfiguration.Protocol;
+using System.Windows;
+using static AppConfiguration.Base.EventAggregator;
+using static Utilities.LoggerUtility;
+using AppConfiguration.Theme;
+using DataBaseConfiguration;
+using AppConfiguration.Parameter;
+
+namespace MainWindowProgram.Engine
+{
+  internal class ApplicationInitializer
+  {
+    private readonly MessageHandler messageHandler;
+
+    /// <summary>
+    /// Конструктор инициализатора приложения.
+    /// </summary>
+    /// <param name="messageHandler">Обработчик сообщений, используемый для отображения ошибок, предупреждений и информации.</param>
+    public ApplicationInitializer(MessageHandler messageHandler)
+    {
+      this.messageHandler = messageHandler;
+    }
+
+    /// <summary>
+    /// Запускает полную процедуру инициализации приложения.
+    /// </summary>
+    public async Task InitializeAsync()
+    {
+      CheckStatusProgram();
+      await LanguageSettings.InitializeAsync();
+      await StartSettingsAsync();
+    }
+
+    /// <summary>
+    /// Проверяет, запущен ли уже экземпляр приложения, и предотвращает запуск нескольких экземпляров.
+    /// </summary>
+    private void CheckStatusProgram()
+    {
+      bool isNewInstance;
+      var mutex = new Mutex(true, "AxionHolding", out isNewInstance);
+
+      if (!isNewInstance)
+      {
+        MessageBox.Show("Вы не можете запускать несколько экземпляров от Axion Holding. Это реализовано, чтобы избежать перегрузку оборудования АСК-МКИ-М!",
+            "ВНИМАНИЕ!", MessageBoxButton.OK, MessageBoxImage.Information);
+        LogWarning("Попытка запустить несколько экземпляров.");
+        Application.Current.Shutdown();
+      }
+    }
+
+    /// <summary>
+    /// Выполняет асинхронную настройку приложения, загружает настройки темы и регистрирует обработчики событий для сообщений.
+    /// </summary>
+    private async Task StartSettingsAsync()
+    {
+      try
+      {
+        var executionTask = ExecutionSettingsManager.ReadExecutionModeAsync();
+        //var protocolTask = ProtocolSettingsManager.ReadProtocolModeAsync();
+        await DataBaseConfig.InitializeDB();
+
+        var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
+        var parameterTask = ParameterSettingsManager.ReadParameterModeAsync();
+        await Task.WhenAll(executionTask, protocolTask, parameterTask);
+
+        if (protocolTask.Result != null)
+        {
+          await ProtocolConfig.SetProtocolModel(protocolTask.Result);
+          Utilities.ResultProtocol.ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
+        }
+
+        ProtocolConfig.SaveProtocolEvent += async (model) =>
+        {
+          var service = new DataBaseConfiguration.Services.Settings.ProtocolService();
+          await service.SaveProtocolAsync(model);
+          Utilities.ResultProtocol.ProtocolModel.SetTemplate(model.CleanTextProtocol);
+        };
+
+
+
+        await ThemeSettingsManager.ReadThemeModeAsync();
+      }
+      catch (Exception ex)
+      {
+        LogException(ex);
+      }
+
+      ErrorMessageEvent += messageHandler.SetErrorMessage;
+      WarningMessageEvent += messageHandler.SetWarningMessage;
+      InfoMessageEvent += messageHandler.SetInfoMessage;
+      ClearMessageEvent += messageHandler.ClearMessage;
+      LogInformation("Настройки инициализированы.");
+    }
+  }
+}
