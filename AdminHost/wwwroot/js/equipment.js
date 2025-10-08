@@ -82,14 +82,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // === 3. Карточка устройства ===
     function renderDeviceInfo(device) {
         controlContainer.innerHTML = `
-            <div class="mode-panel">
-                <h4>${device.Name ?? device.name ?? "Неизвестное устройство"}</h4>
-                <p><b>ID:</b> ${device.Id ?? device.id ?? "—"}</p>
-                <p><b>Описание:</b> ${device.Description ?? device.description ?? "—"}</p>
-                <p><b>Подключение:</b> ${device.ConnectionDetails ?? device.connectionDetails ?? "—"}</p>
-                <p style="opacity:.6;margin-top:8px;">Выберите режим для управления устройством.</p>
-            </div>
-        `;
+        <div class="mode-panel device-info">
+            <h4>${device.Name ?? device.name ?? "Неизвестное устройство"}</h4>
+            <p><b>ID:</b> ${device.Id ?? device.id ?? "—"}</p>
+            <p><b>Описание:</b> ${device.Description ?? device.description ?? "—"}</p>
+            <p><b>Подключение:</b> ${formatConnection(device.ConnectionDetails ?? device.connectionDetails)}</p>
+            <p style="opacity:.6;margin-top:8px;">Выберите режим для управления устройством.</p>
+        </div>
+        <div class="mode-panel control-section">
+            <p class="placeholder">Режим не выбран</p>
+        </div>
+    `;
     }
 
     // === 4. Рендер режимов ===
@@ -108,9 +111,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // === 5. Панель управления ===
+    // === 5. Панель управления (внизу под устройством) ===
     function loadControlPanel(device, modeName) {
-        controlContainer.innerHTML = "<p class='placeholder'>Загрузка панели управления...</p>";
+        const section = controlContainer.querySelector(".control-section");
+        section.innerHTML = "<p class='placeholder'>Загрузка панели управления...</p>";
 
         const category = device.__category || "unknown";
 
@@ -120,18 +124,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 return r.json();
             })
             .then(data => {
-                controlContainer.innerHTML = `
-                    <div class="mode-panel">
-                        <h4>${data.title}</h4>
-                        <p>${data.description}</p>
-                        <div class="btn-group">
-                            ${data.buttons.map(b => `<button class="btn-blue">${b}</button>`).join("")}
-                        </div>
-                    </div>`;
+                section.innerHTML = `
+                <div class="mode-subpanel">
+                    <h4>${data.title}</h4>
+                    <p>${data.description}</p>
+                    <div class="btn-group">
+                        ${data.buttons.map(b => `<button class="btn-blue">${b}</button>`).join("")}
+                    </div>
+                </div>`;
             })
             .catch(err => {
                 console.error("Ошибка при загрузке панели управления:", err);
-                controlContainer.innerHTML = "<p class='placeholder'>Ошибка загрузки панели</p>";
+                section.innerHTML = "<p class='placeholder'>Ошибка загрузки панели</p>";
             });
+    }
+
+    // === Вспомогательная функция для форматирования подключения ===
+    function formatConnection(conn) {
+        if (!conn) return "—";
+        if (typeof conn === "string") return conn;
+        try {
+            return JSON.stringify(conn, null, 2)
+                .replace(/[{}"]/g, "")
+                .replace(/,/g, ", ")
+                .replace(/\n/g, "<br>");
+        } catch {
+            return conn.toString();
+        }
     }
 });

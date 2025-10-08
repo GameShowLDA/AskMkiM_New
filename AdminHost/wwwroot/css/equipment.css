@@ -166,3 +166,37 @@ body {
     background: linear-gradient(145deg, #00aaff, #0078d7);
     color: #fff;
 }
+
+.device-info {
+    margin-bottom: 20px;
+}
+
+.mode-subpanel {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 15px;
+    padding-top: 10px;
+}
+
+.control-section {
+    margin-top: 15px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-blue {
+    background: #009cff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-blue:hover {
+        background: #33b5ff;
+    }
