@@ -80,6 +80,23 @@ namespace AppConfiguration.Error.Translation
     };
 
     /// <summary>
+    /// Возвращает ошибку, если команда с указанным номером и мнемоникой встречается в программе более одного раза.
+    /// </summary>
+    /// <param name="mnemonic">Мнемоника команды, которая продублирована.</param>
+    /// <param name="lineNumber">Номер строки, где обнаружен дубликат.</param>
+    /// <param name="command">Текст дублирующей команды.</param>
+    /// <returns>
+    /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования команды.
+    /// </returns>
+    public static ErrorItem CommandAlreadyExists(string mnemonic, int lineNumber, string command) => new()
+    {
+      SourceLineNumber = lineNumber,
+      Command = command,
+      Code = ErrorCode.Gen_CommandAlreadyExists,
+      Description = $"Команда {command} уже существует. Измените номер команды и повторите попытку."
+    };
+
+    /// <summary>
     /// Возвращает ошибку, если карта точек (РМ) отсутствует и невозможна дальнейшая проверка точек.
     /// </summary>
     /// <param name="lineNumber">Номер строки, где требуется карта точек.</param>

@@ -40,6 +40,11 @@ namespace ControlCommandAnalyser.Parser.Up
         SourceLines = new List<string>(lines),
         TargetLabel = targetLabel
       };
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
+      // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
+      model.SourceLines = model.SourceLines
+        .Where(l => !string.IsNullOrWhiteSpace(l))
+        .ToList();
 
       // Валидация
       if (string.IsNullOrWhiteSpace(targetLabel))

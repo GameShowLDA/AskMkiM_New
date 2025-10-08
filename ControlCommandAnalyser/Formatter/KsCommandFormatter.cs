@@ -55,6 +55,17 @@ namespace ControlCommandAnalyser.Formatter
         yield return $"\tВерхний порог сопротивления не задан.";
       }
 
+      if (ks.Comment.Count > 0)
+      {
+        yield return $"\tКомметрии:";
+        foreach (var line in ks.Comment)
+        {
+          var trimmed = line.Trim();
+          if (!string.IsNullOrEmpty(trimmed))
+            yield return $"\t\t{trimmed}";
+        }
+      }
+
       yield return "\tЗаданные точки:";
       if (CommandsModel.GetRMModel() == null)
       {
@@ -89,6 +100,7 @@ namespace ControlCommandAnalyser.Formatter
           }
         }
       }
+      
 
       yield return string.Empty;
     }

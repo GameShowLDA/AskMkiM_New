@@ -24,6 +24,15 @@ namespace ControlCommandAnalyser.Parser.Cu
         SourceLines = new List<string>(lines)
       };
 
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
+      lines.Clear();
+      lines.AddRange(
+        processedLines.Count > 0 && processedLines.FindAll(l => string.IsNullOrEmpty(l) || string.IsNullOrWhiteSpace(l)).Count == 0 ?
+        processedLines : model.SourceLines
+        .Where(l => !string.IsNullOrWhiteSpace(l))
+        .ToList()
+      );
+
       // Определяем наличие ключа "Д"
       var firstLine = lines[0].Trim();
       model.IsDocument = Regex.IsMatch(firstLine, @"^\s*Д\s+", RegexOptions.IgnoreCase);
@@ -59,7 +68,8 @@ namespace ControlCommandAnalyser.Parser.Cu
       {
         model.CuType = CuCommandType.Information;
       }
-
+      
+            
       return model;
     }
   }

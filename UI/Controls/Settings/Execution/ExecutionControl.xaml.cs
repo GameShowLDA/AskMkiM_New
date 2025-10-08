@@ -59,7 +59,7 @@ namespace UI.Controls.Settings.Execution
 
     public async Task SaveData()
     {
-      await SaveProtocolModel(GetModel());
+      await SaveExecutionModel(GetModel());
       _baseExecutionModel = await GetExecitonModel();
 
       Error.Visibility = Visibility.Collapsed;

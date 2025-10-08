@@ -45,13 +45,15 @@ namespace ControlCommandAnalyser.Parser.Pi
         return model;
       }
 
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
       // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
       model.SourceLines = model.SourceLines
         .Where(l => !string.IsNullOrWhiteSpace(l))
         .ToList();
 
       // Склеиваем всё в одну строку и удаляем \r \n \t
-      var body = string.Concat(model.SourceLines)
+      var body = string.Concat(processedLines.Count > 0 && processedLines.FindAll(l=>string.IsNullOrEmpty(l)||string.IsNullOrWhiteSpace(l)).Count == 0 ? 
+        processedLines : model.SourceLines)
         .Replace("\r", "")
         .Replace("\n", "");
 
@@ -76,7 +78,7 @@ namespace ControlCommandAnalyser.Parser.Pi
       if (!string.IsNullOrEmpty(siRemainder))
       {
         model.UnparsedParameters = "! Не распознанные параметры: ";
-        model.UnparsedParameters += remainder;
+        model.UnparsedParameters += siRemainder;
         model.Errors.Add(GeneralErrors.UnrecognizedParameters(siRemainder, numberLine, $"{commandNumber} {mnemonic}"));
       }
 
@@ -134,16 +136,12 @@ namespace ControlCommandAnalyser.Parser.Pi
       if (model.VoltageSource != null)
       {
         model.Voltage = CommonParameterParser.ParseToDouble(model.VoltageSource);
-        model.VoltageSource += " " + unit;
+        model.VoltageSource += unit;
 
         if (model.Voltage.HasValue && model.Voltage > maxVoltage)
         {
           LoggerUtility.LogError($"В команде ПИ указан вольтаж, превышающий максимально допустимый вольтаж пробойной установки.");
           model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", (int)model.Voltage.Value, maxVoltage));
-        }
-        else
-        {
-          model.VoltageSource = voltage;
         }
       }
       else
@@ -153,7 +151,7 @@ namespace ControlCommandAnalyser.Parser.Pi
       }
 
       model.Time = string.IsNullOrEmpty(time) || time == null ? 1 : CommonParameterParser.ParseToDouble(time);
-      model.TimeSource = string.IsNullOrEmpty(time) || time == null ? "1c" : time+unitTime;
+      model.TimeSource = string.IsNullOrEmpty(time) || time == null ? "1c" : time + unitTime;
 
       if (string.IsNullOrWhiteSpace(voltage))
       {
@@ -167,7 +165,8 @@ namespace ControlCommandAnalyser.Parser.Pi
         LoggerUtility.LogWarning($"Не указано время (строка {numberLine}): {commandNumber} {mnemonic}");
       }
 
-      string bodyNoWs = string.Concat(lines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
+
+      string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
 
       // Ищем первую и последнюю '*'
       int firstStar = bodyNoWs.IndexOf('*');
@@ -176,7 +175,8 @@ namespace ControlCommandAnalyser.Parser.Pi
       if (firstStar >= 0 && lastStar > firstStar)
       {
         // Выделяем блок точек (включительно) — PointParser сам Trim('*')
-        string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
+        string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);        
+        model.PointsSourse = pointsBlob;
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);

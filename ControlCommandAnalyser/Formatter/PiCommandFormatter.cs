@@ -108,6 +108,16 @@ namespace ControlCommandAnalyser.Formatter
       else
         yield return $"\tВремя выполнения не задано!";
 
+      if (pi.Comment.Count > 0)
+      {
+        yield return $"\tКомметрии:";
+        foreach (var line in pi.Comment)
+        {
+          var trimmed = line.Trim();
+          if (!string.IsNullOrEmpty(trimmed))
+            yield return $"\t\t{trimmed}";
+        }
+      }
 
       yield return "\tРазобщенные точки:";
       if (CommandsModel.GetRMModel() == null)
@@ -136,6 +146,7 @@ namespace ControlCommandAnalyser.Formatter
           yield return str.Remove(str.Length - 1);
         }
       }
+      
 
       yield return string.Empty;
     }

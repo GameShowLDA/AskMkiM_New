@@ -49,6 +49,16 @@ namespace ControlCommandAnalyser.Formatter
         yield return $"\tВерхний порог электрической емкости: {ie.HigherLimitCapacitySource}";
       }
 
+      if (ie.Comment.Count > 0)
+      {
+        yield return $"\tКомметрии:";
+        foreach (var line in ie.Comment)
+        {
+          var trimmed = line.Trim();
+          if (!string.IsNullOrEmpty(trimmed))
+            yield return $"\t\t{trimmed}";
+        }
+      }
 
       yield return "\tЗаданные точки:";
       if (CommandsModel.GetRMModel() == null)
@@ -84,6 +94,7 @@ namespace ControlCommandAnalyser.Formatter
           }
         }
       }
+      
 
       yield return string.Empty;
     }

@@ -1,8 +1,11 @@
 ﻿using System.Security.RightsManagement;
+using AppConfiguration.Execution;
 using AppConfiguration.Protocol;
 using DataBaseConfiguration.Configurations;
 using DataBaseConfiguration.Configurations.Device;
 using DataBaseConfiguration.Configurations.Hotkey;
+using DataBaseConfiguration.Configurations.Measurement;
+using DataBaseConfiguration.Configurations.Settings;
 using DataBaseConfiguration.Models.Archive;
 using DataBaseConfiguration.Models.Device;
 using DataBaseConfiguration.Models.Hotkey;
@@ -67,6 +70,8 @@ namespace DataBaseConfiguration
     /// </summary>
     public DbSet<MeasurementErrorEntity> MeasurementErrors { get; set; }
 
+    public DbSet<MeasurementErrorRangeEntity> MeasurementErrorRanges { get; set; }
+
     /// <summary>
     /// Таблица сессий пользователей.
     /// </summary>
@@ -76,6 +81,11 @@ namespace DataBaseConfiguration
     /// Таблица настроек протокола.
     /// </summary>
     public DbSet<SettingsProtocolModel> SettingsProtocol { get; set; }
+
+    /// <summary>
+    /// Таблица настроек протокола.
+    /// </summary>
+    public DbSet<ExecutionModel> Execution { get; set; }
 
     /// <summary>
     /// Таблица корневых архивов пользователей.
@@ -118,7 +128,9 @@ namespace DataBaseConfiguration
       modelBuilder.ApplyConfiguration(new RackConfiguration());
       modelBuilder.ApplyConfiguration(new FileHotkeyEntityConfiguration());
       modelBuilder.ApplyConfiguration(new MeasurementErrorEntityConfiguration());
+      modelBuilder.ApplyConfiguration(new MeasurementErrorRangeEntityConfiguration());
       modelBuilder.ApplyConfiguration(new UserArchiveRootConfiguration());
+      modelBuilder.ApplyConfiguration(new SettingsExecutionConfig());
 
       base.OnModelCreating(modelBuilder);
     }

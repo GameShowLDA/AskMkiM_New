@@ -147,7 +147,7 @@
 		<Rule color="Time">\s\d+\s*[мm]?[сs]\b</Rule>
 		
 		<!--Напряжение-->
-		<Rule color="Voltage">\s\d+\s*[ВVv]\b</Rule>
+		<Rule color="Voltage">\s\+?\d+\s*[ВVv]\b</Rule>
 
 		<!--Сопротивление-->
 
@@ -164,7 +164,7 @@
 		<Rule color="Resistance">(?i)\d+(?:[.,]\d+)?\s?&lt;\s?(Ом|кОм|МОм|ГОм|нф|мкф|пф)</Rule>
 
 		<!--Комментарии-->
-		<Span color="Comment" begin="{" end="}" />
+		<Span color="Comment" begin="{" end="}" multiline="true"/>
 		<Span color="Comment" begin="//" end="\n" />
 		<Span color="Comment" begin="/\*" end="\*/" multiline="true" />
 

@@ -6,21 +6,47 @@ using System.Threading.Tasks;
 
 namespace DataBaseConfiguration.Models.MeasurementError
 {
-  [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+  /// <summary>
+  /// Атрибут, описывающий метрологическую информацию для команды —
+  /// включая процентную и числовую погрешности и (при необходимости) диапазон измерений.
+  /// </summary>
+  [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
   public class CommandInfoAttribute : Attribute
   {
-    public string DisplayName { get; }
-    public string Unit { get; }
+    /// <summary>
+    /// Относительная (в процентах) погрешность по умолчанию.
+    /// </summary>
     public double DefaultPercentage { get; }
+
+    /// <summary>
+    /// Абсолютная (числовая) погрешность по умолчанию.
+    /// </summary>
     public double DefaultNumeric { get; }
 
-    public CommandInfoAttribute(string displayName, string unit, double defaultPercentage = 0, double defaultNumeric = 0)
+    /// <summary>
+    /// Нижняя граница диапазона, для которого применяются указанные погрешности.
+    /// </summary>
+    public double? DefaultMinRange { get; }
+
+    /// <summary>
+    /// Верхняя граница диапазона, для которого применяются указанные погрешности.
+    /// Если <c>null</c> — диапазон распространяется до бесконечности.
+    /// </summary>
+    public double? DefaultMaxRange { get; }
+
+    /// <summary>
+    /// Создаёт новый экземпляр атрибута с диапазоном и погрешностями.
+    /// </summary>
+    /// <param name="percentage">Процентная погрешность по умолчанию.</param>
+    /// <param name="numeric">Числовая погрешность по умолчанию.</param>
+    /// <param name="minRange">Минимальное значение диапазона (опционально).</param>
+    /// <param name="maxRange">Максимальное значение диапазона (опционально).</param>
+    public CommandInfoAttribute(double percentage, double numeric, double? minRange = null, double? maxRange = null)
     {
-      DisplayName = displayName;
-      Unit = unit;
-      DefaultPercentage = defaultPercentage;
-      DefaultNumeric = defaultNumeric;
+      DefaultPercentage = percentage;
+      DefaultNumeric = numeric;
+      DefaultMinRange = minRange;
+      DefaultMaxRange = maxRange;
     }
   }
-
 }

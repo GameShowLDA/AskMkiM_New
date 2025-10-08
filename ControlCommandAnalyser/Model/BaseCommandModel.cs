@@ -34,10 +34,16 @@ namespace ControlCommandAnalyser.Model
     /// </summary>
     public List<string> AlgorithmKey { get; set; } = new();
 
+    /// <summary>
+    /// Комментарии, указанные в команде.
+    /// </summary>
+    public List<string> Comment { get; set; } = new();
+
     public virtual IPointError PointErrors => null;
 
     public string CommandNumber { get; set; }
     public virtual string Mnemonic { get; set; }
+    public string PointsSourse { get; set; }
 
     public virtual T GetModel<T>(BaseCommandModel baseCommandModel) where T : class
     {

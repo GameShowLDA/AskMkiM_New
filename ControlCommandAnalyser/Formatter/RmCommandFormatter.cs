@@ -17,6 +17,17 @@ namespace ControlCommandAnalyser.Formatter
       {
         yield return $"{rm.CommandNumber} {rm.Mnemonic}";
 
+        if (rm.Comment.Count > 0)
+        {
+          yield return $"\tКомметрии:";
+          foreach (var line in rm.Comment)
+          {
+            var trimmed = line.Trim();
+            if (!string.IsNullOrEmpty(trimmed))
+              yield return $"\t\t{trimmed}";
+          }
+        }
+
         foreach (var pair in rm.PointsMap)
           yield return $"\t{pair.Key} => {pair.Value}";
 
@@ -26,6 +37,7 @@ namespace ControlCommandAnalyser.Formatter
       {
         yield break;
       }
+      
     }
   }
 }

@@ -23,23 +23,32 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
     /// </returns>
     public (string? Min, string? Max, string? Unit, string Remainder) ParseCapacityRange(string input)
     {
-      var match = Regex.Match(input,
+      var m = Regex.Match(input,
                               @"(?:(?<low>\d+(?:[.,]\d+)?)\s*<\s*)?(?<unit>нф|мкф|пф)(?:\s*<\s*(?<high>\d+(?:[.,]\d+)?))?",
                               RegexOptions.IgnoreCase);
 
 
-      if (match.Success)
-      {
-        string? min = match.Groups["low"].Success ? match.Groups["low"].Value : null;
-        string? max = match.Groups["high"].Success ? match.Groups["high"].Value : null;
-        string unit = match.Groups["unit"].Value;
+      if (!m.Success)
+        return (null, null, null, input);
 
-        string remainder = input.Remove(match.Index, match.Length).Trim(' ', ',');
+      string unit = m.Groups["unit"].Value;
 
-        return (min, max, unit, remainder);
-      }
+      double? minValue = UnitsConvertor.TryParseValue(m.Groups["low"].Value, unit);
+      double? maxValue = UnitsConvertor.TryParseValue(m.Groups["high"].Value, unit);
 
-      return (null, null, null, input);
+      string remainder = Regex.Replace(
+        input,
+        $@"\b{Regex.Escape(m.Value)}\s*,?",
+        "",
+        RegexOptions.IgnoreCase
+      ).Trim();
+
+      return (
+        minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+        maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+        "Ф",
+        remainder
+      );
     }
   }
 }

@@ -25,6 +25,7 @@ namespace ControlCommandAnalyser.Model
   /// <summary>
   /// Модель команды ЦУ (сообщение оператору).
   /// </summary>
+  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Д)]
   public class CuCommandModel : BaseCommandModel
   {
     public override string Mnemonic => "ЦУ";

@@ -17,6 +17,29 @@ namespace DataBaseConfiguration.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
 
+            modelBuilder.Entity("AppConfiguration.Execution.ExecutionModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IdleModeExecution")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsErrorSimulationMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("StepByStepMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("StopOnError")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Execution");
+                });
+
             modelBuilder.Entity("AppConfiguration.Protocol.SettingsProtocolModel", b =>
                 {
                     b.Property<int>("Id")
@@ -411,12 +434,6 @@ namespace DataBaseConfiguration.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("NumericError")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("PercentageError")
-                        .HasColumnType("REAL");
-
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
@@ -426,6 +443,35 @@ namespace DataBaseConfiguration.Migrations
                         .IsUnique();
 
                     b.ToTable("MeasurementErrors");
+                });
+
+            modelBuilder.Entity("DataBaseConfiguration.Models.MeasurementError.MeasurementErrorRangeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("MaxValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("MeasurementErrorEntityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("MinValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("NumericError")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("PercentageError")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeasurementErrorEntityId", "MinValue", "MaxValue")
+                        .IsUnique();
+
+                    b.ToTable("MeasurementErrorRanges");
                 });
 
             modelBuilder.Entity("DataBaseConfiguration.Models.Session.UserSessionEntity", b =>
@@ -444,6 +490,22 @@ namespace DataBaseConfiguration.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserSessions");
+                });
+
+            modelBuilder.Entity("DataBaseConfiguration.Models.MeasurementError.MeasurementErrorRangeEntity", b =>
+                {
+                    b.HasOne("DataBaseConfiguration.Models.MeasurementError.MeasurementErrorEntity", "MeasurementErrorEntity")
+                        .WithMany("Ranges")
+                        .HasForeignKey("MeasurementErrorEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MeasurementErrorEntity");
+                });
+
+            modelBuilder.Entity("DataBaseConfiguration.Models.MeasurementError.MeasurementErrorEntity", b =>
+                {
+                    b.Navigation("Ranges");
                 });
 #pragma warning restore 612, 618
         }

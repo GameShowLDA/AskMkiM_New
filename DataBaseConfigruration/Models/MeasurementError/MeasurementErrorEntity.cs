@@ -4,44 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataBaseConfiguration.Models.MeasurementError
 {
+  /// <summary>
+  /// Тип команды (режим метрологии) и связанные с ним диапазоны погрешностей.
+  /// </summary>
   public class MeasurementErrorEntity
   {
+    /// <summary>Первичный ключ.</summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// Тип команды, определяющий режим метрологии.
-    /// </summary>
+    /// <summary>Тип команды, для которой задаются погрешности.</summary>
     public TypeCommand Type { get; set; }
 
-    /// <summary>
-    /// Погрешность измерения в процентах.
-    /// </summary>
-    public double PercentageError { get; set; }
+    /// <summary>Коллекция диапазонов погрешностей (один-ко-многим).</summary>
+    public List<MeasurementErrorRangeEntity> Ranges { get; set; } = new();
 
-    /// <summary>
-    /// Погрешность измерения в числовом значении.
-    /// </summary>
-    public double NumericError { get; set; }
-
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="MeasurementErrorEntity"/> с заданными значениями.
-    /// </summary>
-    /// <param name="typeCommand">Тип команды (режим метрологии).</param>
-    /// <param name="percentageError">Погрешность измерения в процентах.</param>
-    /// <param name="numericError">Погрешность измерения в числовом значении.</param>
-    public MeasurementErrorEntity(TypeCommand typeCommand, double percentageError, double numericError)
-    {
-      Type = typeCommand;
-      PercentageError = percentageError;
-      NumericError = numericError;
-    }
-
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="MeasurementErrorEntity"/>.
-    /// </summary>
+    /// <summary>Пустой конструктор для EF.</summary>
     public MeasurementErrorEntity() { }
+
+    /// <summary>Удобный конструктор с указанием типа команды.</summary>
+    public MeasurementErrorEntity(TypeCommand type) => Type = type;
   }
 }

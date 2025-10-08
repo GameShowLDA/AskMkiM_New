@@ -24,7 +24,7 @@
 		<Rule color="Time">\s\d+\s*[мm]?[сs]\b</Rule>
 
 		<!--Напряжение-->
-		<Rule color="Voltage">\s\d+\s*[ВVv]\b</Rule>
+		<Rule color="Voltage">\s\+?\d+\s*[ВVv]\b</Rule>
 
 		<!--Сопротивление-->
 
@@ -63,8 +63,9 @@
 		<Rule color="Mnemonic">\bИЕ\b</Rule>
 
 		<!--Комментарии-->
-		<Span color="Comment" begin="{" end="}" />
+		<Span color="Comment" begin="{" end="}" multiline="true"/>
 		<Span color="Comment" begin="//" end="\n" />
+		<Span color="Comment" begin="/\*" end="\*/" multiline="true" />
 		<Span color="OkParam" begin="\(" end="\)" />
 		
 		<!--Обозначения-->

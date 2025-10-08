@@ -21,20 +21,29 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
     /// </returns>
     public (string? Value, string? Unit, string Remainder) ParseVoltage(string input)
     {
-      var match = Regex.Match(input,
+      var m = Regex.Match(input,
                               @"(?<val>\d+(?:[.,]\d+)?)\s*(?<unit>В|кВ|КВ|мВ|МВ)",
                               RegexOptions.IgnoreCase);
 
-      if (match.Success)
-      {
-        string value = match.Groups["val"].Value;
-        string unit = match.Groups["unit"].Value;
-        string remainder = input.Remove(match.Index, match.Length).Trim(' ', ',');
+      if (!m.Success)
+        return (null, null, input);
 
-        return (value, unit, remainder);
-      }
+      string unit = m.Groups["unit"].Value;
 
-      return (null, null, input);
+      double? value = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+
+      string remainder = Regex.Replace(
+        input,
+        $@"\b{Regex.Escape(m.Value)}\s*,?",
+        "",
+        RegexOptions.IgnoreCase
+      ).Trim();
+
+      return (
+        value?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+        "В",
+        remainder
+      );
     }
   }
 }

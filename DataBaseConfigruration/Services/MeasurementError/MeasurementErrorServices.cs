@@ -1,74 +1,138 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AppConfiguration.Enums;
 using AppConfiguration.MeasurementError;
 using DataBaseConfiguration.Models.MeasurementError;
 using DataBaseConfiguration.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseConfiguration.Services.MeasurementError
 {
+  /// <summary>
+  /// Сервис для получения метрологических погрешностей по типу команды и диапазону измерений.
+  /// </summary>
   public class MeasurementErrorServices : Repository<MeasurementErrorEntity>, IMeasurementErrorProvider
   {
     /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="MeasurementErrorRepository"/>.
+    /// Инициализирует новый экземпляр класса <see cref="MeasurementErrorServices"/>.
     /// </summary>
-    /// <param name="context">Контекст базы данных.</param>
     public MeasurementErrorServices() : base(DataBaseConfig.Context)
     {
+      EnsureDefaultData();
     }
 
     /// <summary>
-    /// Возвращает числовую погрешность по заданному типу команды.
+    /// Возвращает все метрологические данные (типы команд и их диапазоны погрешностей),
+    /// включая структуру диапазонов для каждой команды.
     /// </summary>
-    /// <param name="type">Тип команды.</param>
-    /// <returns>Числовая погрешность.</returns>
-    public double GetNumericError(TypeCommand type)
+    /// <typeparam name="T">
+    /// Тип возвращаемых данных (например, <see cref="MeasurementErrorEntity"/>).
+    /// </typeparam>
+    /// <returns>
+    /// Коллекция объектов типа <typeparamref name="T"/>,
+    /// каждая из которых содержит диапазоны (<see cref="MeasurementErrorRangeEntity"/>).
+    /// </returns>
+    public IEnumerable<T> GetAllWithRanges<T>()
     {
-      var entity = _dbSet.FirstOrDefault(e => e.Type == type);
-      if (entity == null)
-        throw new InvalidOperationException($"Погрешность для типа команды {type} не найдена в базе данных.");
+      if (typeof(T) == typeof(MeasurementErrorEntity))
+      {
+        // Загружаем сущности с диапазонами и приводим к типу T
+        var data = _context.Set<MeasurementErrorEntity>()
+                           .Include(e => e.Ranges)
+                           .AsNoTracking()
+                           .ToList();
 
-      return entity.NumericError;
+        return (IEnumerable<T>)data;
+      }
+
+      throw new NotSupportedException(
+        $"Тип {typeof(T).Name} не поддерживается реализацией {nameof(MeasurementErrorServices)}. " +
+        $"Ожидается {nameof(MeasurementErrorEntity)}.");
     }
 
     /// <summary>
-    /// Возвращает процентную погрешность по заданному типу команды.
+    /// Возвращает числовую и процентную погрешность по типу команды и значению измерения.
     /// </summary>
-    /// <param name="type">Тип команды.</param>
-    /// <returns>Процентная погрешность.</returns>
-    public double GetPercentageError(TypeCommand type)
-    {
-      var entity = _dbSet.FirstOrDefault(e => e.Type == type);
-      if (entity == null)
-        throw new InvalidOperationException($"Погрешность для типа команды {type} не найдена в базе данных.");
-
-      return entity.PercentageError;
-    }
-
-    /// <summary>
-    /// Возвращает числовую и процентную погрешности по заданному типу команды.
-    /// </summary>
-    /// <param name="type">Тип команды.</param>
+    /// <param name="type">Тип команды (режим метрологии).</param>
+    /// <param name="measuredValue">Измеренное значение, для которого подбирается диапазон.</param>
     /// <returns>Кортеж: числовая и процентная погрешности.</returns>
-    public (double Numeric, double Percent) GetErrorParameters(TypeCommand type)
+    public (double Numeric, double Percent) GetErrorParameters(TypeCommand type, double measuredValue)
     {
-      var entity = _dbSet.FirstOrDefault(e => e.Type == type);
-      if (entity == null)
-        throw new InvalidOperationException($"Погрешность для типа команды {type} не найдена в базе данных.");
+      var entity = _dbSet
+        .Include(e => e.Ranges)
+        .FirstOrDefault(e => e.Type == type);
 
-      return (entity.NumericError, entity.PercentageError);
+      if (entity == null)
+        throw new InvalidOperationException($"Не найдена запись погрешности для типа команды {type}.");
+
+      var range = entity.Ranges.FirstOrDefault(r =>
+          measuredValue >= r.MinValue &&
+          (r.MaxValue == null || measuredValue < r.MaxValue));
+
+      if (range == null)
+        throw new InvalidOperationException($"Не найден диапазон погрешности для {type} при значении {measuredValue}.");
+
+      return (range.NumericError, range.PercentageError);
     }
 
-
-    public (double Min, double Max) GetRange(TypeCommand typeCommand, double expectedValue)
+    /// <summary>
+    /// Возвращает диапазон допустимых значений (Min, Max) для измеренного значения.
+    /// </summary>
+    /// <param name="type">Тип команды (режим метрологии).</param>
+    /// <param name="expectedValue">Ожидаемое значение измерения.</param>
+    /// <returns>Кортеж: нижняя и верхняя границы допустимого диапазона.</returns>
+    public (double Min, double Max) GetRange(TypeCommand type, double expectedValue)
     {
-      var (numeric, percent) = GetErrorParameters(typeCommand);
+      var (numeric, percent) = GetErrorParameters(type, expectedValue);
       double min = expectedValue - numeric - expectedValue * percent / 100.0;
       double max = expectedValue + numeric + expectedValue * percent / 100.0;
       return (min, max);
+    }
+
+    /// <summary>
+    /// Проверяет наличие данных и инициализирует значения по умолчанию при их отсутствии.
+    /// </summary>
+    private void EnsureDefaultData()
+    {
+      if (_dbSet.Include(e => e.Ranges).Any())
+        return;
+
+      var defaults = new List<MeasurementErrorEntity>
+      {
+        new MeasurementErrorEntity(TypeCommand.IE)
+        {
+          Ranges = new List<MeasurementErrorRangeEntity>
+          {
+            new() { MinValue = 0, MaxValue = null, PercentageError = 5.0, NumericError = 100.0 }
+          }
+        },
+        new MeasurementErrorEntity(TypeCommand.PR)
+        {
+          Ranges = new List<MeasurementErrorRangeEntity>
+          {
+            new() { MinValue = 0, MaxValue = null, PercentageError = 1.0, NumericError = 0.8 }
+          }
+        },
+        new MeasurementErrorEntity(TypeCommand.KC)
+        {
+          Ranges = new List<MeasurementErrorRangeEntity>
+          {
+            new() { MinValue = 0.001, MaxValue = 1_000_000, PercentageError = 1.0, NumericError = 1.0 },
+            new() { MinValue = 1_000_000, MaxValue = null, PercentageError = 5.0, NumericError = 0.0 }
+          }
+        },
+        new MeasurementErrorEntity(TypeCommand.CI)
+        {
+          Ranges = new List<MeasurementErrorRangeEntity>
+          {
+            new() { MinValue = 0, MaxValue = null, PercentageError = 2.0, NumericError = 0.0 }
+          }
+        }
+      };
+
+      _dbSet.AddRange(defaults);
+      _context.SaveChanges();
     }
   }
 }

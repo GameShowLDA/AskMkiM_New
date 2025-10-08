@@ -13,12 +13,12 @@ namespace AppConfiguration.Error.Translation
     /// <summary>
     /// Ошибка: команда ИЕ не содержит ни одной границы емкости.
     /// </summary>
-    public static ErrorItem EmptyCapacity(int startLineNumber, string command) => new()
+    public static ErrorItem EmptyLowerCapacity(int startLineNumber, string command) => new()
     {
       SourceLineNumber = startLineNumber,
       Command = command,
-      Code = ErrorCode.Ie_EmptyCapacity,
-      Description = "Команда ИЕ должна содержать хотя бы одну из границ емкости. Емкость не может быть не задано."
+      Code = ErrorCode.Ie_EmptyLowerCapacity,
+      Description = "Команда ИЕ должна содержать нижнюю границу емкости."
     };
 
     /// <summary>

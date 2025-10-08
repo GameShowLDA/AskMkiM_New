@@ -18,6 +18,16 @@ namespace AppConfiguration.Error.Translation
       Code = ErrorCode.Ks_EmptyResistance,
       Description = "Команда КС должна содержать хотя бы одну из границ сопротивления. Сопротивление не может быть не задано."
     };
+    /// <summary>
+    /// Ошибка: нижняя граница сопротивления больше верхней границы сопротивления.
+    /// </summary>
+    public static ErrorItem CapacityLimitsConflict(int startLineNumber, string command) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = ErrorCode.Ks_CapacityLimitsConflict,
+      Description = "Нижняя граница электрической емкости больше верхней границы электрической емкости."
+    };
 
     /// <summary>
     /// Ошибка: не удалось распознать параметры (напряжение, сопротивление, время).

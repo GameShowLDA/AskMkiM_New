@@ -20,18 +20,6 @@ namespace MainWindowProgram.ViewModels
       _service = service;
     }
 
-    /// <summary>Открыть настройки выполнения режимов.</summary>
-    [RelayCommand]
-    private async Task Execution() => await _service.OpenExecutionAsync();
-
-    /// <summary>Открыть настройки конфигурации оборудования.</summary>
-    [RelayCommand]
-    private async Task Config() => await _service.OpenConfigurationAsync();
-
-    /// <summary>Открыть настройки протоколирования.</summary>
-    [RelayCommand]
-    private async Task Protocol() => await _service.OpenProtocolAsync();
-
     /// <summary>Открыть раздел "Общие сведения" в справочнике.</summary>
     [RelayCommand]
     private async Task HelpOpenGeneralInformation() => await _service.HelpOpenGeneralInformation();

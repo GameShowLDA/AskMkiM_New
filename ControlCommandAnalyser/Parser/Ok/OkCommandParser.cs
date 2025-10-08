@@ -23,6 +23,12 @@ namespace ControlCommandAnalyser.Parser.Ok
         StartLineNumber = numberLine,
       };
 
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
+      // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
+      model.SourceLines = model.SourceLines
+        .Where(l => !string.IsNullOrWhiteSpace(l))
+        .ToList();
+
       if (lines == null || lines.Count == 0)
       {
         model.Errors.Add(OkErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));

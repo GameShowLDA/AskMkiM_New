@@ -34,6 +34,16 @@ namespace ControlCommandAnalyser.Formatter
         if (!string.IsNullOrEmpty(trimmed))
           yield return $"\t\t{trimmed}";
       }
+      if( cu.Comment.Count > 0)
+      {
+        yield return $"\tКомметрии:";
+        foreach (var line in cu.Comment)
+        {
+          var trimmed = line.Trim();
+          if (!string.IsNullOrEmpty(trimmed))
+            yield return $"\t\t{trimmed}";
+        }
+      }
 
       yield return string.Empty;
     }

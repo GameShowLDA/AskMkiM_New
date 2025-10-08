@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Shapes;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Si
@@ -49,7 +50,7 @@ namespace ControlCommandAnalyser.Parser.Si
       var breakDown = AppConfiguration.ServiceLocator.GetRequired<IBreakdownTester>();
       var maxVoltage = breakDown.MaxVoltage;
 
-      string body = AllLinesInOne(model);
+      string body = AllLinesInOne(model, lines);
 
       // Дальше работаем ТОЛЬКО с body:
       var remainder = body;
@@ -100,6 +101,7 @@ namespace ControlCommandAnalyser.Parser.Si
     {
       // Выделяем блок точек (включительно) — PointParser сам Trim('*')
       string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
+      model.PointsSourse = pointsBlob;
       LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
       var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
@@ -199,9 +201,10 @@ namespace ControlCommandAnalyser.Parser.Si
       double? resistanceValue;
       if (string.IsNullOrEmpty(resistance) || resistance == null)
       {
-        resistance = "100<МОм";
+        resistance = "100";
         LoggerUtility.LogDebug($"Для сопротивления установлено значение по умолчанию '100<МОм'");
         resistanceValue = 100;
+        unitResistance = "МОм";
       }
       else
       {
@@ -212,7 +215,8 @@ namespace ControlCommandAnalyser.Parser.Si
       {
         model.Resistance = resistanceValue.Value;
       }
-      model.ResistanceSource = resistance + unitResistance;
+      model.ResistanceSource = resistance + "<" + unitResistance;
+      model.ResistanceUnit = unitResistance;
 
       double? timeValue;
       if (string.IsNullOrEmpty(time) || time == null)
@@ -243,7 +247,7 @@ namespace ControlCommandAnalyser.Parser.Si
         model.Errors.Add(SiErrors.CannotParseParameters("Не указано напряжение", numberLine, $"{commandNumber} {mnemonic}"));
         LoggerUtility.LogWarning($"Не указано напряжение (строка {numberLine}): {commandNumber} {mnemonic}");
       }
-
+      
       if (string.IsNullOrWhiteSpace(resistance))
       {
         model.Errors.Add(SiErrors.CannotParseParameters("Не указано сопротивление", numberLine, $"{commandNumber} {mnemonic}"));
@@ -288,15 +292,19 @@ namespace ControlCommandAnalyser.Parser.Si
       return remainder;
     }
 
-    private static string AllLinesInOne(SiCommandModel model)
+    private static string AllLinesInOne(SiCommandModel model, List<string> lines)
     {
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
+      lines.Clear();
+      lines.AddRange(processedLines);
       // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
       model.SourceLines = model.SourceLines
         .Where(l => !string.IsNullOrWhiteSpace(l))
         .ToList();
 
       // Склеиваем всё в одну строку и удаляем \r \n \t
-      var body = string.Concat(model.SourceLines)
+      var body = string.Concat(processedLines.Count > 0 && processedLines.FindAll(l => string.IsNullOrEmpty(l) || string.IsNullOrWhiteSpace(l)).Count == 0 ?
+        processedLines : model.SourceLines)
         .Replace("\r", "")
         .Replace("\n", "")
         .Replace("\t", "");

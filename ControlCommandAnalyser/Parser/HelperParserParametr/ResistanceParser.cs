@@ -26,7 +26,14 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
       if (match.Success)
       {
         var resistance = match.Value.Trim();
-        var remainder = input.Remove(match.Index, match.Length).Trim(' ', ',');
+        // удаляем найденный фрагмент вместе с запятой и пробелами после него
+        var remainder = Regex.Replace(
+            input,
+            $@"\b{Regex.Escape(match.Value)}\s*,?",
+            "",
+            RegexOptions.IgnoreCase
+        ).Trim();
+
         return (resistance, remainder);
       }
       return (null, input);
@@ -54,11 +61,12 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
           RegexOptions.IgnoreCase);
       if (m.Success)
       {
-        string value = m.Groups["val"].Value;
+        //string value = m.Groups["val"].Value;
         string unit = m.Groups["unit"].Value;
+        double? value = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
         string op = m.Groups["op"].Value;
         string remainder = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (value, unit, remainder);
+        return (value?.ToString("G", System.Globalization.CultureInfo.InvariantCulture), "Ом", remainder);
       }
 
       // Вариант 2: "100 < МОм" / "100 <= МОм" и т.п.
@@ -67,11 +75,10 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
           RegexOptions.IgnoreCase);
       if (m.Success)
       {
-        string value = m.Groups["val"].Value;
         string unit = m.Groups["unit"].Value;
-        string op = m.Groups["op"].Value;
+        double? value = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
         string remainder = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (value, unit, remainder);
+        return (value?.ToString("G", System.Globalization.CultureInfo.InvariantCulture), "Ом", remainder);
       }
 
       return (null, null, input);
@@ -91,28 +98,34 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
     /// </returns>
     public (string? Min, string? Max, string? Unit, string Remainder) ParseResistanceRange(string input)
     {
-      var match = Regex.Match(input,
-                              @"(?:(?<low>\d+(?:[.,]\d+)?)\s*<\s*)?(?<unit>Ом|кОм|МОм|ГОм)(?:\s*<\s*(?<high>\d+(?:[.,]\d+)?))?",
-                              RegexOptions.IgnoreCase);
+      if (string.IsNullOrWhiteSpace(input))
+        return (null, null, null, input);
 
+      var m = Regex.Match(input,
+          @"(?:(?<low>\d+(?:[.,]\d+)?)\s*<\s*)?(?<unit>Ом|кОм|МОм|ГОм)(?:\s*<\s*(?<high>\d+(?:[.,]\d+)?))?",
+          RegexOptions.IgnoreCase);
 
-      if (match.Success)
-      {
-        string? min = match.Groups["low"].Success ? match.Groups["low"].Value : null;
-        string? max = match.Groups["high"].Success ? match.Groups["high"].Value : null;
-        string unit = match.Groups["unit"].Value;
+      if (!m.Success)
+        return (null, null, null, input);
 
-        var remainder = Regex.Replace(
-          input,
-          $@"\b{Regex.Escape(match.Value)}\s*,?",
-          "",
-          RegexOptions.IgnoreCase
-          ).Trim();
+      string unit = m.Groups["unit"].Value;
 
-        return (min, max, unit, remainder);
-      }
+      double? minValue = UnitsConvertor.TryParseValue(m.Groups["low"].Value, unit);
+      double? maxValue = UnitsConvertor.TryParseValue(m.Groups["high"].Value, unit);
 
-      return (null, null, null, input);
+      string remainder = Regex.Replace(
+        input,
+        $@"\b{Regex.Escape(m.Value)}\s*,?",
+        "",
+        RegexOptions.IgnoreCase
+      ).Trim();
+
+      return (
+        minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+        maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+        "Ом",
+        remainder
+      );
     }
 
     /// <summary>
@@ -142,11 +155,16 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
         var unit = m.Groups["unit2"].Success && !string.IsNullOrEmpty(m.Groups["unit2"].Value)
                  ? m.Groups["unit2"].Value
                  : m.Groups["unit1"].Value;
+        double? minValue = UnitsConvertor.TryParseValue(m.Groups["low"].Value, unit);
+        double? maxValue = UnitsConvertor.TryParseValue(m.Groups["high"].Value, unit);
+
         var remainder1 = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (m.Groups["low"].Value,
-                m.Groups["high"].Value,
-                string.IsNullOrEmpty(unit) ? "Ом" : unit,
-                remainder1);
+        return (
+           minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           "Ом",
+           remainder1
+           );
       }
 
       // 2) Порог: "R < 10 Ом" или "R <= 10 Ом" (также ≥, >, >=)
@@ -156,10 +174,23 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
       if (m.Success)
       {
         var op = m.Groups["op"].Value;
-        string? min = null, max = null;
-        if (op is "<" or "<=" or "≤") max = m.Groups["val"].Value; else min = m.Groups["val"].Value;
+        double? minValue = null, maxValue = null;
+        string? unit = m.Groups["unit"].Value;
+        if (op is "<" or "<=" or "≤")
+        {
+          maxValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
+        else
+        {
+          minValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
         var remainder2 = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (min, max, m.Groups["unit"].Value, remainder2);
+        return (
+           minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           "Ом",
+           remainder2
+           );
       }
 
       // 3) Порог: "10 Ом < R" или "10 Ом <= R"
@@ -169,37 +200,98 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
       if (m.Success)
       {
         var op = m.Groups["op"].Value;
-        string? min = null, max = null;
-        if (op is "<" or "<=" or "≤") min = m.Groups["val"].Value; else max = m.Groups["val"].Value;
+        double? minValue = null, maxValue = null;
+        string? unit = m.Groups["unit"].Value;
+        if (op is "<" or "<=" or "≤")
+        {
+          maxValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
+        else
+        {
+          minValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
         var remainder3 = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (min, max, m.Groups["unit"].Value, remainder3);
+        return (
+           minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           "Ом",
+           remainder3
+           );
       }
 
-      // 4) БЕЗ R: "Ом < 10" / "МОм <= 10"  (единица слева, число справа)
+      // 4. Диапазон вида "10<МОм<20"
+      m = Regex.Match(input,
+          @"(?<!\w)(?<min>\d+(?:[.,]\d+)?)\s*(?<op1><=|>=|<|>|≤|≥)\s*(?<unit>Ом|кОм|МОм|ГОм)\s*(?<op2><=|>=|<|>|≤|≥)\s*(?<max>\d+(?:[.,]\d+)?)\b",
+          RegexOptions.IgnoreCase);
+
+      if (m.Success)
+      {
+        string? unit = m.Groups["unit"].Value;
+        double? maxValue = UnitsConvertor.TryParseValue(m.Groups["max"].Value, unit);
+        double? minValue = UnitsConvertor.TryParseValue(m.Groups["min"].Value, unit);
+        var remainder = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
+        return (
+           minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           "Ом",
+           remainder
+           );
+      }
+
+      // 5. Нижняя граница 
       m = Regex.Match(input,
           @"(?<!\w)(?<unit>Ом|кОм|МОм|ГОм)\s*(?<op><=|>=|<|>|≤|≥)\s*(?<val>\d+(?:[.,]\d+)?)\b",
           RegexOptions.IgnoreCase);
+
       if (m.Success)
       {
         var op = m.Groups["op"].Value;
-        string? min = null, max = null;
-        if (op is "<" or "<=" or "≤") max = m.Groups["val"].Value; else min = m.Groups["val"].Value;
-        var remainder4 = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (min, max, m.Groups["unit"].Value, remainder4);
+        double? minValue = null, maxValue = null;
+        string? unit = m.Groups["unit"].Value;
+        if (op is "<" or "<=" or "≤")
+        {
+          maxValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
+        else
+        {
+          minValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
+        var remainder = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
+        return (
+           minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           "Ом",
+           remainder
+           );
       }
 
-      // 5) БЕЗ R: "10 < МОм" / "10 <= МОм"  (число слева, единица справа)
+      // 6.Верхняя граница
       m = Regex.Match(input,
           @"(?<!\w)(?<val>\d+(?:[.,]\d+)?)\s*(?<op><=|>=|<|>|≤|≥)\s*(?<unit>Ом|кОм|МОм|ГОм)\b",
           RegexOptions.IgnoreCase);
+
       if (m.Success)
       {
         var op = m.Groups["op"].Value;
-        string? min = null, max = null;
-        if (op is "<" or "<=" or "≤") min = m.Groups["val"].Value; else max = m.Groups["val"].Value;
-        var remainder5 = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
-        return (min, max, m.Groups["unit"].Value, remainder5);
+        double? minValue = null, maxValue = null;
+        string? unit = m.Groups["unit"].Value;
+        if (op is "<" or "<=" or "≤")
+        {
+          minValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
+        else
+        {
+          maxValue = UnitsConvertor.TryParseValue(m.Groups["val"].Value, unit);
+        }
+        var remainder = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
+        return (
+           minValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           maxValue?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+           "Ом",
+           remainder
+           );
       }
+
 
       // Ничего не нашли
       return (null, null, null, input);
@@ -223,5 +315,6 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
 
       return (left + right).Trim();
     }
+
   }
 }

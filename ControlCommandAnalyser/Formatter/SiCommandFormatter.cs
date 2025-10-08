@@ -62,7 +62,16 @@ namespace ControlCommandAnalyser.Formatter
       {
         yield return $"\tСопротивление не задано!";
       }
-
+      if (si.Comment.Count > 0)
+      {
+        yield return $"\tКомметрии:";
+        foreach (var line in si.Comment)
+        {
+          var trimmed = line.Trim();
+          if (!string.IsNullOrEmpty(trimmed))
+            yield return $"\t\t{trimmed}";
+        }
+      }
       yield return "\tРазобщенные точки:";
       if (CommandsModel.GetRMModel() == null)
       {
@@ -90,6 +99,7 @@ namespace ControlCommandAnalyser.Formatter
           yield return str.Remove(str.Length - 1);
         }
       }
+
 
 
       yield return string.Empty;

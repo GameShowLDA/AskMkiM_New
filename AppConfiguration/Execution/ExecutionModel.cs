@@ -5,6 +5,8 @@
   /// </summary>
   public class ExecutionModel
   {
+    public int Id { get; set; } = 1;
+
     /// <summary>
     /// Указывает, активен ли холостой режим выполнения.
     /// </summary>

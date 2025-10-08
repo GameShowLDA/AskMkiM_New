@@ -25,6 +25,7 @@ namespace ConsoleUI.ConsoleCommanding.Engine
       commands.Add(new ExitCommand());
       commands.Add(new LogsCommand());
       commands.Add(new UnknownCommand());
+      commands.Add(new SplitLogsCommand());
 
       // Help — получает список всех команд
       commands.Add(new HelpCommand(commands));

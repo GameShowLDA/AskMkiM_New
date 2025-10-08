@@ -225,6 +225,7 @@ namespace MainWindowProgram.Services
         translateEditor.TextEditorModel.FilePath = editor.TextEditorModel.FilePath;
         var manager = new CommandTranslationManager();
         var models = manager.ParseAllAndDisplay(text, translateEditor);
+        manager.SetSourseLines(models);
 
         EventAggregator.RaiseTextEditorActivated(editor);
 

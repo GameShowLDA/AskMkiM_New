@@ -18,6 +18,11 @@ namespace ControlCommandAnalyser.Model
     public override string Mnemonic => "КС";
 
     /// <summary>
+    /// Единицы измерения сопротивления (например, "МОм", "кОм" и т.п.)
+    /// </summary>
+    public string? ResistanceUnit { get; set; }
+
+    /// <summary>
     /// Нижняя граница значеня сопротивления (например, "100<МОм")
     /// </summary>
     public string? LowerLimitResistanceSource { get; set; }

@@ -18,6 +18,9 @@ namespace ControlCommandAnalyser.Parser.Rm
 
       // Собрать весь текст команды (все строки после номера и мнемоники)
       var sb = new System.Text.StringBuilder();
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
+      lines.Clear();
+      lines.AddRange(processedLines);
       for (int i = 0; i < lines.Count; i++)
       {
         var line = lines[i].Trim();
@@ -28,7 +31,10 @@ namespace ControlCommandAnalyser.Parser.Rm
           if (match.Success) line = match.Groups[1].Value.Trim();
         }
         if (!string.IsNullOrWhiteSpace(line))
+        {
           sb.AppendLine(line);
+          model.PointsSourse = line;
+        }
       }
 
       var pairs = RmExpressionParser.ParseAllExpressions(sb.ToString(), ref model);
@@ -36,7 +42,6 @@ namespace ControlCommandAnalyser.Parser.Rm
       foreach (var pair in pairs)
         model.PointsMap[pair.OkPoint] = pair.AskInput;
 
-      model.SourceLines = [.. lines.Where(l => !string.IsNullOrWhiteSpace(l))];
 
       return model;
     }

@@ -18,6 +18,11 @@ namespace ControlCommandAnalyser.Model
     public override string Mnemonic => "ИЕ";
 
     /// <summary>
+    /// Единицы измерения электрической ёмкости (например, "МОм", "кОм" и т.п.)
+    /// </summary>
+    public string? CapacityUnit { get; set; }
+
+    /// <summary>
     /// Нижняя граница значеня элктрической ёмкости в строке (например, "100<МОм")
     /// </summary>
     public string? LowerLimitCapacitySource { get; set; }

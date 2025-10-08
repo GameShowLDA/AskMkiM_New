@@ -4,10 +4,14 @@ using System.Reflection;
 
 namespace DataBaseConfiguration.Services.MeasurementError
 {
+  /// <summary>
+  /// Выполняет инициализацию таблицы MeasurementErrors начальными значениями.
+  /// </summary>
   internal static class MeasurementErrorSeeder
   {
     /// <summary>
-    /// Выполняет инициализацию записей MeasurementErrorEntity по умолчанию из атрибутов.
+    /// Выполняет инициализацию записей MeasurementErrorEntity с диапазонами погрешностей.
+    /// Если таблица уже содержит данные — инициализация не выполняется.
     /// </summary>
     /// <param name="context">Контекст базы данных.</param>
     public static void Seed(AppDbContext context)
@@ -17,6 +21,7 @@ namespace DataBaseConfiguration.Services.MeasurementError
 
       var defaults = new List<MeasurementErrorEntity>();
 
+      // Перебираем все значения перечисления TypeCommand
       foreach (var type in Enum.GetValues(typeof(TypeCommand)).Cast<TypeCommand>())
       {
         var member = typeof(TypeCommand).GetMember(type.ToString()).FirstOrDefault();
@@ -24,12 +29,33 @@ namespace DataBaseConfiguration.Services.MeasurementError
 
         if (attribute != null)
         {
-          defaults.Add(new MeasurementErrorEntity
+          // Если у команды в атрибуте задан диапазон — используем его
+          var entity = new MeasurementErrorEntity(type);
+
+          // Если у атрибута есть диапазон — создаём одну запись
+          if (attribute.DefaultMinRange.HasValue || attribute.DefaultMaxRange.HasValue)
           {
-            Type = type,
-            PercentageError = attribute.DefaultPercentage,
-            NumericError = attribute.DefaultNumeric
-          });
+            entity.Ranges.Add(new MeasurementErrorRangeEntity
+            {
+              MinValue = attribute.DefaultMinRange ?? 0,
+              MaxValue = attribute.DefaultMaxRange,
+              NumericError = attribute.DefaultNumeric,
+              PercentageError = attribute.DefaultPercentage
+            });
+          }
+          else
+          {
+            // Если диапазон не указан — добавляем один общий диапазон "от 0 до ∞"
+            entity.Ranges.Add(new MeasurementErrorRangeEntity
+            {
+              MinValue = 0,
+              MaxValue = null,
+              NumericError = attribute.DefaultNumeric,
+              PercentageError = attribute.DefaultPercentage
+            });
+          }
+
+          defaults.Add(entity);
         }
       }
 
@@ -37,7 +63,7 @@ namespace DataBaseConfiguration.Services.MeasurementError
       context.SaveChanges();
 
       Console.ForegroundColor = ConsoleColor.Yellow;
-      Console.WriteLine("🌿 MeasurementErrorSeeder: Записи успешно созданы из атрибутов.");
+      Console.WriteLine("🌿 MeasurementErrorSeeder: записи MeasurementErrorEntity и диапазоны успешно созданы из атрибутов.");
       Console.ResetColor();
     }
   }

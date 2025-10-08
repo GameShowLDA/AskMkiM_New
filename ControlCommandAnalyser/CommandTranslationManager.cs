@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
+using ControlCommandAnalyser.ComandBody;
 using ControlCommandAnalyser.Formatter;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Parser;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
 using Utilities.Errors;
 using Utilities.Models;
 using Utilities.TextEditor;
@@ -19,11 +22,13 @@ namespace ControlCommandAnalyser
   {
     private readonly List<ICommandParser> _parsers;
     private readonly List<ICommandFormatter> _formatters;
+    private readonly List<ICommandBody> _commandBodyBuilders;
 
     public CommandTranslationManager()
     {
       _parsers = GetAllParsers();
       _formatters = GetAllFormatters();
+      _commandBodyBuilders = GetAllCommandBuilders();
     }
 
     private static List<ICommandParser> GetAllParsers()
@@ -44,6 +49,16 @@ namespace ControlCommandAnalyser
         .GetTypes()
         .Where(t => !t.IsAbstract && iface.IsAssignableFrom(t))
         .Select(t => (ICommandFormatter)Activator.CreateInstance(t))
+        .ToList();
+    }
+
+    private static List<ICommandBody> GetAllCommandBuilders()
+    {
+      var iface = typeof(ICommandBody);
+      return Assembly.GetExecutingAssembly()
+        .GetTypes()
+        .Where(t => !t.IsAbstract && iface.IsAssignableFrom(t))
+        .Select(t => (ICommandBody)Activator.CreateInstance(t))
         .ToList();
     }
 
@@ -193,7 +208,7 @@ namespace ControlCommandAnalyser
     {
       AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Сбор данных...");
 
-      text = PreprocessText(text);
+      text = PkPreprocessor.PreprocessText(text);
       var lines = text.Replace("\r\n", "\n").Split('\n');
       var commands = new List<BaseCommandModel>();
 
@@ -220,6 +235,10 @@ namespace ControlCommandAnalyser
           {
             var model = ParseSingle(commandNumber, mnemonic, currentStartLine + 1, commandLines);
             model.StartLineNumber = currentStartLine + 1;
+            if(commands.Contains(commands.FirstOrDefault(c=>c.Mnemonic == mnemonic && c.CommandNumber == commandNumber)))
+            {
+              model.Errors.Add(GeneralErrors.CommandAlreadyExists(mnemonic, currentStartLine + 1, $"{commandNumber} {mnemonic}"));
+            }
             commands.Add(model);
             CommandsModel.CommandModels.Add(model);
           }
@@ -276,13 +295,106 @@ namespace ControlCommandAnalyser
       return unknownCommandModel;
     }
 
-    private string PreprocessText(string text)
+    public void SetSourseLines(List<BaseCommandModel> models)
     {
-      text = Regex.Replace(text, @"/\*.*?\*/", "", RegexOptions.Singleline);
-      text = Regex.Replace(text, @"//.*?$", "", RegexOptions.Multiline);
-      text = Regex.Replace(text, @"\{[^{}]*\}", "", RegexOptions.Multiline);
+      foreach (var model in models)
+      {
+        var newSourseLines = new StringBuilder();
+        var commandNumberProp = model.GetType().GetProperty("CommandNumber");
+        if (commandNumberProp != null)
+        {
+          var commandNumber = commandNumberProp.GetValue(model) as string;
+          if (commandNumber != null && !string.IsNullOrEmpty(commandNumber))
+          {
+            newSourseLines.Append($"{commandNumber} ");
+          }
+        }
+        var mnemonicProp = model.GetType().GetProperty("Mnemonic");
+        if (mnemonicProp != null)
+        {
+          var mnemonic = mnemonicProp.GetValue(model) as string;
+          if (mnemonic != null && !string.IsNullOrEmpty(mnemonic))
+          {
+            newSourseLines.Append($"{mnemonic}  ");
+          }
+        }
+        var algorithmKeyProp = model.GetType().GetProperty("AlgorithmKey");
+        if (algorithmKeyProp != null)
+        {
+          var algorithmKey = algorithmKeyProp.GetValue(model) as IEnumerable<string>;
+          if (algorithmKey != null)
+          {
+            var algorithmKeysList = algorithmKey.ToList();
+            for (int i = 0; i < algorithmKeysList.Count; i++)
+            {
+              if (!string.IsNullOrEmpty(algorithmKeysList[i]) && !string.IsNullOrWhiteSpace(algorithmKeysList[i]) && i < algorithmKeysList.Count - 1)
+              {
+                newSourseLines.Append($"{algorithmKeysList[i]}, ");
+              }
+              else
+              {
+                newSourseLines.Append($"{algorithmKeysList[i]} ");
+              }
+            }
+          }
+        }
+        var pointsLine = new StringBuilder();
+        var pointsLineProp = model.GetType().GetProperty("PointsSourse");
+        if (pointsLineProp != null)
+        {
+          var points = pointsLineProp.GetValue(model) as string;
+          if (points == null || string.IsNullOrEmpty(points))
+          {
+            points = string.Empty;
+          }
+          pointsLine.Append($"{points} ");
+        }
 
-      return text;
+        var commentsLine = new StringBuilder();
+        var commentsLineProp = model.GetType().GetProperty("Comment");
+        if (commentsLineProp != null)
+        {
+          var comments = commentsLineProp.GetValue(model) as IEnumerable<string>;
+          if (comments != null)
+          {
+            var commentsList = comments.ToList();
+            for (int i = 0; i < commentsList.Count; i++)
+            {
+              if (!string.IsNullOrEmpty(commentsList[i]) && !string.IsNullOrWhiteSpace(commentsList[i]) && i < commentsList.Count - 1)
+              {
+                commentsLine.Append($"{commentsList[i]}\n");
+              }
+              else
+              {
+                commentsLine.Append($"\t{commentsList[i]}\n");
+              }
+            }
+          }
+        }
+
+        var bodyCreator = _commandBodyBuilders.FirstOrDefault(f => f.CanCreate(model));
+        if(bodyCreator != null)
+        {
+          newSourseLines = bodyCreator.Create(model, newSourseLines);
+        }
+        else
+        {
+          foreach(var line in model.SourceLines)
+          {
+            newSourseLines.AppendLine(line);
+          }
+        }
+
+        model.SourceLines = new List<string> { newSourseLines.ToString() };
+        if (!string.IsNullOrEmpty(pointsLine.ToString()) && !string.IsNullOrWhiteSpace(pointsLine.ToString()))
+        {
+          model.SourceLines.Add($"\t{pointsLine.ToString()}");
+        }
+        if (!string.IsNullOrEmpty(commentsLine.ToString()) && !string.IsNullOrWhiteSpace(commentsLine.ToString()))
+        {
+          model.SourceLines.Add($"{commentsLine.ToString()}");
+        }
+      }
     }
   }
 

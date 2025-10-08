@@ -30,7 +30,14 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
       {
         string value = match.Groups["val"].Value;
         string unit = match.Groups["unit"].Value;
-        string remainder = input.Remove(match.Index, match.Length).Trim(' ', ',');
+        // удаляем найденный фрагмент вместе с запятой и пробелами после него
+        var remainder = Regex.Replace(
+            input,
+            $@"\b{Regex.Escape(match.Value)}\s*,?",
+            "",
+            RegexOptions.IgnoreCase
+        ).Trim();
+
 
         return (value, unit, remainder);
       }

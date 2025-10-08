@@ -51,13 +51,15 @@ namespace ControlCommandAnalyser.Parser.Ie
         }
       }
 
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
       // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
       model.SourceLines = model.SourceLines
         .Where(l => !string.IsNullOrWhiteSpace(l))
         .ToList();
 
       // Склеиваем всё в одну строку и удаляем \r \n \t
-      var body = string.Concat(model.SourceLines)
+      var body = string.Concat(processedLines.Count > 0 && processedLines.FindAll(l => string.IsNullOrEmpty(l) || string.IsNullOrWhiteSpace(l)).Count == 0 ?
+        processedLines : model.SourceLines)
         .Replace("\r", "")
         .Replace("\n", "")
         .Replace("\t", "");
@@ -105,9 +107,9 @@ namespace ControlCommandAnalyser.Parser.Ie
 
       if (lowerLimitCapacity != null)
       {
-        if (string.IsNullOrEmpty(lowerLimitCapacity) && string.IsNullOrEmpty(higherLimitCapacity))
+        if (string.IsNullOrEmpty(lowerLimitCapacity))
         {
-          model.Errors.Add(IeErrors.EmptyCapacity(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(IeErrors.EmptyLowerCapacity(numberLine, $"{commandNumber} {mnemonic}"));
           LoggerUtility.LogWarning($"Не указана электрическая емкость (строка {numberLine}): {commandNumber} {mnemonic}");
           if (!string.IsNullOrEmpty(remainder))
           {
@@ -118,25 +120,53 @@ namespace ControlCommandAnalyser.Parser.Ie
           return model;
         }
         model.LowerLimitCapacitySource = lowerLimitCapacity;
-        model.HigherLimitCapacitySource = higherLimitCapacity;
+        if (!string.IsNullOrEmpty(higherLimitCapacity))
+        {
+          model.HigherLimitCapacitySource = higherLimitCapacity;
+        }
+        else
+        {
+          model.HigherLimitCapacitySource = string.Empty;
+        }
+        model.CapacityUnit = string.IsNullOrEmpty(unit) ? string.Empty : unit;
       }
       else
       {
         LoggerUtility.LogError($"В команде ИЕ не указана нижняя граница электрической ёмкости.");
-        model.Errors.Add(IeErrors.EmptyCapacity(numberLine, $"{commandNumber} {mnemonic}"));
+        model.Errors.Add(IeErrors.EmptyLowerCapacity(numberLine, $"{commandNumber} {mnemonic}"));
       }
 
-
-      if (!string.IsNullOrWhiteSpace(model.LowerLimitCapacitySource) && model.LowerLimitCapacitySource != null)
+      if (model.HigherLimitCapacitySource != null &&
+        !string.IsNullOrEmpty(model.HigherLimitCapacitySource) && model.LowerLimitCapacitySource != null &&
+        !string.IsNullOrEmpty(model.LowerLimitCapacitySource) &&
+        CommonParameterParser.ParseToDouble(model.LowerLimitCapacitySource) >= CommonParameterParser.ParseToDouble(model.HigherLimitCapacitySource))
       {
-        model.LowerLimitCapacity = CommonParameterParser.ParseToDouble(model.LowerLimitCapacitySource);
-        model.LowerLimitCapacitySource += " " + unit;
+        LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше верхней границы сопротивления.");
+        model.Errors.Add(KsErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}"));
+
       }
-
-      if (!string.IsNullOrWhiteSpace(model.HigherLimitCapacitySource) && model.HigherLimitCapacitySource != null)
+      else
       {
-        model.HigherLimitCapacity= CommonParameterParser.ParseToDouble(model.HigherLimitCapacitySource);
-        model.HigherLimitCapacitySource += " " + unit;
+        if (!string.IsNullOrWhiteSpace(model.LowerLimitCapacitySource) && model.LowerLimitCapacitySource != null)
+        {
+          model.LowerLimitCapacity = CommonParameterParser.ParseToDouble(model.LowerLimitCapacitySource);
+          model.LowerLimitCapacitySource += " " + unit;
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.HigherLimitCapacitySource) && model.HigherLimitCapacitySource != null)
+        {
+          model.HigherLimitCapacity = CommonParameterParser.ParseToDouble(model.HigherLimitCapacitySource);
+          model.HigherLimitCapacitySource += " " + unit;
+        }
+
+        if (!string.IsNullOrEmpty(unit))
+        {
+          model.CapacityUnit = unit;
+        }
+        else
+        {
+          model.CapacityUnit = string.Empty;
+        }
       }
 
       if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitCapacity ?? higherLimitCapacity, out string err))
@@ -149,7 +179,7 @@ namespace ControlCommandAnalyser.Parser.Ie
       //var schemeModel = new SchemeModel(new List<ChainModel>());
       // --- новый разбор блока точек между первой и последней '*' во всём теле команды ---
       // Собираем всё тело команды (включая последующие строки), убираем все пробельные символы
-      string bodyNoWs = string.Concat(lines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
+      string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
 
       // Ищем первую и последнюю '*'
       int firstStar = bodyNoWs.IndexOf('*');
@@ -159,6 +189,7 @@ namespace ControlCommandAnalyser.Parser.Ie
       {
         // Выделяем блок точек (включительно) — PointParser сам Trim('*')
         string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
+        model.PointsSourse = pointsBlob;
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);

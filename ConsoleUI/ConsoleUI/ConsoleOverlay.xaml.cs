@@ -5,6 +5,8 @@ using System.Windows.Input;
 using ConsoleUI.ConsoleCommanding.Engine;
 using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace ConsoleUI.ConsoleUI
 {
@@ -22,11 +24,17 @@ namespace ConsoleUI.ConsoleUI
     private bool _isPasswordMode = false;
     private StringBuilder _passwordBuffer = new();
 
-    public ConsoleOverlay()
+    private bool _splitViewEnabled = false;
+    private Grid? _splitRoot;
+    private StackPanel? _uiCol;
+    private StackPanel? _devCol;
+
+    public ConsoleOverlay() : this(false) { }
+
+    public ConsoleOverlay(bool startSplit)
     {
       InitializeComponent();
 
-      // Инициализация консольной логики
       var writer = new ConsoleWriterAdapter();
       var factory = new CommandFactory();
       var commands = factory.CreateAll(writer);
@@ -34,13 +42,15 @@ namespace ConsoleUI.ConsoleUI
       ConsoleTextManager.Instance.Append("[DEBUG] Handler инициализирован, команд: " + commands.Count);
       _manager = new ConsoleManager(writer, _handler);
 
-      // Подписка на вывод
+      if (startSplit)
+      {
+        _splitViewEnabled = true;
+        BuildSplitViewIfNeeded();
+      }
       ConsoleTextManager.Instance.Subscribe(AppendLogEntry);
       Loaded += (_, _) => CommandInput.Focus();
       Closed += (_, _) => ConsoleTextManager.Instance.Unsubscribe(AppendLogEntry);
 
-      // Перехватываем Alt+F4, чтобы окно закрывалось,
-      // а не пробовало скрыться через Toggle
       this.PreviewKeyDown += (_, e) =>
       {
         if (e.Key == Key.F4 && (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
@@ -59,20 +69,49 @@ namespace ConsoleUI.ConsoleUI
         return;
       }
 
-      var block = new TextBlock
+      if (_splitViewEnabled)
       {
-        Text         = entry.Text,
-        Foreground   = entry.Color,
-        FontFamily   = new System.Windows.Media.FontFamily("Consolas"),
-        FontSize     = 14,
+        BuildSplitViewIfNeeded();
+
+        var block = new TextBlock
+        {
+          Text = entry.Text,
+          Foreground = entry.Color,
+          FontFamily = new FontFamily("Consolas"),
+          FontSize = 14,
+          TextWrapping = TextWrapping.Wrap,
+          Margin = new Thickness(0, 2, 0, 2)
+        };
+
+        if (TryClassify(entry, out bool isDevice))
+        {
+          if (isDevice)
+            _devCol!.Children.Add(block);
+          else
+            _uiCol!.Children.Add(block);
+        }
+        else
+        {
+          block.Opacity = 0.8;
+          _uiCol!.Children.Add(block);
+        }
+
+        ConsoleScroll.ScrollToEnd();
+        return;
+      }
+      var normal = new TextBlock
+      {
+        Text = entry.Text,
+        Foreground = entry.Color,
+        FontFamily = new FontFamily("Consolas"),
+        FontSize = 14,
         TextWrapping = TextWrapping.Wrap,
-        Margin       = new Thickness(0, 2, 0, 2)
+        Margin = new Thickness(0, 2, 0, 2)
       };
 
-      ConsolePanel.Children.Add(block);
+      ConsolePanel.Children.Add(normal);
       ConsoleScroll.ScrollToEnd();
     }
-
 
     private async void CommandInput_KeyDown(object sender, KeyEventArgs e)
     {
@@ -155,6 +194,89 @@ namespace ConsoleUI.ConsoleUI
       }
     }
 
+    private static bool TryClassify(string text, out bool isDevice)
+    {
+      var t = text ?? string.Empty;
+
+      if (t.Contains("_Device", StringComparison.OrdinalIgnoreCase) ||
+          t.Contains("[DEVICE]", StringComparison.OrdinalIgnoreCase) ||
+          Regex.IsMatch(t, @"(^|[\s;\[\]])Device([;\]\s]|$)", RegexOptions.IgnoreCase) ||
+          Regex.IsMatch(t, @"logger\s*=\s*.+_Device", RegexOptions.IgnoreCase))
+      { isDevice = true; return true; }
+
+      if (t.Contains("_UI", StringComparison.OrdinalIgnoreCase) ||
+          t.Contains("[UI]", StringComparison.OrdinalIgnoreCase) ||
+          Regex.IsMatch(t, @"(^|[\s;\[\]])UI([;\]\s]|$)", RegexOptions.IgnoreCase) ||
+          Regex.IsMatch(t, @"logger\s*=\s*.+_UI", RegexOptions.IgnoreCase))
+      { isDevice = false; return true; }
+
+      isDevice = false;
+      return false;
+    }
+
+    private static bool TryClassify(LogEntry e, out bool isDevice) =>
+      TryClassify(e?.Text ?? string.Empty, out isDevice);
+
+
+    private void BuildSplitViewIfNeeded()
+    {
+      if (_splitRoot != null) return;
+
+      ConsolePanel.Children.Clear();
+
+      _splitRoot = new Grid { Margin = new Thickness(0) };
+      _splitRoot.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+      _splitRoot.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+      _splitRoot.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+      _splitRoot.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+      _splitRoot.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+      var uiHeader = new TextBlock
+      {
+        Text = "UI LOGS",
+        FontFamily = new FontFamily("Consolas"),
+        FontSize = 16,
+        FontWeight = FontWeights.Bold,
+        Foreground = Brushes.DodgerBlue,
+        Margin = new Thickness(0, 0, 0, 6),
+        TextAlignment = TextAlignment.Center
+      };
+      Grid.SetRow(uiHeader, 0); Grid.SetColumn(uiHeader, 0);
+
+      var devHeader = new TextBlock
+      {
+        Text = "DEVICE LOGS",
+        FontFamily = new FontFamily("Consolas"),
+        FontSize = 16,
+        FontWeight = FontWeights.Bold,
+        Foreground = Brushes.OrangeRed,
+        Margin = new Thickness(0, 0, 0, 6),
+        TextAlignment = TextAlignment.Center
+      };
+      Grid.SetRow(devHeader, 0); Grid.SetColumn(devHeader, 2);
+
+      var divider = new Border
+      {
+        Width = 1,
+        Background = new SolidColorBrush(Color.FromRgb(70, 70, 70)),
+        Margin = new Thickness(8, 0, 8, 0)
+      };
+      Grid.SetRow(divider, 0); Grid.SetRowSpan(divider, 2); Grid.SetColumn(divider, 1);
+
+      _uiCol = new StackPanel { Orientation = Orientation.Vertical };
+      _devCol = new StackPanel { Orientation = Orientation.Vertical };
+      Grid.SetRow(_uiCol, 1); Grid.SetColumn(_uiCol, 0);
+      Grid.SetRow(_devCol, 1); Grid.SetColumn(_devCol, 2);
+
+      _splitRoot.Children.Add(uiHeader);
+      _splitRoot.Children.Add(divider);
+      _splitRoot.Children.Add(devHeader);
+      _splitRoot.Children.Add(_uiCol);
+      _splitRoot.Children.Add(_devCol);
+
+      ConsolePanel.Children.Add(_splitRoot);
+    }
+
     private void CommandInput_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
       if (_isPasswordMode)
@@ -198,6 +320,12 @@ namespace ConsoleUI.ConsoleUI
 
     public void ClearConsoleUI()
     {
+      if (_splitViewEnabled && _uiCol != null && _devCol != null)
+      {
+        _uiCol.Children.Clear();
+        _devCol.Children.Clear();
+        return;
+      }
       ConsolePanel.Children.Clear();
     }
 

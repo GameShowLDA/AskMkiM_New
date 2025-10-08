@@ -57,11 +57,13 @@ namespace MainWindowProgram.Engine
     {
       try
       {
-        var executionTask = ExecutionSettingsManager.ReadExecutionModeAsync();
+        //var executionTask = ExecutionSettingsManager.ReadExecutionModeAsync();
         //var protocolTask = ProtocolSettingsManager.ReadProtocolModeAsync();
         await DataBaseConfig.InitializeDB();
 
         var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
+        var executionTask = new DataBaseConfiguration.Services.Settings.ExecutionService().GetExecutionAsync();
+
         var parameterTask = ParameterSettingsManager.ReadParameterModeAsync();
         await Task.WhenAll(executionTask, protocolTask, parameterTask);
 
@@ -71,6 +73,11 @@ namespace MainWindowProgram.Engine
           Utilities.ResultProtocol.ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
         }
 
+        if (executionTask.Result != null)
+        {
+          await ExecutionConfig.SetExecutionModel(executionTask.Result);
+        }
+
         ProtocolConfig.SaveProtocolEvent += async (model) =>
         {
           var service = new DataBaseConfiguration.Services.Settings.ProtocolService();
@@ -78,7 +85,11 @@ namespace MainWindowProgram.Engine
           Utilities.ResultProtocol.ProtocolModel.SetTemplate(model.CleanTextProtocol);
         };
 
-
+        ExecutionConfig.SaveExecutionEvent += async (model) =>
+        {
+          var service = new DataBaseConfiguration.Services.Settings.ExecutionService();
+          await service.SaveExecutionAsync(model);
+        };
 
         await ThemeSettingsManager.ReadThemeModeAsync();
       }

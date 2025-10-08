@@ -31,6 +31,17 @@ namespace ControlCommandAnalyser.Formatter
       else
         yield return $"\tПереходная метка не указана!";
 
+      if (up.Comment.Count > 0)
+      {
+        yield return $"\tКомметрии:";
+        foreach (var line in up.Comment)
+        {
+          var trimmed = line.Trim();
+          if (!string.IsNullOrEmpty(trimmed))
+            yield return $"\t\t{trimmed}";
+        }
+      }
+
       yield return string.Empty;
     }
   }

@@ -114,5 +114,38 @@ namespace AppConfiguration.Error.Translation
     };
 
 
+    /// <summary>
+    /// Ошибка: нижняя граница сопротивления больше верхней границы сопротивления.
+    /// </summary>
+    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = ErrorCode.Pr_ResistanceLimitsConflict,
+      Description = "Нижняя граница сопротивления больше верхней границы сопротивления."
+    };
+
+
+    /// <summary>
+    /// Ошибка: верхняя граница сопротивления больше максимально допустимой границы сопротивления.
+    /// </summary>
+    public static ErrorItem ResistanceMaxLimitsConflict(int startLineNumber, string command, int maxResistance) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = ErrorCode.Pr_ResistanceMaxLimitsConflict,
+      Description = $"Верхняя граница сопротивления больше максимально допустимой границы сопротивления({maxResistance})."
+    };
+
+    /// <summary>
+    /// Ошибка: не удалось распознать параметры (напряжение, сопротивление, время).
+    /// </summary>
+    public static ErrorItem CannotParseParameters(string parameters, int startLineNumber, string command) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = ErrorCode.Pr_CannotParseParameters,
+      Description = $"Не удалось распознать параметры: {parameters}"
+    };
   }
 }

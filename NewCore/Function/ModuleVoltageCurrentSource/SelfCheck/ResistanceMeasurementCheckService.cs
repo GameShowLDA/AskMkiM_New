@@ -79,7 +79,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
         await SetCurrentAsync(powerSource, integerPart, decimalPart);
         await ConnectResistorByNumberAsync(relayModule, resistorNumber, messageService);
 
-        var error = ErrorProviderLocator.Provider.GetErrorParameters(TypeCommand.PR);
+        var error = ErrorProviderLocator.Provider.GetErrorParameters(TypeCommand.PR, resistance);
 
         double firstNorm = resistance - ((resistance / 100.0 * error.Percent) + error.Numeric);
         double lastNorm = resistance + ((resistance / 100.0 * error.Percent) + error.Numeric);

@@ -1,12 +1,4 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AppConfiguration.Execution
+﻿namespace AppConfiguration.Execution
 {
   /// <summary>
   /// Класс конфигурации выполнений режимов для <see cref="ExecutionConfig"/>.
@@ -15,6 +7,8 @@ namespace AppConfiguration.Execution
   /// </summary>
   public static class ExecutionConfig
   {
+    static public Action<ExecutionModel> SaveExecutionEvent;
+
     static ExecutionModel ExecutionModel = new ExecutionModel();
 
     /// <summary>
@@ -74,6 +68,14 @@ namespace AppConfiguration.Execution
       });
     }
 
+    public static async Task SetExecutionModel(ExecutionModel protocolModel)
+    {
+      await Task.Run(() =>
+      {
+        ExecutionModel = protocolModel;
+      });
+    }
+
     #endregion
 
     #region Get.
@@ -116,30 +118,17 @@ namespace AppConfiguration.Execution
     }
     #endregion
 
-    public static async Task SaveProtocolModel(ExecutionModel protocolModel)
+    public static async Task SaveExecutionModel(ExecutionModel execution)
     {
-      await SetIdleMode(protocolModel.IdleModeExecution);
-      await SetIsErrorSimulationMode(protocolModel.IsErrorSimulationMode);
-      await SetStepByStepMode(protocolModel.StepByStepMode);
-      await SetStopOnError(protocolModel.StopOnError);
+      await Task.Run(() =>
+      {
+        ExecutionModel.IdleModeExecution = execution.IdleModeExecution;
+        ExecutionModel.IsErrorSimulationMode = execution.IsErrorSimulationMode;
+        ExecutionModel.StepByStepMode = execution.StepByStepMode;
+        ExecutionModel.StopOnError = execution.StopOnError;
+      });
 
-      await RewriteExecutionConfigAsync();
-    }
-
-    /// <summary>
-    /// Перезаписывает конфигурацию выполнений.
-    /// </summary>
-    /// <returns></returns>
-    public static async Task RewriteExecutionConfigAsync()
-    {
-      ExecutionModel executionModel = new ExecutionModel();
-      executionModel.IdleModeExecution = ExecutionModel.IdleModeExecution;
-      executionModel.StopOnError = ExecutionModel.StopOnError;
-      executionModel.IsErrorSimulationMode = ExecutionModel.IsErrorSimulationMode;
-      executionModel.StepByStepMode = ExecutionModel.StepByStepMode;
-
-      ExecutionFileManager executionFileManager = new ExecutionFileManager(FileLocations.ExecutionConfigPath);
-      await executionFileManager.RewriteFileAsync(executionModel);
+      SaveExecutionEvent?.Invoke(execution);
     }
   }
 }

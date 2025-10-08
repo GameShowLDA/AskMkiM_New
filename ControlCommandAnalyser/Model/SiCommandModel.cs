@@ -9,7 +9,10 @@ namespace ControlCommandAnalyser.Model
   /// <summary>
   /// Модель для команды СИ (сопротивление изоляции).
   /// </summary>
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К, /*ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П, ControlCommandAnalyser.AlgorithmKey.И,*/
+  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
+    ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П, 
+     ControlCommandAnalyser.AlgorithmKey.Т, 
+      ControlCommandAnalyser.AlgorithmKey.И,
     ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
   public class SiCommandModel : BaseCommandModel, IHasScheme
   {
@@ -20,6 +23,11 @@ namespace ControlCommandAnalyser.Model
     /// </summary>
     public string? VoltageSource { get; set; }
     public double? Voltage { get; set; }
+
+    /// <summary>
+    /// Единицы измерения сопротивления (например, "МОм", "кОм" и т.п.)
+    /// </summary>
+    public string? ResistanceUnit { get; set; }
 
     /// <summary>
     /// Значение сопротивления (например, "100<МОм").

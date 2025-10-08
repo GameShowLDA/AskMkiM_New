@@ -56,13 +56,15 @@ namespace ControlCommandAnalyser.Parser.Kc
         }
       }
 
+      List<string> processedLines = CommentsParser.ParseComments(lines, model);
       // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
       model.SourceLines = model.SourceLines
         .Where(l => !string.IsNullOrWhiteSpace(l))
         .ToList();
 
       // Склеиваем всё в одну строку и удаляем \r \n \t
-      var body = string.Concat(model.SourceLines)
+      var body = string.Concat(processedLines.Count > 0 && processedLines.FindAll(l => string.IsNullOrEmpty(l) || string.IsNullOrWhiteSpace(l)).Count == 0 ?
+        processedLines : model.SourceLines)
         .Replace("\r", "")
         .Replace("\n", "")
         .Replace("\t", "");
@@ -105,6 +107,8 @@ namespace ControlCommandAnalyser.Parser.Kc
         RegexOptions.IgnoreCase);
       }
 
+      //TODO: проверить верхнюю и нижнюю границу сопротивления. Привести к системе СИ
+
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRange(remainder);
       LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
 
@@ -120,30 +124,54 @@ namespace ControlCommandAnalyser.Parser.Kc
         }
         return model;
       }
-
-      model.LowerLimitResistanceSource = lowerLimitResistance;
-      model.HigherLimitResistanceSource = higherLimitResistance;
-
-      if (!string.IsNullOrWhiteSpace(model.LowerLimitResistanceSource))
+      else
       {
-        model.LowerLimitResistance = CommonParameterParser.ParseToDouble(model.LowerLimitResistanceSource);
-        model.LowerLimitResistanceSource += " " + unit;
+        model.HigherLimitResistanceSource = higherLimitResistance;
+        model.LowerLimitResistanceSource = lowerLimitResistance;
+      }
+
+      if (model.HigherLimitResistanceSource != null &&
+        !string.IsNullOrEmpty(model.HigherLimitResistanceSource) && model.LowerLimitResistanceSource != null &&
+        !string.IsNullOrEmpty(model.LowerLimitResistanceSource) &&
+        CommonParameterParser.ParseToDouble(model.LowerLimitResistanceSource) >= CommonParameterParser.ParseToDouble(model.HigherLimitResistanceSource))
+      {
+        LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше верхней границы сопротивления.");
+        model.Errors.Add(KsErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}"));
+        model.HigherLimitResistanceSource = null;
+        model.LowerLimitResistanceSource = null;
       }
       else
       {
-        model.LowerLimitResistance = 0;
-        model.LowerLimitResistanceSource = $"0 Ом";
-      }
+        if (!string.IsNullOrWhiteSpace(model.LowerLimitResistanceSource))
+        {
+          model.LowerLimitResistance = CommonParameterParser.ParseToDouble(model.LowerLimitResistanceSource);
+          model.LowerLimitResistanceSource += " " + unit;
+        }
+        else
+        {
+          model.LowerLimitResistance = 0;
+          model.LowerLimitResistanceSource = $"0 Ом";
+        }
 
-      if (!string.IsNullOrWhiteSpace(model.HigherLimitResistanceSource))
-      {
-        model.HigherLimitResistance = CommonParameterParser.ParseToDouble(model.HigherLimitResistanceSource);
-        model.HigherLimitResistanceSource += " " + unit;
-      }
-      else
-      {
-        model.HigherLimitResistance = 10000000;
-        model.HigherLimitResistanceSource = $"10000000 Ом";
+        if (!string.IsNullOrWhiteSpace(model.HigherLimitResistanceSource))
+        {
+          model.HigherLimitResistance = CommonParameterParser.ParseToDouble(model.HigherLimitResistanceSource);
+          model.HigherLimitResistanceSource += " " + unit;
+        }
+        else
+        {
+          model.HigherLimitResistance = 10000000;
+          model.HigherLimitResistanceSource = $"10000000 Ом";
+        }
+
+        if (!string.IsNullOrEmpty(unit))
+        {
+          model.ResistanceUnit = unit;
+        }
+        else
+        {
+          model.ResistanceUnit = string.Empty;
+        }
       }
 
       if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitResistance ?? higherLimitResistance, time, out string err))
@@ -153,7 +181,7 @@ namespace ControlCommandAnalyser.Parser.Kc
         return model;
       }
 
-      string bodyNoWs = string.Concat(lines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
+      string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
 
       // Ищем первую и последнюю '*'
       int firstStar = bodyNoWs.IndexOf('*');
@@ -163,6 +191,7 @@ namespace ControlCommandAnalyser.Parser.Kc
       {
         // Выделяем блок точек (включительно) — PointParser сам Trim('*')
         string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
+        model.PointsSourse = pointsBlob;
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);

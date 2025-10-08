@@ -87,6 +87,10 @@ namespace Utilities.Errors
     [ErrorCodeTag("GEN017")]
     Gen_VoltageConflict,
 
+    /// <summary> Команда с указанной мнемоникой и номером уже существует. </summary>
+    [ErrorCodeTag("GEN018")]
+    Gen_CommandAlreadyExists,
+
     #endregion
 
     #region Режим УМ
@@ -295,13 +299,17 @@ namespace Utilities.Errors
     [ErrorCodeTag("KS008")]
     Ks_PairError,
 
+    /// <summary> В команде КС нижняя граница сопротивления больше верхней границы сопротивления. </summary>
+    [ErrorCodeTag("KS009")]
+    Ks_CapacityLimitsConflict,
+
     #endregion
 
     #region Режим ИЕ
 
     /// <summary> Не указаны границы емкости для команды ИЕ. </summary>
     [ErrorCodeTag("IE001")]
-    Ie_EmptyCapacity,
+    Ie_EmptyLowerCapacity,
 
     /// <summary> Не удалось корректно разобрать параметры команды ИЕ. </summary>
     [ErrorCodeTag("IE002")]
@@ -355,6 +363,18 @@ namespace Utilities.Errors
     /// <summary> В команде ПР отсутствует список точек. </summary>
     [ErrorCodeTag("PR0011")]
     Pr_EmptyResistance,
+
+    /// <summary> В команде ПР нижняя граница сопротивления больше верхней границы сопротивления. </summary>
+    [ErrorCodeTag("PR0012")]
+    Pr_ResistanceLimitsConflict,
+
+    /// <summary> В команде ПР не удалось распознать параметры. </summary>
+    [ErrorCodeTag("PR0013")]
+    Pr_CannotParseParameters,
+
+    /// <summary> В команде ПР верхняя граница сопротивления больше максимально допустимой границы сопротивления.  </summary>
+    [ErrorCodeTag("PR0014")]
+    Pr_ResistanceMaxLimitsConflict,
     #endregion
 
     #region Ключи команд
