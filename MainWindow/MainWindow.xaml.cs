@@ -94,9 +94,9 @@ namespace MainWindowProgram
 
       try
       {
-        await Task.Run(async () =>
+        await Task.Run(() =>
         {
-          await applicationInitializer.InitializeAsync();
+          applicationInitializer.InitializeAsync();
         });
 
         await this.Dispatcher.InvokeAsync(() =>
