@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <div class="admin-panel">
+        <div class="cards">
+            <div class="card">
+                <h3>База данных</h3>
+                <p>Просмотр таблиц и данных.</p>
+                <button class="btn-blue">Открыть</button>
+            </div>
+
+            <div class="card">
+                <h3>Оборудование</h3>
+                <p>Мониторинг и настройка подключений.</p>
+                <button class="btn-green" onclick="window.location.href='/html/devices/equipment.html'">
+                    Открыть
+                </button>
+            </div>
+
+            <div class="card">
+                <h3>Логирование</h3>
+                <p>Просмотр системных журналов.</p>
+                <button class="btn-orange">Открыть</button>
+            </div>
+            <div class="card">
+                <h3>Параметры</h3>
+                <p>Изменение конфигурации системы.</p>
+                <button class="btn-purple">Открыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function logout() {
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/html/login.html";
+        }
+    </script>
+</body>
+</html>

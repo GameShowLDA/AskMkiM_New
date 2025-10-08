@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlCommandExecutor", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message", "Message\Message.csproj", "{2C6A71AB-CB30-444C-9F79-9F013BC46D5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminHost", "AdminHost\AdminHost.csproj", "{A6314A42-5BAD-467A-BC3D-A41ED2B3E31A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,10 @@ Global
 		{2C6A71AB-CB30-444C-9F79-9F013BC46D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C6A71AB-CB30-444C-9F79-9F013BC46D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C6A71AB-CB30-444C-9F79-9F013BC46D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6314A42-5BAD-467A-BC3D-A41ED2B3E31A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6314A42-5BAD-467A-BC3D-A41ED2B3E31A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6314A42-5BAD-467A-BC3D-A41ED2B3E31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6314A42-5BAD-467A-BC3D-A41ED2B3E31A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

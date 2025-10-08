@@ -11,10 +11,13 @@
 		<PackageOutputPath>$(OutputPath)</PackageOutputPath>
 		<OutputPath>D:\AskMkiM\Bin\</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 
-		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier></RuntimeIdentifier>
+		<SelfContained>false</SelfContained>
 		<PublishTrimmed>false</PublishTrimmed>
-		<PublishDir>$(OutputPath)publish\</PublishDir>
+		<PublishDir>$(OutputPath)</PublishDir>
+
 	</PropertyGroup>
 
 
