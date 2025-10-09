@@ -1,6 +1,6 @@
 ﻿using AppConfiguration.Error.DataBase;
 using DataBaseConfiguration.Models.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.PowerSourceModule;
 
 namespace DataBaseConfiguration.Services.Device
 {

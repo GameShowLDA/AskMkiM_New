@@ -1,11 +1,17 @@
-﻿using AppConfiguration;
-using DataBaseConfiguration.Services;
-using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using AppConfiguration;
+using DataBaseConfiguration.Services.Device;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PrecisionMeter;
+using DTO.Device.Rack;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 
 namespace UI.Controls.Settings.DeviceConfig.Controls
 {

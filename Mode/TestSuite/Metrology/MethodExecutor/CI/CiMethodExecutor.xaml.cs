@@ -1,9 +1,8 @@
 ﻿using System.Windows.Controls;
 using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
-using AppConfiguration.Execution;
+using DTO.Device.Breakdown;
 using Mode.Base;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
@@ -116,7 +115,6 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
           await protocolUI.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
 
           var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, protocolUI);
-          var pause = false;
           var type = ShowMessageModel.MessageType.Success;
           if (answer < dataModel.Param)
           {

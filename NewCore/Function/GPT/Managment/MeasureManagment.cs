@@ -1,5 +1,4 @@
-﻿using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
 using NewCore.Function.GPT.Command;
 using NewCore.Function.GPT.Helper;

@@ -1,11 +1,6 @@
-﻿using System.Net;
-using DTO.Device.Base;
-using NewCore.Base.Device;
+﻿using DTO.Device.Base;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
-using NewCore.Device;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
 

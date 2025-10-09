@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Interface.Main;
-using static DTO.Enum.DeviceEnums;
-using static Utilities.LoggerUtility;
-using NewCore.Base.DeviceResponses;
-using System.Text.Json;
-using Utilities.Models;
-using AppConfiguration.Enums;
+﻿using AppConfiguration.Enums;
 using AppConfiguration.MeasurementError;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.SwitchingDevice;
 using Utilities.Interface;
+using Utilities.Models;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {
@@ -86,13 +80,13 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 
         var voltage = await fastMeter.DcVoltageManager.MeasureDCVoltageAsync(resistance, messageService);
         double result = resistance;
-        
+
         if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
         {
           result = voltage / currentAmps;
         }
 
-        ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения сопротивления ({firstNorm:F2}-{lastNorm:F2})", 
+        ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения сопротивления ({firstNorm:F2}-{lastNorm:F2})",
           message: $"{result:F2}",
           type: (result >= firstNorm && result <= lastNorm) ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error
           );
@@ -124,7 +118,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     static private async Task ConnectBlockingRelaysAsync(ISwitchingDevice relayModule, IUserMessageService messageService)
     {
       await messageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Подключение блокировочных реле на УКШ."));
-      var relays = relayModule.SelfTestManager.GetValidBusContacts(Base.Function.DBC.TypeConnector.BlockingRelay, messageService);
+      var relays = relayModule.SelfTestManager.GetValidBusContacts(SwitchingDeviceTypeConnector.BlockingRelay, messageService);
       foreach (var item in relays)
       {
         var result = await relayModule.RelayManager.ConnectRelay(item, messageService);

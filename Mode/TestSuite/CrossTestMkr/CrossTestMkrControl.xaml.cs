@@ -1,12 +1,11 @@
-﻿using DataBaseConfiguration.Services.Device;
-using Mode.Base;
-using NewCore.Base.Interface.Main;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
-using UI.Controls.ProtocolNew;
+using DataBaseConfiguration.Services.Device;
+using DTO.Device.RelaySwitchModule;
+using Mode.Base;
 using Utilities.Help;
 using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 using static Utilities.Models.ShowMessageModel;
 

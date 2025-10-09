@@ -4,16 +4,17 @@ using AppConfiguration.Enums;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using Utilities.Interface;
 using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
 
@@ -133,7 +134,7 @@ namespace Mode.Metrology.PR
       public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
-       
+
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => fastMeter.DcVoltageManager.SetDCVoltageModeAsync(messageService), messageService))
           throw DcExceptionFactory.SetModeFailed(fastMeter.Name, fastMeter.NumberChassis, fastMeter.Number);
       }

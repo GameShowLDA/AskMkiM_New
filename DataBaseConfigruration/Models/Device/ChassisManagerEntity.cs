@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using NewCore.Base.Device;
-using NewCore.Base.Function.ManagerChassis;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
-using NewCore.Enum;
+using DTO.Device.Base;
+using DTO.Device.Chassis;
+using DTO.Device.Chassis.Capabilities;
+using static DTO.Enum.DeviceEnums;
 
 namespace DataBaseConfiguration.Models.Device
 {
@@ -29,14 +27,10 @@ namespace DataBaseConfiguration.Models.Device
     public string ConnectionDetails { get; set; }
 
     /// <inheritdoc />
-    public DeviceEnum.DeviceType DeviceType => DeviceEnum.DeviceType.ChassisManager;
+    public DeviceType DeviceType => DeviceType.ChassisManager;
 
     /// <inheritdoc />
     public string DeviceClass { get; set; }
-
-    /// <inheritdoc />
-    [NotMapped]
-    public IStateManagerChassis StateManager { get; set; }
 
     /// <inheritdoc />
     [NotMapped]

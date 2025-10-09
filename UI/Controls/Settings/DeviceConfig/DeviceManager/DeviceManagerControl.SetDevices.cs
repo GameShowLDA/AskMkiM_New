@@ -1,5 +1,6 @@
 ﻿using DataBaseConfiguration.Models;
 using DataBaseConfiguration.Models.Device;
+using DTO.Device.Base;
 using NewCore.Base.Device;
 
 namespace UI.Controls.Settings.DeviceConfig.DeviceManager

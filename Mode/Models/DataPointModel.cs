@@ -1,4 +1,5 @@
-﻿using NewCore.Base.Interface.Main;
+﻿using DTO.Device.Chassis;
+using DTO.Device.RelaySwitchModule;
 using UI.Components.Invoke;
 using Utilities.Models;
 

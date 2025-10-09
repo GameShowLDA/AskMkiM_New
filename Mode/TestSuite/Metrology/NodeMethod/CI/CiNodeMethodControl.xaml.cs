@@ -1,9 +1,9 @@
 ﻿using System.Windows.Controls;
-using System.Xml.Linq;
 using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
+using DTO.Device.Breakdown;
+using DTO.Enum;
 using Mode.Base;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
@@ -69,7 +69,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
         return;
       }
 
-      await testMeasurement.SetupCommutation(ProtocolUI, first, second, NewCore.Enum.DeviceEnum.BusPoint.A);
+      await testMeasurement.SetupCommutation(ProtocolUI, first, second, DeviceEnums.BusPoint.A);
       await testMeasurement.ConfigureMeter(ProtocolUI, dataModel);
       await testMeasurement.PerformMeasurement(ProtocolUI, dataModel);
       await testMeasurement.FinalizeAsync(ProtocolUI);

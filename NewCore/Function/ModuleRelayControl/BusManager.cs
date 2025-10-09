@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;

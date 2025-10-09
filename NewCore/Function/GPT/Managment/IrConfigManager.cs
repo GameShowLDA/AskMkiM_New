@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
-using NewCore.Base.Function.Breakdown.Capabilities;
-using NewCore.Function.GPT.Data;
+﻿using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Model;
 
 namespace NewCore.Function.GPT.Managment
 {

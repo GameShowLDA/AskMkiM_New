@@ -1,5 +1,6 @@
 ﻿using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
 using UI.Controls.ProtocolNew;
 using Utilities.Models;
 using static Utilities.DelegateManager;

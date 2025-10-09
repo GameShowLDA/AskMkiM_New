@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using AdminHost.Models.Interface;
-using Microsoft.AspNetCore.Mvc;
-using NewCore.Base.Interface.Main;
 using DataBaseConfiguration;
 using DataBaseConfiguration.Services.Device;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdminHost.Controllers
 {

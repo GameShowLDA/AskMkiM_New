@@ -1,8 +1,7 @@
-﻿using DTO.Enum;
+﻿using DTO.Device.Chassis;
+using DTO.Device.Chassis.Capabilities;
+using DTO.Enum;
 using NewCore.Base.Device;
-using NewCore.Base.Function.ManagerChassis;
-using NewCore.Base.Interface.Main;
-using NewCore.Enum;
 using NewCore.Function.ManagerChassis;
 
 namespace NewCore.Device

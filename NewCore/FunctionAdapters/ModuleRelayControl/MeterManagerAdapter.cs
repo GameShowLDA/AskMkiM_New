@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.ModuleRelayControl;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
+﻿using AppConfiguration.Error.Device.ModuleRelayControl;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
 using Utilities.Interface;
@@ -75,7 +73,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
           1, userMessageService);
 
       if (!result)
-      { 
+      {
         throw MeterExceptionFactory.DisconnectFailed(description);
       }
       else

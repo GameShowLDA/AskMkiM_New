@@ -1,4 +1,5 @@
-﻿using NewCore.Enum;
+﻿using DTO.Enum;
+using NewCore.Enum;
 using Utilities.Models;
 
 namespace Mode.ServicesTest.MKR
@@ -20,16 +21,16 @@ namespace Mode.ServicesTest.MKR
       switch (currentBus.Name)
       {
         case "RbAB1":
-          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnum.SwitchingBus.AB1, false);
+          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnums.SwitchingBus.AB1, false);
           break;
         case "RbAB2":
-          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnum.SwitchingBus.AB2, false);
+          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnums.SwitchingBus.AB2, false);
           break;
         case "RbAB3":
-          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnum.SwitchingBus.AB3, false);
+          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnums.SwitchingBus.AB3, false);
           break;
         case "RbAB4":
-          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnum.SwitchingBus.AB4, false);
+          await currentDevice.BusManager.DisconnectBusAsync(DeviceEnums.SwitchingBus.AB4, false);
           break;
       }
     }
@@ -45,16 +46,16 @@ namespace Mode.ServicesTest.MKR
       switch (currentBus.Name)
       {
         case "RbAB1":
-          await currentDevice.BusManager.ConnectBusAsync(DeviceEnum.SwitchingBus.AB1, false);
+          await currentDevice.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.AB1, false);
           break;
         case "RbAB2":
-          await currentDevice.BusManager.ConnectBusAsync(DeviceEnum.SwitchingBus.AB2, false);
+          await currentDevice.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.AB2, false);
           break;
         case "RbAB3":
-          await currentDevice.BusManager.ConnectBusAsync(DeviceEnum.SwitchingBus.AB3, false);
+          await currentDevice.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.AB3, false);
           break;
         case "RbAB4":
-          await currentDevice.BusManager.ConnectBusAsync(DeviceEnum.SwitchingBus.AB4, false);
+          await currentDevice.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.AB4, false);
           break;
       }
     }

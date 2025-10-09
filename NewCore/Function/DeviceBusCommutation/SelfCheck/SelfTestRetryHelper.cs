@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices.ActiveDirectory;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice.Capabilities;
 using Utilities.Interface;
 using Utilities.Models;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck
 {
@@ -30,7 +22,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// <param name="busContact">Номер контакта шины, подлежащий замыканию.</param>
     /// <param name="circuitName">Название цепи для отображения в сообщениях.</param>
     /// <returns>True, если замыкание выполнено успешно; иначе false.</returns>
-    internal static async Task<bool> TryCloseCircuitWithRetryAsync(CancellationToken cancellation, IUserMessageService messageService, ISelfTestCheckerDeviceBusCommutation selfTestChecker, TypeConnector testType, int busContact, string circuitName)
+    internal static async Task<bool> TryCloseCircuitWithRetryAsync(CancellationToken cancellation, IUserMessageService messageService, ISelfTestCheckerDeviceBusCommutation selfTestChecker, SwitchingDeviceTypeConnector testType, int busContact, string circuitName)
     {
       cancellation.ThrowIfCancellationRequested();
 

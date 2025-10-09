@@ -1,9 +1,11 @@
 ﻿using AppConfiguration;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.Base;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
+using DTO.Enum;
 using Mode.Base;
-using Mode.Models;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Interface;
@@ -346,11 +348,11 @@ namespace Mode.Metrology.MeasurementSystem
 
       foreach (var relayModule in relayModules)
       {
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.BusManager.ConnectBusAsync(NewCore.Enum.DeviceEnum.SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(NewCore.Enum.DeviceEnum.SwitchingBus.A1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
+          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(DeviceEnums.SwitchingBus.A1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.BusManager.ConnectBusAsync(NewCore.Enum.DeviceEnum.SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(NewCore.Enum.DeviceEnum.SwitchingBus.B1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
+          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(DeviceEnums.SwitchingBus.B1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
       }
 
       if (modeDevice == MetrologicalDeviceType.BreakdownTester)
@@ -362,14 +364,14 @@ namespace Mode.Metrology.MeasurementSystem
       {
         if (modeDevice == MetrologicalDeviceType.Mint)
         {
-          if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => mint.BusManager.ConnectBusToPositiveAsync(NewCore.Enum.DeviceEnum.SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
-            throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectPositiveFailed(NewCore.Enum.DeviceEnum.SwitchingBus.A1.ToString());
+          if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => mint.BusManager.ConnectBusToPositiveAsync(DeviceEnums.SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
+            throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectPositiveFailed(DeviceEnums.SwitchingBus.A1.ToString());
 
-          if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => mint.BusManager.ConnectBusToNegativeAsync(NewCore.Enum.DeviceEnum.SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
-            throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectNegativeFailed(NewCore.Enum.DeviceEnum.SwitchingBus.A1.ToString());
+          if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => mint.BusManager.ConnectBusToNegativeAsync(DeviceEnums.SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
+            throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectNegativeFailed(DeviceEnums.SwitchingBus.A1.ToString());
         }
 
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectMultimeter(NewCore.Enum.DeviceEnum.SwitchingBusNew.AB1, protocolUI), protocolUI))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectMultimeter(DeviceEnums.SwitchingBusNew.AB1, protocolUI), protocolUI))
           throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectMultiMeterFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
       }
     }
@@ -384,10 +386,10 @@ namespace Mode.Metrology.MeasurementSystem
     {
       await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение точек"), IsBlockStart: true);
 
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules[0].PointManager.ConnectRelayAsync(NewCore.Enum.DeviceEnum.BusPoint.A, point1.PointNumber, protocolUI), protocolUI))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules[0].PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.A, point1.PointNumber, protocolUI), protocolUI))
         throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModules[0].Name, relayModules[0].NumberChassis, relayModules[0].Number);
 
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules.Last().PointManager.ConnectRelayAsync(NewCore.Enum.DeviceEnum.BusPoint.B, point2.PointNumber, protocolUI), protocolUI))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules.Last().PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.B, point2.PointNumber, protocolUI), protocolUI))
         throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModules.Last().Name, relayModules.Last().NumberChassis, relayModules.Last().Number);
     }
     #endregion

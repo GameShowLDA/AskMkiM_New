@@ -1,15 +1,11 @@
 ﻿using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using AppConfiguration;
-using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
 using DataBaseConfiguration.Services.Device;
-using Microsoft.Extensions;
+using DTO.Device.Breakdown;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
 using NewCore.Device;
 using static Utilities.LoggerUtility;
 

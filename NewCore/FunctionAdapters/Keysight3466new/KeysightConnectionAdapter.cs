@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device;
-using DTO.Device.Base;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.Base;
 using NewCore.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.Keysight3466new;

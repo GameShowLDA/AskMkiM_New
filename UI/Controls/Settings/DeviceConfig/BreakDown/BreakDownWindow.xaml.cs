@@ -1,15 +1,12 @@
 ﻿using System.Windows;
 using AppConfiguration;
+using AppConfiguration.Error.DataBase;
 using DataBaseConfiguration.Models.Device;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
 using UI.Controls.Settings.DeviceConfig.Base;
 using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using AppConfiguration.Error.DataBase;
-using System.Windows.Forms;
 
 namespace UI.Controls.Settings.DeviceConfig.BreakDown
 {

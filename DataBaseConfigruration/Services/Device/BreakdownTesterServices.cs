@@ -1,7 +1,6 @@
 ﻿using AppConfiguration.Error.DataBase;
 using DataBaseConfiguration.Models.Device;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Breakdown;
 
 namespace DataBaseConfiguration.Services.Device
 {

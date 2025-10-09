@@ -1,15 +1,13 @@
 ﻿using System.Windows;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls;
 using AppConfiguration.Enums;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
+using DTO.Device.FastMeter;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using Mode.Metrology.PI;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;

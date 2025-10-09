@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
@@ -130,7 +128,7 @@ namespace NewCore.Function.ModuleRelayControl
         }
 
         return true;
-      }  
+      }
 
       var cmd = new DeviceCommand(8, number, (int)bus, 2);
       string commandText = cmd.ToString();

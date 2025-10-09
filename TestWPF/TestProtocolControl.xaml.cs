@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
+using DTO.Device.Breakdown;
 using Mode.Base;
 using Mode.TestSuite.Metrology.MethodExecutor;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities.Interface;
 using Utilities.Models;

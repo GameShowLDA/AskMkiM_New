@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+﻿using System.ComponentModel;
+using DTO.Device.Breakdown;
+using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
 using Utilities;
 using Utilities.Interface;
 using Utilities.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NewCore.Function.GPT.SelfCheck
 {
@@ -132,7 +125,7 @@ namespace NewCore.Function.GPT.SelfCheck
         }
         await device.ConnectorManager.DisconnectBreakdownTesterAndMultimeter(userMessageService);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
       }
     }

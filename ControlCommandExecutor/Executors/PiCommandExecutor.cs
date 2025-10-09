@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Breakdown;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using Utilities;
 using Utilities.Interface;
 using Utilities.Models;
 using Utilities.ResultProtocol;
+using static DTO.Enum.DeviceEnums;
 
 namespace ControlCommandExecutor.Executors
 {
@@ -137,13 +134,13 @@ namespace ControlCommandExecutor.Executors
         {
           throw AppConfiguration.Error.Device.ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
         }
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(NewCore.Enum.DeviceEnum.SwitchingBus.A1, userMessageService: userMessageService), userMessageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: userMessageService), userMessageService))
         {
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(NewCore.Enum.DeviceEnum.SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
+          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
         }
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(NewCore.Enum.DeviceEnum.SwitchingBus.B1, userMessageService: userMessageService), userMessageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.B1, userMessageService: userMessageService), userMessageService))
         {
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(NewCore.Enum.DeviceEnum.SwitchingBus.B1.ToString(), module.Name, module.NumberChassis, module.Number);
+          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(SwitchingBus.B1.ToString(), module.Name, module.NumberChassis, module.Number);
         }
       }
     }

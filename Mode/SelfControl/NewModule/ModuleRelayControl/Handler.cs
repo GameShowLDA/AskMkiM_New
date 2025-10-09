@@ -1,6 +1,6 @@
 ﻿using System.Windows;
+using DTO.Device.RelaySwitchModule;
 using Mode.SelfControl.Module.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Models;

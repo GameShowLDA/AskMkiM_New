@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.DeviceBusCommutation;
-using NewCore.Base.Function.DBC;
+﻿using AppConfiguration.Error.Device.DeviceBusCommutation;
+using DTO.Device.SwitchingDevice.Capabilities;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities.Interface;

@@ -1,8 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using DTO.Device.Base;
-using NewCore.Base.Device;
-using NewCore.Base.Function.FastMeter;
 using NewCore.Device;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
@@ -47,7 +45,7 @@ namespace NewCore.Function.Keysight3466new
 
       if ((await ConnectAsync()).Connect)
       {
-        string idn = await _device.DeviceProtocol.QueryAsync("*IDN?", timeout: 1000, port:_device.Port);
+        string idn = await _device.DeviceProtocol.QueryAsync("*IDN?", timeout: 1000, port: _device.Port);
         if (!string.IsNullOrEmpty(idn))
         {
           return (true, string.Empty);
@@ -130,7 +128,7 @@ namespace NewCore.Function.Keysight3466new
 
     /// <inheritdoc />
     public Task<bool> ResetAsync(IUserMessageService messageService = null)
-    { 
+    {
       return Task.FromResult(true);
     }
   }

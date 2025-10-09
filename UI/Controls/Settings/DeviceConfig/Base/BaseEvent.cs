@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DTO.Device.Base;
 using Message;
 using NewCore.Base.Device;
 using NewCore.Device;

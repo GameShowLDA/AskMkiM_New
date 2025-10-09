@@ -2,10 +2,10 @@
 using System.Windows.Controls;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
+using DTO.Device.FastMeter;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using Mode.Metrology.PI;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;

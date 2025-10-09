@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using NewCore.Base.Function.Breakdown;
+﻿using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Model;
 using NewCore.Device;
-using NewCore.Function.GPT.Data;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;

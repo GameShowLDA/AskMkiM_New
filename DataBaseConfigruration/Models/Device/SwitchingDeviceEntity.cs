@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Net;
-using NewCore.Base.Device;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
-using NewCore.Enum;
+using DTO.Device.Base;
+using DTO.Device.SwitchingDevice;
+using DTO.Device.SwitchingDevice.Capabilities;
+using static DTO.Enum.DeviceEnums;
 
 namespace DataBaseConfiguration.Models.Device
 {
@@ -33,7 +30,7 @@ namespace DataBaseConfiguration.Models.Device
     public string ConnectionDetails { get; set; }
 
     /// <inheritdoc />
-    public DeviceEnum.DeviceType DeviceType => DeviceEnum.DeviceType.SwitchingDevice;
+    public DeviceType DeviceType => DeviceType.SwitchingDevice;
 
     /// <inheritdoc />
     public string DeviceClass { get; set; }

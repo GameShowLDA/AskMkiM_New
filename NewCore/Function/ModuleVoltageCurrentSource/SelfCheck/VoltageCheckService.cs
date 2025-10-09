@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
 using Utilities.Interface;
 using Utilities.Models;
 using static Utilities.LoggerUtility;
@@ -67,7 +62,6 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="token">Токен отмены.</param>
     static private async Task MeasureAndCompareVoltage(IUserMessageService messageService, double voltage, int delay, IFastMeter fastMeter)
     {
-      double tolerance = 0.0001;
       double firstNorm = Math.Round(voltage - (0.01 * voltage + 0.1), 3);
       double lastNorm = Math.Round(voltage + (0.01 * voltage + 0.1), 3);
 

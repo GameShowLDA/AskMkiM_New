@@ -1,10 +1,5 @@
-﻿using System.Net;
-using DTO.Device.Base;
-using NewCore.Base.Device;
-using NewCore.Base.Function.ManagerChassis;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.Base;
 using NewCore.Communication;
-using NewCore.Device;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
 

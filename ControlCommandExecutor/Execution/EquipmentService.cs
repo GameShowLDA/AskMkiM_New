@@ -1,11 +1,10 @@
 ﻿using AppConfiguration;
 using ControlCommandAnalyser.Model.Chains;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DTO.Device.Breakdown;
+using DTO.Device.FastMeter;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using Utilities;
 using Utilities.Interface;
 using Utilities.Models;

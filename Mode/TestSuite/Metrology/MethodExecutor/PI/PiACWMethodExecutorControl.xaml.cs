@@ -1,9 +1,8 @@
 ﻿using System.Windows.Controls;
 using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
-using AppConfiguration.Execution;
+using DTO.Device.Breakdown;
 using Mode.Base;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;

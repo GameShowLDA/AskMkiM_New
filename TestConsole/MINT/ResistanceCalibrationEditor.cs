@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using DataBaseConfiguration.Models.Device;
 using DataBaseConfiguration.Services.Device;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Interface.Main;
 using NewCore.Device;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace TestConsole.MINT
 {

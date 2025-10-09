@@ -1,12 +1,12 @@
-﻿using DataBaseConfiguration.Services.Device;
-using Mode.Models;
-using NewCore.Base.Interface.Main;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows;
+using DataBaseConfiguration.Services.Device;
+using DTO.Device.RelaySwitchModule;
+using Mode.Models;
 using static Utilities.Models.ShowMessageModel;
 
 namespace Mode.ServicesTest.MKR

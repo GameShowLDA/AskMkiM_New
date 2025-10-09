@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Device;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Base;
+using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
+using DTO.Device.SwitchingDevice.Capabilities;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace TestConsole
@@ -44,31 +44,31 @@ namespace TestConsole
         switch (choice)
         {
           case 1:
-            await SelfCheckCircuitAsync(TypeConnector.BlockingRelay);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.BlockingRelay);
             break;
 
           case 2:
-            await SelfCheckCircuitAsync(TypeConnector.Multimeter);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.Multimeter);
             break;
 
           case 3:
-            await SelfCheckCircuitAsync(TypeConnector.ADC);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.ADC);
             break;
 
           case 4:
-            await SelfCheckCircuitAsync(TypeConnector.ADCReversed);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.ADCReversed);
             break;
 
           case 5:
-            await SelfCheckCircuitAsync(TypeConnector.PINT);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.PINT);
             break;
 
           case 6:
-            await SelfCheckCircuitAsync(TypeConnector.Shunt);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.Shunt);
             break;
 
           case 7:
-            await SelfCheckCircuitAsync(TypeConnector.BreakdownTester);
+            await SelfCheckCircuitAsync(SwitchingDeviceTypeConnector.BreakdownTester);
             break;
 
           case 8:
@@ -78,7 +78,7 @@ namespace TestConsole
 
             LogInformation("Начинаем полный самоконтроль всех цепей...");
 
-            foreach (TypeConnector testType in Enum.GetValues(typeof(TypeConnector)))
+            foreach (SwitchingDeviceTypeConnector testType in Enum.GetValues(typeof(SwitchingDeviceTypeConnector)))
             {
               await Task.Delay(20);
               LogInformation($"Запуск проверки: {testType}");
@@ -110,7 +110,7 @@ namespace TestConsole
     /// </summary>
     /// <param name="testType">Тип цепи для проверки.</param>
     /// <returns>True, если проверка успешна, иначе false.</returns>
-    private static async Task<bool> SelfCheckCircuitAsync(TypeConnector testType, ISwitchingDevice device = null, IFastMeter meter = null)
+    private static async Task<bool> SelfCheckCircuitAsync(SwitchingDeviceTypeConnector testType, ISwitchingDevice device = null, IFastMeter meter = null)
     {
       if (device == null)
       {
@@ -189,7 +189,7 @@ namespace TestConsole
     /// <param name="circuitName">Название цепи.</param>
     /// <param name="busContact">Контакт шины.</param>
     /// <returns>True, если тест пройден успешно, иначе false.</returns>
-    private static async Task<bool> PerformCircuitTestAsync(ISelfTestCheckerDeviceBusCommutation selfTestChecker, IFastMeter meter, TypeConnector testType, string circuitName, int busContact)
+    private static async Task<bool> PerformCircuitTestAsync(ISelfTestCheckerDeviceBusCommutation selfTestChecker, IFastMeter meter, SwitchingDeviceTypeConnector testType, string circuitName, int busContact)
     {
       LogInformation($"Запуск теста: {circuitName}");
 
@@ -246,7 +246,7 @@ namespace TestConsole
     /// <param name="circuitName">Название цепи.</param>
     /// <param name="busContact">Контакт шины.</param>
     /// <returns>True, если все реле прошли проверку, иначе false.</returns>
-    private static async Task<bool> PerformRelayCheck(ISelfTestCheckerDeviceBusCommutation selfTestChecker, TypeConnector testType, string circuitName, int busContact, IFastMeter meter)
+    private static async Task<bool> PerformRelayCheck(ISelfTestCheckerDeviceBusCommutation selfTestChecker, SwitchingDeviceTypeConnector testType, string circuitName, int busContact, IFastMeter meter)
     {
       int relayCount = await selfTestChecker.GetRelayCountAsync(testType, busContact);
       if (relayCount < 0)

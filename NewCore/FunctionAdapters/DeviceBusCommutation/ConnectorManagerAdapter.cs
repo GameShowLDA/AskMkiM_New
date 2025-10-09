@@ -1,6 +1,6 @@
 ﻿using AppConfiguration.Error.Device.DeviceBusCommutation;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Main;
+using DTO.Device.SwitchingDevice;
+using DTO.Device.SwitchingDevice.Capabilities;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities.Interface;
@@ -222,7 +222,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       return result;
     }
 
-    public async Task<bool> GetSuccesCurrentMode(TypeConnector mode, IUserMessageService? userMessageService = null)
+    public async Task<bool> GetSuccesCurrentMode(SwitchingDeviceTypeConnector mode, IUserMessageService? userMessageService = null)
     {
       var result = await _connectorManager.GetSuccesCurrentMode(mode);
       return result;

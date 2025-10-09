@@ -1,16 +1,7 @@
 ﻿using AppConfiguration.Base;
 using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
-using NewCore.Base.Interface.Main;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using Utilities.ResultProtocol;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ControlCommandExecutor.Executors
 {
@@ -59,7 +50,7 @@ namespace ControlCommandExecutor.Executors
       protocolModel.Executor = executor;
       protocolModel.Agent = agent;
       protocolModel.Customer = customer;
-      protocolModel.Mode = await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? "Холостой режим":"Рабочий режим" ;
+      protocolModel.Mode = await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? "Холостой режим" : "Рабочий режим";
       ProtocolModel.GetPathProtocol(protocolModel);
       EventAggregator.RaiseViewProtocol(protocolModel);
       EventAggregator.ProtocolInfoClose -= OnProtocolInfoClosing;

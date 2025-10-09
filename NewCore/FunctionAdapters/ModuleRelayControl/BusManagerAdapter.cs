@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.ModuleRelayControl;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
 using Utilities.Interface;

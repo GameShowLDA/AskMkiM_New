@@ -1,23 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
-using UI.Components;
-using Utilities.Models;
-using static UI.Components.DeviceSelectorPanel;
+﻿using System.Windows.Controls;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.SelfControl.DeviceCheck
 {
@@ -66,11 +48,11 @@ namespace Mode.SelfControl.DeviceCheck
       var dbc = new DataBaseConfiguration.Services.Device.SwitchingDeviceServices().GetDevicesByNumberChassis(managerShassi.Number).FirstOrDefault();
       var mkr = new DataBaseConfiguration.Services.Device.RelaySwitchModuleServices().GetDevicesByNumberChassis(managerShassi.Number);
 
-      await dbc.SelfTestManager.StartSelfCheck(ProtocolUI.GetCancellationToken(), NewCore.Base.Function.DBC.TypeConnector.FullCheck, ProtocolUI, dbc, meter);
+      await dbc.SelfTestManager.StartSelfCheck(ProtocolUI.GetCancellationToken(), SwitchingDeviceTypeConnector.FullCheck, ProtocolUI, dbc, meter);
 
       foreach (var item in mkr)
       {
-        await item.SelfTestManager.StartSelfCheck(ProtocolUI.GetCancellationToken(), NewCore.Base.Function.ModuleRelayControl.TypeConnector.FullCheck, ProtocolUI, dbc);
+        await item.SelfTestManager.StartSelfCheck(ProtocolUI.GetCancellationToken(), RelaySwitchTypeConnector.FullCheck, ProtocolUI, dbc);
       }
     }
   }

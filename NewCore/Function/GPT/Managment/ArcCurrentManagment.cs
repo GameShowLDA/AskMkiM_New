@@ -1,8 +1,8 @@
-﻿using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
-using NewCore.Function.GPT.Data;
 using NewCore.Function.GPT.Helper;
 using Utilities.Interface;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT.Managment
 {
@@ -13,7 +13,7 @@ namespace NewCore.Function.GPT.Managment
   public class ArcCurrentManagment : IArcCurrentConfigurable
   {
     private readonly GPT79904 _gptModel;
-    private readonly TypeMode _mode;
+    private readonly BreakdownTypeMode _mode;
     private readonly int _delay;
     private readonly Func<double> _getArcCurrent;
     private readonly Action<double> _setArcCurrent;
@@ -28,7 +28,7 @@ namespace NewCore.Function.GPT.Managment
     /// <param name="setArcCurrent">Действие для обновления значения тока дуги в конфигурации.</param>
     public ArcCurrentManagment(
       GPT79904 gptModel,
-      TypeMode mode,
+      BreakdownTypeMode mode,
       int delay,
       Func<double> getArcCurrent,
       Action<double> setArcCurrent)

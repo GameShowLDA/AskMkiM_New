@@ -1,6 +1,5 @@
-﻿using DataBaseConfiguration.Services;
-using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+﻿using DataBaseConfiguration.Services.Device;
+using DTO.Device.RelaySwitchModule;
 
 namespace Mode.TestSuite.Metrology
 {

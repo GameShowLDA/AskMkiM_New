@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
-using AppConfiguration.Enums;
-using NewCore.Base.Interface.Main;
-using NewCore.Function.GPT.Data;
+using DTO.Device.Breakdown;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
@@ -12,7 +11,7 @@ namespace NewCore.Function.GPT.Helper
   static internal class CurrentLimitHelper
   {
     /// <inheritdoc />
-    static public async Task<(bool Success, string Message)> SetHighCurrentLimitAsync(IBreakdownTester breakDown, TypeMode typeCommand, double value, int delay)
+    static public async Task<(bool Success, string Message)> SetHighCurrentLimitAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, double value, int delay)
     {
       LogInformation($"Начало {nameof(SetHighCurrentLimitAsync)}: value={value:F3}", isDeviceLog: true);
 
@@ -26,8 +25,8 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_CHISET,
-          TypeMode.DCW => ManualCommand.MANU_DCW_CHISET,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_CHISET,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_CHISET,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetHighCurrentLimitAsync)}"),
         };
 
@@ -68,14 +67,14 @@ namespace NewCore.Function.GPT.Helper
 
 
     /// <inheritdoc />
-    static public async Task<double> GetHighCurrentLimitAsync(IBreakdownTester breakDown, TypeMode typeCommand, int delay)
+    static public async Task<double> GetHighCurrentLimitAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, int delay)
     {
       LogInformation($"Начало {nameof(GetHighCurrentLimitAsync)}", isDeviceLog: true);
 
       ManualCommand manualCommand = typeCommand switch
       {
-        TypeMode.ACW => ManualCommand.MANU_ACW_CHISET,
-        TypeMode.DCW => ManualCommand.MANU_DCW_CHISET,
+        BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_CHISET,
+        BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_CHISET,
         _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetHighCurrentLimitAsync)}"),
       };
 
@@ -109,7 +108,7 @@ namespace NewCore.Function.GPT.Helper
     }
 
     /// <inheritdoc />
-    static public async Task<(bool Success, string Message)> SetLowCurrentLimitAsync(IBreakdownTester breakDown, TypeMode typeCommand, double value, int delay)
+    static public async Task<(bool Success, string Message)> SetLowCurrentLimitAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, double value, int delay)
     {
       LogInformation($"Начало {nameof(SetLowCurrentLimitAsync)}: value={value:F3}", isDeviceLog: true);
 
@@ -123,8 +122,8 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_CLOSET,
-          TypeMode.DCW => ManualCommand.MANU_DCW_CLOSET,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_CLOSET,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_CLOSET,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetLowCurrentLimitAsync)}"),
         };
 
@@ -165,7 +164,7 @@ namespace NewCore.Function.GPT.Helper
 
 
     /// <inheritdoc />
-    static public async Task<double> GetLowCurrentLimitAsync(IBreakdownTester breakDown, TypeMode typeCommand, int delay)
+    static public async Task<double> GetLowCurrentLimitAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, int delay)
     {
       LogInformation($"Начало {nameof(GetLowCurrentLimitAsync)}", isDeviceLog: true);
 
@@ -179,8 +178,8 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_CLOSET,
-          TypeMode.DCW => ManualCommand.MANU_DCW_CLOSET,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_CLOSET,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_CLOSET,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetLowCurrentLimitAsync)}"),
         };
 

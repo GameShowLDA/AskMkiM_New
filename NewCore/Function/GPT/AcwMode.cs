@@ -1,14 +1,11 @@
-﻿using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using DTO.Device.Breakdown.Model;
 using NewCore.Device;
-using NewCore.Function.GPT.Command;
 using NewCore.Function.GPT.Data;
-using NewCore.Function.GPT.Helper;
 using NewCore.Function.GPT.Managment;
-using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static NewCore.Function.GPT.Command.FunctionCommandManager;
-using static Utilities.LoggerUtility;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT
 {
@@ -76,15 +73,15 @@ namespace NewCore.Function.GPT
     {
       _gptModel = gpt79904;
       _config = new AcwConfiguration();
-      Voltage = new VoltageManagment(_gptModel, TypeMode.ACW, delay, getConfigVoltage: () => _config.Voltage, setConfigVoltage: v => _config.Voltage = v);
-      CurrentLimits = new CurrentLimitManagment(_gptModel, TypeMode.ACW, delay, getHighLimit: () => _config.HighCurrentLimit, setHighLimit: v => _config.HighCurrentLimit = v, getLowLimit: () => _config.LowCurrentLimit, setLowLimit: v => _config.LowCurrentLimit = v);
-      Time = new TimeManagment(_gptModel, TypeMode.ACW, delay, getTestTime: () => _config.TestTime, setTestTime: v => _config.TestTime = v, getRampTime: () => _config.RampTime, setRampTime: v => _config.RampTime = v);
-      Offset = new OffsetManagment(_gptModel, TypeMode.ACW, delay, getOffset: () => _config.Offset, setOffset: v => _config.Offset = v);
-      ArcCurrent = new ArcCurrentManagment(_gptModel, TypeMode.ACW, delay, getArcCurrent: () => _config.ArcCurrent, setArcCurrent: v => _config.ArcCurrent = v);
-      FrequencyConfigurable = new FrequencyManagment(_gptModel, TypeMode.ACW, delay, getFrequency: () => _config.Frequency, setFrequency: v => _config.Frequency = v);
+      Voltage = new VoltageManagment(_gptModel, BreakdownTypeMode.ACW, delay, getConfigVoltage: () => _config.Voltage, setConfigVoltage: v => _config.Voltage = v);
+      CurrentLimits = new CurrentLimitManagment(_gptModel, BreakdownTypeMode.ACW, delay, getHighLimit: () => _config.HighCurrentLimit, setHighLimit: v => _config.HighCurrentLimit = v, getLowLimit: () => _config.LowCurrentLimit, setLowLimit: v => _config.LowCurrentLimit = v);
+      Time = new TimeManagment(_gptModel, BreakdownTypeMode.ACW, delay, getTestTime: () => _config.TestTime, setTestTime: v => _config.TestTime = v, getRampTime: () => _config.RampTime, setRampTime: v => _config.RampTime = v);
+      Offset = new OffsetManagment(_gptModel, BreakdownTypeMode.ACW, delay, getOffset: () => _config.Offset, setOffset: v => _config.Offset = v);
+      ArcCurrent = new ArcCurrentManagment(_gptModel, BreakdownTypeMode.ACW, delay, getArcCurrent: () => _config.ArcCurrent, setArcCurrent: v => _config.ArcCurrent = v);
+      FrequencyConfigurable = new FrequencyManagment(_gptModel, BreakdownTypeMode.ACW, delay, getFrequency: () => _config.Frequency, setFrequency: v => _config.Frequency = v);
       Measure = new MeasureManagment(_gptModel, delayBeforeCall, getTestTime: async () => await Time.GetTestTimeAsync(), getRampTime: async () => await Time.GetRampTimeAsync(), getIsIdleMode: async () => await GetIsIdleModeEnabled());
       Config = new AcwConfigManager(Voltage, CurrentLimits, Time, Offset, ArcCurrent, FrequencyConfigurable);
-      Mode = new ModeManagment(_gptModel, TypeMode.ACW, delay, async () => _config = await Config.ReadConfigurationAsync());
+      Mode = new ModeManagment(_gptModel, BreakdownTypeMode.ACW, delay, async () => _config = await Config.ReadConfigurationAsync());
     }
   }
 }

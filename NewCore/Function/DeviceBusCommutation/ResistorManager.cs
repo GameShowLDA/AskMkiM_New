@@ -1,8 +1,8 @@
-﻿using NewCore.Base.Function.DBC;
+﻿using DTO.Device.SwitchingDevice.Capabilities;
 using NewCore.Communication;
-using static Utilities.LoggerUtility;
-using static AppConfiguration.Execution.ExecutionConfig;
 using Utilities.Interface;
+using static AppConfiguration.Execution.ExecutionConfig;
+using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.DeviceBusCommutation
 {
@@ -52,7 +52,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// </summary>
     /// <param name="number">Номер резистора.</param>
     /// <returns>Задача (Task), представляющая асинхронную операцию.</returns>
-    public async Task<bool> DisconnectResistor(string number, IUserMessageService? userMessageService = null  )
+    public async Task<bool> DisconnectResistor(string number, IUserMessageService? userMessageService = null)
     {
       if (int.TryParse(number, out int num))
       {

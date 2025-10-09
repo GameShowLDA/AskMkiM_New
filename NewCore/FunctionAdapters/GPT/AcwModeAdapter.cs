@@ -1,8 +1,8 @@
-﻿using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using DTO.Device.Breakdown.Model;
 using NewCore.Device;
 using NewCore.Function.GPT;
-using NewCore.Function.GPT.Data;
 using NewCore.Function.Helpers;
 using Utilities.Interface;
 
@@ -25,7 +25,7 @@ namespace NewCore.FunctionAdapters.GPT
     public IArcCurrentConfigurable ArcCurrent { get; set; }
     public IFrequencyConfigurable FrequencyConfigurable { get; set; }
     public IMeasurable Measure { get; set; }
-    public IConfigurationProvider<AcwConfiguration> Config { get ; set ; }
+    public IConfigurationProvider<AcwConfiguration> Config { get; set; }
 
     public AcwModeAdapter(GPT79904 device)
     {

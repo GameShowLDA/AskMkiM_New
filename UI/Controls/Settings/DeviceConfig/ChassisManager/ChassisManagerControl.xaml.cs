@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using DataBaseConfiguration.Models.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Chassis;
 
 namespace UI.Controls.Settings.DeviceConfig.ChassisManager
 {

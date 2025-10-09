@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using NewCore.Base.Device;
-using NewCore.Base.Function.FastMeter;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
-using NewCore.Enum;
+using DTO.Device.Base;
+using DTO.Device.FastMeter;
+using DTO.Device.FastMeter.Capabilities;
+using static DTO.Enum.DeviceEnums;
 
 namespace DataBaseConfiguration.Models.Device
 {
@@ -31,7 +30,7 @@ namespace DataBaseConfiguration.Models.Device
     public string ConnectionDetails { get; set; }
 
     /// <inheritdoc />
-    public DeviceEnum.DeviceType DeviceType => DeviceEnum.DeviceType.FastMeter;
+    public DeviceType DeviceType => DeviceType.FastMeter;
 
     /// <inheritdoc />
     public string DeviceClass { get; set; }

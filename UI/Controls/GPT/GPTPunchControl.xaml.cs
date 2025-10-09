@@ -1,12 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using AppConfiguration;
-using ControlCommandExecutor.Execution;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using DTO.Device.Breakdown;
 
 namespace UI.Controls.GPT
 {

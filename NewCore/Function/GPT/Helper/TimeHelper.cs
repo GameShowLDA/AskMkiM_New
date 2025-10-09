@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using NewCore.Base.Interface.Main;
-using NewCore.Function.GPT.Data;
-using Utilities.Interface;
+using DTO.Device.Breakdown;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
@@ -13,7 +12,7 @@ namespace NewCore.Function.GPT.Helper
   static internal class TimeHelper
   {
     /// <inheritdoc />
-    static public async Task<(bool Success, string Message)> SetTestTimeAsync(IBreakdownTester breakDown, TypeMode typeCommand, double value, int delay)
+    static public async Task<(bool Success, string Message)> SetTestTimeAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, double value, int delay)
     {
       LogInformation($"Начало {nameof(SetTestTimeAsync)}: value={value:F1}", isDeviceLog: true);
 
@@ -27,9 +26,9 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_TTIME,
-          TypeMode.DCW => ManualCommand.MANU_DCW_TTIME,
-          TypeMode.IR => ManualCommand.MANU_IR_TTIME,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_TTIME,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_TTIME,
+          BreakdownTypeMode.IR => ManualCommand.MANU_IR_TTIME,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetTestTimeAsync)}"),
         };
 
@@ -70,7 +69,7 @@ namespace NewCore.Function.GPT.Helper
     }
 
     /// <inheritdoc />
-    static public async Task<double> GetTestTimeAsync(IBreakdownTester breakDown, TypeMode typeCommand, int delay)
+    static public async Task<double> GetTestTimeAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, int delay)
     {
       LogInformation($"Начало {nameof(GetTestTimeAsync)}", isDeviceLog: true);
 
@@ -84,9 +83,9 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_TTIME,
-          TypeMode.DCW => ManualCommand.MANU_DCW_TTIME,
-          TypeMode.IR => ManualCommand.MANU_IR_TTIME,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_TTIME,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_TTIME,
+          BreakdownTypeMode.IR => ManualCommand.MANU_IR_TTIME,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetTestTimeAsync)}"),
         };
 
@@ -112,7 +111,7 @@ namespace NewCore.Function.GPT.Helper
     }
 
     /// <inheritdoc />
-    static public async Task<(bool Success, string Message)> SetRampTimeAsync(IBreakdownTester breakDown,double value, int delay)
+    static public async Task<(bool Success, string Message)> SetRampTimeAsync(IBreakdownTester breakDown, double value, int delay)
     {
       LogInformation($"Начало {nameof(SetRampTimeAsync)}: value={value:F1}", isDeviceLog: true);
 

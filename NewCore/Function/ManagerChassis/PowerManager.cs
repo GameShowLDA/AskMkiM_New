@@ -1,6 +1,5 @@
-﻿using System.Net;
-using NewCore.Base.Function.ManagerChassis;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.Chassis;
+using DTO.Device.Chassis.Capabilities;
 using NewCore.Communication;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;

@@ -1,7 +1,5 @@
 ﻿using AppConfiguration.Services;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Device;
+using DTO.Device.Base;
 using Utilities.Interface;
 using Utilities.Models;
 using static Utilities.LoggerUtility;
@@ -95,7 +93,7 @@ namespace NewCore.Function.Helpers
       }
 
       BuildMessage(ref showMessageModel, isError: !result);
-      
+
       await ShowDeviceMessage(userMessageService, showMessageModel, result);
     }
 

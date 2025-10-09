@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
 using Utilities.Interface;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck
 {
@@ -21,7 +16,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckBlockingRelayAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.BlockingRelay, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.BlockingRelay, messageService, device, meter);
     }
 
     /// <summary>
@@ -29,7 +24,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckMultimeterAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.Multimeter, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.Multimeter, messageService, device, meter);
     }
 
     /// <summary>
@@ -37,7 +32,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckAdcAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.ADC, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.ADC, messageService, device, meter);
     }
 
     /// <summary>
@@ -45,7 +40,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckAdcReversedAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.ADCReversed, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.ADCReversed, messageService, device, meter);
     }
 
     /// <summary>
@@ -53,7 +48,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckPintAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.PINT, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.PINT, messageService, device, meter);
     }
 
     /// <summary>
@@ -61,7 +56,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckShuntAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.Shunt, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.Shunt, messageService, device, meter);
     }
 
     /// <summary>
@@ -69,7 +64,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// </summary>
     static internal async Task RunSelfCheckBreakdownTesterAsync(CancellationToken cancellationToken, IUserMessageService messageService, ISwitchingDevice device = null, IFastMeter meter = null)
     {
-      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, TypeConnector.BreakdownTester, messageService, device, meter);
+      await SelfTestProcessManager.SelfCheckCircuitAsync(cancellationToken, SwitchingDeviceTypeConnector.BreakdownTester, messageService, device, meter);
     }
 
   }

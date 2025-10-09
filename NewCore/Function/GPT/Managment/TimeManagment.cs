@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
-using NewCore.Function.GPT.Data;
 using NewCore.Function.GPT.Helper;
 using Utilities.Interface;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT.Managment
 {
@@ -18,7 +13,7 @@ namespace NewCore.Function.GPT.Managment
   public class TimeManagment : ITimeConfigurable
   {
     private readonly GPT79904 _gptModel;
-    private readonly TypeMode _mode;
+    private readonly BreakdownTypeMode _mode;
     private readonly int _delay;
     private readonly Func<double> _getTestTime;
     private readonly Action<double> _setTestTime;
@@ -37,7 +32,7 @@ namespace NewCore.Function.GPT.Managment
     /// <param name="setRampTime">Действие для обновления времени нарастания в конфигурации.</param>
     public TimeManagment(
       GPT79904 gptModel,
-      TypeMode mode,
+      BreakdownTypeMode mode,
       int delay,
       Func<double> getTestTime,
       Action<double> setTestTime,

@@ -1,8 +1,6 @@
 ﻿using System.Net;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
-using NewCore.Device;
+using DTO.Device.FastMeter;
 
 namespace TestConsole
 {

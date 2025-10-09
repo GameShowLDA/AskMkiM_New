@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.Breakdown;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using UI.Components;
 using UI.Controls.ProtocolNew;
 using Utilities;

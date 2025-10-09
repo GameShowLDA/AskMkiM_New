@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.SwitchingDevice;
 using Utilities.Interface;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
-using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {

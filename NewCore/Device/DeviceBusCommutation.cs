@@ -1,10 +1,7 @@
-﻿using DTO.Enum;
+﻿using DTO.Device.SwitchingDevice;
+using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Enum;
 using NewCore.Base.Device;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Enum;
-using NewCore.Function.DeviceBusCommutation;
 using NewCore.FunctionAdapters.DeviceBusCommutation;
 
 namespace NewCore.Device

@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
-using AppConfiguration.Enums;
-using NewCore.Base.Interface.Main;
-using NewCore.Function.GPT.Data;
+using DTO.Device.Breakdown;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
@@ -12,7 +11,7 @@ namespace NewCore.Function.GPT.Helper
 {
   static internal class OffsetHelper
   {
-    static public async Task<(bool Success, string Message)> SetOffsetAsync(IBreakdownTester breakDown, TypeMode typeCommand, double value, int delay)
+    static public async Task<(bool Success, string Message)> SetOffsetAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, double value, int delay)
     {
       LogInformation($"Начало {nameof(SetOffsetAsync)}: value={value:F3}", isDeviceLog: true);
 
@@ -26,9 +25,9 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_REF,
-          TypeMode.DCW => ManualCommand.MANU_DCW_REF,
-          TypeMode.IR => ManualCommand.MANU_IR_REF,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_REF,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_REF,
+          BreakdownTypeMode.IR => ManualCommand.MANU_IR_REF,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetOffsetAsync)}"),
         };
 
@@ -68,7 +67,7 @@ namespace NewCore.Function.GPT.Helper
     }
 
     /// <inheritdoc />
-    static public async Task<double> GetOffsetAsync(IBreakdownTester breakDown, TypeMode typeCommand, int delay)
+    static public async Task<double> GetOffsetAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, int delay)
     {
       LogInformation($"Начало {nameof(GetOffsetAsync)}", isDeviceLog: true);
 
@@ -82,9 +81,9 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_REF,
-          TypeMode.DCW => ManualCommand.MANU_DCW_REF,
-          TypeMode.IR => ManualCommand.MANU_IR_REF,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_REF,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_REF,
+          BreakdownTypeMode.IR => ManualCommand.MANU_IR_REF,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetOffsetAsync)}"),
         };
 

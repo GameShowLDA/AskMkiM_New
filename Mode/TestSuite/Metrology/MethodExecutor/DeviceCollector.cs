@@ -1,6 +1,7 @@
 ﻿using AppConfiguration;
 using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.Base;
 using Mode.Models;
 using NewCore.Base.Device;
 using Utilities.Interface;

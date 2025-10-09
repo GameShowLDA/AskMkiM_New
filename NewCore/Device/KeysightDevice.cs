@@ -1,13 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using DTO.Device.FastMeter;
+using DTO.Device.FastMeter.Capabilities;
 using DTO.Enum;
 using NewCore.Base.Device;
-using NewCore.Base.Function.FastMeter;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
-using NewCore.Enum;
-using NewCore.Function.Keysight3466new;
 using NewCore.FunctionAdapters.Keysight3466new;
 
 namespace NewCore.Device

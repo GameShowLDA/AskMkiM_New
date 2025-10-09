@@ -1,14 +1,15 @@
 ﻿using AppConfiguration;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using Mode.Base;
-using Mode.Models;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Interface;
 using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.TestSuite.Metrology.NodeMethod
 {

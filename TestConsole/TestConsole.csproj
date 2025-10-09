@@ -10,6 +10,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ControlCommandAnalyser\ControlCommandAnalyser.csproj" />
     <ProjectReference Include="..\DataBaseConfigruration\DataBaseConfiguration.csproj" />
+    <ProjectReference Include="..\DTO.Attributes\DTO.Attributes.csproj" />
+    <ProjectReference Include="..\DTO.Device\DTO.Device.csproj" />
+    <ProjectReference Include="..\DTO.Enum\DTO.Enum.csproj" />
+    <ProjectReference Include="..\DTO\DTO.Settings.csproj" />
     <ProjectReference Include="..\Mode\Mode.csproj" />
     <ProjectReference Include="..\NewCore\NewCore.csproj" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using System.Windows;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Models;
@@ -48,8 +48,6 @@ namespace Mode.SelfControl.NewModule.Meter
       { 5 , 100 },
       { 6 , 0.13 },
     };
-
-    bool returnMeasure = false;
 
     /// <summary>
     /// Конструктор Handler, принимающий ProtocolSelfCheckControl и модель устройства.

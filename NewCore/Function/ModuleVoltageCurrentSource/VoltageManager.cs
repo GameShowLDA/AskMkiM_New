@@ -1,11 +1,10 @@
-﻿using System.Net;
-using NewCore.Base.Function.ModuleVoltageCurrentSource;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.PowerSourceModule;
+using DTO.Device.PowerSourceModule.Capabilities;
 using NewCore.Communication;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static Utilities.LoggerUtility;
 using static DTO.Enum.DeviceEnums;
+using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource
 {

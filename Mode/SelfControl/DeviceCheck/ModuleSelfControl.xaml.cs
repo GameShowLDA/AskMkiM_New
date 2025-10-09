@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Breakdown;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using UI.Components;
 using Utilities.Models;
 using static UI.Components.DeviceSelectorPanel;

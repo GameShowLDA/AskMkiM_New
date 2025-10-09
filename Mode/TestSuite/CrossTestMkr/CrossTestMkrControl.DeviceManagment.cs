@@ -1,13 +1,9 @@
-﻿using System.Threading;
-using Mode.Models;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.RelaySwitchModule;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Interface;
 using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
-using static Utilities.LoggerUtility;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.TestSuite.CrossTestMkr
 {

@@ -1,7 +1,6 @@
 ﻿using AppConfiguration.Error.DataBase;
-using DataBaseConfiguration.Models;
 using DataBaseConfiguration.Models.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.SwitchingDevice;
 
 namespace DataBaseConfiguration.Services.Device
 {
@@ -20,7 +19,7 @@ namespace DataBaseConfiguration.Services.Device
 
     public override void Create(ISwitchingDevice entity)
     {
-      bool exists = _context.Set<SwitchingDeviceEntity>().Any(e => e.NumberChassis == entity.NumberChassis && e.Number == entity.Number); 
+      bool exists = _context.Set<SwitchingDeviceEntity>().Any(e => e.NumberChassis == entity.NumberChassis && e.Number == entity.Number);
       if (exists)
       {
         throw new DuplicateEntityException($"Устройство коммутации шин с шасси {entity.NumberChassis} и адресом {entity.Number} уже существует.");

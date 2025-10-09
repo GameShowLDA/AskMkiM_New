@@ -1,7 +1,5 @@
 ﻿using DTO.Device.Base;
-using NewCore.Base.Device;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.DBC;
 using NewCore.Communication;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
@@ -88,7 +86,7 @@ namespace NewCore.Function.DeviceBusCommutation
       }
 
       DeviceCommand cmd = new DeviceCommand(2, 1, 0, 0);
-      string result = await _deviceBusCommutation.DeviceProtocol.QueryAsync(cmd.ToString(), timeout:1000);
+      string result = await _deviceBusCommutation.DeviceProtocol.QueryAsync(cmd.ToString(), timeout: 1000);
       IsReset?.Invoke();
       return result.Contains("2.0.1");
     }

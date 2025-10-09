@@ -1,21 +1,17 @@
-﻿using AppConfiguration.Interface;
-﻿using System;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using AppConfiguration.Enums;
+using AppConfiguration.Error.Device.Multimeter;
+using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
-using AppConfiguration.Services;
+using DTO.Device.FastMeter;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
-using NewCore.Function.Helpers;
 using UI.Controls.ProtocolNew;
+using Utilities;
+using Utilities.Help;
+using Utilities.Interface;
 using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
-using Utilities;
-using Utilities.Interface;
-using AppConfiguration.Error.Device.Multimeter;
-using Utilities.Help;
 
 namespace Mode.Metrology.KC
 {
@@ -72,7 +68,7 @@ namespace Mode.Metrology.KC
       Data = UIValidationHelper.TryValidateAndParseInputWithEquipment(ProtocolUI, timeCheck: true, voltageCheck: true);
       if (!Data.Success)
       {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка",message: Data.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
+        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: Data.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
         throw new Exception();
       }
 
@@ -125,9 +121,9 @@ namespace Mode.Metrology.KC
 
         var result = await fastMeter.ResistanceManager.MeasureResistanceAsync(param, firstNorm, lastNorm);
 
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления",  message: $"{result} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)){ IndentLevel = 1 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений",  message: $"от {firstNorm} до {lastNorm} Ом") { IndentLevel = 2}, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения",  message: $"{(Math.Abs(result - param))} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{result} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstNorm} до {lastNorm} Ом") { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
         return true;
       }
     }

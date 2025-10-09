@@ -1,5 +1,5 @@
 ﻿using AdminHost.Models.Interface;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Breakdown;
 
 namespace AdminHost.Models.Modes.Breakdown
 {
