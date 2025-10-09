@@ -5,10 +5,11 @@ using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
 using Utilities;
 using DTO.Service;
-using Utilities.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using static ControlCommandExecutor.BaseStrategies.NodeFullChecker;
 using static DTO.Enum.DeviceEnums;
 using DTO.Service.Models;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.BaseStrategies
 {

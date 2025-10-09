@@ -1,7 +1,4 @@
-﻿using System;
-using DTO.Service.Models; using Utilities.Errors;
-using Utilities.Models;
-
+﻿using DTO.Service.Models;
 namespace AppConfiguration.Error.Translation
 {
   /// <summary>
@@ -91,7 +88,7 @@ namespace AppConfiguration.Error.Translation
     /// </summary>
     public static ErrorItem DuplicateParameterKey(int lineNumber, string command, string key) => new()
     {
-        SourceLineNumber = lineNumber,
+      SourceLineNumber = lineNumber,
       Command = command,
       Code = ErrorCode.Ok_DuplicateKey,
       Description = $"Повтор идентификатора параметра '{key}'. Допускается только для КД, ЦЕХ и ПРИМ/ПРИМЕЧ(АНИЕ)."

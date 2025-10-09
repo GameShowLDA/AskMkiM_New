@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using DTO.Base.Models;
 using DTO.Service;
 using DTO.Service.Models;
 using DTO.Settings.SettingsModels;
@@ -12,7 +13,7 @@ using Message;
 using Utilities;
 using static AppConfiguration.Protocol.ProtocolConfig;
 using static AppConfiguration.SystemStateManager;
-using static DTO.Service.Models.ShowMessageModel;
+using static DTO.Base.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 
 namespace UI.Controls.ProtocolNew

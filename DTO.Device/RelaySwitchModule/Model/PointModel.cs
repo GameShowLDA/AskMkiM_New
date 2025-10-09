@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.Base.Models;
 
-namespace Utilities.Models
+namespace DTO.Device.RelaySwitchModule.Model
 {
   /// <summary>
   /// Модель точки.
@@ -27,10 +28,7 @@ namespace Utilities.Models
     public int PointNumber { get; set; }
 
     public PointType.Type PointType { get; set; } 
-
     public string Mnemonic { get; set; }
-
-    
 
     /// <summary>
     /// Метод для поиска строки формата "x.x.x" и возвращения объекта PointModel.

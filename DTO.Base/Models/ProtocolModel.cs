@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DTO.Service.Models;
-using Utilities.Models;
+﻿using System.IO;
 
-namespace Utilities.ResultProtocol
+namespace DTO.Base.Models
 {
   public class ProtocolModel
   {

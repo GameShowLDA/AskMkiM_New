@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.RelaySwitchModule.Model;
 using UI.Components;
 using UI.Controls.ProtocolNew;
 using Utilities.Events;
-using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
 
 namespace Mode.Base

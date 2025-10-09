@@ -1,4 +1,5 @@
-﻿using DTO.Service.Models;
+﻿using DTO.Base.Models;
+using DTO.Service.Models;
 
 namespace DTO.Service
 {

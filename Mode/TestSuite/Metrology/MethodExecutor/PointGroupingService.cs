@@ -1,5 +1,5 @@
 ﻿using DTO.Device.RelaySwitchModule;
-using Utilities.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using static DTO.Enum.DeviceEnums;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor

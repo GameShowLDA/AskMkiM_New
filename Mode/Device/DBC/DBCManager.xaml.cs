@@ -3,10 +3,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using DTO.Service.Models;
-using Utilities.Models;
 
 namespace Mode.Device.DBC
 {

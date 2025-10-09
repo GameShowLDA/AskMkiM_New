@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Service.Models;
-using Utilities.Models;
 
 namespace ControlCommandAnalyser.Parser
 {

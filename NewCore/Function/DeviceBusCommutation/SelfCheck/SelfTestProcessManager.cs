@@ -1,15 +1,14 @@
 ﻿using System.Net;
+using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Service;
 using NewCore.Communication;
 using Utilities;
-using DTO.Service;
-using Utilities.Models;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
-using DTO.Service.Models;
 
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck

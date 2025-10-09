@@ -1,8 +1,8 @@
-﻿using DTO.Device.FastMeter;
+﻿using DTO.Base.Models;
+using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Service;
 using DTO.Service.Models;
-using Utilities.Models;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck

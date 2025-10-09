@@ -1,14 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using DTO.Base.Models;
 using DTO.Service;
-using DTO.Service.Models;
 using Message;
 using WindowsInput;
 using static AppConfiguration.Base.EventAggregator;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static AppConfiguration.Protocol.ProtocolConfig;
 using static AppConfiguration.SystemStateManager;
-using static DTO.Service.Models.ShowMessageModel;
+using static DTO.Base.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
 

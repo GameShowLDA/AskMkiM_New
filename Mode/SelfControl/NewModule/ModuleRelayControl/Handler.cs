@@ -1,11 +1,11 @@
 ﻿using System.Windows;
+using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
-using DTO.Service.Models;
 using Mode.SelfControl.Module.ModuleRelayControl;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static DTO.Service.Models.ShowMessageModel;
+using static DTO.Base.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
 

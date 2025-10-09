@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Theme;
-using Utilities.Models;
+﻿using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
 
 namespace ControlCommandAnalyser.Model.Chains
 {

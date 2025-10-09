@@ -1,12 +1,12 @@
 ﻿using System.Windows.Controls;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service.Models;
 using UI.Components;
-using Utilities.Models;
 using static UI.Components.DeviceSelectorPanel;
 
 namespace Mode.SelfControl.DeviceCheck

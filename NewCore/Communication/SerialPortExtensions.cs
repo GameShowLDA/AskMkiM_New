@@ -1,11 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
-using System.Management;
-using System.Threading.Tasks;
+using DTO.Base.Models;
 using DTO.Service;
-using DTO.Service.Models;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Communication
@@ -41,7 +38,7 @@ namespace NewCore.Communication
       while (true)
       {
         if (userMessageService != null)
-        { 
+        {
           userMessageService.GetCancellationToken().ThrowIfCancellationRequested();
         }
 

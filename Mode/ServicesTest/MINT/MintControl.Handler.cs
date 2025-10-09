@@ -4,6 +4,7 @@ using System.Windows;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using DTO.Service.Models;
+using DTO.Base.Models;
 
 namespace Mode.ServicesTest.MINT
 {

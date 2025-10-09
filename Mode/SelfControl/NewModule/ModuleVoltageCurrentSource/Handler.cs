@@ -2,16 +2,16 @@
 using System.Windows;
 using AppConfiguration.Error.Device.Breakdown;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
-using DTO.Service.Models;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Base.Models.ShowMessageModel;
 using static DTO.Enum.DeviceEnums;
-using static DTO.Service.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
 

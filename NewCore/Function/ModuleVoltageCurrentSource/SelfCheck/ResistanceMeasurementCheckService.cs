@@ -1,11 +1,11 @@
 ﻿using AppConfiguration.Enums;
 using AppConfiguration.MeasurementError;
+using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using DTO.Service.Models;
-using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck

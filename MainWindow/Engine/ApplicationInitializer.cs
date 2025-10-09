@@ -4,6 +4,7 @@ using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
 using AppConfiguration.Theme;
 using DataBaseConfiguration;
+using DTO.Base.Models;
 using static AppConfiguration.Base.EventAggregator;
 using static Utilities.LoggerUtility;
 
@@ -69,7 +70,7 @@ namespace MainWindowProgram.Engine
         if (protocolTask.Result != null)
         {
           await ProtocolConfig.SetProtocolModel(protocolTask.Result);
-          Utilities.ResultProtocol.ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
+          ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
         }
 
         if (executionTask.Result != null)
@@ -81,7 +82,7 @@ namespace MainWindowProgram.Engine
         {
           var service = new DataBaseConfiguration.Services.Settings.ProtocolService();
           await service.SaveProtocolAsync(model);
-          Utilities.ResultProtocol.ProtocolModel.SetTemplate(model.CleanTextProtocol);
+          ProtocolModel.SetTemplate(model.CleanTextProtocol);
         };
 
         ExecutionConfig.SaveExecutionEvent += async (model) =>

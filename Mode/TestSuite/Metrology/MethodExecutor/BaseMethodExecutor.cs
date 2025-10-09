@@ -1,8 +1,8 @@
 ﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Service;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
-using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DTO.Base.Models;
 
 namespace ControlCommandAnalyser.Model.Ok
 {
@@ -69,6 +70,6 @@ namespace ControlCommandAnalyser.Model.Ok
     /// </summary>
     public string? Comments { get; set; }
 
-    public Utilities.ResultProtocol.ProtocolModel ProtocolModel { get; set; } = new();
+    public ProtocolModel ProtocolModel { get; set; } = new();
   }
 }

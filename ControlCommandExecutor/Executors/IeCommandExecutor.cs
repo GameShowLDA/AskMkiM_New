@@ -2,14 +2,13 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies;
 using ControlCommandExecutor.Execution;
+using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
-using DTO.Service.Models;
 using Utilities;
-using Utilities.Models;
-using Utilities.ResultProtocol;
 using static DTO.Enum.DeviceEnums;
 
 namespace ControlCommandExecutor.Executors

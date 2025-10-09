@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using DTO.Base.Models;
 using DTO.Service;
 using DTO.Service.Models;
 using Utilities;

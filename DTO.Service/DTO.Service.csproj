@@ -7,4 +7,8 @@
 		<UseWPF>true</UseWPF>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\DTO.Base\DTO.Base.csproj" />
+	</ItemGroup>
+
 </Project>

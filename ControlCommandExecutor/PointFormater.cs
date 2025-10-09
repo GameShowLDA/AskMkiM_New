@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using ControlCommandAnalyser.Model.Chains;
 using DTO.Service;
 using DTO.Service.Models;
-using Utilities.Models;
+using DTO.Device.RelaySwitchModule.Model;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor
 {

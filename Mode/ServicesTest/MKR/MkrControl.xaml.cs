@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
 using DTO.Service.Models;
 using Mode.Models;

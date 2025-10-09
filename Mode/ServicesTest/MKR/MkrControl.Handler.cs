@@ -1,10 +1,8 @@
-﻿using DTO.Enum;
+﻿using System.Windows.Controls;
+using DTO.Base.Models;
+using DTO.Enum;
 using DTO.Service.Models;
 using Mode.Models;
-using NewCore.Enum;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Utilities.Models;
 
 
 namespace Mode.ServicesTest.MKR

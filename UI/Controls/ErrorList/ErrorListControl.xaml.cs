@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DTO.Service.Models; using Utilities.Errors;
+using DTO.Service.Models;
 using Utilities.Help;
-using Utilities.Models;
 
 namespace UI.Controls.ErrorList
 {
@@ -38,14 +26,14 @@ namespace UI.Controls.ErrorList
       };
     }
 
-    public Visibility StringsNumberVisible 
+    public Visibility StringsNumberVisible
     {
       get
       {
         return StringsNumber.Visibility;
       }
       set
-      { 
+      {
         StringsNumber.Visibility = value;
       }
     }

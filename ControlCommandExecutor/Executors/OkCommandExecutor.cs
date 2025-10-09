@@ -1,7 +1,6 @@
 ﻿using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
-using DTO.Service.Models;
-using Utilities.ResultProtocol;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.Executors
 {
@@ -24,7 +23,7 @@ namespace ControlCommandExecutor.Executors
 
       var command = context.Command as OkCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
-      command.ProtocolModel = new Utilities.ResultProtocol.ProtocolModel();
+      command.ProtocolModel = new ProtocolModel();
       command.ProtocolModel.ProgramPath = command.ObjectName;
 
       await context.Console.ShowMessageAsync(new ShowMessageModel($"Выполнение программы контроля для \"{command.ObjectName}({command.ObjectCode})\"", type: ShowMessageModel.MessageType.Command), IsBlockStart: true);

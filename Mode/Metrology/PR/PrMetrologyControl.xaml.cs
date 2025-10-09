@@ -3,17 +3,17 @@ using AppConfiguration.Enums;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
+using DTO.Base.Models;
 using DTO.Device.FastMeter;
+using DTO.Service;
+using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using DTO.Service;
-using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
-using DTO.Service.Models;
 
 
 namespace Mode.Metrology.PR

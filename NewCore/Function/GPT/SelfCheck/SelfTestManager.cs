@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel;
+using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
-using Utilities;
 using DTO.Service;
-using Utilities.Models;
 using DTO.Service.Models;
+using Utilities;
 
 namespace NewCore.Function.GPT.SelfCheck
 {

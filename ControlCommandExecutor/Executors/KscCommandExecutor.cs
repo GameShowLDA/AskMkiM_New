@@ -1,7 +1,7 @@
 ﻿using AppConfiguration.Base;
 using ControlCommandAnalyser.Model;
 using ControlCommandExecutor.Execution;
-using Utilities.ResultProtocol;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.Executors
 {

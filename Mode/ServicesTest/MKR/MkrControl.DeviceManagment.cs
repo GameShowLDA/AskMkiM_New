@@ -1,7 +1,6 @@
-﻿using DTO.Enum;
+﻿using DTO.Base.Models;
+using DTO.Enum;
 using DTO.Service.Models;
-using NewCore.Enum;
-using Utilities.Models;
 
 namespace Mode.ServicesTest.MKR
 {

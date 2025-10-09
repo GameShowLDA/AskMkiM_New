@@ -19,6 +19,7 @@ using static UI.Components.Invoke.OpenFileButton;
 using static Utilities.LoggerUtility;
 using Application = System.Windows.Application;
 using UserControl = System.Windows.Controls.UserControl;
+using DTO.Base.Models;
 
 namespace UI.Components
 {
@@ -127,7 +128,7 @@ namespace UI.Components
     /// Добавляет новый MultiEditorControl в контейнер.
     /// </summary>
     /// <param name="filePath">Путь к файлу.</param>
-    public void ViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol, bool showInSoftware)
+    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware)
     {
       if (MultiEditor == null)
       {

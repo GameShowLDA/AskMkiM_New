@@ -1,16 +1,17 @@
 ﻿using AppConfiguration;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.Base;
 using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
+using DTO.Service;
+using DTO.Service.Models;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using DTO.Service;
-using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
-using DTO.Service.Models;
 
 namespace Mode.TestSuite.Metrology.NodeMethod
 {
@@ -224,7 +225,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// <returns>Задача, представляющая операцию подключения.</returns>
     public virtual async Task<(bool Connect, string Message)> ConnectDevicesAsync(IUserMessageService messageService)
     {
-      await AppConfiguration.Services.UserMessageServiceProvider.ShowMessageAsync(new ShowMessageModel("Инициализация оборудования", type: ShowMessageModel.MessageType.Info));
+      await messageService.ShowMessageAsync(new ShowMessageModel("Инициализация оборудования", type: ShowMessageModel.MessageType.Info));
 
       foreach (var device in Devices)
       {

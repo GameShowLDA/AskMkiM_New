@@ -7,8 +7,9 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.SwitchingDevice;
 using Utilities;
 using DTO.Service;
-using Utilities.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Service.Models;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.Execution
 {

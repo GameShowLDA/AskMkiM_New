@@ -1,13 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device;
+﻿using AppConfiguration.Error.Device;
 using DTO.Device.Base;
-using NewCore.Base.Device;
+using DTO.Service;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities;
-using DTO.Service;
-using Utilities.Models;
 
 namespace NewCore.FunctionAdapters.DeviceBusCommutation
 {
@@ -77,7 +73,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     {
       var result = await _stateManager.DisconnectAsync();
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Сброс устройства", result, 1, userMessageService);
-	  IsReset?.Invoke();
+      IsReset?.Invoke();
       return result;
     }
   }

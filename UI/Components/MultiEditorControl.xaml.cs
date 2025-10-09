@@ -17,6 +17,7 @@ using static UI.Components.Invoke.OpenFileButton;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using UserControl = System.Windows.Controls.UserControl;
+using DTO.Base.Models;
 
 namespace UI.Components
 {
@@ -254,7 +255,7 @@ namespace UI.Components
     /// Открывает диалоговое окно для открытия файла.
     /// </summary>
     /// <param name="path">Путь к файлу.</param>
-    public void ViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol, bool showInSoftware)
+    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware)
     {
       fileManager.ViewProtocol(protocol, showInSoftware);
     }

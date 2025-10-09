@@ -1,4 +1,5 @@
 ﻿using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using DTO.Service.Models;

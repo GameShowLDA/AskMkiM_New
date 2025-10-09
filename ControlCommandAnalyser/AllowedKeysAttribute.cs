@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
-using DTO.Service.Models; using Utilities.Errors;
-using Utilities.Models;
-using AppConfiguration.Error.Translation;
 
 namespace ControlCommandAnalyser
 {
-  public  enum AlgorithmKey
+  public enum AlgorithmKey
   {
     ЗР, ЗС, П, И, Г, С, Т1, Ш, Т, Б, К, Н, Д
   }

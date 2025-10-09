@@ -1,18 +1,19 @@
 ﻿using AppConfiguration;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.Base;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Enum;
+using DTO.Service;
+using DTO.Service.Models;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using DTO.Service;
-using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
-using DTO.Service.Models;
 
 namespace Mode.Metrology.MeasurementSystem
 {

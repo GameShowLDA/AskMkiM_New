@@ -1,10 +1,10 @@
-﻿using DTO.Device.RelaySwitchModule;
+﻿using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule;
+using DTO.Service;
+using DTO.Service.Models;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using DTO.Service;
-using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
-using DTO.Service.Models;
 
 namespace Mode.TestSuite.CrossTestMkr
 {

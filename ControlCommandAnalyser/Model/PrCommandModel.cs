@@ -1,21 +1,15 @@
 ﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model.Chains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.Models;
 
 namespace ControlCommandAnalyser.Model
 {
-   [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К, 
-    ControlCommandAnalyser.AlgorithmKey.ЗР,
-    ControlCommandAnalyser.AlgorithmKey.ЗС,
-    ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П, 
-     ControlCommandAnalyser.AlgorithmKey.И,
-     ControlCommandAnalyser.AlgorithmKey.Т,
-    ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
+  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
+   ControlCommandAnalyser.AlgorithmKey.ЗР,
+   ControlCommandAnalyser.AlgorithmKey.ЗС,
+   ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П,
+    ControlCommandAnalyser.AlgorithmKey.И,
+    ControlCommandAnalyser.AlgorithmKey.Т,
+   ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
   public class PrCommandModel : BaseCommandModel, IError, IHasScheme
   {
     public override string Mnemonic => "ПР";

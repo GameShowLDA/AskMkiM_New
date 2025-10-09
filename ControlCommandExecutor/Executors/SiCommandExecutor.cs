@@ -1,15 +1,14 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
+using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
-using Utilities;
 using DTO.Service;
-using Utilities.Models;
-using Utilities.ResultProtocol;
+using Utilities;
 using static DTO.Enum.DeviceEnums;
-using DTO.Service.Models;
 
 namespace ControlCommandExecutor.Executors
 {

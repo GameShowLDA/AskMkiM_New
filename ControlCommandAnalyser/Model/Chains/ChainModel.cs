@@ -1,4 +1,5 @@
-﻿using Utilities.Models;
+﻿using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
 
 namespace ControlCommandAnalyser.Model.Chains
 {

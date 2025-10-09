@@ -1,12 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AppConfiguration.Interface;
+using DTO.Base.Models;
 using DTO.Service.Models;
-using Utilities.Models;
-using static Utilities.LoggerUtility;
 
 namespace UI.Controls.ProtocolNew
 {

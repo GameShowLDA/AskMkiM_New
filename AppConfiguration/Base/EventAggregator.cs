@@ -1,7 +1,6 @@
-﻿using AppConfiguration.Protocol;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using Utilities.ResultProtocol;
+using DTO.Base.Models;
 using static AppConfiguration.AdminConfig;
 using static AppConfiguration.SystemStateManager;
 using static Utilities.LoggerUtility;
@@ -155,7 +154,7 @@ namespace AppConfiguration.Base
     /// <summary>
     /// Событие, которое вызывается при нажатии на кнопку возврата к редактирванию файла в текстовом редакторе.
     /// </summary>
-    public static event Action<Utilities.ResultProtocol.ProtocolModel> ViewProtocol;
+    public static event Action<ProtocolModel> ViewProtocol;
 
     public static event Action SaveSession;
     public static event Action OpenSession;
@@ -438,7 +437,7 @@ namespace AppConfiguration.Base
     /// Метод для вызова события для просмотра файла протокола в новом текстовом редакторе.
     /// </summary>
     /// <param name="filePath">Путь к файлу.</param>
-    public static void RaiseViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol)
+    public static void RaiseViewProtocol(ProtocolModel protocol)
     {
       ViewProtocol?.Invoke(protocol);
     }

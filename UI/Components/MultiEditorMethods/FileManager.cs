@@ -3,6 +3,7 @@ using AppConfiguration.Base;
 using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
 using DataBaseConfiguration.Services;
+using DTO.Base.Models;
 using DTO.Settings.SettingsModels;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Message;
@@ -127,17 +128,17 @@ namespace UI.Components.MultiEditorMethods
     /// Открывает файл, который находится по заданному пути, в текстовом редакторе.
     /// </summary>
     /// <param name="protocol">Путь к файлу.</param>
-    public void ViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol, bool showInSoftware)
+    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware)
     {
       // TODO: проверять каким способоом нужно открыть протокол
       var protocolText = string.Empty;
       if (protocol.Errors.Count > 0)
       {
-        protocolText = Utilities.ResultProtocol.ProtocolModel.GetProtocolWithErrorsText(protocol);
+        protocolText = ProtocolModel.GetProtocolWithErrorsText(protocol);
       }
       else
       {
-        protocolText = Utilities.ResultProtocol.ProtocolModel.GetProtocolText(protocol);
+        protocolText = ProtocolModel.GetProtocolText(protocol);
       }
       if (!string.IsNullOrEmpty(protocolText))
       {
@@ -158,7 +159,7 @@ namespace UI.Components.MultiEditorMethods
       SaveAsPdf(programName, protocolText);
     }
 
-    private void ViewProtocolInSoftware(Utilities.ResultProtocol.ProtocolModel protocol, string? protocolText)
+    private void ViewProtocolInSoftware(ProtocolModel protocol, string? protocolText)
     {
       Application.Current.Dispatcher.BeginInvoke(() =>
       {

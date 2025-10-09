@@ -1,4 +1,4 @@
-﻿namespace Utilities.Models
+﻿namespace DTO.Base.Models
 {
   public class PointType
   {

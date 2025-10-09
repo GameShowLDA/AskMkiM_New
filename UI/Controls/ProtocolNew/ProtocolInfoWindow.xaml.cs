@@ -1,8 +1,7 @@
-﻿using AppConfiguration.Base;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using Message;
-using Utilities.ResultProtocol;
+using AppConfiguration.Base;
+using DTO.Base.Models;
 
 
 namespace UI.Controls.ProtocolNew

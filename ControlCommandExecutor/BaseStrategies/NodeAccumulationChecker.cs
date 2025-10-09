@@ -10,9 +10,10 @@ using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
 using Utilities;
 using DTO.Service;
-using Utilities.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using static DTO.Enum.DeviceEnums;
 using DTO.Service.Models;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.BaseStrategies
 {

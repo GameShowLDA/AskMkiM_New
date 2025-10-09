@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using ControlCommandAnalyser.Model;
 using ControlCommandExecutor.Executors;
+using DTO.Base.Models;
 using DTO.Service;
 using DTO.Service.Models;
-using Utilities.ResultProtocol;
 using Utilities.TextEditor;
 
 namespace ControlCommandExecutor.Execution

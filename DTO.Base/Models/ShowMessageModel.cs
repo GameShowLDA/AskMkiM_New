@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace DTO.Service.Models
+namespace DTO.Base.Models
 {
   /// <summary>
   /// Модель сообщения.
