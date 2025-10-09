@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DTO.Enum;
 using NewCore.Base.Device;
 using NewCore.Base.DeviceResponses;
 using NewCore.Base.Function.ModuleVoltageCurrentSource;
@@ -25,7 +26,7 @@ namespace NewCore.Device
       Name = "Модуль МиНТ";
       Description = "Предназначен для создания электрических параметров для проверки кабельных изделий, печатных плат, контроля функционирования релейно-коммутационных изделий и другой подобной аппаратуры, проведения испытаний изделий по программам контроля";
 
-      DeviceType = DeviceEnum.DeviceType.PowerSourceModule;
+      DeviceType = DeviceEnums.DeviceType.PowerSourceModule;
 
       BusManager = new BusManagerAdapter(this);
       CurrentManager = new CurrentManagerAdapter(this);

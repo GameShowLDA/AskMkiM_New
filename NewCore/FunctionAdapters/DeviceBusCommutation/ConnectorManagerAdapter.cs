@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.DeviceBusCommutation;
+﻿using AppConfiguration.Error.Device.DeviceBusCommutation;
 using NewCore.Base.Function.DBC;
 using NewCore.Base.Interface.Main;
-using NewCore.Enum;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.FunctionAdapters.DeviceBusCommutation
 {
@@ -107,7 +104,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectMultimeter(DeviceEnum.SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectMultimeter(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
     {
       var description = $"мультиметра к шине [{bus}]";
 
@@ -137,7 +134,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectMultimeter(DeviceEnum.SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectMultimeter(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
     {
       if (deviceBusStatus.TryGetValue((DeviceType.Multimeter, bus), out var isConnected) && !isConnected)
         return true;
@@ -154,7 +151,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectPINT(DeviceEnum.SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectPINT(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
     {
       var description = $"ПИНТ к шине [{bus}]";
 
@@ -181,7 +178,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectPINT(DeviceEnum.SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectPINT(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
     {
       if (deviceBusStatus.TryGetValue((DeviceType.Multimeter, bus), out var isConnected) && !isConnected)
         return true;

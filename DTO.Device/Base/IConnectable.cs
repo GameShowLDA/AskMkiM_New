@@ -1,6 +1,11 @@
-﻿using Utilities.Interface;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Utilities.Interface;
 
-namespace NewCore.Base.Device
+namespace DTO.Device.Base
 {
   /// <summary>
   /// Определяет интерфейс для компонентов, требующих инициализации,

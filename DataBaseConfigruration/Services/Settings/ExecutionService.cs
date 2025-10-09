@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Execution;
 using AppConfiguration.Protocol;
+using DTO.SettingsModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseConfiguration.Services.Settings
@@ -16,14 +17,14 @@ namespace DataBaseConfiguration.Services.Settings
     /// Если строки ещё нет, создаёт новую.
     /// Если строка есть, обновляет её.
     /// </summary>
-    public async Task SaveExecutionAsync(ExecutionModel value)
+    public async Task SaveExecutionAsync(SettingsExecutionModel value)
     {
       using var db = DataBaseConfig.Context;
 
-      var existing = await db.Set<ExecutionModel>().FirstOrDefaultAsync();
+      var existing = await db.Set<SettingsExecutionModel>().FirstOrDefaultAsync();
       if (existing == null)
       {
-        await db.Set<ExecutionModel>().AddAsync(value);
+        await db.Set<SettingsExecutionModel>().AddAsync(value);
       }
       else
       {
@@ -37,10 +38,10 @@ namespace DataBaseConfiguration.Services.Settings
     /// Возвращает сохранённые настройки протокола.
     /// Если строки нет, возвращает null.
     /// </summary>
-    public async Task<ExecutionModel?> GetExecutionAsync()
+    public async Task<SettingsExecutionModel?> GetExecutionAsync()
     {
       using var db = DataBaseConfig.Context;
-      return await db.Set<ExecutionModel>().FirstOrDefaultAsync();
+      return await db.Set<SettingsExecutionModel>().FirstOrDefaultAsync();
     }
   }
 }

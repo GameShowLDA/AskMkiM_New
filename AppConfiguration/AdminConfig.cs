@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Base;
 
-namespace AppConfiguration.Admin
+namespace AppConfiguration
 {
   static public class AdminConfig
   {

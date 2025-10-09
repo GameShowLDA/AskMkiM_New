@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using Utilities.ResultProtocol;
-using static AppConfiguration.Admin.AdminConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.AdminConfig;
+using static AppConfiguration.SystemStateManager;
 using static Utilities.LoggerUtility;
 
 

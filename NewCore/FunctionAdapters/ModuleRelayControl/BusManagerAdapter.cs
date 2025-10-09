@@ -6,7 +6,7 @@ using NewCore.Base.Interface.Main;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
 using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.FunctionAdapters.ModuleRelayControl
 {

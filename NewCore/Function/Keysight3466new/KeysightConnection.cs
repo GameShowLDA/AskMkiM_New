@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using DTO.Device.Base;
 using NewCore.Base.Device;
 using NewCore.Base.Function.FastMeter;
 using NewCore.Device;

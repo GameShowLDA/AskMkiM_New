@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using DTO.Device.Base;
 using NewCore.Base.Device;
 using NewCore.Base.Function.ManagerChassis;
 using NewCore.Base.Interface.Main;

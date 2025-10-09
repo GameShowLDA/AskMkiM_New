@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppConfiguration.Base
+namespace DTO.Attributes
 {
   [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
   public class CommandInfoAttribute : Attribute

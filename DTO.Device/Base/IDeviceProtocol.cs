@@ -1,11 +1,10 @@
-﻿using NewCore.Base.Device;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NewCore.Communication
+namespace DTO.Device.Base
 {
   /// <summary>
   /// Определяет интерфейс для универсального протокола обмена данными с устройствами.

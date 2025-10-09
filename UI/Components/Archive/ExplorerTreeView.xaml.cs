@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using UI.Controls.Archive.Models;
 using UI.Components.Archive.ArchiveMenu;
+using AppConfiguration;
 
 namespace UI.Components.Archive
 {
@@ -43,7 +44,7 @@ namespace UI.Components.Archive
 
       Loaded += async (_, __) =>
       {
-        var isAdmin = await AppConfiguration.Admin.AdminConfig.GetAdminRights();
+        var isAdmin = await AdminConfig.GetAdminRights();
         IsAdmin = isAdmin;
       };
     }

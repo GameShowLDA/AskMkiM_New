@@ -1,10 +1,19 @@
-﻿namespace AppConfiguration.Execution
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DTO.SettingsModels
 {
   /// <summary>
   /// Модель данных для выполнения.
   /// </summary>
-  public class ExecutionModel
+  public class SettingsExecutionModel
   {
+    /// <summary>
+    /// Уникальный идентификатор модели.
+    /// </summary>
     public int Id { get; set; } = 1;
 
     /// <summary>

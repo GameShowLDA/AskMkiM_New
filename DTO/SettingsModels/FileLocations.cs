@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppConfiguration.Base
+namespace DTO.Settings.SettingsModels
 {
   /// <summary>
   /// Класс, содержащий пути к файлам.

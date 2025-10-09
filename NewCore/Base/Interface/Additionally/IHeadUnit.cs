@@ -1,4 +1,5 @@
-﻿using NewCore.Base.Device;
+﻿using DTO.Device.Base;
+using NewCore.Base.Device;
 
 namespace NewCore.Base.Interface.Additionally
 {

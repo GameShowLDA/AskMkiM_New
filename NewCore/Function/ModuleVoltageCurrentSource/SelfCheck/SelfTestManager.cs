@@ -12,7 +12,7 @@ using NewCore.Base.Interface.Main;
 using NewCore.Communication;
 using Utilities.Interface;
 using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {

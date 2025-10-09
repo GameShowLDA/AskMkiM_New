@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using DTO.Device.Base;
 using NewCore.Base.Interface.Main;
 using static Utilities.LoggerUtility;
 
@@ -101,7 +102,7 @@ namespace NewCore.Communication
     private async Task EstablishConnection()
     {
       Client = new TcpClient();
-      await Client.ConnectAsync(_device.ConnectionDetails, _port);
+      await Client.ConnectAsync(host: _device.ConnectionDetails, _port);
       Stream = Client.GetStream();
     }
 

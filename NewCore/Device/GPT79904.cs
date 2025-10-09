@@ -1,4 +1,5 @@
 ﻿using System.IO.Ports;
+using DTO.Enum;
 using NewCore.Base.Device;
 using NewCore.Base.Function.Breakdown;
 using NewCore.Base.Interface.Additionally;
@@ -29,7 +30,7 @@ namespace NewCore.Device
       Parity = Parity.None;
       DeviceClass = GetType().FullName;
 
-      DeviceType = DeviceEnum.DeviceType.BreakdownTester;
+      DeviceType = DeviceEnums.DeviceType.BreakdownTester;
 
       AcwManger = new AcwModeAdapter(this);
       DcwManger = new DcwModeAdapter(this);

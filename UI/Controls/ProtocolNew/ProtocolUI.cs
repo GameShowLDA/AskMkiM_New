@@ -7,12 +7,13 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using AppConfiguration.Base;
+using DTO.Settings.SettingsModels;
 using Message;
 using Utilities;
 using Utilities.Interface;
 using Utilities.Models;
 using static AppConfiguration.Protocol.ProtocolConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
 using static Utilities.DelegateManager;
 using static Utilities.Models.ShowMessageModel;
 

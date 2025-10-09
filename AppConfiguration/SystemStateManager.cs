@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Base;
 
-namespace AppConfiguration.SystemState
+namespace AppConfiguration
 {
   /// <summary>
   /// Менеджер состояния системы, управляющий правами доступа, питанием и блокировкой интерфейса.

@@ -14,7 +14,7 @@ namespace AppConfiguration.Error.Device.Adapters
     /// </summary>
     public static DeviceException SetSourceFailed(string source, string reason = null)
     {
-      if (AppConfiguration.Admin.AdminConfig.ErrorDebug)
+      if (AdminConfig.ErrorDebug)
       { 
       
       }

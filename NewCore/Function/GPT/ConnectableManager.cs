@@ -2,6 +2,7 @@
 using System.IO.Ports;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using DTO.Device.Base;
 using Microsoft.Win32.SafeHandles;
 using NewCore.Base.Device;
 using NewCore.Communication;

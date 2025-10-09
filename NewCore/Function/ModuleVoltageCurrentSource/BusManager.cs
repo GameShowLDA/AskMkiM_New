@@ -4,7 +4,7 @@ using NewCore.Base.Interface.Main;
 using NewCore.Communication;
 using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource

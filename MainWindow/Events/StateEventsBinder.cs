@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using AppConfiguration;
 using AppConfiguration.Base;
 using AppConfiguration.Execution;
-using AppConfiguration.SystemState;
 using ConsoleUI.ConsoleCommanding.Commands;
 using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
@@ -171,7 +171,7 @@ namespace MainWindowProgram.Events
     /// <param name="newRights">Новое состояние прав администратора.</param>
     private void OnAdminRightsChangedHandler(object sender, bool newRights)
     {
-      AppConfiguration.Admin.AdminConfig.SetAdminRights(newRights).ConfigureAwait(true);
+      AdminConfig.SetAdminRights(newRights).ConfigureAwait(true);
     }
 
     /// <summary>

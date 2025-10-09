@@ -1,7 +1,11 @@
-﻿using NewCore.Communication;
-using static NewCore.Enum.DeviceEnum;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static DTO.Enum.DeviceEnums;
 
-namespace NewCore.Base.Device
+namespace DTO.Device.Base
 {
   /// <summary>
   /// Интерфейс IDevice предоставляет общие методы и свойства для управления устройствами.

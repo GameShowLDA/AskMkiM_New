@@ -1,5 +1,5 @@
 ﻿using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Base.Function.ModuleRelayControl
 {

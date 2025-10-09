@@ -7,7 +7,7 @@ using NewCore.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
 using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
 {

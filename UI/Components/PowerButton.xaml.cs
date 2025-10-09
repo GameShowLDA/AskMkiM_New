@@ -8,7 +8,7 @@ using Message;
 using NewCore.Base.Interface.Main;
 using static AppConfiguration.Base.EventAggregator;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
 
 namespace UI.Components
 {

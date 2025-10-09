@@ -3,6 +3,7 @@ using AppConfiguration.Base;
 using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
 using DataBaseConfiguration.Services;
+using DTO.Settings.SettingsModels;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Message;
 using Message;

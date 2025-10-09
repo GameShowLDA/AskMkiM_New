@@ -1,9 +1,6 @@
-﻿namespace NewCore.Enum
+﻿namespace DTO.Enum
 {
-  /// <summary>
-  /// Различные перечисления для устройств.
-  /// </summary>
-  public class DeviceEnum
+  public class DeviceEnums
   {
     /// <summary>
     /// Перечисление типов устройств.
@@ -162,7 +159,7 @@
     /// <summary>
     /// Словарь соответствий шин и их параметров (группа, номер).
     /// </summary>
-    internal static readonly Dictionary<SwitchingBus, Tuple<int, int>> BusParameters = new Dictionary<SwitchingBus, Tuple<int, int>>
+    public static readonly Dictionary<SwitchingBus, Tuple<int, int>> BusParameters = new Dictionary<SwitchingBus, Tuple<int, int>>
     {
       { SwitchingBus.A1, Tuple.Create(1, 1) },
       { SwitchingBus.A2, Tuple.Create(1, 2) },

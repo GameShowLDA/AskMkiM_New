@@ -7,7 +7,7 @@ using AppConfiguration.Interface;
 using NewCore.Base.Interface.Main;
 using Utilities.Interface;
 using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck

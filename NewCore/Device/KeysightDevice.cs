@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using DTO.Enum;
 using NewCore.Base.Device;
 using NewCore.Base.Function.FastMeter;
 using NewCore.Base.Interface.Additionally;
@@ -79,7 +80,7 @@ namespace NewCore.Device
       Name = "Keysight 3466 new";
       Description = "Реализовать описание в NewCore.Device.KeysightDevice";
       DeviceClass = GetType().FullName;
-      DeviceType = DeviceEnum.DeviceType.FastMeter;
+      DeviceType = DeviceEnums.DeviceType.FastMeter;
       IsConnected = false;
 
       CapacitanceManager = new CapacitanceMeasurementAdapter(this);

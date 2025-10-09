@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace AppConfiguration.Parameter
+namespace DTO.SettingsModels
 {
-  public class ParameterModel
+  public class SettingsParameterModel
   {
     /// <summary>
     /// Выбранный язык интерфейса программы.

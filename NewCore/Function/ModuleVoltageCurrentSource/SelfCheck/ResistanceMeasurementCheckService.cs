@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppConfiguration.Interface;
 using NewCore.Base.Interface.Main;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 using NewCore.Base.DeviceResponses;
 using System.Text.Json;

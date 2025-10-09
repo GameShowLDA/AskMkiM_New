@@ -1,7 +1,8 @@
-﻿using NewCore.Communication;
+﻿using DTO.Device.Base;
+using NewCore.Communication;
 using System.IO.Ports;
 using System.Management;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Base.Device

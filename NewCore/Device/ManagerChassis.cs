@@ -1,4 +1,5 @@
-﻿using NewCore.Base.Device;
+﻿using DTO.Enum;
+using NewCore.Base.Device;
 using NewCore.Base.Function.ManagerChassis;
 using NewCore.Base.Interface.Main;
 using NewCore.Enum;
@@ -18,7 +19,7 @@ namespace NewCore.Device
     {
       ConnectableManager = new StateManager(this);
       PowerManager = new PowerManager(this);
-      DeviceType = DeviceEnum.DeviceType.ChassisManager;
+      DeviceType = DeviceEnums.DeviceType.ChassisManager;
 
       Name = "Тестер АСКМ";
       Description = "Добавить описание сюда";

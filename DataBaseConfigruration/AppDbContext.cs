@@ -11,6 +11,7 @@ using DataBaseConfiguration.Models.Device;
 using DataBaseConfiguration.Models.Hotkey;
 using DataBaseConfiguration.Models.MeasurementError;
 using DataBaseConfiguration.Models.Session;
+using DTO.SettingsModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseConfiguration
@@ -85,7 +86,7 @@ namespace DataBaseConfiguration
     /// <summary>
     /// Таблица настроек протокола.
     /// </summary>
-    public DbSet<ExecutionModel> Execution { get; set; }
+    public DbSet<SettingsExecutionModel> Execution { get; set; }
 
     /// <summary>
     /// Таблица корневых архивов пользователей.

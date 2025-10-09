@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NewCore.Base.Interface.Main;
 using Utilities;
 using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck
 {

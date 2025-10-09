@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\DTO.Device\DTO.Device.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 </Project>

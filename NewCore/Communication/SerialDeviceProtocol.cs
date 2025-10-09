@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DTO.Device.Base;
 using NewCore.Base.Device;
 using static Utilities.LoggerUtility;
 

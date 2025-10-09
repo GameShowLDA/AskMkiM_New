@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using AppConfiguration.Base;
+using DTO.SettingsModels;
 
 namespace AppConfiguration.Protocol
 {

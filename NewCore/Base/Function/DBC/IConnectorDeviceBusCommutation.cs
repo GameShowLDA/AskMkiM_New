@@ -1,6 +1,6 @@
 ﻿using NewCore.Base.Function.DBC;
 using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 /// <summary>
 /// Интерфейс для управления коммутацией устройств на шинах.

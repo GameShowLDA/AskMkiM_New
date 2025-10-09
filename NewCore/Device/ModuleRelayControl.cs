@@ -1,4 +1,5 @@
-﻿using NewCore.Base.Device;
+﻿using DTO.Enum;
+using NewCore.Base.Device;
 using NewCore.Base.Function.ModuleRelayControl;
 using NewCore.Base.Interface.Additionally;
 using NewCore.Base.Interface.Main;
@@ -25,7 +26,7 @@ namespace NewCore.Device
       PointManager = new PointManagerAdapter(this);
       SelfTestManager = new Function.ModuleRelayControl.SelfCheck.SelfTestManager(this);
 
-      DeviceType = DeviceEnum.DeviceType.RelaySwitchModule;
+      DeviceType = DeviceEnums.DeviceType.RelaySwitchModule;
       Name = "Модуль МКР-350";
       Description = "Добавить описание сюда";
       PointCount = 350;
