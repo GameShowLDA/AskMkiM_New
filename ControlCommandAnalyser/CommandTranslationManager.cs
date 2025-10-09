@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
-using Utilities.Errors;
+using DTO.Service.Models; using Utilities.Errors;
 using Utilities.Models;
 using Utilities.TextEditor;
 

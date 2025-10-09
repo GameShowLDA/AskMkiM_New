@@ -10,9 +10,10 @@ using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
+using DTO.Service.Models;
 
 namespace Mode.Metrology.CI
 {

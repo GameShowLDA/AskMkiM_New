@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace DTO.Device.Breakdown.Capabilities

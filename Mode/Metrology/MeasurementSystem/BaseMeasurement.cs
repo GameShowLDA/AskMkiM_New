@@ -8,10 +8,11 @@ using DTO.Enum;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
+using DTO.Service.Models;
 
 namespace Mode.Metrology.MeasurementSystem
 {

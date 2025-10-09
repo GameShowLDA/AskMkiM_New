@@ -6,8 +6,9 @@ using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
+using DTO.Service.Models;
 
 namespace Mode.TestSuite.Metrology.NodeMethod.PI
 {

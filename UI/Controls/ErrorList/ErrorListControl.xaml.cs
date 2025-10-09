@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Utilities.Errors;
+using DTO.Service.Models; using Utilities.Errors;
 using Utilities.Help;
 using Utilities.Models;
 

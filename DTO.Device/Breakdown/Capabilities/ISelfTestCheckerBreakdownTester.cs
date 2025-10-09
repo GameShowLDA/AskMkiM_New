@@ -1,6 +1,6 @@
 ﻿using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace DTO.Device.Breakdown.Capabilities
 {

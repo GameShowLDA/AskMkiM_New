@@ -1,4 +1,5 @@
 ﻿using DTO.Enum;
+using DTO.Service.Models;
 using Mode.Models;
 using NewCore.Enum;
 using System.Windows.Controls;

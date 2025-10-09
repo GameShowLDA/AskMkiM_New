@@ -6,8 +6,9 @@ using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
+using DTO.Service.Models;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor.PI
 {
@@ -111,15 +112,15 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
       }
 
       /// <inheritdoc />
-      public override async Task PerformMeasurement(ProtocolUI protocolUI, DataModel dataModel)
+      public override async Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel)
       {
         var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
 
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("\tИспытания прочности изоляции(ACW)"));
+        await messageService.ShowMessageAsync(new ShowMessageModel("\tИспытания прочности изоляции(ACW)"));
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          protocolUI.GetCancellationToken().ThrowIfCancellationRequested();
-          var answer = await breakDown.AcwManger.Measure.MeasureAsync(dataModel.Param, userMessageService: protocolUI);
+          messageService.GetCancellationToken().ThrowIfCancellationRequested();
+          var answer = await breakDown.AcwManger.Measure.MeasureAsync(dataModel.Param, userMessageService: messageService);
           var type = ShowMessageModel.MessageType.Success;
           if (answer > dataModel.Param)
           {
@@ -129,7 +130,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
           // await protocolUI.ShowMessageAsync(new ShowMessageModel($"\t\tРезультат измерения разряда {HighestBitCount}({GetBitString()})", message: $"{answer.ToString()} мА", type: type));
           return type == ShowMessageModel.MessageType.Success ? true : false;
 
-        }, protocolUI);
+        }, messageService);
       }
 
       public override async Task FinalizeAsync(IUserMessageService messageService)

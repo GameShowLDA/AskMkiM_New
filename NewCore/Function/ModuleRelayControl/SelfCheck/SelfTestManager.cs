@@ -1,13 +1,13 @@
 ﻿using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Capabilities;
 using DTO.Device.SwitchingDevice;
+using DTO.Service;
+using DTO.Service.Models;
 using NewCore.Communication;
 using Utilities;
-using Utilities.Interface;
-using Utilities.Models;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static DTO.Enum.DeviceEnums;
-using static Utilities.Models.ShowMessageModel;
+using static DTO.Service.Models.ShowMessageModel;
 
 namespace NewCore.Function.ModuleRelayControl.SelfCheck
 {

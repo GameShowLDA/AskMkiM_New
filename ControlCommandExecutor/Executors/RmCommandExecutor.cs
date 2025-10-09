@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
+using DTO.Service.Models;
 using Utilities.Models;
 using Utilities.ResultProtocol;
 

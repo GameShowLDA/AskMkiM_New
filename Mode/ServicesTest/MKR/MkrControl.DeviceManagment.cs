@@ -1,4 +1,5 @@
 ﻿using DTO.Enum;
+using DTO.Service.Models;
 using NewCore.Enum;
 using Utilities.Models;
 

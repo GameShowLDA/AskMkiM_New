@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.Models;
+﻿using DTO.Service.Models;
 
-namespace Utilities.Interface
+namespace DTO.Service
 {
   /// <summary>
   /// Интерфейс для отображения сообщений пользователю и управления действиями, доступными при ошибках.

@@ -1,7 +1,7 @@
 ﻿using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.Breakdown.Model;
 using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;

@@ -1,6 +1,7 @@
 ﻿using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
-using Utilities.Interface;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities.Models;
 using static Utilities.LoggerUtility;
 
@@ -14,7 +15,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="token">Токен для отмены операции.</param>
     static internal async Task GenerateDiscreteVoltageCheck(CancellationToken cancellationToken, IUserMessageService messageService, IFastMeter fastMeter, IPowerSourceModule powerSource)
     {
-      await messageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Начало проверки формирования дискрет напряжения"));
+      await messageService.ShowMessageAsync(new ShowMessageModel("Начало проверки формирования дискрет напряжения"));
 
       await CheckVoltageLevelsAsync(cancellationToken, messageService, 0.1, 0.9, 0.1, 20, fastMeter, powerSource);
       await CheckVoltageLevelsAsync(cancellationToken, messageService, 1, 9, 1, 20, fastMeter, powerSource);

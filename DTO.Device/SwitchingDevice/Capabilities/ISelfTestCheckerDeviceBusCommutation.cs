@@ -1,5 +1,5 @@
 ﻿using DTO.Device.FastMeter;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace DTO.Device.SwitchingDevice.Capabilities

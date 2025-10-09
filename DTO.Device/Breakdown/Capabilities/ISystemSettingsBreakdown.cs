@@ -1,5 +1,5 @@
 ﻿using DTO.Device.Breakdown.Model;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace DTO.Device.Breakdown.Capabilities
 {

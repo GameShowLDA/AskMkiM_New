@@ -3,7 +3,7 @@ using DTO.Device.Base;
 using DTO.Device.PowerSourceModule;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
 {

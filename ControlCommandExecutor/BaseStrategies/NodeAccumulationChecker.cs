@@ -9,9 +9,10 @@ using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
+using DTO.Service.Models;
 
 namespace ControlCommandExecutor.BaseStrategies
 {

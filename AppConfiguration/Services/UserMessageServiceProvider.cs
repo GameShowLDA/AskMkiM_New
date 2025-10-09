@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using Utilities.Interface;
-using Utilities.Models;
+﻿using DTO.Service;
+using DTO.Service.Models;
 
 namespace AppConfiguration.Services
 {

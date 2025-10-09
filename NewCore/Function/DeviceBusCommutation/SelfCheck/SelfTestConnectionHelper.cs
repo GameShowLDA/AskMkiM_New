@@ -1,7 +1,7 @@
 ﻿using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck
 {

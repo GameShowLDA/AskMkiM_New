@@ -1,7 +1,7 @@
 ﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
 using NewCore.Function.GPT.Helper;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT.Managment

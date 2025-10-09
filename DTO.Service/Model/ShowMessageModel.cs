@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
-namespace Utilities.Models
+namespace DTO.Service.Models
 {
   /// <summary>
   /// Модель сообщения.
@@ -46,12 +45,12 @@ namespace Utilities.Models
     /// <summary>
     /// Сообщение и цвет для успешного выполнения.
     /// </summary>
-    static public (string Title, System.Windows.Media.Color TitleColor) SuccessMessage => ("НОРМА", System.Windows.Media.Color.FromArgb(255, 79, 205, 101));
+    static public (string Title, Color TitleColor) SuccessMessage => ("НОРМА", Color.FromArgb(255, 79, 205, 101));
 
     /// <summary>
     /// Сообщение и цвет для ошибки.
     /// </summary>
-    static public (string Title, System.Windows.Media.Color TitleColor) ErrorMessage => ("БРАК", System.Windows.Media.Color.FromArgb(255, 241, 48, 27));
+    static public (string Title, Color TitleColor) ErrorMessage => ("БРАК", Color.FromArgb(255, 241, 48, 27));
 
     /// <summary>
     /// Получает или задает заголовок сообщения.
@@ -68,12 +67,12 @@ namespace Utilities.Models
     /// <summary>
     /// Получает или задает цвет заголовка сообщения.
     /// </summary>
-    public System.Windows.Media.Color? HeaderColor { get; set; }
+    public Color? HeaderColor { get; set; }
 
     /// <summary>
     /// Получает или задает цвет текста сообщения.
     /// </summary>
-    public System.Windows.Media.Color? MessageColor
+    public Color? MessageColor
     {
       get;
       set;
@@ -214,7 +213,7 @@ namespace Utilities.Models
       }
     }
 
-    public System.Windows.Media.Color? GetColorMessage()
+    public Color? GetColorMessage()
     {
       if (Status == MessageType.Success)
       {
@@ -226,7 +225,7 @@ namespace Utilities.Models
       }
       else if (Status == MessageType.Command)
       {
-        System.Windows.Media.Color? color = null;
+        Color? color = null;
         System.Windows.Application.Current.Dispatcher.Invoke(() =>
         {
           if (System.Windows.Application.Current?.Resources["YellowColorSolidColorBrush"] is SolidColorBrush brush)
@@ -239,7 +238,7 @@ namespace Utilities.Models
       }
       else if (Status == MessageType.CommandBlock)
       {
-        System.Windows.Media.Color? color = null;
+        Color? color = null;
         System.Windows.Application.Current.Dispatcher.Invoke(() =>
         {
           if (System.Windows.Application.Current?.Resources["LightBlueColorSolidColorBrush"] is SolidColorBrush brush)
@@ -261,7 +260,7 @@ namespace Utilities.Models
     /// <param name="headerColor">Цвет заголовка сообщения (по умолчанию null).</param>
     /// <param name="message">Основной текст сообщения (по умолчанию null).</param>
     /// <param name="messageColor">Цвет основного текста сообщения (по умолчанию null).</param>
-    public ShowMessageModel(string header = null, System.Windows.Media.Color? headerColor = null, string message = null, System.Windows.Media.Color? messageColor = null, MessageType? type = MessageType.Info) : this()
+    public ShowMessageModel(string header = null, Color? headerColor = null, string message = null, Color? messageColor = null, MessageType? type = MessageType.Info) : this()
     {
       if (headerColor != null)
       {

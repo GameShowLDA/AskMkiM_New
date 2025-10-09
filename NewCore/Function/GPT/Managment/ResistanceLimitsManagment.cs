@@ -1,6 +1,6 @@
 ﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
 

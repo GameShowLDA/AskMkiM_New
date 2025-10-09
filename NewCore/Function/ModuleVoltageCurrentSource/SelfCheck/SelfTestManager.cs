@@ -3,9 +3,10 @@ using DTO.Device.PowerSourceModule;
 using DTO.Device.PowerSourceModule.Capabilities;
 using DTO.Device.SwitchingDevice;
 using NewCore.Communication;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
+using DTO.Service.Models;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {

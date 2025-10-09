@@ -1,7 +1,7 @@
 ﻿using DTO.Device.RelaySwitchModule;
+using DTO.Service;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
-using Utilities.Interface;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
 
@@ -47,18 +47,18 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
     /// <summary>
     /// Выполняет измерение.
     /// </summary>
-    /// <param name="protocolUI">Интерфейс протокола для вывода сообщений.</param>
+    /// <param name="messageService">Интерфейс протокола для вывода сообщений.</param>
     /// <param name="dataModel">Модель данных, содержащая параметры измерений.</param>
-    public abstract Task PerformMeasurement(ProtocolUI protocolUI, DataModel dataModel);
+    public abstract Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel);
 
     /// <summary>
     /// Подключает все устройства и инициализирует компоненты.
     /// </summary>
     /// <param name="point1">Начальная точка диапазона.</param>
     /// <param name="point2">Конечная точка диапазона.</param>
-    /// <param name="protocolUI">Интерфейс протокола для вывода сообщений.</param>
+    /// <param name="messageService">Интерфейс протокола для вывода сообщений.</param>
     /// <returns>Результат подключения.</returns>
-    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, ProtocolUI protocolUI)
+    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, IUserMessageService messageService)
     {
       try
       {
@@ -72,7 +72,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
         return (false, ex.Message);
       }
 
-      return await _deviceCollector.ConnectAllAsync(protocolUI);
+      return await _deviceCollector.ConnectAllAsync(messageService);
     }
 
     /// <summary>

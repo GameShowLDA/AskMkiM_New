@@ -1,5 +1,5 @@
 ﻿using DTO.Device.SwitchingDevice;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace DTO.Device.RelaySwitchModule.Capabilities
 {

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AppConfiguration.Interface;
+using DTO.Service.Models;
 using Utilities.Models;
 using static Utilities.LoggerUtility;
 

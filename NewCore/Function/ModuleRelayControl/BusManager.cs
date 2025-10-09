@@ -2,7 +2,7 @@
 using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Base.DeviceResponses;
 using NewCore.Communication;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;

@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using DTO.Device.Breakdown;
 using NewCore.Function.GPT.Command;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static Utilities.LoggerUtility;

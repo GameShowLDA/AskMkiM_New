@@ -1,4 +1,5 @@
 ﻿using DTO.Device.RelaySwitchModule;
+using DTO.Service.Models;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;

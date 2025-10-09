@@ -6,7 +6,7 @@ using NewCore.Base.Device;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 
 namespace NewCore.FunctionAdapters.DeviceBusCommutation

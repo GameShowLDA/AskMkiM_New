@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using ControlCommandAnalyser.Model;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.TextEditor;
 
 namespace ControlCommandExecutor.Execution

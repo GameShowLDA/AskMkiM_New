@@ -7,7 +7,7 @@ using Microsoft.Win32.SafeHandles;
 using NewCore.Base.Device;
 using NewCore.Communication;
 using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 

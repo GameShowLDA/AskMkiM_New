@@ -2,9 +2,10 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
+using DTO.Service.Models;
 
 namespace ControlCommandExecutor.BaseStrategies
 {
@@ -111,15 +112,6 @@ namespace ControlCommandExecutor.BaseStrategies
       foreach (var point in points)
       {
         await DisconnectFromBusBAsync(point, messageService);
-      }
-    }
-
-
-    private static async Task ConnectAllFromBusBAsync(List<ChainModel> points, IUserMessageService messageService)
-    {
-      foreach (var point in points)
-      {
-        await ConnectToBusBAsync(point, messageService);
       }
     }
 

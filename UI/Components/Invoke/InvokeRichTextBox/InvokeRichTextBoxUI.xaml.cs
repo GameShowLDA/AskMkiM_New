@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using DTO.Service.Models;
 using Utilities.Models;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static AppConfiguration.Protocol.ProtocolConfig;

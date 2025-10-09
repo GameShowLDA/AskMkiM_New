@@ -4,8 +4,9 @@ using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
+using DTO.Service.Models;
 
 namespace NewCore.Function.GPT.SelfCheck
 {

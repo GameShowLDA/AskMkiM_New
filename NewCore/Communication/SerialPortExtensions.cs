@@ -4,7 +4,8 @@ using System.IO;
 using System.IO.Ports;
 using System.Management;
 using System.Threading.Tasks;
-using Utilities.Interface;
+using DTO.Service;
+using DTO.Service.Models;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Communication
@@ -59,7 +60,7 @@ namespace NewCore.Communication
         {
           var str = $"COM-порт {port.PortName} уже был открыт (попытка {attempt}).";
           LogWarning($"{header} {str}", isDeviceLog: true);
-          await userMessageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel(header, message: str, type: Utilities.Models.ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
+          await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
           return new DummyReleaser();
         }
         catch (UnauthorizedAccessException ex)
@@ -91,13 +92,13 @@ namespace NewCore.Communication
         {
           var str = $"Попытка {attempt}/{maxAttempts}: ошибка I/O при открытии {port.PortName} ({ex.Message}).";
           LogWarning($"{header} {str}", isDeviceLog: true);
-          await userMessageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel(header, message: str, type: Utilities.Models.ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
+          await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
 
           if (attempt >= maxAttempts)
           {
             str = $"COM-порт {port.PortName} не удалось открыть после {maxAttempts} попыток.";
             LogException($"{header} {str}", ex, isDeviceLog: true);
-            await userMessageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel(header, message: str, type: Utilities.Models.ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
+            await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
             throw;
           }
 
@@ -107,13 +108,13 @@ namespace NewCore.Communication
         {
           var str = $"Попытка {attempt}/{maxAttempts}: общая ошибка при открытии {port.PortName} ({ex.Message}).";
           LogWarning($"{header} {str}", isDeviceLog: true);
-          await userMessageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel(header, message: str, type: Utilities.Models.ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
+          await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
 
           if (attempt >= maxAttempts)
           {
             str = $"COM-порт {port.PortName} не удалось открыть после {maxAttempts} попыток.";
             LogException($"{header} {str}", ex, isDeviceLog: true);
-            await userMessageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel(header, message: str, type: Utilities.Models.ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
+            await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
             throw;
           }
 

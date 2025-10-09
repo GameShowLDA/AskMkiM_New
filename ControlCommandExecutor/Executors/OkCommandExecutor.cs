@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
+﻿using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
-using Utilities.Models;
+using DTO.Service.Models;
 using Utilities.ResultProtocol;
 
 namespace ControlCommandExecutor.Executors
@@ -33,7 +27,7 @@ namespace ControlCommandExecutor.Executors
       command.ProtocolModel = new Utilities.ResultProtocol.ProtocolModel();
       command.ProtocolModel.ProgramPath = command.ObjectName;
 
-      await context.Console.ShowMessageAsync(new Utilities.Models.ShowMessageModel($"Выполнение программы контроля для \"{command.ObjectName}({command.ObjectCode})\"", type: ShowMessageModel.MessageType.Command), IsBlockStart: true);
+      await context.Console.ShowMessageAsync(new ShowMessageModel($"Выполнение программы контроля для \"{command.ObjectName}({command.ObjectCode})\"", type: ShowMessageModel.MessageType.Command), IsBlockStart: true);
     }
   }
 }

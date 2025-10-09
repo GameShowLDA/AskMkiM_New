@@ -1,7 +1,7 @@
 ﻿using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using DTO.Device.SwitchingDevice.Capabilities;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck

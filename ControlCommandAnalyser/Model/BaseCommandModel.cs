@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Error.Translation;
-using Utilities.Errors;
+using DTO.Service.Models; using Utilities.Errors;
 using Utilities.Models;
 
 namespace ControlCommandAnalyser.Model

@@ -6,8 +6,9 @@ using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.SwitchingDevice;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
+using DTO.Service.Models;
 
 namespace ControlCommandExecutor.Execution
 {

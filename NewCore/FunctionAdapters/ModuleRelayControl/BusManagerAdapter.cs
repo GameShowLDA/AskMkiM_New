@@ -2,7 +2,7 @@
 using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.FunctionAdapters.ModuleRelayControl

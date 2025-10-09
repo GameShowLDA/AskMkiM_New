@@ -1,17 +1,16 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using DTO.Service;
+using DTO.Service.Models;
 using Message;
-using NewCore.Communication;
-using Utilities.Interface;
-using Utilities.Models;
 using WindowsInput;
 using static AppConfiguration.Base.EventAggregator;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static AppConfiguration.Protocol.ProtocolConfig;
 using static AppConfiguration.SystemStateManager;
+using static DTO.Service.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
-using static Utilities.Models.ShowMessageModel;
 
 namespace UI.Controls.ProtocolNew
 {

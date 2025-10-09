@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ControlCommandAnalyser.Model;
-using Utilities.Errors;
+using DTO.Service.Models; using Utilities.Errors;
 using Utilities.Models;
 using AppConfiguration.Error.Translation;
 

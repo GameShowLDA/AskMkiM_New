@@ -1,5 +1,5 @@
-﻿using Utilities.Interface;
-using static Utilities.Interface.IUserMessageService;
+﻿using DTO.Service;
+using static DTO.Service.IUserMessageService;
 
 namespace Utilities
 {

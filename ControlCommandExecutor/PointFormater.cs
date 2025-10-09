@@ -6,7 +6,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ControlCommandAnalyser.Model.Chains;
-using Utilities.Interface;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities.Models;
 
 namespace ControlCommandExecutor

@@ -4,7 +4,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.SwitchingDevice;
-using Utilities.Interface;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities.Models;
 
 namespace Mode.Device.DBC

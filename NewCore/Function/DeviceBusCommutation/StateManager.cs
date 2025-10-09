@@ -1,7 +1,7 @@
 ﻿using DTO.Device.Base;
 using NewCore.Base.DeviceResponses;
 using NewCore.Communication;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.DeviceBusCommutation

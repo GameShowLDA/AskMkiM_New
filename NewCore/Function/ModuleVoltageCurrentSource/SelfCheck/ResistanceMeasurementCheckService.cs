@@ -3,7 +3,8 @@ using AppConfiguration.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
-using Utilities.Interface;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
 
@@ -117,7 +118,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
     static private async Task ConnectBlockingRelaysAsync(ISwitchingDevice relayModule, IUserMessageService messageService)
     {
-      await messageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Подключение блокировочных реле на УКШ."));
+      await messageService.ShowMessageAsync(new ShowMessageModel("Подключение блокировочных реле на УКШ."));
       var relays = relayModule.SelfTestManager.GetValidBusContacts(SwitchingDeviceTypeConnector.BlockingRelay, messageService);
       foreach (var item in relays)
       {

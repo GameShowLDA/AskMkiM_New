@@ -1,7 +1,6 @@
-﻿using AppConfiguration.Services;
-using DTO.Device.Base;
-using Utilities.Interface;
-using Utilities.Models;
+﻿using DTO.Device.Base;
+using DTO.Service;
+using DTO.Service.Models;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.Helpers
@@ -52,9 +51,9 @@ namespace NewCore.Function.Helpers
     {
       if (!result || await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo())
       {
-        if (UserMessageServiceProvider.Instance != null)
+        if (userMessageService != null)
         {
-          await UserMessageServiceProvider.Instance.ShowMessageAsync(showMessageModel, skipPause: true);
+          await userMessageService.ShowMessageAsync(showMessageModel, skipPause: true);
         }
         else
         {

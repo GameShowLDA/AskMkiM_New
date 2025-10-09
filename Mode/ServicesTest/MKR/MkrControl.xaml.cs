@@ -6,8 +6,8 @@ using System.Windows.Data;
 using System.Windows.Media;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.RelaySwitchModule;
+using DTO.Service.Models;
 using Mode.Models;
-using static Utilities.Models.ShowMessageModel;
 
 namespace Mode.ServicesTest.MKR
 {
@@ -24,12 +24,12 @@ namespace Mode.ServicesTest.MKR
     /// <summary>
     /// Статусное сообщение для успешного выполнения теста.
     /// </summary>
-    private readonly (string Title, Color TitleColor) goodText = SuccessMessage;
+    private readonly (string Title, Color TitleColor) goodText = ShowMessageModel.SuccessMessage;
 
     /// <summary>
     /// Статусное сообщение для ошибки в процессе выполнения теста.
     /// </summary>
-    private readonly (string Title, Color TitleColor) errorText = ErrorMessage;
+    private readonly (string Title, Color TitleColor) errorText = ShowMessageModel.ErrorMessage;
 
     /// <summary>
     /// Коллекция точек для привязки к пользовательскому интерфейсу.

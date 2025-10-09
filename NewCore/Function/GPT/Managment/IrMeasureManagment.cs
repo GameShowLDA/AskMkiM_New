@@ -3,7 +3,7 @@ using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
 using NewCore.Function.GPT.Command;
 using NewCore.Function.GPT.Helper;
-using Utilities.Interface;
+using DTO.Service;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static Utilities.LoggerUtility;
 

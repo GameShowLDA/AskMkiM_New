@@ -3,8 +3,9 @@ using DTO.Device.Breakdown;
 using Mode.Base;
 using Mode.TestSuite.Metrology.MethodExecutor;
 using UI.Controls.ProtocolNew;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
+using DTO.Service.Models;
 
 namespace TestWPF
 {
@@ -82,10 +83,10 @@ namespace TestWPF
     }
 
     /// <inheritdoc />
-    public override async Task PerformMeasurement(ProtocolUI protocolUI, DataModel dataModel)
+    public override async Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel)
     {
       //var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
-      await protocolUI.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
+      await messageService.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
 
       // var answer = await breakDown.IrManger.MeasureResistanceAsync();
       var answer = 0;
@@ -96,7 +97,7 @@ namespace TestWPF
         type = ShowMessageModel.MessageType.Error;
       }
 
-      await protocolUI.ShowMessageAsync(new ShowMessageModel($"\t\tРезультат измерения разряда {HighestBitCount}({GetBitString()})", message: $"{answer.ToString()} МОм", type: type));
+      await messageService.ShowMessageAsync(new ShowMessageModel($"\t\tРезультат измерения разряда {HighestBitCount}({GetBitString()})", message: $"{answer.ToString()} МОм", type: type));
     }
 
     public override async Task FinalizeAsync(IUserMessageService messageService)

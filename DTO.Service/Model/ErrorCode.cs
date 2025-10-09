@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.Models;
+﻿using System.Reflection;
 
-namespace Utilities.Errors
+namespace DTO.Service.Models
 {
   /// <summary>
   /// Коды ошибок, используемые при анализе и разборе управляющих программ.

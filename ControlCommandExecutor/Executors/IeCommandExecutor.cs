@@ -5,8 +5,9 @@ using ControlCommandExecutor.Execution;
 using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.SwitchingDevice;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities;
-using Utilities.Interface;
 using Utilities.Models;
 using Utilities.ResultProtocol;
 using static DTO.Enum.DeviceEnums;
@@ -71,7 +72,7 @@ namespace ControlCommandExecutor.Executors
         secondValue = command.HigherLimitCapacity.Value;
       }
 
-      BaseStrategies.ConnectedPointChecker.PerformMeasurementAsync measure = ResistanceMeasure;
+      ConnectedPointChecker.PerformMeasurementAsync measure = ResistanceMeasure;
       var errMes = await ConnectedPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2);
       errorMessage.AddRange(errMes);
 

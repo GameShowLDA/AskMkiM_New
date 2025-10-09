@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
+using DTO.Service.Models;
 using Utilities.Models;
 
 namespace MainWindowProgram.Test.Protocol

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utilities.Errors
+namespace DTO.Service.Models
 {
   [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
   public sealed class ErrorCodeTagAttribute : Attribute

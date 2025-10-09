@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace DTO.Device.Breakdown.Capabilities
 {

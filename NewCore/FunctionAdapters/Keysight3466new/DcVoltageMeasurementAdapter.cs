@@ -2,7 +2,7 @@
 using NewCore.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.Keysight3466new;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.Keysight3466new
 {

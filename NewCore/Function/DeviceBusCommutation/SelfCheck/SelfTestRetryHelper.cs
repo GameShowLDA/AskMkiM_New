@@ -1,6 +1,7 @@
 ﻿using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice.Capabilities;
-using Utilities.Interface;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities.Models;
 using static DTO.Enum.DeviceEnums;
 

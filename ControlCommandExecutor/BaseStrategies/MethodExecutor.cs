@@ -4,10 +4,11 @@ using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 using static ControlCommandExecutor.BaseStrategies.NodeFullChecker;
 using static DTO.Enum.DeviceEnums;
+using DTO.Service.Models;
 
 namespace ControlCommandExecutor.BaseStrategies
 {
@@ -59,7 +60,7 @@ namespace ControlCommandExecutor.BaseStrategies
           showMessageModels.Add(new ShowMessageModel($"Ошибка при проверке разряда {step} ({HighestBitCount})", message: $"Измеренное значение - {result.Value}", type: ShowMessageModel.MessageType.Error));
 
           await messageService.ShowMessageAsync(new ShowMessageModel($"Выполение измерения методом полного узла"), IsBlockStart: true);
-          showMessageModels.AddRange(await BaseStrategies.NodeFullChecker.CheckSequenceAsync(schemeModel, performMeasurementAsync, manager, siCommandModel, messageService, resistance));
+          showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync(schemeModel, performMeasurementAsync, manager, siCommandModel, messageService, resistance));
 
           return showMessageModels;
         }

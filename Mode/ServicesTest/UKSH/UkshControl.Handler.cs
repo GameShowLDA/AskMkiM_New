@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using DTO.Service.Models;
 using Mode.Models;
 
 namespace Mode.ServicesTest.UKSH
@@ -133,7 +134,7 @@ namespace Mode.ServicesTest.UKSH
     /// <returns>Задача, представляющая асинхронную операцию.</returns>
     private Task ShowMessageAsync(string text)
     {
-      ProtocolSelfCheckControl?.ShowMessageAsync(new Utilities.Models.ShowMessageModel(text));
+      ProtocolSelfCheckControl?.ShowMessageAsync(new ShowMessageModel(text));
       return Task.CompletedTask;
     }
   }

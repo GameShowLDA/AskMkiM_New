@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using DTO.Service.Models;
 using Utilities.Models;
 
 namespace UI.Controls.ErrorList

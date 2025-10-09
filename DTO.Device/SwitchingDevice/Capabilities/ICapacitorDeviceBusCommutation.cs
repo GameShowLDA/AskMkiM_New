@@ -1,4 +1,4 @@
-﻿using Utilities.Interface;
+﻿using DTO.Service;
 
 namespace DTO.Device.SwitchingDevice.Capabilities
 {

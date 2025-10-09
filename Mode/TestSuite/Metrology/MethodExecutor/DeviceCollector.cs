@@ -4,7 +4,7 @@ using DataBaseConfiguration.Services.Device;
 using DTO.Device.Base;
 using Mode.Models;
 using NewCore.Base.Device;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor

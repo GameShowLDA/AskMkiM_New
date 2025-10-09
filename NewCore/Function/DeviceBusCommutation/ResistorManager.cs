@@ -1,6 +1,6 @@
 ﻿using DTO.Device.SwitchingDevice.Capabilities;
 using NewCore.Communication;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static Utilities.LoggerUtility;
 

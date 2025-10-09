@@ -2,7 +2,7 @@
 using DTO.Device.PowerSourceModule;
 using NewCore.Base.DeviceResponses;
 using NewCore.Communication;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource

@@ -3,7 +3,7 @@ using DTO.Device.PowerSourceModule;
 using DTO.Device.PowerSourceModule.Capabilities;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
-using Utilities.Interface;
+using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource

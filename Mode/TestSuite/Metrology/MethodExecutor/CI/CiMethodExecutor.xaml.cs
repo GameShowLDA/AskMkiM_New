@@ -6,8 +6,9 @@ using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
+using DTO.Service;
 using Utilities.Models;
+using DTO.Service.Models;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor.CI
 {
@@ -105,25 +106,25 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
       }
 
       /// <inheritdoc />
-      public override async Task PerformMeasurement(ProtocolUI protocolUI, DataModel dataModel)
+      public override async Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel)
       {
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          protocolUI.GetCancellationToken().ThrowIfCancellationRequested();
+          messageService.GetCancellationToken().ThrowIfCancellationRequested();
 
           var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
-          await protocolUI.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
+          await messageService.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
 
-          var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, protocolUI);
+          var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, messageService);
           var type = ShowMessageModel.MessageType.Success;
           if (answer < dataModel.Param)
           {
             type = ShowMessageModel.MessageType.Error;
           }
 
-          await protocolUI.ShowMessageAsync(new ShowMessageModel($"\t\tРезультат измерения разряда {HighestBitCount}({GetBitString()})", message: $"{answer.ToString()} МОм", type: type), skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel($"\t\tРезультат измерения разряда {HighestBitCount}({GetBitString()})", message: $"{answer.ToString()} МОм", type: type), skipPause: true);
           return type == ShowMessageModel.MessageType.Success ? true : false;
-        }, protocolUI);
+        }, messageService);
       }
 
       public override async Task FinalizeAsync(IUserMessageService messageService)

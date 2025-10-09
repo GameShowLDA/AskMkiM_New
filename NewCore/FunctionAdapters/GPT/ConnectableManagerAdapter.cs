@@ -2,7 +2,7 @@
 using DTO.Device.Base;
 using NewCore.Device;
 using NewCore.Function.Helpers;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {

@@ -6,7 +6,7 @@ using NewCore.Device;
 using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
 using Utilities;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {

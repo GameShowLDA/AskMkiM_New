@@ -2,7 +2,7 @@
 using DTO.Device.SwitchingDevice.Capabilities;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.DeviceBusCommutation
 {

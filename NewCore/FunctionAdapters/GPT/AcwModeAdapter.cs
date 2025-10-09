@@ -4,7 +4,7 @@ using DTO.Device.Breakdown.Model;
 using NewCore.Device;
 using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {
