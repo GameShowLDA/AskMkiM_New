@@ -95,44 +95,61 @@ namespace DataBaseConfiguration.Services.MeasurementError
     /// </summary>
     private void EnsureDefaultData()
     {
-      if (_dbSet.Include(e => e.Ranges).Any())
-        return;
-
       var defaults = new List<MeasurementErrorEntity>
-      {
+    {
         new MeasurementErrorEntity(TypeCommand.IE)
         {
-          Ranges = new List<MeasurementErrorRangeEntity>
-          {
-            new() { MinValue = 0, MaxValue = null, PercentageError = 5.0, NumericError = 100.0 }
-          }
+            Ranges = new List<MeasurementErrorRangeEntity>
+            {
+                new() { MinValue = 0, MaxValue = null, PercentageError = 5.0, NumericError = 100.0 }
+            }
         },
         new MeasurementErrorEntity(TypeCommand.PR)
         {
-          Ranges = new List<MeasurementErrorRangeEntity>
-          {
-            new() { MinValue = 0, MaxValue = null, PercentageError = 1.0, NumericError = 0.8 }
-          }
+            Ranges = new List<MeasurementErrorRangeEntity>
+            {
+                new() { MinValue = 0, MaxValue = null, PercentageError = 1.0, NumericError = 0.8 }
+            }
         },
         new MeasurementErrorEntity(TypeCommand.KC)
         {
-          Ranges = new List<MeasurementErrorRangeEntity>
-          {
-            new() { MinValue = 0.001, MaxValue = 1_000_000, PercentageError = 1.0, NumericError = 1.0 },
-            new() { MinValue = 1_000_000, MaxValue = null, PercentageError = 5.0, NumericError = 0.0 }
-          }
+            Ranges = new List<MeasurementErrorRangeEntity>
+            {
+                new() { MinValue = 0.001, MaxValue = 1_000_000, PercentageError = 1.0, NumericError = 1.0 },
+                new() { MinValue = 1_000_000, MaxValue = null, PercentageError = 5.0, NumericError = 0.0 }
+            }
         },
         new MeasurementErrorEntity(TypeCommand.CI)
         {
-          Ranges = new List<MeasurementErrorRangeEntity>
-          {
-            new() { MinValue = 0, MaxValue = null, PercentageError = 2.0, NumericError = 0.0 }
-          }
+            Ranges = new List<MeasurementErrorRangeEntity>
+            {
+                new() { MinValue = 0, MaxValue = null, PercentageError = 2.0, NumericError = 0.0 }
+            }
         }
-      };
+    };
 
-      _dbSet.AddRange(defaults);
+      foreach (var def in defaults)
+      {
+        // ищем сущность по типу
+        var existing = _dbSet
+            .Include(e => e.Ranges)
+            .FirstOrDefault(e => e.Type == def.Type);
+
+        if (existing == null)
+        {
+          // если не найдено — добавляем полностью новую запись
+          _dbSet.Add(def);
+        }
+        else if (existing.Ranges == null || !existing.Ranges.Any())
+        {
+          // если есть, но без диапазонов — добавляем их
+          foreach (var range in def.Ranges)
+            existing.Ranges.Add(range);
+        }
+      }
+
       _context.SaveChanges();
     }
+
   }
 }
