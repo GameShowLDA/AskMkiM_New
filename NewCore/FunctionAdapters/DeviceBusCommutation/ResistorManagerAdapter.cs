@@ -1,8 +1,8 @@
 ﻿using AppConfiguration.Error.Device.DeviceBusCommutation;
 using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Service;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.DeviceBusCommutation
 {

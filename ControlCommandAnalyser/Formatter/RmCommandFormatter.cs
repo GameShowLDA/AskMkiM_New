@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.Formatter
 {
@@ -37,7 +32,7 @@ namespace ControlCommandAnalyser.Formatter
       {
         yield break;
       }
-      
+
     }
   }
 }

@@ -5,7 +5,6 @@ using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Service;
-using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;

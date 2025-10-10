@@ -38,7 +38,7 @@ namespace MainWindowProgram.Engine
           admin,
           windowService,
           selfTest,
-          translation, 
+          translation,
           run
       );
 

@@ -1,10 +1,6 @@
-﻿using ControlCommandAnalyser.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using ControlCommandAnalyser.Model;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser

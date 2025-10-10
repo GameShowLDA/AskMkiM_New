@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.Formatter
 {
@@ -34,7 +29,7 @@ namespace ControlCommandAnalyser.Formatter
         if (!string.IsNullOrEmpty(trimmed))
           yield return $"\t\t{trimmed}";
       }
-      if( cu.Comment.Count > 0)
+      if (cu.Comment.Count > 0)
       {
         yield return $"\tКомметрии:";
         foreach (var line in cu.Comment)

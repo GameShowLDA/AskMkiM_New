@@ -1,40 +1,39 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace UI.Windows.WpfDocking.Windows.Docking
 {
-    partial class DockItem
+  partial class DockItem
+  {
+    private class HideCommand : CommandBase
     {
-        private class HideCommand : CommandBase
-        {
-            public static void Execute(DockItem dockItem)
-            {
-                DockControl dockControl = dockItem.DockControl;
-                if (dockControl.CanEnterUndo)
-                    dockControl.ExecuteCommand(new HideCommand(dockItem));
-                else
-                    dockItem.DoHide();
-            }
+      public static void Execute(DockItem dockItem)
+      {
+        DockControl dockControl = dockItem.DockControl;
+        if (dockControl.CanEnterUndo)
+          dockControl.ExecuteCommand(new HideCommand(dockItem));
+        else
+          dockItem.DoHide();
+      }
 
-            private DockItemShowMethod _showMethod;
+      private DockItemShowMethod _showMethod;
 
-            private HideCommand(DockItem dockItem)
-                : base(dockItem)
-            {
-                Debug.Assert(dockItem.DockPosition != DockPosition.Hidden);
-                Debug.Assert(dockItem.FirstPane != null);
-                _showMethod = GetShowMethod(dockItem, dockItem.FirstPane);
-            }
+      private HideCommand(DockItem dockItem)
+          : base(dockItem)
+      {
+        Debug.Assert(dockItem.DockPosition != DockPosition.Hidden);
+        Debug.Assert(dockItem.FirstPane != null);
+        _showMethod = GetShowMethod(dockItem, dockItem.FirstPane);
+      }
 
-            public override void Execute(DockControl dockControl)
-            {
-                GetDockItem(dockControl).Hide();
-            }
+      public override void Execute(DockControl dockControl)
+      {
+        GetDockItem(dockControl).Hide();
+      }
 
-            public override void UnExecute(DockControl dockControl)
-            {
-                GetDockItem(dockControl).Show(_showMethod);
-            }
-        }
+      public override void UnExecute(DockControl dockControl)
+      {
+        GetDockItem(dockControl).Show(_showMethod);
+      }
     }
+  }
 }

@@ -4,26 +4,26 @@
 
 namespace DataBaseConfiguration.Migrations
 {
+  /// <inheritdoc />
+  public partial class MaxVoltageBreakdown : Migration
+  {
     /// <inheritdoc />
-    public partial class MaxVoltageBreakdown : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(
-                name: "MaxVoltage",
-                table: "BreakdownTesters",
-                type: "INTEGER",
-                nullable: false,
-                defaultValue: 0);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "MaxVoltage",
-                table: "BreakdownTesters");
-        }
+      migrationBuilder.AddColumn<int>(
+          name: "MaxVoltage",
+          table: "BreakdownTesters",
+          type: "INTEGER",
+          nullable: false,
+          defaultValue: 0);
     }
+
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+      migrationBuilder.DropColumn(
+          name: "MaxVoltage",
+          table: "BreakdownTesters");
+    }
+  }
 }

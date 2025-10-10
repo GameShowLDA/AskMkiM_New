@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataBaseConfiguration.Services.Device;
+﻿using DataBaseConfiguration.Services.Device;
 using NewCore.Base.Device;
 using NewCore.Communication;
 
@@ -12,7 +7,7 @@ namespace TestConsole
   internal class TestAirSpeed
   {
     public static async Task RunAsync()
-    { 
+    {
       var manager = new ChassisManagerServices().GetByNumber(1);
       await manager.PowerManager.StartPowerAsync();
 

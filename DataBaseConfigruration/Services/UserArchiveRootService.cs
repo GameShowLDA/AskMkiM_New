@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using DataBaseConfiguration.Models.Archive;
+﻿using DTO.Base.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseConfiguration.Services

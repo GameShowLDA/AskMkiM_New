@@ -1,13 +1,10 @@
-﻿using AppConfiguration.Interface;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using AppConfiguration.Interface;
 using UI.Components.Invoke;
-using UI.Controls.ProtocolNew;
-using UI.Controls.TextEditor;
-using static Utilities.LoggerUtility;
 
 namespace UI.Components.MultiEditorMethods
 {

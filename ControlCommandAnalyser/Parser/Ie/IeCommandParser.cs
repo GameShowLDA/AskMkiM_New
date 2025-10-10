@@ -1,8 +1,8 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using System.Text.RegularExpressions;
+using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
-using System.Text.RegularExpressions;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Ie

@@ -1,8 +1,8 @@
 ﻿
 using DTO.Device.Breakdown.Capabilities;
+using DTO.Service;
 using global::NewCore.Device;
 using global::NewCore.Function.GPT.Command;
-using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 using static global::NewCore.Function.GPT.Command.ManualCommandManager;
 

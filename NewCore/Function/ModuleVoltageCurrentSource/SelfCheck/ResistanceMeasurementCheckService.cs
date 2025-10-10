@@ -1,12 +1,11 @@
-﻿using AppConfiguration.Enums;
-using AppConfiguration.MeasurementError;
+﻿using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
-using DTO.Service.Models;
 using static DTO.Enum.DeviceEnums;
+using static DTO.Enum.Metrology;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {
@@ -74,7 +73,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
         await SetCurrentAsync(powerSource, integerPart, decimalPart);
         await ConnectResistorByNumberAsync(relayModule, resistorNumber, messageService);
 
-        var error = ErrorProviderLocator.Provider.GetErrorParameters(TypeCommand.PR, resistance);
+        var error = ErrorProviderLocator.Provider.GetErrorParameters(MetrologyTypeCommand.PR, resistance);
 
         double firstNorm = resistance - ((resistance / 100.0 * error.Percent) + error.Numeric);
         double lastNorm = resistance + ((resistance / 100.0 * error.Percent) + error.Numeric);

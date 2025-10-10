@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mode.SelfControl.DeviceCheck;
-using Mode.TestSuite.Metrology.NodeMethod.CI;
+﻿using Mode.SelfControl.DeviceCheck;
 using static UI.Components.Invoke.OpenFileButton;
 
 namespace MainWindowProgram.Services

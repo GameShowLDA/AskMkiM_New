@@ -1,12 +1,12 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using ConsoleUI.ConsoleCommanding.Engine;
 using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
-using System.Text.RegularExpressions;
-using System.Windows.Media;
 
 namespace ConsoleUI.ConsoleUI
 {

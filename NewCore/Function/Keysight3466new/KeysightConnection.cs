@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using DTO.Device.Base;
-using NewCore.Device;
 using DTO.Service;
+using NewCore.Device;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.Keysight3466new

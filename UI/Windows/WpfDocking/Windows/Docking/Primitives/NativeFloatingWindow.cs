@@ -1,18 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel;
+using System.Security.Permissions;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Threading;
-using System.Windows.Threading;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Globalization;
-using System.Security.Permissions;
-using System.ComponentModel;
+using System.Windows.Media;
 
 namespace UI.Windows.WpfDocking.Windows.Docking.Primitives
 {

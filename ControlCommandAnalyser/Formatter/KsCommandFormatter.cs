@@ -1,10 +1,5 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ControlCommandAnalyser.Formatter
 {
@@ -43,7 +38,7 @@ namespace ControlCommandAnalyser.Formatter
       {
         yield return $"\tНижний порог сопротивления не задан.";
       }
-      
+
 
       // Верхний порог сопротивления
       if (!string.IsNullOrWhiteSpace(ks.HigherLimitResistanceSource))
@@ -100,7 +95,7 @@ namespace ControlCommandAnalyser.Formatter
           }
         }
       }
-      
+
 
       yield return string.Empty;
     }

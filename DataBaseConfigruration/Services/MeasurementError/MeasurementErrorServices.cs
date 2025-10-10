@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AppConfiguration.Enums;
-using AppConfiguration.MeasurementError;
-using DataBaseConfiguration.Models.MeasurementError;
+﻿using AppConfiguration.MeasurementError;
 using DataBaseConfiguration.Repositories;
+using DTO.Base.Models.MeasurementError;
 using Microsoft.EntityFrameworkCore;
+using static DTO.Enum.Metrology;
 
 namespace DataBaseConfiguration.Services.MeasurementError
 {
@@ -57,7 +54,7 @@ namespace DataBaseConfiguration.Services.MeasurementError
     /// <param name="type">Тип команды (режим метрологии).</param>
     /// <param name="measuredValue">Измеренное значение, для которого подбирается диапазон.</param>
     /// <returns>Кортеж: числовая и процентная погрешности.</returns>
-    public (double Numeric, double Percent) GetErrorParameters(TypeCommand type, double measuredValue)
+    public (double Numeric, double Percent) GetErrorParameters(MetrologyTypeCommand type, double measuredValue)
     {
       var entity = _dbSet
         .Include(e => e.Ranges)
@@ -82,7 +79,7 @@ namespace DataBaseConfiguration.Services.MeasurementError
     /// <param name="type">Тип команды (режим метрологии).</param>
     /// <param name="expectedValue">Ожидаемое значение измерения.</param>
     /// <returns>Кортеж: нижняя и верхняя границы допустимого диапазона.</returns>
-    public (double Min, double Max) GetRange(TypeCommand type, double expectedValue)
+    public (double Min, double Max) GetRange(MetrologyTypeCommand type, double expectedValue)
     {
       var (numeric, percent) = GetErrorParameters(type, expectedValue);
       double min = expectedValue - numeric - expectedValue * percent / 100.0;
@@ -96,22 +93,22 @@ namespace DataBaseConfiguration.Services.MeasurementError
     private void EnsureDefaultData()
     {
       var defaults = new List<MeasurementErrorEntity>
-    {
-        new MeasurementErrorEntity(TypeCommand.IE)
+      {
+        new MeasurementErrorEntity(MetrologyTypeCommand.IE)
         {
             Ranges = new List<MeasurementErrorRangeEntity>
             {
                 new() { MinValue = 0, MaxValue = null, PercentageError = 5.0, NumericError = 100.0 }
             }
         },
-        new MeasurementErrorEntity(TypeCommand.PR)
+        new MeasurementErrorEntity(MetrologyTypeCommand.PR)
         {
             Ranges = new List<MeasurementErrorRangeEntity>
             {
                 new() { MinValue = 0, MaxValue = null, PercentageError = 1.0, NumericError = 0.8 }
             }
         },
-        new MeasurementErrorEntity(TypeCommand.KC)
+        new MeasurementErrorEntity(MetrologyTypeCommand.KC)
         {
             Ranges = new List<MeasurementErrorRangeEntity>
             {
@@ -119,7 +116,7 @@ namespace DataBaseConfiguration.Services.MeasurementError
                 new() { MinValue = 1_000_000, MaxValue = null, PercentageError = 5.0, NumericError = 0.0 }
             }
         },
-        new MeasurementErrorEntity(TypeCommand.CI)
+        new MeasurementErrorEntity(MetrologyTypeCommand.CI)
         {
             Ranges = new List<MeasurementErrorRangeEntity>
             {

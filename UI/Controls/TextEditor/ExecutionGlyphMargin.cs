@@ -3,7 +3,6 @@ using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
-using static Utilities.LoggerUtility;
 
 public class ExecutionGlyphMargin : AbstractMargin
 {

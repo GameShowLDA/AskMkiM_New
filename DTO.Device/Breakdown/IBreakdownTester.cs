@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using DTO.Device.Base;
+﻿using DTO.Device.Base;
 using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.Breakdown.Mode;
 using static DTO.Enum.DeviceEnums;

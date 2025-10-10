@@ -1,6 +1,4 @@
-﻿using AppConfiguration.Error.Device;
-
-namespace AppConfiguration.Error.Device.Breakdown
+﻿namespace AppConfiguration.Error.Device.Breakdown
 {
   /// <summary>
   /// Фабрика исключений для ошибок, возникающих при работе в режиме ACW.

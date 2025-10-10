@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AppConfiguration.Error.Device
+﻿namespace AppConfiguration.Error.Device
 {
   /// <summary>
   /// Базовое исключение, возникающее при ошибках, связанных с оборудованием.

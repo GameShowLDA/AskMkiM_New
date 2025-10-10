@@ -1,6 +1,4 @@
-﻿using AppConfiguration.Parameter;
-
-namespace AppConfiguration.Parameter
+﻿namespace AppConfiguration.Parameter
 {
   public static class LanguageSettings
   {

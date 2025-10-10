@@ -1,9 +1,7 @@
-﻿using AppConfiguration.Parameter;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Resources;
-using System.Threading;
 using System.Windows;
-using UI.Localization;
+using AppConfiguration.Parameter;
 
 namespace UI.Localization
 {

@@ -1,7 +1,7 @@
-﻿using MigraDoc.DocumentObjectModel;
-using MigraDoc.Rendering;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
+using MigraDoc.DocumentObjectModel;
+using MigraDoc.Rendering;
 using static Utilities.LoggerUtility;
 
 namespace UI.Components.MultiEditorMethods

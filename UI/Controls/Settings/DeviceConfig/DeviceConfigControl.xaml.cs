@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using AppConfiguration;
-using DataBaseConfiguration.Models.Device;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.Base;
 using DTO.Device.Chassis;
+using DTO.Device.Entity;
 using UI.Controls.Settings.DeviceConfig.BreakDown;
 using UI.Controls.Settings.DeviceConfig.ChassisManager;
 using UI.Controls.Settings.DeviceConfig.DeviceBusCommutation;

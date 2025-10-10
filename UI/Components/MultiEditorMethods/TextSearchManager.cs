@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AppConfiguration.Base;
 using EventCore.Adapters;
 using ICSharpCode.AvalonEdit.Rendering;
 using Message;

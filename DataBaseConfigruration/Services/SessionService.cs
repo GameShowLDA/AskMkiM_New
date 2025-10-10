@@ -1,7 +1,6 @@
-﻿using DataBaseConfiguration;
-using System.Text.Json;
+﻿using System.Text.Json;
+using DTO.Base.Models.Session;
 using Microsoft.EntityFrameworkCore;
-using DataBaseConfiguration.Models.Session;
 
 namespace DataBaseConfiguration.Services
 {

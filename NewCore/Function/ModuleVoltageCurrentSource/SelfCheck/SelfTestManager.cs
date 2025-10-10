@@ -4,7 +4,6 @@ using DTO.Device.PowerSourceModule;
 using DTO.Device.PowerSourceModule.Capabilities;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
-using DTO.Service.Models;
 using NewCore.Communication;
 using static DTO.Enum.DeviceEnums;
 

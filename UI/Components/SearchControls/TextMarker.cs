@@ -1,5 +1,5 @@
-﻿using ICSharpCode.AvalonEdit.Document;
-using System.Windows.Media;
+﻿using System.Windows.Media;
+using ICSharpCode.AvalonEdit.Document;
 
 namespace UI.Components.SearchControls
 {

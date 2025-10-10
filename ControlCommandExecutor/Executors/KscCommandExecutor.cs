@@ -1,5 +1,4 @@
-﻿using AppConfiguration.Base;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using EventCore.Adapters;

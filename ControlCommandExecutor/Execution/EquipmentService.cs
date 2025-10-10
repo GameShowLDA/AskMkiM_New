@@ -1,15 +1,14 @@
 ﻿using AppConfiguration;
 using ControlCommandAnalyser.Model.Chains;
 using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
-using DTO.Device.SwitchingDevice;
-using Utilities;
-using DTO.Service;
 using DTO.Device.RelaySwitchModule.Model;
-using DTO.Service.Models;
-using DTO.Base.Models;
+using DTO.Device.SwitchingDevice;
+using DTO.Service;
+using Utilities;
 
 namespace ControlCommandExecutor.Execution
 {

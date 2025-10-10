@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model.Chains;
-using DTO.Service;
-using DTO.Service.Models;
-using DTO.Device.RelaySwitchModule.Model;
+﻿using ControlCommandAnalyser.Model.Chains;
 using DTO.Base.Models;
+using DTO.Service;
 
 namespace ControlCommandExecutor
 {

@@ -1,12 +1,11 @@
-using DataBaseConfiguration.Models.Session;
-﻿using AppConfiguration.Protocol;
 using System.Windows.Controls;
+using DTO.Base.Models;
+using DTO.Base.Models.Session;
 using UI.Components;
 using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
 using static UI.Components.Invoke.OpenFileButton;
-using DTO.Base.Models;
 
 namespace MainWindowProgram.Services
 {
@@ -190,11 +189,11 @@ namespace MainWindowProgram.Services
 
     internal async Task DeleteTranslatorItem(TranslatorItem translatorItem, EditorType editorType)
     {
-     await _multiWindowControl.DeleteTranslatorItem(translatorItem, editorType);
+      await _multiWindowControl.DeleteTranslatorItem(translatorItem, editorType);
     }
 
 
- /// <summary>
+    /// <summary>
     /// Добавляет вкладку с транслятором.
     /// </summary>
     /// <param name="editor">Текстовый редактор с файлом, который необходимо транслировать.</param>
@@ -211,7 +210,7 @@ namespace MainWindowProgram.Services
       return _multiWindowControl.AddRunItem(runControl, editorType);
     }
 
-  /// <summary>
+    /// <summary>
     /// Открывает папку, содержащую файл, в проводнике.
     /// </summary>
     /// <returns>Асинхронную задачу, представляющую результат выполнения.</returns>

@@ -1,6 +1,6 @@
 ﻿using DTO.Device.FastMeter.Capabilities;
-using NewCore.Device;
 using DTO.Service;
+using NewCore.Device;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static Utilities.LoggerUtility;
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NewCore.Communication
+﻿namespace NewCore.Communication
 {
   /// <summary>
   /// Набор расширений для SemaphoreSlim для удобного использования в стиле using.

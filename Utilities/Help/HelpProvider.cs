@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -150,7 +149,7 @@ namespace Utilities.Help
       OpenHelpViewer(url);
     }
 
-    public static void OpenFastMenuCommand() => 
+    public static void OpenFastMenuCommand() =>
       OpenHelpViewer("/FastMenuCommand.html");
 
     private static void OpenHelpViewer(string relativeFileAddress)
@@ -169,7 +168,7 @@ namespace Utilities.Help
       try
       {
         if (Application.Current.Dispatcher.CheckAccess())
-          ShowHelpWindow($"http://localhost:{HelpServer.Port}"+relativeFileAddress);
+          ShowHelpWindow($"http://localhost:{HelpServer.Port}" + relativeFileAddress);
         else
           Application.Current.Dispatcher.Invoke(() => ShowHelpWindow($"http://localhost:{HelpServer.Port}" + relativeFileAddress));
       }

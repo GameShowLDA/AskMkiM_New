@@ -1,5 +1,4 @@
-﻿using DataBaseConfiguration.Services.Device;
-using MainWindowProgram.Services;
+﻿using MainWindowProgram.Services;
 
 namespace MainWindowProgram.ViewModels
 {
@@ -70,7 +69,7 @@ namespace MainWindowProgram.ViewModels
       AdminServices adminServices,
       WindowService window,
       SelfTestServices selfTest,
-      TranslationServices translationServices, 
+      TranslationServices translationServices,
       RunServices runServices
       )
     {

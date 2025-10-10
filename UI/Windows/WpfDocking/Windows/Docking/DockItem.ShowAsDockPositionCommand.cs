@@ -1,35 +1,32 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Diagnostics;
 
 namespace UI.Windows.WpfDocking.Windows.Docking
 {
-    partial class DockItem
+  partial class DockItem
+  {
+    private class ShowAsDockPositionCommand : ShowCommandBase
     {
-        private class ShowAsDockPositionCommand : ShowCommandBase
-        {
-            public static void Execute(DockItem dockItem, DockControl dockControl, DockPosition dockPosition, DockItemShowMethod showMethod)
-            {
-                Debug.Assert(dockControl != null);
-                if (TestUndo(dockItem, dockControl))
-                    dockControl.ExecuteCommand(new ShowAsDockPositionCommand(dockItem, dockPosition, showMethod));
-                else
-                    dockItem.DoShowAsDockPosition(dockControl, dockPosition, showMethod);
-            }
+      public static void Execute(DockItem dockItem, DockControl dockControl, DockPosition dockPosition, DockItemShowMethod showMethod)
+      {
+        Debug.Assert(dockControl != null);
+        if (TestUndo(dockItem, dockControl))
+          dockControl.ExecuteCommand(new ShowAsDockPositionCommand(dockItem, dockPosition, showMethod));
+        else
+          dockItem.DoShowAsDockPosition(dockControl, dockPosition, showMethod);
+      }
 
-            private DockPosition _dockPosition;
+      private DockPosition _dockPosition;
 
-            private ShowAsDockPositionCommand(DockItem dockItem, DockPosition dockPosition, DockItemShowMethod showMethod)
-                : base(dockItem, showMethod)
-            {
-                _dockPosition = dockPosition;
-            }
+      private ShowAsDockPositionCommand(DockItem dockItem, DockPosition dockPosition, DockItemShowMethod showMethod)
+          : base(dockItem, showMethod)
+      {
+        _dockPosition = dockPosition;
+      }
 
-            protected override void ExecuteOverride(DockControl dockControl)
-            {
-                GetDockItem(dockControl).DoShowAsDockPosition(dockControl, _dockPosition, ShowMethod);
-            }
-        }
+      protected override void ExecuteOverride(DockControl dockControl)
+      {
+        GetDockItem(dockControl).DoShowAsDockPosition(dockControl, _dockPosition, ShowMethod);
+      }
     }
+  }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Utilities.TextEditor
+﻿namespace Utilities.TextEditor
 {
   /// <summary>
   /// Универсальный фасад для взаимодействия с редактором текста.

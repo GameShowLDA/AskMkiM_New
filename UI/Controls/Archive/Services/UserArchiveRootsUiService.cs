@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using DataBaseConfiguration;
-using DataBaseConfiguration.Models.Archive;
+using DTO.Base.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace UI.Controls.Archive.Services

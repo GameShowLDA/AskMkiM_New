@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using static Utilities.LoggerUtility;

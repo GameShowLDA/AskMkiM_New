@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Management;
-using static Utilities.LoggerUtility;
+﻿using System.Diagnostics;
 
 namespace NewCore.Communication
 {

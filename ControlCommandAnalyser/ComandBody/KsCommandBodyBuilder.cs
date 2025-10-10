@@ -1,5 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
-using System.Text;
+﻿using System.Text;
+using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.ComandBody
 {

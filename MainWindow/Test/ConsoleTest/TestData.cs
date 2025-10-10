@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Utilities.LoggerUtility;
+﻿using static Utilities.LoggerUtility;
 
 namespace MainWindowProgram.Test.ConsoleTest
 {
@@ -11,7 +6,7 @@ namespace MainWindowProgram.Test.ConsoleTest
   {
     static internal async Task PrintTestData()
     {
-      int i = 1; 
+      int i = 1;
       while (true)
       {
         LogInformation($"Тест {i}");

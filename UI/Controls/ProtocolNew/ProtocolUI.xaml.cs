@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using AppConfiguration.Interface;
 using DTO.Base.Models;
-using DTO.Service.Models;
 using EventCore.Events;
 
 namespace UI.Controls.ProtocolNew

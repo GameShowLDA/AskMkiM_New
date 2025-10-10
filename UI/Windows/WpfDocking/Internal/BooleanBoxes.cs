@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UI.Windows.WpfDocking
+﻿namespace UI.Windows.WpfDocking
 {
   static class BooleanBoxes
   {

@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using DTO.Device.Breakdown;
-using NewCore.Function.GPT.Command;
 using DTO.Service;
+using NewCore.Function.GPT.Command;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static Utilities.LoggerUtility;

@@ -1,8 +1,7 @@
 ﻿using System.Windows;
-using AppConfiguration.Base;
 using AppConfiguration.Protocol;
-using DataBaseConfiguration.Models.Session;
 using DTO.Base.Models;
+using DTO.Base.Models.Session;
 using EventCore.Adapters;
 using EventCore.Events;
 using Microsoft.Win32;
@@ -45,7 +44,7 @@ namespace MainWindowProgram.Services
       _mainWindow = mainWindow;
       _mainWindow.SearchWindow = new SearchWindow();
       _isLockedProvider = isLockedProvider;
-      
+
       EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchWindowClosing>(e => OnSearchWindowClosing(e.IsClosing));
 
       EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ViewProtocol>(e => ViewProtocol(e.Protocol));

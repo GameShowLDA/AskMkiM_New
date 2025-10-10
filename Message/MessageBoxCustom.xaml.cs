@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Message
 {
@@ -132,24 +121,24 @@ namespace Message
 
     public static MessageBoxResult Show(string text = "", string title = "", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
     {
-     return Application.Current.Dispatcher.Invoke(() =>
-      {
-        var window = new MessageBoxCustom(buttons, image)
-        {
-          Title = title
-        };
+      return Application.Current.Dispatcher.Invoke(() =>
+       {
+         var window = new MessageBoxCustom(buttons, image)
+         {
+           Title = title
+         };
 
-        var _mainWindow = Application.Current.MainWindow;
+         var _mainWindow = Application.Current.MainWindow;
 
-        // можно настроить текст и заголовок, если нужно
-        window.Header.Text = title;
-        window.MessageText.Text = text;
+         // можно настроить текст и заголовок, если нужно
+         window.Header.Text = title;
+         window.MessageText.Text = text;
 
-        _mainWindow.Effect = new System.Windows.Media.Effects.BlurEffect();
-        window.ShowDialog();
-        _mainWindow.Effect = null;
-        return window.Result;
-      });
+         _mainWindow.Effect = new System.Windows.Media.Effects.BlurEffect();
+         window.ShowDialog();
+         _mainWindow.Effect = null;
+         return window.Result;
+       });
     }
 
     private void OkButtonVisible()
