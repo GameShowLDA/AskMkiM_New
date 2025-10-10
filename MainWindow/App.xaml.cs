@@ -4,6 +4,7 @@ using AppConfiguration;
 using ConsoleUI.ConsoleLogic;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.Breakdown;
+using EventCore.Adapters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewCore.Device;
@@ -103,7 +104,7 @@ namespace MainWindowProgram
     {
       base.OnExit(e);
 
-      AppConfiguration.Base.EventAggregator.RaiseSaveSession();
+      SessionEventAdapter.RaiseSaveSession();
 
       try
       {

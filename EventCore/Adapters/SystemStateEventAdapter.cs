@@ -23,10 +23,8 @@ namespace EventCore.Adapters
     /// SystemStateEventAdapter.RaisePowerChanged(true);
     /// </code>
     /// </example>
-    public static void RaisePowerChanged(bool isPowered)
-    {
+    public static void RaisePowerChanged(bool isPowered) =>
       EventAggregator.Publish(new SystemStateEvents.PowerChanged(isPowered));
-    }
 
     /// <summary>
     /// Генерирует событие изменения состояния блокировки интерфейса.
@@ -37,10 +35,8 @@ namespace EventCore.Adapters
     /// SystemStateEventAdapter.RaiseLockedChanged(false);
     /// </code>
     /// </example>
-    public static void RaiseLockedChanged(bool isLocked)
-    {
+    public static void RaiseLockedChanged(bool isLocked) =>
       EventAggregator.Publish(new SystemStateEvents.LockedChanged(isLocked));
-    }
 
     /// <summary>
     /// Генерирует событие изменения прав администратора.
@@ -51,9 +47,7 @@ namespace EventCore.Adapters
     /// SystemStateEventAdapter.RaiseAdminRightsChanged(true);
     /// </code>
     /// </example>
-    public static void RaiseAdminRightsChanged(bool isAdmin)
-    {
+    public static void RaiseAdminRightsChanged(bool isAdmin) =>
       EventAggregator.Publish(new SystemStateEvents.AdminRightsChanged(isAdmin));
-    }
   }
 }

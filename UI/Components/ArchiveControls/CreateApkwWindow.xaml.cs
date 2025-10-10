@@ -1,5 +1,6 @@
 ﻿using AppConfiguration.Base;
 using EventCore.Events;
+using EventCore.Services;
 using Message;
 using System.Windows;
 using System.Windows.Controls;
@@ -91,10 +92,13 @@ namespace UI.Components.ArchiveControls
       WindowStyle = WindowStyle.None;
       ResizeMode = ResizeMode.NoResize;
 
-      if (EventAggregator.GetAdminRights())
+      EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e =>
       {
-        choseArchiveType.Visibility = Visibility.Visible;
-      }
+        if (e.IsAdmin)
+          choseArchiveType.Visibility = Visibility.Visible;
+        else
+          choseArchiveType.Visibility = Visibility.Collapsed;
+      });
 
       if (Owner != null)
       {

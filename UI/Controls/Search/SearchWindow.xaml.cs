@@ -10,6 +10,7 @@ using System.Windows.Media.Effects;
 using AppConfiguration.Base;
 using EventCore.Adapters;
 using EventCore.Events;
+using EventCore.Services;
 using UI.Components.SearchControls;
 using UI.Controls.TextEditor;
 using static Utilities.LoggerUtility;
@@ -61,11 +62,11 @@ namespace UI.Controls.Search
       InitializeComponent();
       this.Loaded += Window_Loaded;
 
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchButtonPressed>(e => OnSearchButtonPressed(e.SearchParameters));
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.ReplaceWordButtonPressed>(_ => OnReplaceWordButtonPressed());
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.ReplaceAllWordsButtonPressed>(_ => OnReplaceAllWordsButtonPressed());
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.CloseSearchWindow>(_ => OnCloseSearchWindowRequested());
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchTextRequested>(e => OnSearchTextRequested(e.SelectedText));
+      EventAggregator.Subscribe<SearchEvents.SearchButtonPressed>(e => OnSearchButtonPressed(e.SearchParameters));
+      EventAggregator.Subscribe<SearchEvents.ReplaceWordButtonPressed>(_ => OnReplaceWordButtonPressed());
+      EventAggregator.Subscribe<SearchEvents.ReplaceAllWordsButtonPressed>(_ => OnReplaceAllWordsButtonPressed());
+      EventAggregator.Subscribe<SearchEvents.CloseSearchWindow>(_ => OnCloseSearchWindowRequested());
+      EventAggregator.Subscribe<SearchEvents.SearchTextRequested>(e => OnSearchTextRequested(e.SelectedText));
 
       this.Focus();
       SearchTextBox.Focus();

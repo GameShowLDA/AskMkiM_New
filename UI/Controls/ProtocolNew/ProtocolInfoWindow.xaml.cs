@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using AppConfiguration.Base;
 using DTO.Base.Models;
+using EventCore.Adapters;
 
 
 namespace UI.Controls.ProtocolNew
@@ -78,7 +79,7 @@ namespace UI.Controls.ProtocolNew
       else
       {
         this.DialogResult = true;
-        EventAggregator.RaiseProtocolInfoClose(NumberResult, ExecutorResult, AgentResult, CustomerAgentResult, _protocolModel);
+        FileInteractionEventAdapter.RaiseProtocolInfoClose(NumberResult, ExecutorResult, AgentResult, CustomerAgentResult, _protocolModel);
         this.Close();
       }
     }

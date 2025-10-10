@@ -1,24 +1,17 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using AppConfiguration.Base;
-using AppConfiguration.Base;
-using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
 using DataBaseConfiguration.Services;
 using DTO.Base.Models;
 using DTO.Settings.SettingsModels;
 using EventCore.Adapters;
 using EventCore.Events;
-using ICSharpCode.AvalonEdit.Highlighting;
-using Message;
 using Message;
 using Ude;
 using UI.Components.ArchiveControls;
@@ -180,7 +173,7 @@ namespace UI.Components.MultiEditorMethods
           var textEditorModel = new TextEditorModel(newPath);
           var textEditor = CreateTextEditor(textEditorModel, protocolText, FileType.Protocol);
           textEditor.IsReadOnly = true;
-          
+
           EditorEventAdapter.RaiseTextEditorActivated(textEditor);
 
           ShowNewDockItem(newFileName, protocolContainer, textEditor, containerType);
@@ -411,8 +404,8 @@ namespace UI.Components.MultiEditorMethods
         Content = textEditor
       };
 
-      EventAggregator.OpenOpk -= OnOpenOpk;
-      EventAggregator.OpenOpk += OnOpenOpk;
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.OpenOpk>(e => OnOpenOpk(e.Control, e.FileName));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.OpenOpk>(e => OnOpenOpk(e.Control, e.FileName));
 
       if (dockItem.Content is TextEditorUI && editorType == EditorType.Archive || dockItem.Content is RunControl && editorType == EditorType.Run)
       {

@@ -7,6 +7,7 @@ using System.Windows.Media.Effects;
 using AppConfiguration.Base;
 using EventCore.Adapters;
 using EventCore.Events;
+using EventCore.Services;
 using ICSharpCode.AvalonEdit;
 using MainWindowProgram.HotkeyBindings;
 using MainWindowProgram.Services;
@@ -61,20 +62,20 @@ namespace MainWindowProgram.Events
     public void Bind()
     {
 
-      EventCore.Services.EventAggregator.Subscribe<EditorEvents.TextEditorActive>(e => OnTextEditorActive(e.IsActive));
-      EventCore.Services.EventAggregator.Subscribe<EditorEvents.TextEditorActivated>(e => OnTextEditorActivated(e.ActiveEditor));
-      EventCore.Services.EventAggregator.Subscribe<EditorEvents.TextEditorContainerClosing>(e => OnTextEditorClosing(e.IsClosing, e.EditorName));
+      EventAggregator.Subscribe<EditorEvents.TextEditorActive>(e => OnTextEditorActive(e.IsActive));
+      EventAggregator.Subscribe<EditorEvents.TextEditorActivated>(e => OnTextEditorActivated(e.ActiveEditor));
+      EventAggregator.Subscribe<EditorEvents.TextEditorContainerClosing>(e => OnTextEditorClosing(e.IsClosing, e.EditorName));
 
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchWindowClosing>(e => OnSearchWindowClosing(e.IsClosing));
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchWindowActivated>(e => OnSearchWindowActivated(e.IsActive));
+      EventAggregator.Subscribe<SearchEvents.SearchWindowClosing>(e => OnSearchWindowClosing(e.IsClosing));
+      EventAggregator.Subscribe<SearchEvents.SearchWindowActivated>(e => OnSearchWindowActivated(e.IsActive));
 
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchText>(e => SearchWindow_SearchTextHandler(e.SearchString, e.WholeWord, e.MatchCase, e.SearchArea, e.SearchParameters));
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.ReplaceText>(e => SearchWindow_ReplaceTextHandler(e.ReplaceString, e.SearchString, e.WholeWord, e.MatchCase, e.SearchArea, e.SearchParameters));
+      EventAggregator.Subscribe<SearchEvents.SearchText>(e => SearchWindow_SearchTextHandler(e.SearchString, e.WholeWord, e.MatchCase, e.SearchArea, e.SearchParameters));
+      EventAggregator.Subscribe<SearchEvents.ReplaceText>(e => SearchWindow_ReplaceTextHandler(e.ReplaceString, e.SearchString, e.WholeWord, e.MatchCase, e.SearchArea, e.SearchParameters));
 
       _mainWindow.SearchWindow.ClearHighlights += _multiWindow.OnSearchWindowClosing;
 
-      EventAggregator.CompareFiles += OnCompareFiles;
-      EventCore.Services.EventAggregator.Subscribe<EditorEvents.TranslatorActive>(e => EventAggregator_TranslatorActive(e.IsActive));
+      EventAggregator.Subscribe<FileInteractionEvents.CompareFiles>(e => OnCompareFiles(e.FirstFilePath, e.SecondFilePath));
+      EventAggregator.Subscribe<EditorEvents.TranslatorActive>(e => EventAggregator_TranslatorActive(e.IsActive));
 
       MenuHotkeyBinder.BindAutoRenumbering(_mainWindow.mainMenu);
     }

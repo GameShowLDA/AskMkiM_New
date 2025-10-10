@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventCore.Events;
 
 namespace UI.Controls.ProtocolNew
 {
@@ -88,7 +89,7 @@ namespace UI.Controls.ProtocolNew
         IsStepInto = true;
       }
 
-      AppConfiguration.Base.EventAggregator.StepByStepModeChanged += EventAggregator_StepByStepModeChanged;
+      EventCore.Services.EventAggregator.Subscribe<ExecutionEvents.StepByStepModeChanged>(e => EventAggregator_StepByStepModeChanged(e.IsEnabled));
     }
 
     /// <summary>

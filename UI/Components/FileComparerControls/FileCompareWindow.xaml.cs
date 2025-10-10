@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Input;
 using AppConfiguration.Base;
+using EventCore.Adapters;
+using EventCore.Events;
 using Message;
 using Microsoft.Win32;
 using static Utilities.LoggerUtility;
@@ -136,7 +138,7 @@ namespace UI.Components.FileComparerControls
       {
         if (CheckFileExists(firstPath, secondPath))
         {
-          EventAggregator.RaiseCompareFiles(firstPath, secondPath);
+          FileInteractionEventAdapter.RaiseCompareFiles(firstPath, secondPath);
           LogInformation("Вызвано сравнение файлов");
           CloseDialog();
         }

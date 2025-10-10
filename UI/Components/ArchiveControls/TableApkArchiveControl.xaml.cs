@@ -4,8 +4,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using AppConfiguration;
 using AppConfiguration.Base;
+using EventCore.Adapters;
 using EventCore.Events;
+using EventCore.Services;
 using Message;
 using Microsoft.Win32;
 using UI.Components.ArchiveManager;
@@ -68,7 +71,9 @@ namespace UI.Components.ArchiveControls
       var indexEditor = new IndexEditor();
 
       this.isMain = await IsArchiveMain(_archiveName);
-      var result = (EventAggregator.GetAdminRights() && isMain == true) || isMain == false;
+
+      var result = (await AdminConfig.GetAdminRights() && isMain == true) || isMain == false;
+
       if (result == true)
       {
         buttonsGrid.Visibility = Visibility.Visible;
@@ -311,7 +316,7 @@ namespace UI.Components.ArchiveControls
       var textEditorModel = new TextEditorModel(foundOpkPath, Path.GetFileName(foundOpkPath), Encoding.UTF8);
       var textEditor = new TextEditorUI(FileType.OPK, textEditorModel);
       textEditor.Text = content;
-      EventAggregator.RaiseOpenOpk(textEditor, $"{opkFile.OpkFilename}");
+      FileInteractionEventAdapter.RaiseOpenOpk(textEditor, $"{opkFile.OpkFilename}");
     }
 
     private async void viewOpkFilesDataGrid_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -322,7 +327,7 @@ namespace UI.Components.ArchiveControls
       var textEditorModel = new TextEditorModel(foundOpkPath, Path.GetFileName(foundOpkPath), Encoding.UTF8);
       var textEditor = new TextEditorUI(FileType.OPK, textEditorModel);
       textEditor.Text = content;
-      EventAggregator.RaiseOpenOpk(textEditor, $"{opkFile.OpkFilename}");
+      FileInteractionEventAdapter.RaiseOpenOpk(textEditor, $"{opkFile.OpkFilename}");
     }
   }
 }

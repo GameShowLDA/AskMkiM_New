@@ -48,12 +48,14 @@ namespace MainWindowProgram.Services
       
       EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchWindowClosing>(e => OnSearchWindowClosing(e.IsClosing));
 
-      EventAggregator.ViewProtocol -= ViewProtocol;
-      EventAggregator.ViewProtocol += ViewProtocol;
-      EventAggregator.SaveSession += SaveSession;
-      EventAggregator.OpenSession += OpenSession;
-      EventAggregator.GetProtocolInfo -= OnGetProtocolInfo;
-      EventAggregator.GetProtocolInfo += OnGetProtocolInfo;
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ViewProtocol>(e => ViewProtocol(e.Protocol));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ViewProtocol>(e => ViewProtocol(e.Protocol));
+
+      EventCore.Services.EventAggregator.Subscribe<SessionEvents.SaveSession>(e => SaveSession());
+      EventCore.Services.EventAggregator.Subscribe<SessionEvents.OpenSession>(e => SaveSession());
+
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.GetProtocolInfo>(e => OnGetProtocolInfo(e.Protocol));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.GetProtocolInfo>(e => OnGetProtocolInfo(e.Protocol));
     }
 
     private void OnGetProtocolInfo(ProtocolModel protocolModel)

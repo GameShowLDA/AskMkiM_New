@@ -1,4 +1,6 @@
 ﻿using DTO.SettingsModels;
+using EventCore.Adapters;
+using EventCore.Events;
 
 namespace AppConfiguration.Execution
 {
@@ -42,7 +44,7 @@ namespace AppConfiguration.Execution
       await Task.Run(() =>
       {
         SettingsExecutionModel.StepByStepMode = enable;
-        Base.EventAggregator.StepByStepModeFlag = enable;
+        ExecutionEventAdapter.RaiseStepByStepModeChanged(enable);
       });
     }
 

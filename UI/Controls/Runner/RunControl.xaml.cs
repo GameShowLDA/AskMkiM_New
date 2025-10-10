@@ -165,7 +165,7 @@ namespace UI.Controls.Runner
           && !string.IsNullOrEmpty(textEditor.TextEditorModel.FilePath)
           && File.Exists(textEditor.TextEditorModel.FilePath))
         {
-          EventAggregator.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
+          FileInteractionEventAdapter.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
           EditorEventAdapter.RaiseCloseRunItem(this);
         }
       }

@@ -32,8 +32,9 @@ namespace MainWindowProgram.Services
     {
       _multiWindow = multiWindow;
       _fileService = fileService;
-      EventAggregator.OpenFileInEditorAgain -= OpenFileCommand;
-      EventAggregator.OpenFileInEditorAgain += OpenFileCommand;
+
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.OpenFileInEditorAgain>(e => OpenFileCommand(e.FilePath));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.OpenFileInEditorAgain>(e => OpenFileCommand(e.FilePath));
 
       EventCore.Services.EventAggregator.Unsubscribe<EditorEvents.CloseRunItem>(e => CloseRunItem(e.RunControl));
       EventCore.Services.EventAggregator.Subscribe<EditorEvents.CloseRunItem>(e => CloseRunItem(e.RunControl));

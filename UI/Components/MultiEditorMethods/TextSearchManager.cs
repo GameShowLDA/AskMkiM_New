@@ -264,8 +264,6 @@ namespace UI.Components.MultiEditorMethods
         return;
       }
 
-      EventAggregator.RaiseRequestShowProgress();
-
       List<DockItem> searchPages = SetSearchAreaPages(searchArea);
       ClearPreviousSearchResults();
 
@@ -275,10 +273,6 @@ namespace UI.Components.MultiEditorMethods
       if (showResults)
       {
         HandleSearchResults(searchText);
-      }
-      else
-      {
-        EventAggregator.RaiseRequestCloseProgress();
       }
     }
 
@@ -314,12 +308,10 @@ namespace UI.Components.MultiEditorMethods
         if (lastFoundResultsDictionary?.Count > 0)
         {
           DisplaySearchResults(searchText, _caseWord, foundInOpenedFiles);
-          EventAggregator.RaiseRequestCloseProgress();
         }
       }
       else
       {
-        EventAggregator.RaiseRequestCloseProgress();
         MessageBoxCustom.Show("Текст не найден в открытых документах.", image: MessageBoxImage.Warning);
         LogInformation("Текст не найден в открытых документах.");
       }
