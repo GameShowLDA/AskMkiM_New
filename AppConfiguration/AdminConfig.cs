@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AppConfiguration.Base;
 using EventCore.Adapters;
 using EventCore.Events;
+using EventCore.Services;
 
 namespace AppConfiguration
 {
@@ -13,7 +14,7 @@ namespace AppConfiguration
   {
     static AdminConfig()
     {
-      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => IsAdmin = e.IsAdmin);
+      EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => IsAdmin = e.IsAdmin);
     }
 
     /// <summary>

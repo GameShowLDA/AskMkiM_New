@@ -8,6 +8,7 @@ using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
 using DTO.Base.Models;
 using EventCore.Events;
+using EventCore.Services;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
 using UI.Components.SearchControls;
@@ -116,7 +117,7 @@ namespace UI.Components
       this.KeyDown -= MultiWindowControl_KeyDown;
       this.KeyDown += MultiWindowControl_KeyDown;
 
-      EventCore.Services.EventAggregator.Subscribe<SearchEvents.FoundTextSelectRow>(e => OnFoundTextSelectRow(e.FileName, e.LineNumber, e.StartOffset, e.LineText, e.SearchText));
+      EventAggregator.Subscribe<SearchEvents.FoundTextSelectRow>(e => OnFoundTextSelectRow(e.FileName, e.LineNumber, e.StartOffset, e.LineText, e.SearchText));
 
       ProtocolUI.AnotherKeyPressed -= MultiWindowControl_KeyDown;
       ProtocolUI.AnotherKeyPressed += MultiWindowControl_KeyDown;

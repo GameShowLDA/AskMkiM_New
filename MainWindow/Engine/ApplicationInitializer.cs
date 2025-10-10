@@ -1,13 +1,11 @@
 ﻿using System.Windows;
-using AppConfiguration.Base;
 using AppConfiguration.Execution;
 using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
 using AppConfiguration.Theme;
 using DataBaseConfiguration;
 using DTO.Base.Models;
-using EventCore.Adapters;
-using static AppConfiguration.Base.EventAggregator;
+using EventCore.Services;
 using static EventCore.Events.Message;
 using static Utilities.LoggerUtility;
 
@@ -101,16 +99,16 @@ namespace MainWindowProgram.Engine
         LogException(ex);
       }
 
-      EventCore.Services.EventAggregator.Subscribe<Error>(e =>
+      EventAggregator.Subscribe<Error>(e =>
         messageHandler.SetErrorMessage(e.Text, e.ClearPrevious));
 
-      EventCore.Services.EventAggregator.Subscribe<Warning>(e =>
+      EventAggregator.Subscribe<Warning>(e =>
         messageHandler.SetWarningMessage(e.Text, e.ClearPrevious));
 
-      EventCore.Services.EventAggregator.Subscribe<Info>(e =>
+      EventAggregator.Subscribe<Info>(e =>
         messageHandler.SetInfoMessage(e.Text, e.ClearPrevious));
 
-      EventCore.Services.EventAggregator.Subscribe<Clear>(_ =>
+      EventAggregator.Subscribe<Clear>(_ =>
         messageHandler.ClearMessage());
 
       LogInformation("Настройки инициализированы.");
