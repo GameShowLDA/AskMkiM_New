@@ -9,6 +9,7 @@ using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
 using DTO.Base.Models;
 using EventCore.Events;
+using EventCore.Services;
 using Message;
 using Message;
 using UI.Components.Invoke;
@@ -48,7 +49,7 @@ namespace UI.Components
     public MultiWindowControl()
     {
       InitializeComponent();
-      EventCore.Services.EventAggregator.Subscribe<EditorEvents.TextEditorContainerClosing>(e => OnTextEditorClosig(e.IsClosing, e.EditorName));
+      EventAggregator.Subscribe<EditorEvents.TextEditorContainerClosing>(e => OnTextEditorClosig(e.IsClosing, e.EditorName));
     }
 
     /// <summary>

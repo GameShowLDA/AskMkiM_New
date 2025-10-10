@@ -11,6 +11,7 @@ using ConsoleUI.ConsoleCommanding.Commands;
 using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
 using EventCore.Events;
+using EventCore.Services;
 using MainWindowProgram.Services;
 using UI.Components;
 using Utilities.USB;
@@ -58,8 +59,8 @@ namespace MainWindowProgram.Events
     /// </summary>
     public void Bind()
     {
-      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => OnLockedChanged(e.IsLocked));
-      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => OnAdminRightsChanged(e.IsAdmin));
+      EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => OnLockedChanged(e.IsLocked));
+      EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => OnAdminRightsChanged(e.IsAdmin));
 
       ExecutionConfig.IdleModeChange += OnIdleModeChange;
 

@@ -7,8 +7,8 @@ using DataBaseConfiguration.Services.Device;
 using DTO.Device.Chassis;
 using EventCore.Adapters;
 using EventCore.Events;
+using EventCore.Services;
 using Message;
-using static AppConfiguration.Base.EventAggregator;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static AppConfiguration.SystemStateManager;
 
@@ -64,7 +64,7 @@ namespace UI.Components
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
       UpdateToolTipVisibility();
-      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.PowerChanged>(OnPowerChanged);
+      EventAggregator.Subscribe<SystemStateEvents.PowerChanged>(OnPowerChanged);
 
       this.MouseEnter += OnMouseEnter;
       this.MouseLeave += OnMouseLeave;
