@@ -79,7 +79,13 @@ namespace MainWindowProgram
 
         ServiceLocator.Initialize(AppHost);
         var chassisNumber = new DataBaseConfiguration.Services.Device.ChassisManagerServices().GetAll().FirstOrDefault();
-        var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
+        try
+        {
+          var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
+        }
+        catch 
+        {
+        }
 
         await splashWindow.WaitForCloseAsync();
 
