@@ -1,11 +1,12 @@
-﻿using AppConfiguration.Base;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using AppConfiguration.Base;
+using EventCore.Adapters;
 using static Utilities.LoggerUtility;
 
 namespace UI.Components.SearchControls
@@ -155,7 +156,7 @@ namespace UI.Components.SearchControls
         if (arrowType != null)
         {
           LogInformation($"Запуск поиска для: {selectedArrow.Name}");
-          EventAggregator.RaiseSearchButtonPressed(selectedArrow.Name);
+          SearchEventAdapter.RaiseSearchButtonPressed(selectedArrow.Name);
         }
       }
     }

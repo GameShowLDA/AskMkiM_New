@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using ControlCommandAnalyser.Model;
 using DTO.Service.Models;
+using EventCore.Adapters;
 using UI.Controls.TextEditor;
 
 namespace UI.Controls
@@ -120,7 +121,7 @@ namespace UI.Controls
 
       if (ErrorCount > 0)
       {
-        AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
       }
 
     }

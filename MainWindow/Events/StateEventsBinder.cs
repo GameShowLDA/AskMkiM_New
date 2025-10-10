@@ -10,6 +10,7 @@ using AppConfiguration.Execution;
 using ConsoleUI.ConsoleCommanding.Commands;
 using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
+using EventCore.Events;
 using MainWindowProgram.Services;
 using UI.Components;
 using Utilities.USB;
@@ -57,8 +58,9 @@ namespace MainWindowProgram.Events
     /// </summary>
     public void Bind()
     {
-      EventAggregator.LockedChanged += OnLockedChanged;
-      EventAggregator.AdminRightsChanged += OnAdminRightsChanged;
+      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => OnLockedChanged(e.IsLocked));
+      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => OnAdminRightsChanged(e.IsAdmin));
+
       ExecutionConfig.IdleModeChange += OnIdleModeChange;
 
       AdminCommand.AdminModeChanged += AdminModeChanged;

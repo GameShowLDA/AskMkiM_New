@@ -3,9 +3,10 @@ using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using UI.Controls.Archive.Models;
-using UI.Components.Archive.ArchiveMenu;
 using AppConfiguration;
+using EventCore.Events;
+using UI.Components.Archive.ArchiveMenu;
+using UI.Controls.Archive.Models;
 
 namespace UI.Components.Archive
 {
@@ -40,7 +41,7 @@ namespace UI.Components.Archive
       ArchiveContextMenuEvents.DeleteArchiveRequested += (s, m) =>
         DeleteArchiveRequested?.Invoke(this, m);
 
-      AppConfiguration.Base.EventAggregator.AdminRightsChanged += OnAdminRightsChanged;
+      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => OnAdminRightsChanged(e.IsAdmin));
 
       Loaded += async (_, __) =>
       {

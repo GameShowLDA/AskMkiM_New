@@ -20,7 +20,7 @@ namespace ControlCommandAnalyser.Parser
     ///   (пример 'Х51/51-*60') → каждая раскрытая точка = отдельная цепь.
     /// - Для КС: одиночная точка (один исходный токен БЕЗ '-') в части запрещена.
     /// </summary>
-    public static (SchemeModel, List<ErrorItem>) ParsePoints(string expr, string mnemonic, RmCommandModel rmCommandModel)
+    public static (SchemeModel?, List<ErrorItem>) ParsePoints(string expr, string mnemonic, RmCommandModel rmCommandModel)
     {
       if (rmCommandModel == null || rmCommandModel.PointsMap == null || rmCommandModel.PointsMap.Count == 0)
       {
@@ -33,6 +33,7 @@ namespace ControlCommandAnalyser.Parser
       // Убираем все пробелы/табы/переводы строк и внешние '*'
       expr = Regex.Replace(expr ?? string.Empty, @"\s+", "");
       expr = expr.Trim('*');
+
       if (string.IsNullOrEmpty(expr))
         return (null, errors);
 

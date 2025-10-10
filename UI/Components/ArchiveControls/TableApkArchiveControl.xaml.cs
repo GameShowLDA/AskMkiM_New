@@ -1,12 +1,13 @@
-﻿using AppConfiguration.Base;
-using Message;
-using Microsoft.Win32;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using AppConfiguration.Base;
+using EventCore.Events;
+using Message;
+using Microsoft.Win32;
 using UI.Components.ArchiveManager;
 using UI.Components.ArchiveManager.ArchiveFiles;
 using UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive;
@@ -43,12 +44,11 @@ namespace UI.Components.ArchiveControls
       InitializeComponent();
       _archiveName = archiveName;
       this.Loaded += async (s, e) => await ShowOpkFiles();
-      EventAggregator.AdminRightsChanged += ApplicationDataHandler_AdminRightsChanged;
 
-      // Регистрируем обработчик движения мыши
+      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => ApplicationDataHandler_AdminRightsChanged(e.IsAdmin));
+      
       MouseMove += (s, e) =>
       {
-        // Обновляем последний элемент под курсором
         HelpProvider.SetHelpKey(this, "FuncArchive");
       };
     }

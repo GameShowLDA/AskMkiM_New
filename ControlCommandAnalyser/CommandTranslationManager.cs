@@ -7,6 +7,7 @@ using ControlCommandAnalyser.Formatter;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Parser;
 using DTO.Service.Models;
+using EventCore.Adapters;
 using Utilities.TextEditor;
 
 namespace ControlCommandAnalyser
@@ -60,19 +61,19 @@ namespace ControlCommandAnalyser
     /// </summary>
     public List<BaseCommandModel> ParseAllAndDisplay(string text, ITextEditorAdapter adapter)
     {
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Начало трансляции");
+      MessageEventAdapter.RaiseInfoMessage("Начало трансляции");
       var models = ParseAll(text);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Формирование данных");
+      MessageEventAdapter.RaiseInfoMessage("Формирование данных");
       FormatAndDisplay(models, adapter);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Проверка взаимосвязей");
+      MessageEventAdapter.RaiseInfoMessage("Проверка взаимосвязей");
       Analyze(models);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Формирование данных");
+      MessageEventAdapter.RaiseInfoMessage("Формирование данных");
       FormatAndDisplay(models, adapter);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Готово");
+      MessageEventAdapter.RaiseInfoMessage("Готово");
       return models;
     }
 
@@ -186,11 +187,11 @@ namespace ControlCommandAnalyser
       var totalErrorCount = models.Sum(m => m?.Errors?.Count() ?? 0);
       if (totalErrorCount > 0)
       {
-        AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Ошибка трансляции");
+        MessageEventAdapter.RaiseInfoMessage("Ошибка трансляции");
       }
       else
       {
-        AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Готово");
+        MessageEventAdapter.RaiseInfoMessage("Готово");
       }
     }
 
@@ -199,7 +200,7 @@ namespace ControlCommandAnalyser
     /// </summary>
     public List<BaseCommandModel> ParseAll(string text)
     {
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Сбор данных...");
+      MessageEventAdapter.RaiseInfoMessage($"Сбор данных...");
 
       text = PkPreprocessor.PreprocessText(text);
       var lines = text.Replace("\r\n", "\n").Split('\n');

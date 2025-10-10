@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using DTO.Base.Models;
 using DTO.Service;
+using EventCore.Adapters;
 using Message;
 using WindowsInput;
 using static AppConfiguration.Base.EventAggregator;
@@ -582,7 +583,7 @@ namespace UI.Controls.ProtocolNew
           _stopwatch.Stop();
         }
 
-        RaiseInfoMessage("");
+        MessageEventAdapter.RaiseInfoMessage("");
       });
     }
 

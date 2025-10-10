@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using DTO.Service.Models;
+using EventCore.Adapters;
 
 namespace UI.Controls.ProtocolNew
 {
@@ -17,7 +18,7 @@ namespace UI.Controls.ProtocolNew
 
         if (ErrorCount > 0)
         {
-          AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+          MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
         }
       });
     }

@@ -1,13 +1,15 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using Message;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using AppConfiguration.Base;
+using AppConfiguration.Base;
+using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
+using DTO.Base.Models;
+using EventCore.Events;
+using Message;
 using Message;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
@@ -19,7 +21,6 @@ using static UI.Components.Invoke.OpenFileButton;
 using static Utilities.LoggerUtility;
 using Application = System.Windows.Application;
 using UserControl = System.Windows.Controls.UserControl;
-using DTO.Base.Models;
 
 namespace UI.Components
 {
@@ -47,7 +48,7 @@ namespace UI.Components
     public MultiWindowControl()
     {
       InitializeComponent();
-      EventAggregator.TextEditorContainerClosing += OnTextEditorClosig;
+      EventCore.Services.EventAggregator.Subscribe<EditorEvents.TextEditorContainerClosing>(e => OnTextEditorClosig(e.IsClosing, e.EditorName));
     }
 
     /// <summary>

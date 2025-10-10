@@ -1,14 +1,4 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using DataBaseConfiguration.Models.Session;
-using DataBaseConfiguration.Services;
-using DTO.Base.Models;
-using DTO.Settings.SettingsModels;
-using ICSharpCode.AvalonEdit.Highlighting;
-using Message;
-using Message;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection.Metadata;
@@ -18,6 +8,18 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using AppConfiguration.Base;
+using AppConfiguration.Base;
+using AppConfiguration.Protocol;
+using DataBaseConfiguration.Models.Session;
+using DataBaseConfiguration.Services;
+using DTO.Base.Models;
+using DTO.Settings.SettingsModels;
+using EventCore.Adapters;
+using EventCore.Events;
+using ICSharpCode.AvalonEdit.Highlighting;
+using Message;
+using Message;
 using Ude;
 using UI.Components.ArchiveControls;
 using UI.Components.ArchiveManager.Models;
@@ -110,7 +112,8 @@ namespace UI.Components.MultiEditorMethods
           {
             textEditor.IsReadOnly = true;
           }
-          EventAggregator.RaiseTextEditorActivated(textEditor);
+
+          EditorEventAdapter.RaiseTextEditorActivated(textEditor);
 
           ShowNewDockItem(newFileName, textEditorContainer, textEditor);
 
@@ -177,7 +180,8 @@ namespace UI.Components.MultiEditorMethods
           var textEditorModel = new TextEditorModel(newPath);
           var textEditor = CreateTextEditor(textEditorModel, protocolText, FileType.Protocol);
           textEditor.IsReadOnly = true;
-          EventAggregator.RaiseTextEditorActivated(textEditor);
+          
+          EditorEventAdapter.RaiseTextEditorActivated(textEditor);
 
           ShowNewDockItem(newFileName, protocolContainer, textEditor, containerType);
 
@@ -474,7 +478,9 @@ namespace UI.Components.MultiEditorMethods
             LogDebug($"Закрытие контейнера типа \"{editorType.ToString()}\".");
             RemoveTextEditorContainer(textEditorContainer, editorType);
           }
-          EventAggregator.RaiseTextEditorContainerClosing(true, nameFile);
+
+          EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
+
         }
       };
     }
@@ -512,7 +518,8 @@ namespace UI.Components.MultiEditorMethods
           {
             RemoveTextEditorContainer(translatorContainer, EditorType.Translator);
           }
-          EventAggregator.RaiseTextEditorContainerClosing(true, nameFile);
+
+          EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
         };
 
 

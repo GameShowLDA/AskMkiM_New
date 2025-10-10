@@ -3,6 +3,8 @@ using AppConfiguration.Base;
 using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
 using DTO.Base.Models;
+using EventCore.Adapters;
+using EventCore.Events;
 using Microsoft.Win32;
 using UI.Components.FileComparerControls;
 using UI.Controls.ProtocolNew;
@@ -43,7 +45,9 @@ namespace MainWindowProgram.Services
       _mainWindow = mainWindow;
       _mainWindow.SearchWindow = new SearchWindow();
       _isLockedProvider = isLockedProvider;
-      EventAggregator.SearchWindowClosing += OnSearchWindowClosing;
+      
+      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchWindowClosing>(e => OnSearchWindowClosing(e.IsClosing));
+
       EventAggregator.ViewProtocol -= ViewProtocol;
       EventAggregator.ViewProtocol += ViewProtocol;
       EventAggregator.SaveSession += SaveSession;
@@ -66,7 +70,7 @@ namespace MainWindowProgram.Services
     private void OnSearchWindowClosing(bool closing)
     {
       _isSearchWindowOpen = false;
-      EventAggregator.RaiseInfoMessage(string.Empty);
+      MessageEventAdapter.RaiseInfoMessage(string.Empty);
     }
 
     /// <summary>
@@ -207,7 +211,7 @@ namespace MainWindowProgram.Services
 
         if (!string.IsNullOrEmpty(selectedText))
         {
-          EventAggregator.RaiseSearchTextRequested(selectedText);
+          SearchEventAdapter.RaiseSearchTextRequested(selectedText);
         }
       }
       else

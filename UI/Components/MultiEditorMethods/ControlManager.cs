@@ -1,8 +1,10 @@
-﻿using AppConfiguration.Base;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using AppConfiguration.Base;
+using EventCore.Adapters;
+using EventCore.Events;
 using UI.Components.FileComparerControls;
 using UI.Components.Invoke;
 using UI.Controls.Runner;
@@ -57,7 +59,7 @@ namespace UI.Components.MultiEditorMethods
               }
             }
           }
-          
+
         }
         else if (control is RunControl runControl)
         {
@@ -95,7 +97,7 @@ namespace UI.Components.MultiEditorMethods
         if (fileManager.UserControls.OfType<TextEditorContainer>().Count() == 0 || activeTab == null
           || !(fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer))
         {
-          EventAggregator.RaiseCloseSearchWindow();
+          SearchEventAdapter.RaiseCloseSearchWindow();
         }
       }
     }
@@ -110,7 +112,7 @@ namespace UI.Components.MultiEditorMethods
       var result = MessageBoxResult.No;
       var saveFileResult = false;
       if (control.Content is TextEditorUI)
-      { 
+      {
         var saveFileManager = new SaveFileManager(fileManager);
         saveFileManager.SaveFileDialog(ref result, ref saveFileResult, control);
       }
@@ -125,7 +127,7 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="tabButton">Вкладка, которая будет закрыта.</param>
     private void HandleClosingEvents(UserControl control, OpenFileButton tabButton)
     {
-      EventAggregator.RaiseTextEditorContainerClosing(control is TextEditorContainer, tabButton.Text);
+      EditorEventAdapter.RaiseTextEditorContainerClosing(control is TextEditorContainer, tabButton.Text);
     }
 
     /// <summary>
@@ -180,13 +182,14 @@ namespace UI.Components.MultiEditorMethods
 
           _pendingHighlights.Remove(fileName);
         }
-        EventAggregator.RaiseTextEditorActivated(control);
+        EditorEventAdapter.RaiseTextEditorActivated(control);
 
       }
 
       bool isTextEditorContainer = control is TextEditorContainer;
-      EventAggregator.RaiseTextEditorActive(isTextEditorContainer);
-      EventAggregator.RaiseActiveEditorChanged(isTextEditorContainer);
+
+      EditorEventAdapter.RaiseTextEditorActive(isTextEditorContainer);
+      EditorEventAdapter.RaiseActiveEditorChanged(isTextEditorContainer);
     }
 
     /// <summary>
@@ -375,11 +378,11 @@ namespace UI.Components.MultiEditorMethods
           child.Background = (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"];
           if (control.Text == "Текстовый редактор")
           {
-            EventAggregator.RaiseTranslatorActivated(true);
+            EditorEventAdapter.RaiseTranslatorActive(true);
           }
           else
           {
-            EventAggregator.RaiseTranslatorActivated(false);
+            EditorEventAdapter.RaiseTranslatorActive(false);
           }
         }
         else

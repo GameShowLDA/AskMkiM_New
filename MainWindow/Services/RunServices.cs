@@ -1,10 +1,11 @@
-﻿using AppConfiguration.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using AppConfiguration.Base;
+using EventCore.Events;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
 
@@ -33,8 +34,9 @@ namespace MainWindowProgram.Services
       _fileService = fileService;
       EventAggregator.OpenFileInEditorAgain -= OpenFileCommand;
       EventAggregator.OpenFileInEditorAgain += OpenFileCommand;
-      EventAggregator.CloseRunItem -= CloseRunItem;
-      EventAggregator.CloseRunItem += CloseRunItem;
+
+      EventCore.Services.EventAggregator.Unsubscribe<EditorEvents.CloseRunItem>(e => CloseRunItem(e.RunControl));
+      EventCore.Services.EventAggregator.Subscribe<EditorEvents.CloseRunItem>(e => CloseRunItem(e.RunControl));
     }
 
     public async void OpenFileCommand(string filePath)

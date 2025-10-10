@@ -7,6 +7,7 @@ using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
 using DTO.Service.Models;
+using EventCore.Adapters;
 using Message;
 using UI.Controls.ProtocolNew;
 using UI.Controls.TextEditor;
@@ -141,7 +142,7 @@ namespace UI.Controls.Runner
 
         if (ErrorCount > 0)
         {
-          AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+          MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
         }
       });
     }
@@ -165,7 +166,7 @@ namespace UI.Controls.Runner
           && File.Exists(textEditor.TextEditorModel.FilePath))
         {
           EventAggregator.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
-          EventAggregator.RaiseCloseRunItem(this);
+          EditorEventAdapter.RaiseCloseRunItem(this);
         }
       }
       else

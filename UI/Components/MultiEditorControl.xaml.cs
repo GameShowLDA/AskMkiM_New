@@ -1,11 +1,13 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using AppConfiguration.Base;
+using AppConfiguration.Base;
+using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
+using DTO.Base.Models;
+using EventCore.Events;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
 using UI.Components.SearchControls;
@@ -17,7 +19,6 @@ using static UI.Components.Invoke.OpenFileButton;
 using Application = System.Windows.Application;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using UserControl = System.Windows.Controls.UserControl;
-using DTO.Base.Models;
 
 namespace UI.Components
 {
@@ -114,7 +115,9 @@ namespace UI.Components
 
       this.KeyDown -= MultiWindowControl_KeyDown;
       this.KeyDown += MultiWindowControl_KeyDown;
-      EventAggregator.FoundTextSelectRow += OnFoundTextSelectRow;
+
+      EventCore.Services.EventAggregator.Subscribe<SearchEvents.FoundTextSelectRow>(e => OnFoundTextSelectRow(e.FileName, e.LineNumber, e.StartOffset, e.LineText, e.SearchText));
+
       ProtocolUI.AnotherKeyPressed -= MultiWindowControl_KeyDown;
       ProtocolUI.AnotherKeyPressed += MultiWindowControl_KeyDown;
       InitializeManagers();

@@ -1,62 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Base;
+﻿using System.Diagnostics;
+using EventCore.Adapters;
+using EventCore.Events;
+using EventCore.Services;
 
 namespace AppConfiguration
 {
   /// <summary>
-  /// Менеджер состояния системы, управляющий правами доступа, питанием и блокировкой интерфейса.
+  /// Менеджер состояния системы, управляющий питанием и блокировкой интерфейса.
   /// </summary>
-  static public class SystemStateManager
+  public static class SystemStateManager
   {
     #region Properties.
 
     /// <summary>
     /// Таймер для измерения времени выполнения операций.
     /// </summary>
-    static public readonly Stopwatch _stopwatch = new Stopwatch();
+    public static readonly Stopwatch _stopwatch = new();
 
     /// <summary>
-    /// Флаг, указывающий, активна ли система питания.
+    /// Флаг, указывающий, активно ли питание системы.
     /// </summary>
-    static internal bool IsActivePower { get; set; }
+    internal static bool IsActivePower { get; private set; }
 
     /// <summary>
-    /// Флаг, указывающий на блокировку программы.
+    /// Флаг, указывающий, находится ли система в состоянии блокировки.
     /// </summary>
-    static internal bool IsLocked { get; set; }
+    internal static bool IsLocked { get; private set; }
+
+    #endregion
+
+    #region Constructor.
+
+    /// <summary>
+    /// Статический конструктор.
+    /// Подписывается на события <see cref="SystemStateEvents.PowerChanged"/> и <see cref="SystemStateEvents.LockedChanged"/>,
+    /// обеспечивая автоматическую синхронизацию внутренних флагов состояния.
+    /// </summary>
+    static SystemStateManager()
+    {
+      EventAggregator.Subscribe<SystemStateEvents.PowerChanged>(e => IsActivePower = e.IsPowered);
+      EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => IsLocked = e.IsLocked);
+    }
 
     #endregion
 
     #region Set.
 
-
     /// <summary>
-    /// Включает или выключает питание системы.
+    /// Включает или выключает питание системы и публикует соответствующее событие.
     /// </summary>
-    /// <param name="enable">true для включения, false для выключения.</param>
+    /// <param name="enable">true — включить питание; false — выключить.</param>
     public static async Task SetIsActivePower(bool enable)
     {
       await Task.Run(() =>
       {
-        EventAggregator.PowerFlag = enable;
+        SystemStateEventAdapter.RaisePowerChanged(enable);
       });
     }
 
     /// <summary>
-    /// Включает или отключает блокировку UI элементов.
+    /// Включает или отключает блокировку интерфейса и публикует соответствующее событие.
     /// </summary>
-    /// <param name="enable"></param>
+    /// <param name="enable">true — заблокировать; false — разблокировать.</param>
     public static async Task SetIsLocked(bool enable)
     {
       await Task.Run(() =>
       {
-        EventAggregator.LockedFlag = enable;
+        SystemStateEventAdapter.RaiseLockedChanged(enable);
       });
     }
 
@@ -65,16 +75,22 @@ namespace AppConfiguration
     #region Get.
 
     /// <summary>
-    /// Возвращает статус питания системы.
+    /// Асинхронно возвращает текущий статус питания системы.
     /// </summary>
-    /// <returns>true, если активно; false, если не активно.</returns>
-    public static async Task<bool> GetIsActivePower() => await Task.Run(() => IsActivePower);
+    /// <returns>
+    /// <see langword="true"/>, если питание активно; <see langword="false"/> — если отключено.
+    /// </returns>
+    public static async Task<bool> GetIsActivePower() =>
+      await Task.Run(() => IsActivePower);
 
     /// <summary>
-    /// Возвращает статус занятости программы.
+    /// Асинхронно возвращает текущий статус блокировки интерфейса.
     /// </summary>
-    /// <returns>true, если активно; false, если не активно.</returns>
-    public static async Task<bool> GetIsLocked() => await Task.Run(() => IsLocked);
+    /// <returns>
+    /// <see langword="true"/>, если интерфейс заблокирован; <see langword="false"/> — если разблокирован.
+    /// </returns>
+    public static async Task<bool> GetIsLocked() =>
+      await Task.Run(() => IsLocked);
 
     #endregion
   }

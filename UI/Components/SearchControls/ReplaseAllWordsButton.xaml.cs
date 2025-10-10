@@ -1,4 +1,5 @@
 ﻿using AppConfiguration.Base;
+using EventCore.Adapters;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -30,7 +31,7 @@ namespace UI.Components.SearchControls
 
     private void replaceAllWords_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-      EventAggregator.RaiseReplaceAllWordsButtonPressed();
+      SearchEventAdapter.RaiseReplaceAllWordsButtonPressed();
     }
   }
 }

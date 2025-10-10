@@ -4,11 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Base;
+using EventCore.Adapters;
+using EventCore.Events;
 
 namespace AppConfiguration
 {
   static public class AdminConfig
   {
+    static AdminConfig()
+    {
+      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => IsAdmin = e.IsAdmin);
+    }
+
     /// <summary>
     /// Флаг, указывающий, запущено ли приложение с правами администратора.
     /// </summary>
@@ -20,21 +27,22 @@ namespace AppConfiguration
     static public bool ErrorDebug { get; set; } = false;
 
     /// <summary>
-    /// Устанавливает статус прав администратора.
+    /// Асинхронно устанавливает статус прав администратора и уведомляет систему.
     /// </summary>
-    /// <param name="enable">true, если запущено с правами администратора; false в противном случае.</param>
-    static public async Task SetAdminRights(bool enable)
-    {
-      await Task.Run(() =>
-      {
-        EventAggregator.AdminRightsFlag = enable;
-      });
-    }
+    /// <param name="enable">
+    /// <see langword="true"/>, если запущено с правами администратора;
+    /// <see langword="false"/> — если в обычном режиме.
+    /// </param>
+    public static async Task SetAdminRights(bool enable) =>
+      await Task.Run(() => SystemStateEventAdapter.RaiseAdminRightsChanged(enable));
 
     /// <summary>
-    /// Возвращает текущий статус прав администратора.
+    /// Асинхронно возвращает текущий статус прав администратора.
     /// </summary>
-    /// <returns>true, если запущено с правами администратора; false в противном случае.</returns>
-    static public async Task<bool> GetAdminRights() => await Task.Run(() => IsAdmin);
+    /// <returns>
+    /// <see langword="true"/>, если приложение работает с правами администратора;
+    /// <see langword="false"/> — если без них.
+    /// </returns>
+    public static async Task<bool> GetAdminRights() => await Task.Run(() => IsAdmin);
   }
 }
