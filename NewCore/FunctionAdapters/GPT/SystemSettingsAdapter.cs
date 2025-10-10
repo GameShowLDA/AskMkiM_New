@@ -1,9 +1,9 @@
 ﻿using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.Breakdown.Model;
+using DTO.Service;
 using NewCore.Device;
 using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {

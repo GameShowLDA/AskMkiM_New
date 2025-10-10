@@ -1,6 +1,5 @@
 ﻿using DTO.Base.Models;
 using DTO.Enum;
-using DTO.Service.Models;
 
 namespace Mode.ServicesTest.MKR
 {

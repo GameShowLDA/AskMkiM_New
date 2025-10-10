@@ -1,9 +1,9 @@
 ﻿using AppConfiguration.Error.Device.ModuleVoltageCurrent;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.PowerSourceModule.Capabilities;
+using DTO.Service;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
 {

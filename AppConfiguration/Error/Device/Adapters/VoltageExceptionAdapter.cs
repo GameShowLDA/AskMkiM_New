@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.ModuleVoltageCurrent;
-
-namespace AppConfiguration.Error.Device.Adapters
+﻿namespace AppConfiguration.Error.Device.Adapters
 {
   internal static class VoltageExceptionAdapter
   {

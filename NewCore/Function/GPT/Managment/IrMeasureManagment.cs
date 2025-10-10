@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using DTO.Device.Breakdown.Capabilities;
+using DTO.Service;
 using NewCore.Device;
 using NewCore.Function.GPT.Command;
 using NewCore.Function.GPT.Helper;
-using DTO.Service;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static Utilities.LoggerUtility;
 

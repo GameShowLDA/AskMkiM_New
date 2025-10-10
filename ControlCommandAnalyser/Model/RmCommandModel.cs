@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ControlCommandAnalyser.Model
+﻿namespace ControlCommandAnalyser.Model
 {
   /// <summary>
   /// Модель для команды РМ: хранит сопоставление точек.
@@ -40,14 +34,14 @@ namespace ControlCommandAnalyser.Model
       key = null;
 
       if (!PointsMap.ContainsValue(value))
-      { 
+      {
         return false;
       }
 
       foreach (var kv in PointsMap)
       {
         if (kv.Value.Equals(value))
-        { 
+        {
           key = kv.Key;
           break;
         }

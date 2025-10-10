@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Settings.SettingsModels
+﻿namespace DTO.Settings.SettingsModels
 {
   /// <summary>
   /// Класс, содержащий пути к файлам.

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
-using DataBaseConfiguration.Models.Device;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.Entity;
 using NewCore.Base.DeviceResponses;
 using NewCore.Device;
 using static DTO.Enum.DeviceEnums;

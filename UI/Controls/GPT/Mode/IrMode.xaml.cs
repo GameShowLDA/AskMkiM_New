@@ -115,7 +115,7 @@ namespace UI.Controls.GPT.Mode
     private async void Button_PreviewMouseDown_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
       // Сначала собираем значения с UI строго в UI-потоке
-      double voltage = 0, rhi = 0, rlo = 0, time = 0, timeRamp = 0, refValue = 0, arcCurrent = 0;
+      double voltage = 0, rhi = 0, rlo = 0, time = 0, timeRamp = 0, refValue = 0;
 
       Dispatcher.Invoke(() =>
       {

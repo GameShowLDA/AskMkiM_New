@@ -1,10 +1,5 @@
-﻿
-using Microsoft.Win32;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows;
 using System.Windows.Input;
-using UI.Controls.TextEditor;
 
 namespace TestDocking
 {

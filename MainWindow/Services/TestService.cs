@@ -1,10 +1,8 @@
-﻿using MainWindowProgram.Infrastructure;
-using Mode.TestSuite.CrossTestMkr;
+﻿using Mode.TestSuite.CrossTestMkr;
 using Mode.TestSuite.Metrology.MethodExecutor.CI;
 using Mode.TestSuite.Metrology.MethodExecutor.PI;
 using Mode.TestSuite.Metrology.NodeMethod.CI;
 using Mode.TestSuite.Metrology.NodeMethod.PI;
-using System.Windows.Input;
 using static UI.Components.Invoke.OpenFileButton;
 
 namespace MainWindowProgram.Services

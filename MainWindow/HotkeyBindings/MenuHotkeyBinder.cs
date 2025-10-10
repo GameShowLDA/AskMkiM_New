@@ -1,11 +1,9 @@
-﻿using DataBaseConfiguration;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using DataBaseConfiguration.Context;
 using static Utilities.LoggerUtility;
 
 namespace MainWindowProgram.HotkeyBindings

@@ -1,7 +1,6 @@
-﻿using DTO.Device.Base;
+﻿using System.Net;
+using DTO.Device.Base;
 using NewCore.Communication;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Net;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 

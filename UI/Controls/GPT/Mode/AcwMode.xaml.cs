@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Message;
-using Utilities;
 
 namespace UI.Controls.GPT.Mode
 {
@@ -37,7 +36,7 @@ namespace UI.Controls.GPT.Mode
         ChiSlider.Value = systemData.HighCurrentLimit;
         CloSlider.Value = systemData.LowCurrentLimit;
         TimeSlider.Value = systemData.TestTime;
-        RampTimeSlider.Value = systemData.RampTime; 
+        RampTimeSlider.Value = systemData.RampTime;
         FrequencyComboBox.SelectedIndex = systemData.Frequency == 50 ? 0 : 1;
         RefSlider.Value = systemData.Offset;
         ArcCurrentSlider.Value = systemData.ArcCurrent;

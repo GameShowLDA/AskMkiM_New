@@ -1,5 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
-using System.Text;
+﻿using System.Text;
+using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.ComandBody
 {
@@ -19,7 +19,7 @@ namespace ControlCommandAnalyser.ComandBody
       if (pi.SiCommand != null)
       {
         var siBuilder = new SiCommandBodyBuilder();
-        commandBody = siBuilder.Create(pi.SiCommand, commandBody); 
+        commandBody = siBuilder.Create(pi.SiCommand, commandBody);
       }
       if (pi.VoltageType == VoltageEnum.Type.DCW)
       {

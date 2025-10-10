@@ -1,20 +1,8 @@
-﻿using AppConfiguration.Execution;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using AppConfiguration.Parameter;
 using DTO.SettingsModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using UI.Localization;
 using static AppConfiguration.Parameter.ParameterConfig;
 
@@ -90,12 +78,12 @@ namespace UI.Controls.Settings.UserInterface
     private async void UiSettingsControl_Loaded(object sender, RoutedEventArgs e)
     {
       _baseParameterModel = await GetParameterModel();
-      
+
       LanguageSelect.ValueChanged += ValueChanged;
-      
+
       Success.PreviewMouseDown += Success_PreviewMouseDown;
       Error.PreviewMouseDown += Error_PreviewMouseDown;
-      
+
       Error.Visibility = Visibility.Collapsed;
       Success.Visibility = Visibility.Collapsed;
       HasUnsavedChanges = false;
@@ -132,9 +120,9 @@ namespace UI.Controls.Settings.UserInterface
     /// </summary>
     private void DefalultData()
     {
-      var current = LanguageSettings.CurrentLanguage;   
-      LanguageSelect.DefaultValue = current;          
-      LanguageSelect.SelectedValue = current;         
+      var current = LanguageSettings.CurrentLanguage;
+      LanguageSelect.DefaultValue = current;
+      LanguageSelect.SelectedValue = current;
     }
 
     /// <summary>
@@ -143,9 +131,9 @@ namespace UI.Controls.Settings.UserInterface
     private SettingsParameterModel GetModel()
     {
       var code =
-          LanguageSelect.SelectedValue as string          
-          ?? LanguageSelect.SelectedItem?.ToString()      
-          ?? LanguageSettings.CurrentLanguage;            
+          LanguageSelect.SelectedValue as string
+          ?? LanguageSelect.SelectedItem?.ToString()
+          ?? LanguageSettings.CurrentLanguage;
 
       return new SettingsParameterModel
       {

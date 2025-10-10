@@ -4,14 +4,13 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Message;
-using UI.Windows.WpfDocking.Windows.Docking;
 using UI.Components.Invoke;
+using UI.Controls;
 using UI.Controls.TextEditor;
+using UI.Windows.WpfDocking.Windows.Docking;
 using static Utilities.LoggerUtility;
 using Application = System.Windows.Application;
 using Path = System.IO.Path;
-using Microsoft.Win32.SafeHandles;
-using UI.Controls;
 
 namespace UI.Components.MultiEditorMethods
 {

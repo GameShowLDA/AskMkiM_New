@@ -1,7 +1,6 @@
-﻿using AppConfiguration.Base;
-using EventCore.Adapters;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
+using EventCore.Adapters;
 
 namespace UI.Components.SearchControls
 {

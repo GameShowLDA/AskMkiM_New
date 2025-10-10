@@ -1,9 +1,5 @@
 ﻿using ConsoleUI.ConsoleCommanding.Core;
 using ConsoleUI.ConsoleLogic;
-using ConsoleUI.ConsoleUI;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ConsoleUI.ConsoleCommanding.Commands
 {

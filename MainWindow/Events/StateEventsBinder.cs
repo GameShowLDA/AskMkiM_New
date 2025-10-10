@@ -1,11 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using AppConfiguration;
-using AppConfiguration.Base;
 using AppConfiguration.Execution;
 using ConsoleUI.ConsoleCommanding.Commands;
 using ConsoleUI.ConsoleCommanding.Services;
@@ -13,7 +9,6 @@ using ConsoleUI.ConsoleLogic;
 using EventCore.Events;
 using EventCore.Services;
 using MainWindowProgram.Services;
-using UI.Components;
 using Utilities.USB;
 
 namespace MainWindowProgram.Events

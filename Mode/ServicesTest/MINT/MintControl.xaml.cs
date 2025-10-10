@@ -1,5 +1,5 @@
-﻿using Mode.Models;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using Mode.Models;
 using UI.Controls.ProtocolNew;
 
 namespace Mode.ServicesTest.MINT

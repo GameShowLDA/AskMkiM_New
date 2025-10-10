@@ -1,12 +1,6 @@
 ﻿// UI.Controls.Archive/Services/ArchiveTreeService.cs
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using DataBaseConfiguration;
 using Microsoft.EntityFrameworkCore;
 using UI.Controls.Archive.Models;
 

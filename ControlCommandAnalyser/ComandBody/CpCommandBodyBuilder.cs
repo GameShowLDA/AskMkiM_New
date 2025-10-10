@@ -1,10 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.ComandBody
 {
@@ -19,7 +14,7 @@ namespace ControlCommandAnalyser.ComandBody
         return newSourseLines;
       }
       var commandBody = new StringBuilder();
-      for (int i = 0; i<cp.SourceLines.Count; i++)
+      for (int i = 0; i < cp.SourceLines.Count; i++)
       {
         if (cp.SourceLines[i].Contains(cp.CommandNumber))
         {

@@ -4,33 +4,33 @@
 
 namespace DataBaseConfiguration.Migrations
 {
+  /// <inheritdoc />
+  public partial class AddResistanceCalibrationJsonNull : Migration
+  {
     /// <inheritdoc />
-    public partial class AddResistanceCalibrationJsonNull : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<string>(
-                name: "ResistanceCalibrationJson",
-                table: "PowerSourceModules",
-                type: "TEXT",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "TEXT");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterColumn<string>(
-                name: "ResistanceCalibrationJson",
-                table: "PowerSourceModules",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "TEXT",
-                oldNullable: true);
-        }
+      migrationBuilder.AlterColumn<string>(
+          name: "ResistanceCalibrationJson",
+          table: "PowerSourceModules",
+          type: "TEXT",
+          nullable: true,
+          oldClrType: typeof(string),
+          oldType: "TEXT");
     }
+
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+      migrationBuilder.AlterColumn<string>(
+          name: "ResistanceCalibrationJson",
+          table: "PowerSourceModules",
+          type: "TEXT",
+          nullable: false,
+          defaultValue: "",
+          oldClrType: typeof(string),
+          oldType: "TEXT",
+          oldNullable: true);
+    }
+  }
 }

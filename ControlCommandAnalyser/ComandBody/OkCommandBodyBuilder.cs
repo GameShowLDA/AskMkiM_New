@@ -1,10 +1,6 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using System.Text;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ControlCommandAnalyser.ComandBody
 {

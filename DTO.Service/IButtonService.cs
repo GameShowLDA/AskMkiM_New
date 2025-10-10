@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Service
+﻿namespace DTO.Service
 {
   /// <summary>
   /// Интерфейс сервиса управления отображением кнопок пользовательского интерфейса.

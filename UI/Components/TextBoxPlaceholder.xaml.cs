@@ -6,7 +6,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using DTO.Base.Models;
-using DTO.Service.Models;
 
 namespace UI.Components
 {

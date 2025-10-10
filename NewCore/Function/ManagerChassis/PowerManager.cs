@@ -1,7 +1,7 @@
 ﻿using DTO.Device.Chassis;
 using DTO.Device.Chassis.Capabilities;
-using NewCore.Communication;
 using DTO.Service;
+using NewCore.Communication;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.ManagerChassis

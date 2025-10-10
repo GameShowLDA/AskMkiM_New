@@ -1,8 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using AppConfiguration.Execution;
-using AppConfiguration.Protocol;
 using DTO.SettingsModels;
 using Message;
 using static AppConfiguration.Execution.ExecutionConfig;

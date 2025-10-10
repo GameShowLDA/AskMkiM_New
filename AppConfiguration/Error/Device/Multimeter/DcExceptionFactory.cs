@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AppConfiguration.Error.Device.Multimeter
+﻿namespace AppConfiguration.Error.Device.Multimeter
 {
   public static class DcExceptionFactory
   {

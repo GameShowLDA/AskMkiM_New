@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static DTO.Enum.DeviceEnums;
+﻿using static DTO.Enum.DeviceEnums;
 
 namespace DTO.Device.Base
 {

@@ -1,7 +1,6 @@
 ﻿using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
 using DTO.Service;
-using DTO.Service.Models;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.DeviceEnums;

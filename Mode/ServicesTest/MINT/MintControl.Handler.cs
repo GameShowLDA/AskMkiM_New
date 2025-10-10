@@ -1,9 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using DTO.Service.Models;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using DTO.Base.Models;
 
 namespace Mode.ServicesTest.MINT

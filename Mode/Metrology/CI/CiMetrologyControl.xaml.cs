@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using AppConfiguration.Enums;
 using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
@@ -7,12 +6,12 @@ using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Service;
-using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
+using static DTO.Enum.Metrology;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.CI
@@ -125,7 +124,7 @@ namespace Mode.Metrology.CI
       {
         var meterDevice = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции"));
-        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(TypeCommand.CI, param);
+        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.CI, param);
 
         var result = await meterDevice.IrManger.Measure.MeasureAsync(param, firstNorm, lastNorm, protocolUI);
 

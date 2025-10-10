@@ -1,9 +1,9 @@
 ﻿using DTO.Device.Base;
+using DTO.Service;
 using NewCore.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.Keysight3466new;
 using Utilities;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.Keysight3466new
 {

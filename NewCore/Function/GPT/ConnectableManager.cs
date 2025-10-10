@@ -1,13 +1,11 @@
-﻿using System.IO;
-using System.IO.Ports;
+﻿using System.IO.Ports;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using DTO.Device.Base;
+using DTO.Service;
 using Microsoft.Win32.SafeHandles;
-using NewCore.Base.Device;
 using NewCore.Communication;
 using NewCore.Device;
-using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
@@ -19,8 +17,8 @@ public class ConnectableManager : IConnectable
 {
   private GPT79904 _gptModel;
 
-    public event Action IsReset;
-	
+  public event Action IsReset;
+
   /// <summary>
   /// Семафор для синхронизации операций подключения/отключения.
   /// </summary>

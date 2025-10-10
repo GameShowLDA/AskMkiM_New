@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UI.Controls.Archive.Models
+﻿namespace UI.Controls.Archive.Models
 {
   /// <summary>
   /// OPK-файл.

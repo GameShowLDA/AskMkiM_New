@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ControlCommandAnalyser.Model
+﻿namespace ControlCommandAnalyser.Model
 {
   /// <summary>
   /// Тип команды ЦУ: информация, вопрос, переход (вопрос с условием).

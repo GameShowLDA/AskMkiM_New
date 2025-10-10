@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using ControlCommandAnalyser.Model;
+﻿using System.Text.RegularExpressions;
 using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model.Ok;
-using Utilities;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr; // Для LoggerUtility
+using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Kc
 {
@@ -79,7 +75,7 @@ namespace ControlCommandAnalyser.Parser.Kc
       if (match.Success)
         remainder = match.Groups[1].Value.Trim();
 
-      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = null, unitTime = null;
+      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = null;
 
       var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder);
 

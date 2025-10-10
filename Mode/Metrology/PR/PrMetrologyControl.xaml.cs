@@ -1,17 +1,16 @@
 ﻿using System.Windows.Controls;
-using AppConfiguration.Enums;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Service;
-using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
+using static DTO.Enum.Metrology;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
 
@@ -126,7 +125,7 @@ namespace Mode.Metrology.PR
         for (int i = 0; i < 10; i++)
         {
           await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления"), IsBlockStart: true);
-          var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(TypeCommand.PR, param);
+          var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.PR, param);
 
           var result = await fastMeter.ContinuityManager.CheckContinuityAsync(param);
 

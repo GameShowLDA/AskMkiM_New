@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using DTO.Device.Base;
 using NewCore.Base.Device;
 using static Utilities.LoggerUtility;
@@ -98,7 +96,7 @@ namespace NewCore.Communication
         return $"[{_device.Name}] Общая ошибка QueryAsync: {ex.Message}";
       }
       finally
-      { 
+      {
       }
     }
 

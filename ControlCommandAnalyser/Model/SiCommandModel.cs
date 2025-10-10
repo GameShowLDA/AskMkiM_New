@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model.Chains;
 
 namespace ControlCommandAnalyser.Model
@@ -10,8 +8,8 @@ namespace ControlCommandAnalyser.Model
   /// Модель для команды СИ (сопротивление изоляции).
   /// </summary>
   [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
-    ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П, 
-     ControlCommandAnalyser.AlgorithmKey.Т, 
+    ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П,
+     ControlCommandAnalyser.AlgorithmKey.Т,
       ControlCommandAnalyser.AlgorithmKey.И,
     ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
   public class SiCommandModel : BaseCommandModel, IHasScheme
@@ -44,7 +42,7 @@ namespace ControlCommandAnalyser.Model
     /// <summary>
     /// Список точек измерения.
     /// </summary>
-    public SchemeModel Scheme {get; set; }
+    public SchemeModel Scheme { get; set; }
 
     /// <summary>
     /// Остаток строки с нераспознанными параметрами.

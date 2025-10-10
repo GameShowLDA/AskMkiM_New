@@ -2,7 +2,6 @@
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
-using DTO.Service.Models;
 using UI.Controls.ProtocolNew;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;

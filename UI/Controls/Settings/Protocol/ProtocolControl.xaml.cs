@@ -1,10 +1,8 @@
-﻿using AppConfiguration.Protocol;
-using DTO.SettingsModels;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AppConfiguration.Protocol;
+using DTO.SettingsModels;
 using static AppConfiguration.Protocol.ProtocolConfig;
 
 namespace UI.Controls.Settings.Protocol

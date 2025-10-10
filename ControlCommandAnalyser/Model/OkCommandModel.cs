@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 
 namespace ControlCommandAnalyser.Model.Ok
 {
@@ -53,7 +52,7 @@ namespace ControlCommandAnalyser.Model.Ok
     /// <summary>
     /// Номер последнего проведенного в КД извещения.
     /// </summary>
-    public List<Tuple<string, string?>?>?  LastNotificationNumber { get; set; }
+    public List<Tuple<string, string?>?>? LastNotificationNumber { get; set; }
 
     /// <summary>
     /// Номер заказа.

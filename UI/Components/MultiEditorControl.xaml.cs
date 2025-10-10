@@ -2,11 +2,8 @@
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using AppConfiguration.Base;
-using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using DataBaseConfiguration.Models.Session;
 using DTO.Base.Models;
+using DTO.Base.Models.Session;
 using EventCore.Events;
 using EventCore.Services;
 using UI.Components.Invoke;
@@ -93,7 +90,7 @@ namespace UI.Components
       textSearchManager = new TextSearchManager(fileManager, this);
       controlManager = new ControlManager(fileManager, this);
       saveFileManager = new SaveFileManager(fileManager);
-      textReplacementManager = new TextReplacementManager(fileManager); 
+      textReplacementManager = new TextReplacementManager(fileManager);
     }
 
     /// <summary>

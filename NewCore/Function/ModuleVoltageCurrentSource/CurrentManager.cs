@@ -1,7 +1,7 @@
 ﻿using DTO.Device.PowerSourceModule;
 using DTO.Device.PowerSourceModule.Capabilities;
-using NewCore.Communication;
 using DTO.Service;
+using NewCore.Communication;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static Utilities.LoggerUtility;
 

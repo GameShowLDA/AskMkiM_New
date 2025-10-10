@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Device.Breakdown.Model
+﻿namespace DTO.Device.Breakdown.Model
 {
   /// <summary>
   /// Класс для хранения конфигурации ACW (переменный ток высокого напряжения).

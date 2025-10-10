@@ -1,7 +1,6 @@
-﻿using ICSharpCode.AvalonEdit.Document;
+﻿using System.Text.RegularExpressions;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace UI.Controls.TextEditor
 {

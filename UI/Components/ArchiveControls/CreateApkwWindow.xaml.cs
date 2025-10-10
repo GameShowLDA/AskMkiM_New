@@ -1,12 +1,11 @@
-﻿using AppConfiguration.Base;
-using EventCore.Events;
-using EventCore.Services;
-using Message;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using EventCore.Events;
+using EventCore.Services;
+using Message;
 using UI.Components.ArchiveManager;
 using UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive;
 

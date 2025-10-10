@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using AppConfiguration.Base;
+﻿using System.Windows.Controls;
 using EventCore.Events;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;

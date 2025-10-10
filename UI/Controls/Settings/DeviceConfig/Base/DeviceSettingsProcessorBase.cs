@@ -1,7 +1,7 @@
-﻿using DataBaseConfiguration.Models.Device;
-using DTO.Device.Base;
+﻿using DTO.Device.Base;
 using DTO.Device.Breakdown;
 using DTO.Device.Chassis;
+using DTO.Device.Entity;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.PrecisionMeter;

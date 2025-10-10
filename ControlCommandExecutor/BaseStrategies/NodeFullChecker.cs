@@ -1,12 +1,11 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
-using Utilities;
-using DTO.Service;
-using DTO.Device.RelaySwitchModule.Model;
-using static DTO.Enum.DeviceEnums;
-using DTO.Service.Models;
 using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
+using DTO.Service;
+using Utilities;
+using static DTO.Enum.DeviceEnums;
 
 namespace ControlCommandExecutor.BaseStrategies
 {

@@ -5,7 +5,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using AppConfiguration.Base;
 using EventCore.Adapters;
 using static Utilities.LoggerUtility;
 

@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Windows.Controls;
-using AppConfiguration.Enums;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
@@ -8,7 +7,6 @@ using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Service;
-using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using NewCore.Base.DeviceResponses;
@@ -16,6 +14,7 @@ using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.DeviceEnums;
+using static DTO.Enum.Metrology;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
 
@@ -152,7 +151,7 @@ namespace Mode.Metrology.PR
         var data = SelectOptimalCurrentAndVoltage(param, mint);
         double currentGenerial = (data.DecimalCurrent / 1000.0) + data.IntegerCurrent;
 
-        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(TypeCommand.PR, param);
+        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.PR, param);
 
         var voltage = await meterDevice.DcVoltageManager.MeasureDCVoltageAsync(param * (currentGenerial / 1000), protocolUI);
         double fakeCurrent = GetInterpolatedCurrent(param, mint);

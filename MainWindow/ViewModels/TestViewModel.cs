@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using MainWindowProgram.Services;
-using System.Threading.Tasks;
 
 namespace MainWindowProgram.ViewModels
 {

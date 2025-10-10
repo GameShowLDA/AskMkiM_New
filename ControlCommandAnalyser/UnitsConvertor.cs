@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ControlCommandAnalyser
+﻿namespace ControlCommandAnalyser
 {
   public class UnitsConvertor
   {
@@ -26,11 +20,11 @@ namespace ControlCommandAnalyser
         {
           return ConvertToOhms(value, unit);
         }
-        else if(unit.ToLowerInvariant().Contains("ф"))
+        else if (unit.ToLowerInvariant().Contains("ф"))
         {
           return ConvertToFarads(value, unit);
         }
-        else if(unit.ToLowerInvariant().Contains("в"))
+        else if (unit.ToLowerInvariant().Contains("в"))
         {
           return ConvertToVolts(value, unit);
         }

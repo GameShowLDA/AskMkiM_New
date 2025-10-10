@@ -2,9 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using AppConfiguration.Base;
 using EventCore.Adapters;
-using EventCore.Events;
 using UI.Components.FileComparerControls;
 using UI.Components.Invoke;
 using UI.Controls.Runner;

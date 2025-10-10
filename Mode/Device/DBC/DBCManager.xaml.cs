@@ -6,7 +6,6 @@ using DataBaseConfiguration.Services.Device;
 using DTO.Base.Models;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
-using DTO.Service.Models;
 
 namespace Mode.Device.DBC
 {

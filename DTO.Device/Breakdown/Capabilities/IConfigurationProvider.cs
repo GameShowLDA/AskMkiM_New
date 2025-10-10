@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Device.Breakdown.Capabilities
+﻿namespace DTO.Device.Breakdown.Capabilities
 {
   /// <summary>
   /// Универсальный интерфейс для режимов, поддерживающих работу с конфигурацией.

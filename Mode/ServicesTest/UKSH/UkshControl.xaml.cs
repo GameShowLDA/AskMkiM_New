@@ -1,7 +1,7 @@
-﻿using Mode.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Mode.Models;
 using UI.Controls.ProtocolNew;
 
 namespace Mode.ServicesTest.UKSH

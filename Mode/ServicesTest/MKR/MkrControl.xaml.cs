@@ -7,7 +7,6 @@ using System.Windows.Media;
 using DataBaseConfiguration.Services.Device;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
-using DTO.Service.Models;
 using Mode.Models;
 
 namespace Mode.ServicesTest.MKR
