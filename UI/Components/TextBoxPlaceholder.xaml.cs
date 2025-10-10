@@ -1,12 +1,12 @@
 ﻿using System.Globalization;
-using System.Printing;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using Utilities.Models;
+using DTO.Base.Models;
+using DTO.Service.Models;
 
 namespace UI.Components
 {

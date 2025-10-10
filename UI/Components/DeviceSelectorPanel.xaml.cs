@@ -1,11 +1,18 @@
 ﻿using System.ComponentModel;
-using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Breakdown;
+using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PowerSourceModule.Capabilities;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
+using DTO.Device.SwitchingDevice;
+using DTO.Device.SwitchingDevice.Capabilities;
 using Utilities;
 using static Utilities.LoggerUtility;
 

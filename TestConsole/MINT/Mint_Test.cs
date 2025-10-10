@@ -1,8 +1,10 @@
-﻿using DataBaseConfiguration.Services;
-using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+﻿using DataBaseConfiguration.Services.Device;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.SwitchingDevice;
 using NewCore.Communication;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 
 namespace TestConsole.MINT

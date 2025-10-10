@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AppConfiguration;
+using EventCore.Events;
+using EventCore.Services;
 using Microsoft.Win32;
 using UI.Components.Archive;
 using UI.Controls.Archive.Models;
@@ -78,14 +81,21 @@ namespace UI.Controls.Archive
     {
       await RefreshAsync();
 
-      var a = await AppConfiguration.Admin.AdminConfig.GetAdminRights().ConfigureAwait(false);
+      var a = await AdminConfig.GetAdminRights().ConfigureAwait(false);
       await Dispatcher.InvokeAsync(() => IsAdmin = a);
 
-      AppConfiguration.Base.EventAggregator.AdminRightsChanged += isAdmin =>
+      EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e =>
       {
-        if (!Dispatcher.CheckAccess()) Dispatcher.BeginInvoke(new Action(() => IsAdmin = isAdmin));
-        else IsAdmin = isAdmin;
-      };
+        if (!Dispatcher.CheckAccess())
+        {
+          Dispatcher.BeginInvoke(new Action(() => IsAdmin = e.IsAdmin));
+        }
+        else
+        {
+          IsAdmin = e.IsAdmin;
+        }
+      });
+
     }
 
     /// <summary>

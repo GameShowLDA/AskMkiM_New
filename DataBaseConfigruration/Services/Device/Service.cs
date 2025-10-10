@@ -1,8 +1,15 @@
 ﻿using System.Reflection;
 using DataBaseConfiguration.Models.Device;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PrecisionMeter;
+using DTO.Device.Rack;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using Microsoft.EntityFrameworkCore;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
 using static Utilities.LoggerUtility;
 
 

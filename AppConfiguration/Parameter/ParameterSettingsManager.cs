@@ -1,5 +1,7 @@
 ﻿using AppConfiguration.Base;
 using AppConfiguration.Protocol;
+using DTO.Settings.SettingsModels;
+using DTO.SettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +24,7 @@ namespace AppConfiguration.Parameter
         return;
       }
 
-      ParameterModel protocolModel = await protocolFileManager.ReadFileAsync();
+      SettingsParameterModel protocolModel = await protocolFileManager.ReadFileAsync();
       if (protocolModel == null)
       {
         return;

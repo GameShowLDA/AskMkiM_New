@@ -3,6 +3,8 @@ using System.Windows.Input;
 using System.Windows;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using DTO.Service.Models;
+using DTO.Base.Models;
 
 namespace Mode.ServicesTest.MINT
 {
@@ -338,7 +340,7 @@ namespace Mode.ServicesTest.MINT
     /// <returns>Задача, представляющая завершение асинхронной операции.</returns>
     private Task ShowMessageAsync(string text)
     {
-      ProtocolSelfCheckControl?.ShowMessageAsync(new Utilities.Models.ShowMessageModel(text));
+      ProtocolSelfCheckControl?.ShowMessageAsync(new ShowMessageModel(text));
       return Task.CompletedTask;
     }
   }

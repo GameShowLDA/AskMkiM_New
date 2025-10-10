@@ -1,9 +1,15 @@
-﻿using DataBaseConfiguration.Models;
-using DataBaseConfiguration.Models.Device;
+﻿using DataBaseConfiguration.Models.Device;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PrecisionMeter;
+using DTO.Device.Rack;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+using static DTO.Enum.DeviceEnums;
 
 namespace UI.Controls.Settings.DeviceConfig.Base
 {
@@ -72,7 +78,7 @@ namespace UI.Controls.Settings.DeviceConfig.Base
     /// <param name="deviceModel">Объект устройства.</param>
     private void SetChassisNumber(IDevice deviceModel, DeviceSettingsControl control)
     {
-      if (deviceModel.DeviceType != NewCore.Enum.DeviceEnum.DeviceType.ChassisManager)
+      if (deviceModel.DeviceType != DeviceType.ChassisManager)
       {
         IAttachableDevice attachableDevice = (IAttachableDevice)deviceModel;
         attachableDevice.NumberChassis = control.NumberChassis;

@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\DTO.Device\DTO.Device.csproj" />
+    <ProjectReference Include="..\DTO.Enum\DTO.Enum.csproj" />
+    <ProjectReference Include="..\DTO\DTO.Settings.csproj" />
     <ProjectReference Include="..\NewCore\NewCore.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>

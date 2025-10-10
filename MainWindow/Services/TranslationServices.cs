@@ -1,9 +1,10 @@
-﻿using AppConfiguration.Base;
+﻿using System.IO;
+using System.Windows;
+using AppConfiguration.Base;
 using ControlCommandAnalyser;
 using ControlCommandAnalyser.Model.Ok;
+using EventCore.Adapters;
 using Message;
-using System.IO;
-using System.Windows;
 using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
@@ -153,7 +154,7 @@ namespace MainWindowProgram.Services
 
       if (_multiWindow.RemoveActiveTextEditor(true))
       {
-        EventAggregator.RaiseTextEditorContainerClosing(true, editor.TextEditorModel.FileName);
+        EditorEventAdapter.RaiseTextEditorContainerClosing(true, editor.TextEditorModel.FileName);
         await CreateNewTranslator(editor, text);
       }
     }
@@ -227,7 +228,7 @@ namespace MainWindowProgram.Services
         var models = manager.ParseAllAndDisplay(text, translateEditor);
         manager.SetSourseLines(models);
 
-        EventAggregator.RaiseTextEditorActivated(editor);
+        EditorEventAdapter.RaiseCloseRunItem(editor);
 
         var item = await _multiWindow.AddTranslatorItem(editor, translateEditor, EditorType.Translator);
         item.TranslationModels = models;

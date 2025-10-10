@@ -1,11 +1,10 @@
 ﻿using System.Globalization;
 using DataBaseConfiguration.Services.Device;
-using Mode.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using UI.Components;
 using UI.Controls.ProtocolNew;
 using Utilities.Events;
-using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.Base
 {

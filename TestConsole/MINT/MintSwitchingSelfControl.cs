@@ -1,4 +1,6 @@
-﻿using NewCore.Base.Interface.Main;
+﻿using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.SwitchingDevice;
 using static Utilities.LoggerUtility;
 
 

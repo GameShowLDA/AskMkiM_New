@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Utilities.Models;
+﻿using System.Windows;
+using DTO.Service.Models;
+using EventCore.Adapters;
 
 namespace UI.Controls.ProtocolNew
 {
@@ -22,7 +18,7 @@ namespace UI.Controls.ProtocolNew
 
         if (ErrorCount > 0)
         {
-          AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+          MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
         }
       });
     }

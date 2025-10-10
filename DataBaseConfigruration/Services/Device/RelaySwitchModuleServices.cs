@@ -1,6 +1,6 @@
 ﻿using AppConfiguration.Error.DataBase;
 using DataBaseConfiguration.Models.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Device.RelaySwitchModule;
 
 namespace DataBaseConfiguration.Services.Device
 {
@@ -44,7 +44,7 @@ namespace DataBaseConfiguration.Services.Device
 
       return result;
     }
-    
+
     /// <summary>
     /// Получает список всех устройств, привязанных к определенному шасси.
     /// </summary>

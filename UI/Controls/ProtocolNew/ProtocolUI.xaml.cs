@@ -1,11 +1,11 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AppConfiguration.Interface;
-using Utilities.Models;
-using static Utilities.LoggerUtility;
+using DTO.Base.Models;
+using DTO.Service.Models;
+using EventCore.Events;
 
 namespace UI.Controls.ProtocolNew
 {
@@ -118,9 +118,7 @@ namespace UI.Controls.ProtocolNew
       ActionExecutor = Task.Run(() => ActionExecutor.CreateInstanceAsync(this)).Result;
       InitializeInternal();
 
-      AppConfiguration.Base.EventAggregator.StepByStepModeChanged += EventAggregator_StepByStepModeChanged;
-
-
+      EventCore.Services.EventAggregator.Subscribe<ExecutionEvents.StepByStepModeChanged>(e => EventAggregator_StepByStepModeChanged(e.IsEnabled));
     }
 
     private void EventAggregator_StepByStepModeChanged(bool obj)

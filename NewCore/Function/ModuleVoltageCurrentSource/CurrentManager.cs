@@ -1,9 +1,7 @@
-﻿using System.Net;
-using NewCore.Base.Function.ModuleVoltageCurrentSource;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.PowerSourceModule;
+using DTO.Device.PowerSourceModule.Capabilities;
 using NewCore.Communication;
-using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static Utilities.LoggerUtility;
 

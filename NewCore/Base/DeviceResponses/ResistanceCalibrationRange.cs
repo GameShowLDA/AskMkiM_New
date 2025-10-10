@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Base.DeviceResponses
 {

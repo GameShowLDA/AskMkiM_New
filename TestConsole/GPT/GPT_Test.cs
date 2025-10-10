@@ -1,9 +1,6 @@
 ﻿using System.Diagnostics;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
-using Mode.Base;
-using NewCore.Base.Interface.Main;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using DTO.Device.Breakdown;
 
 namespace TestConsole.GPT
 {

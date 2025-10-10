@@ -1,14 +1,14 @@
-﻿using System.CodeDom;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
+using DTO.Base.Models;
+using DTO.Device.Breakdown;
+using DTO.Service;
+using DTO.Service.Models;
 using Mode.Base;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
-using Utilities.Models;
 
 namespace Mode.TestSuite.Metrology.NodeMethod.PI
 {
@@ -25,10 +25,8 @@ namespace Mode.TestSuite.Metrology.NodeMethod.PI
       InitializeComponent();
       InitializeSettingsAsync().ConfigureAwait(true);
 
-      // Регистрируем обработчик движения мыши
       MouseMove += (s, e) =>
       {
-        // Обновляем последний элемент под курсором
         HelpProvider.SetHelpKey(this, "TestPINodeMethod");
       };
     }

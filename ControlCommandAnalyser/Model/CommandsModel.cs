@@ -1,8 +1,8 @@
 ﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model.Chains;
+using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
 using Utilities;
-using Utilities.Models;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ControlCommandAnalyser.Model
 {

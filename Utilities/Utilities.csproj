@@ -2096,6 +2096,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DTO.Service\DTO.Service.csproj" />
 	  <ProjectReference Include="..\Message\Message.csproj" />
 	</ItemGroup>
 

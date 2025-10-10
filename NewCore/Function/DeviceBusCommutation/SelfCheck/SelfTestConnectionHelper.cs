@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
 using Utilities;
-using Utilities.Interface;
-using static NewCore.Enum.DeviceEnum;
+using DTO.Service;
 
 namespace NewCore.Function.DeviceBusCommutation.SelfCheck
 {

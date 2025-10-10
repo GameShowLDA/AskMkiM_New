@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using AppConfiguration.Interface;
-using NewCore.Base.Function.ModuleVoltageCurrentSource;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Base.Models;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PowerSourceModule.Capabilities;
+using DTO.Device.SwitchingDevice;
+using DTO.Service;
+using DTO.Service.Models;
 using NewCore.Communication;
-using Utilities.Interface;
-using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {
@@ -22,7 +16,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <inheritdoc />
     public async Task StartSelfCheck(CancellationToken cancellationToken, IUserMessageService messageService, System.Enum selectedType, ISwitchingDevice dbc = null, IPowerSourceModule powerDevice = null, IFastMeter meter = null)
     {
-      if (selectedType is not TypeConnector type)
+      if (selectedType is not PowerSourceModuleTypeConnector type)
       {
         await messageService.ShowMessageAsync(new ShowMessageModel(
           "Ошибка",
@@ -41,7 +35,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
       switch (type)
       {
 
-        case TypeConnector.FullCheck:
+        case PowerSourceModuleTypeConnector.FullCheck:
           await DeviceCommandSender.ResetAllSystem();
           await SettingsMeter(meter, messageService);
           await powerDevice.BusManager.ConnectBusToPositiveAsync(SwitchingBus.A2, messageService);
@@ -57,7 +51,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
           break;
 
 
-        case TypeConnector.OutputVoltageCheck:
+        case PowerSourceModuleTypeConnector.OutputVoltageCheck:
           await SettingsMeter(meter, messageService);
           await powerDevice.BusManager.ConnectBusToPositiveAsync(SwitchingBus.A2, messageService);
           await powerDevice.BusManager.ConnectBusToNegativeAsync(SwitchingBus.B2, messageService);
@@ -65,12 +59,12 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
           await VoltageCheckService.GenerateDiscreteVoltageCheck(cancellationToken, messageService, meter, powerDevice);
           break;
 
-        case TypeConnector.CommutationCheck:
+        case PowerSourceModuleTypeConnector.CommutationCheck:
           await DeviceCommandSender.ResetAllSystem();
           await SwitchingSelfControl.CheckSwitching(cancellationToken, messageService, meter, powerDevice, dbc);
           break;
 
-        case TypeConnector.OutputCurrentCheck:
+        case PowerSourceModuleTypeConnector.OutputCurrentCheck:
           await DeviceCommandSender.ResetAllSystem();
           await ResistanceMeasurementCheckService.PerformResistanceCheckAsync(cancellationToken, messageService, meter, powerDevice, dbc);
           break;
@@ -123,7 +117,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 
     public Type GetTestTypeEnum()
     {
-      return typeof(TypeConnector);
+      return typeof(PowerSourceModuleTypeConnector);
     }
   }
 }

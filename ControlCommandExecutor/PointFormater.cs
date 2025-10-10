@@ -6,8 +6,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ControlCommandAnalyser.Model.Chains;
-using Utilities.Interface;
-using Utilities.Models;
+using DTO.Service;
+using DTO.Service.Models;
+using DTO.Device.RelaySwitchModule.Model;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor
 {

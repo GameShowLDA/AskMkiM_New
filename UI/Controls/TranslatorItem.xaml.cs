@@ -1,7 +1,8 @@
 ﻿using System.Windows.Controls;
-using UI.Controls.TextEditor;
-using Utilities.Models;
 using ControlCommandAnalyser.Model;
+using DTO.Service.Models;
+using EventCore.Adapters;
+using UI.Controls.TextEditor;
 
 namespace UI.Controls
 {
@@ -27,14 +28,11 @@ namespace UI.Controls
         translationModels = value;
         ErrorClear();
 
-        bool hasErrors = false;
-
         foreach (var model in value)
         {
           if (model.Errors.Count > 0)
           {
             SetError(model.Errors);
-            hasErrors = true;
           }
         }
       }
@@ -123,7 +121,7 @@ namespace UI.Controls
 
       if (ErrorCount > 0)
       {
-        AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
       }
 
     }

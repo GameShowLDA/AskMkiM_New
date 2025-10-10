@@ -1,6 +1,7 @@
-﻿using NewCore.Base.Interface.Main;
+﻿using DTO.Device.Chassis;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 using UI.Components.Invoke;
-using Utilities.Models;
 
 namespace Mode.Models
 {

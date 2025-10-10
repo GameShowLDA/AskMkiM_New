@@ -1,11 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Interface.Main;
-using NewCore.Device;
+using DTO.Device.Breakdown;
 using NewCore.Function.GPT.Command;
-using NewCore.Function.GPT.Data;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static Utilities.LoggerUtility;

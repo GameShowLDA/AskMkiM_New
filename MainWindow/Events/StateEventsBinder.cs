@@ -4,12 +4,14 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using AppConfiguration;
 using AppConfiguration.Base;
 using AppConfiguration.Execution;
-using AppConfiguration.SystemState;
 using ConsoleUI.ConsoleCommanding.Commands;
 using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
+using EventCore.Events;
+using EventCore.Services;
 using MainWindowProgram.Services;
 using UI.Components;
 using Utilities.USB;
@@ -57,8 +59,9 @@ namespace MainWindowProgram.Events
     /// </summary>
     public void Bind()
     {
-      EventAggregator.LockedChanged += OnLockedChanged;
-      EventAggregator.AdminRightsChanged += OnAdminRightsChanged;
+      EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => OnLockedChanged(e.IsLocked));
+      EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => OnAdminRightsChanged(e.IsAdmin));
+
       ExecutionConfig.IdleModeChange += OnIdleModeChange;
 
       AdminCommand.AdminModeChanged += AdminModeChanged;
@@ -171,7 +174,7 @@ namespace MainWindowProgram.Events
     /// <param name="newRights">Новое состояние прав администратора.</param>
     private void OnAdminRightsChangedHandler(object sender, bool newRights)
     {
-      AppConfiguration.Admin.AdminConfig.SetAdminRights(newRights).ConfigureAwait(true);
+      AdminConfig.SetAdminRights(newRights).ConfigureAwait(true);
     }
 
     /// <summary>

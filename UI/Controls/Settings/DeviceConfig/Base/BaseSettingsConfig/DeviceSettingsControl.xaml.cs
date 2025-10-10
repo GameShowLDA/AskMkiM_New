@@ -3,8 +3,8 @@ using System.Management;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using DTO.Device.Base;
 using NewCore.Base.Device;
-using NewCore.Base.Interface.Additionally;
 using NewCore.Device;
 
 namespace UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig

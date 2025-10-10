@@ -1,19 +1,13 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.ComandBody;
 using ControlCommandAnalyser.Formatter;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Parser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using System.Windows.Shapes;
-using Utilities.Errors;
-using Utilities.Models;
+using DTO.Service.Models;
+using EventCore.Adapters;
 using Utilities.TextEditor;
 
 namespace ControlCommandAnalyser
@@ -67,19 +61,19 @@ namespace ControlCommandAnalyser
     /// </summary>
     public List<BaseCommandModel> ParseAllAndDisplay(string text, ITextEditorAdapter adapter)
     {
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Начало трансляции");
+      MessageEventAdapter.RaiseInfoMessage("Начало трансляции");
       var models = ParseAll(text);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Формирование данных");
+      MessageEventAdapter.RaiseInfoMessage("Формирование данных");
       FormatAndDisplay(models, adapter);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Проверка взаимосвязей");
+      MessageEventAdapter.RaiseInfoMessage("Проверка взаимосвязей");
       Analyze(models);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Формирование данных");
+      MessageEventAdapter.RaiseInfoMessage("Формирование данных");
       FormatAndDisplay(models, adapter);
 
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Готово");
+      MessageEventAdapter.RaiseInfoMessage("Готово");
       return models;
     }
 
@@ -193,11 +187,11 @@ namespace ControlCommandAnalyser
       var totalErrorCount = models.Sum(m => m?.Errors?.Count() ?? 0);
       if (totalErrorCount > 0)
       {
-        AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Ошибка трансляции");
+        MessageEventAdapter.RaiseInfoMessage("Ошибка трансляции");
       }
       else
       {
-        AppConfiguration.Base.EventAggregator.RaiseInfoMessage("Готово");
+        MessageEventAdapter.RaiseInfoMessage("Готово");
       }
     }
 
@@ -206,7 +200,7 @@ namespace ControlCommandAnalyser
     /// </summary>
     public List<BaseCommandModel> ParseAll(string text)
     {
-      AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Сбор данных...");
+      MessageEventAdapter.RaiseInfoMessage($"Сбор данных...");
 
       text = PkPreprocessor.PreprocessText(text);
       var lines = text.Replace("\r\n", "\n").Split('\n');
@@ -235,7 +229,7 @@ namespace ControlCommandAnalyser
           {
             var model = ParseSingle(commandNumber, mnemonic, currentStartLine + 1, commandLines);
             model.StartLineNumber = currentStartLine + 1;
-            if(commands.Contains(commands.FirstOrDefault(c=>c.Mnemonic == mnemonic && c.CommandNumber == commandNumber)))
+            if (commands.Contains(commands.FirstOrDefault(c => c.Mnemonic == mnemonic && c.CommandNumber == commandNumber)))
             {
               model.Errors.Add(GeneralErrors.CommandAlreadyExists(mnemonic, currentStartLine + 1, $"{commandNumber} {mnemonic}"));
             }
@@ -373,13 +367,13 @@ namespace ControlCommandAnalyser
         }
 
         var bodyCreator = _commandBodyBuilders.FirstOrDefault(f => f.CanCreate(model));
-        if(bodyCreator != null)
+        if (bodyCreator != null)
         {
           newSourseLines = bodyCreator.Create(model, newSourseLines);
         }
         else
         {
-          foreach(var line in model.SourceLines)
+          foreach (var line in model.SourceLines)
           {
             newSourseLines.AppendLine(line);
           }

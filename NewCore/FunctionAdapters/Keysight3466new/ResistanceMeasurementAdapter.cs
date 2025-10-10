@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Services;
-using NewCore.Base.Function.FastMeter;
+﻿using AppConfiguration.Services;
+using DTO.Device.FastMeter.Capabilities;
 using NewCore.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.Keysight3466new;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.Keysight3466new
 {

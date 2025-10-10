@@ -1,4 +1,6 @@
 ﻿using AppConfiguration.Base;
+using EventCore.Events;
+using EventCore.Services;
 using Message;
 using System.Windows;
 using System.Windows.Controls;
@@ -83,16 +85,20 @@ namespace UI.Components.ArchiveControls
       DefaultGotAndLostEvent(newArchiveName, newArchiveName.Tag.ToString());
       DefaultGotAndLostEvent(newArchiveDescription, newArchiveDescription.Tag.ToString());
       Owner = Application.Current.MainWindow;
-      EventAggregator.AdminRightsChanged += ApplicationDataHandler_AdminRightsChanged;
+
+      EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => ApplicationDataHandler_AdminRightsChanged(e.IsAdmin));
 
       ShowInTaskbar = false;
       WindowStyle = WindowStyle.None;
       ResizeMode = ResizeMode.NoResize;
 
-      if (EventAggregator.GetAdminRights())
+      EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e =>
       {
-        choseArchiveType.Visibility = Visibility.Visible;
-      }
+        if (e.IsAdmin)
+          choseArchiveType.Visibility = Visibility.Visible;
+        else
+          choseArchiveType.Visibility = Visibility.Collapsed;
+      });
 
       if (Owner != null)
       {

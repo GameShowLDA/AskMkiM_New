@@ -1,9 +1,7 @@
-﻿using NewCore.Base.Device;
-using NewCore.Base.Function.DBC;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Enum;
-using NewCore.Function.DeviceBusCommutation;
+﻿using DTO.Device.SwitchingDevice;
+using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Enum;
+using NewCore.Base.Device;
 using NewCore.FunctionAdapters.DeviceBusCommutation;
 
 namespace NewCore.Device
@@ -21,7 +19,7 @@ namespace NewCore.Device
       Name = "Устройство УКШ";
       Description = "Реализовать описание в NewCore.Device.DeviceBusCommutation";
       DeviceClass = GetType().FullName;
-      DeviceType = DeviceEnum.DeviceType.SwitchingDevice;
+      DeviceType = DeviceEnums.DeviceType.SwitchingDevice;
 
       ConnectableManager = new StateManagerAdapter(this);
       ConnectorManager = new ConnectorManagerAdapter(this);

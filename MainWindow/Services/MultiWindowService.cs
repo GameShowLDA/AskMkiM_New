@@ -6,6 +6,7 @@ using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
 using static UI.Components.Invoke.OpenFileButton;
+using DTO.Base.Models;
 
 namespace MainWindowProgram.Services
 {
@@ -72,7 +73,7 @@ namespace MainWindowProgram.Services
     /// Добавляет новый MultiEditorControl в контейнер.
     /// </summary>
     /// <param name="filePath">Путь к файлу.</param>
-    public Task ViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol, bool showInSoftware)
+    public Task ViewProtocol(ProtocolModel protocol, bool showInSoftware)
     {
       _multiWindowControl.ViewProtocol(protocol, showInSoftware);
       return Task.CompletedTask;

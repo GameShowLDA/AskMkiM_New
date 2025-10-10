@@ -1,12 +1,13 @@
-﻿using AppConfiguration.Execution;
-using AppConfiguration.MeasurementError;
+﻿using System.Windows;
+using AppConfiguration.Execution;
+using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
-using System.Windows;
-using static AppConfiguration.Base.EventAggregator;
-using static Utilities.LoggerUtility;
 using AppConfiguration.Theme;
 using DataBaseConfiguration;
-using AppConfiguration.Parameter;
+using DTO.Base.Models;
+using EventCore.Services;
+using static EventCore.Events.Message;
+using static Utilities.LoggerUtility;
 
 namespace MainWindowProgram.Engine
 {
@@ -70,7 +71,7 @@ namespace MainWindowProgram.Engine
         if (protocolTask.Result != null)
         {
           await ProtocolConfig.SetProtocolModel(protocolTask.Result);
-          Utilities.ResultProtocol.ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
+          ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
         }
 
         if (executionTask.Result != null)
@@ -82,7 +83,7 @@ namespace MainWindowProgram.Engine
         {
           var service = new DataBaseConfiguration.Services.Settings.ProtocolService();
           await service.SaveProtocolAsync(model);
-          Utilities.ResultProtocol.ProtocolModel.SetTemplate(model.CleanTextProtocol);
+          ProtocolModel.SetTemplate(model.CleanTextProtocol);
         };
 
         ExecutionConfig.SaveExecutionEvent += async (model) =>
@@ -98,10 +99,18 @@ namespace MainWindowProgram.Engine
         LogException(ex);
       }
 
-      ErrorMessageEvent += messageHandler.SetErrorMessage;
-      WarningMessageEvent += messageHandler.SetWarningMessage;
-      InfoMessageEvent += messageHandler.SetInfoMessage;
-      ClearMessageEvent += messageHandler.ClearMessage;
+      EventAggregator.Subscribe<Error>(e =>
+        messageHandler.SetErrorMessage(e.Text, e.ClearPrevious));
+
+      EventAggregator.Subscribe<Warning>(e =>
+        messageHandler.SetWarningMessage(e.Text, e.ClearPrevious));
+
+      EventAggregator.Subscribe<Info>(e =>
+        messageHandler.SetInfoMessage(e.Text, e.ClearPrevious));
+
+      EventAggregator.Subscribe<Clear>(_ =>
+        messageHandler.ClearMessage());
+
       LogInformation("Настройки инициализированы.");
     }
   }

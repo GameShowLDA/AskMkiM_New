@@ -1,10 +1,7 @@
-﻿using NewCore.Base.Device;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Enum;
-using NewCore.Function.GPT;
-using NewCore.Function.ModuleRelayControl;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
+using DTO.Enum;
+using NewCore.Base.Device;
 using NewCore.FunctionAdapters.ModuleRelayControl;
 
 namespace NewCore.Device
@@ -25,7 +22,7 @@ namespace NewCore.Device
       PointManager = new PointManagerAdapter(this);
       SelfTestManager = new Function.ModuleRelayControl.SelfCheck.SelfTestManager(this);
 
-      DeviceType = DeviceEnum.DeviceType.RelaySwitchModule;
+      DeviceType = DeviceEnums.DeviceType.RelaySwitchModule;
       Name = "Модуль МКР-350";
       Description = "Добавить описание сюда";
       PointCount = 350;
@@ -49,6 +46,6 @@ namespace NewCore.Device
 
     /// <inheritdoc />
     public IPointManager PointManager { get; set; }
-    public ISelfTestCheckerModuleRelayControl SelfTestManager { get ; set; }
+    public ISelfTestCheckerModuleRelayControl SelfTestManager { get; set; }
   }
 }

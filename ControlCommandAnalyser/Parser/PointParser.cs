@@ -1,7 +1,9 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using System.Text.RegularExpressions;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
-using System.Text.RegularExpressions;
-using Utilities.Models;
+using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
+using DTO.Service.Models;
 
 namespace ControlCommandAnalyser.Parser
 {
@@ -18,7 +20,7 @@ namespace ControlCommandAnalyser.Parser
     ///   (пример 'Х51/51-*60') → каждая раскрытая точка = отдельная цепь.
     /// - Для КС: одиночная точка (один исходный токен БЕЗ '-') в части запрещена.
     /// </summary>
-    public static (SchemeModel, List<ErrorItem>) ParsePoints(string expr, string mnemonic, RmCommandModel rmCommandModel)
+    public static (SchemeModel?, List<ErrorItem>) ParsePoints(string expr, string mnemonic, RmCommandModel rmCommandModel)
     {
       if (rmCommandModel == null || rmCommandModel.PointsMap == null || rmCommandModel.PointsMap.Count == 0)
       {
@@ -31,6 +33,7 @@ namespace ControlCommandAnalyser.Parser
       // Убираем все пробелы/табы/переводы строк и внешние '*'
       expr = Regex.Replace(expr ?? string.Empty, @"\s+", "");
       expr = expr.Trim('*');
+
       if (string.IsNullOrEmpty(expr))
         return (null, errors);
 
@@ -123,7 +126,7 @@ namespace ControlCommandAnalyser.Parser
             errors.Add(new ErrorItem
             {
               Description = $"Нельзя указывать одиночную точку (часть цепи содержит только: {expandedTokens[0]}).",
-              Code = Utilities.Errors.ErrorCode.Gen_InvalidOnePointUse
+              Code = ErrorCode.Gen_InvalidOnePointUse
             });
           }
 
@@ -189,7 +192,7 @@ namespace ControlCommandAnalyser.Parser
         errors.Add(new ErrorItem
         {
           Description = $"Неверный диапазон точек: {token}.",
-          Code = Utilities.Errors.ErrorCode.Gen_InvalidRange
+          Code = ErrorCode.Gen_InvalidRange
         });
         return result;
       }
@@ -200,7 +203,7 @@ namespace ControlCommandAnalyser.Parser
         errors.Add(new ErrorItem
         {
           Description = $"Неверное начало диапазона: {left} (в {token}).",
-          Code = Utilities.Errors.ErrorCode.Gen_InvalidRange
+          Code = ErrorCode.Gen_InvalidRange
         });
         return result;
       }
@@ -214,7 +217,7 @@ namespace ControlCommandAnalyser.Parser
           errors.Add(new ErrorItem
           {
             Description = $"Несовместимые префиксы в диапазоне: {token} (\"{leftPrefix}\" vs \"{rightPrefix}\").",
-            Code = Utilities.Errors.ErrorCode.Gen_InvalidRange
+            Code = ErrorCode.Gen_InvalidRange
           });
           return result;
         }
@@ -227,7 +230,7 @@ namespace ControlCommandAnalyser.Parser
           errors.Add(new ErrorItem
           {
             Description = $"Неверный конец диапазона: {right} (в {token}).",
-            Code = Utilities.Errors.ErrorCode.Gen_InvalidRange
+            Code = ErrorCode.Gen_InvalidRange
           });
           return result;
         }
@@ -238,7 +241,7 @@ namespace ControlCommandAnalyser.Parser
         errors.Add(new ErrorItem
         {
           Description = $"Неверный диапазон точек (конец меньше начала): {token}.",
-          Code = Utilities.Errors.ErrorCode.Gen_InvalidRange
+          Code = ErrorCode.Gen_InvalidRange
         });
         return result;
       }

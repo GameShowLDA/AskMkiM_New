@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DTO.Attributes\DTO.Attributes.csproj" />
+    <ProjectReference Include="..\DTO.Base\DTO.Base.csproj" />
+    <ProjectReference Include="..\DTO.Device\DTO.Device.csproj" />
+    <ProjectReference Include="..\DTO\DTO.Settings.csproj" />
+    <ProjectReference Include="..\EventCore\EventCore.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 

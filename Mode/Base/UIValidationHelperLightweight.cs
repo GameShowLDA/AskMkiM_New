@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
+using DTO.Base.Models;
+using DTO.Service.Models;
 using UI.Components;
 using UI.Controls.ProtocolNew;
-using Utilities.Models;
 
 namespace Mode.Base
 {

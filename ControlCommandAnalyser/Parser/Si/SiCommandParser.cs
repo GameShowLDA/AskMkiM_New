@@ -1,16 +1,9 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using System.Text.RegularExpressions;
+using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains; // Для LoggerUtility
-using ControlCommandAnalyser.Model.Ok;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
-using Message;
-using NewCore.Base.Interface.Main;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Shapes;
+using DTO.Device.Breakdown;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Si
@@ -247,7 +240,7 @@ namespace ControlCommandAnalyser.Parser.Si
         model.Errors.Add(SiErrors.CannotParseParameters("Не указано напряжение", numberLine, $"{commandNumber} {mnemonic}"));
         LoggerUtility.LogWarning($"Не указано напряжение (строка {numberLine}): {commandNumber} {mnemonic}");
       }
-      
+
       if (string.IsNullOrWhiteSpace(resistance))
       {
         model.Errors.Add(SiErrors.CannotParseParameters("Не указано сопротивление", numberLine, $"{commandNumber} {mnemonic}"));

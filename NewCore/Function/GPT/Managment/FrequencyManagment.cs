@@ -1,9 +1,9 @@
 ﻿
-using global::NewCore.Base.Function.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Capabilities;
 using global::NewCore.Device;
 using global::NewCore.Function.GPT.Command;
-using global::NewCore.Function.GPT.Data;
-using Utilities.Interface;
+using DTO.Service;
+using static DTO.Enum.DeviceEnums;
 using static global::NewCore.Function.GPT.Command.ManualCommandManager;
 
 namespace NewCore.Function.GPT.Data
@@ -15,7 +15,7 @@ namespace NewCore.Function.GPT.Data
   public class FrequencyManagment : IFrequencyConfigurable
   {
     private readonly GPT79904 _gptModel;
-    private readonly TypeMode _mode;
+    private readonly BreakdownTypeMode _mode;
     private readonly int _delay;
     private readonly Func<int> _getFrequency;
     private readonly Action<int> _setFrequency;
@@ -30,7 +30,7 @@ namespace NewCore.Function.GPT.Data
     /// <param name="setFrequency">Действие для обновления частоты в конфигурации.</param>
     public FrequencyManagment(
       GPT79904 gptModel,
-      TypeMode mode,
+      BreakdownTypeMode mode,
       int delay,
       Func<int> getFrequency,
       Action<int> setFrequency)

@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.DeviceBusCommutation;
-using AppConfiguration.Services;
-using NewCore.Base.Device;
-using NewCore.Base.Function.DBC;
+﻿using AppConfiguration.Error.Device.DeviceBusCommutation;
+using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Service;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
-using Utilities;
-using Utilities.Interface;
 
 namespace NewCore.FunctionAdapters.DeviceBusCommutation
 {
@@ -79,7 +71,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Отключение конденсатора", number.ToString(), result, 1, userMessageService);
 
       if (!result)
-      { 
+      {
         throw CapacitorExceptionFactory.DisconnectFailed(number.ToString());
       }
       else

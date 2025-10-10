@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppConfiguration.Base;
+using DTO.Attributes;
 
 namespace AppConfiguration.Enums
 {

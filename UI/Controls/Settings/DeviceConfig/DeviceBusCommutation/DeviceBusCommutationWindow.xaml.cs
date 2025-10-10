@@ -1,12 +1,9 @@
 ﻿using System.Windows;
 using AppConfiguration.Error.DataBase;
-using DataBaseConfiguration.Models;
 using DataBaseConfiguration.Models.Device;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Base;
+using DTO.Device.SwitchingDevice;
 using UI.Controls.Settings.DeviceConfig.Base;
 using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
 

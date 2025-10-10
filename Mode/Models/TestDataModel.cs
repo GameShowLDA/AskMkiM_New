@@ -1,4 +1,4 @@
-﻿using NewCore.Base.Interface.Main;
+﻿using DTO.Device.RelaySwitchModule;
 using UI.Components.Invoke;
 
 namespace Mode.Models

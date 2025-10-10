@@ -1,6 +1,6 @@
-﻿using NewCore.Base.Interface.Main;
-using NewCore.Function.GPT.Data;
+﻿using DTO.Device.Breakdown;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
@@ -9,7 +9,7 @@ namespace NewCore.Function.GPT.Helper
 {
   internal static class ModeHelper
   {
-    static public async Task<(bool Success, string Message)> GetModeAsync(IBreakdownTester breakDown, TypeMode typeMode, int delay)
+    static public async Task<(bool Success, string Message)> GetModeAsync(IBreakdownTester breakDown, BreakdownTypeMode typeMode, int delay)
     {
       LogInformation($"Начало выполнения {nameof(GetModeAsync)}", isDeviceLog: true);
 
@@ -37,7 +37,7 @@ namespace NewCore.Function.GPT.Helper
         throw;
       }
     }
-    static public async Task<(bool Success, string Message)> SetModeAsync(IBreakdownTester breakDown, TypeMode typeMode, int delay)
+    static public async Task<(bool Success, string Message)> SetModeAsync(IBreakdownTester breakDown, BreakdownTypeMode typeMode, int delay)
     {
       LogInformation($"Начало выполнения {nameof(SetModeAsync)}", isDeviceLog: true);
 

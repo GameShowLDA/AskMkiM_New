@@ -1,17 +1,10 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using DTO.Device.Breakdown.Model;
 using NewCore.Device;
-using NewCore.Function.GPT.Command;
-using NewCore.Function.GPT.Data;
-using NewCore.Function.GPT.Helper;
 using NewCore.Function.GPT.Managment;
-using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static NewCore.Function.GPT.Command.FunctionCommandManager;
-using static NewCore.Function.GPT.Command.ManualCommandManager;
-using static Utilities.LoggerUtility;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT
 {
@@ -78,14 +71,14 @@ namespace NewCore.Function.GPT
     {
       _gptModel = gpt79904;
       _config = new DcwConfiguration();
-      Voltage = new VoltageManagment(_gptModel, TypeMode.DCW, delay, getConfigVoltage: () => _config.Voltage, setConfigVoltage: v => _config.Voltage = v);
-      CurrentLimits = new CurrentLimitManagment(_gptModel, TypeMode.DCW, delay, getHighLimit: () => _config.HighCurrentLimit, setHighLimit: v => _config.HighCurrentLimit = v, getLowLimit: () => _config.LowCurrentLimit, setLowLimit: v => _config.LowCurrentLimit = v);
-      Time = new TimeManagment(_gptModel, TypeMode.DCW, delay, getTestTime: () => _config.TestTime, setTestTime: v => _config.TestTime = v, getRampTime: () => _config.RampTime, setRampTime: v => _config.RampTime = v);
-      Offset = new OffsetManagment(_gptModel, TypeMode.DCW, delay, getOffset: () => _config.Offset, setOffset: v => _config.Offset = v);
-      ArcCurrent = new ArcCurrentManagment(_gptModel, TypeMode.DCW, delay, getArcCurrent: () => _config.ArcCurrent, setArcCurrent: v => _config.ArcCurrent = v);
+      Voltage = new VoltageManagment(_gptModel, BreakdownTypeMode.DCW, delay, getConfigVoltage: () => _config.Voltage, setConfigVoltage: v => _config.Voltage = v);
+      CurrentLimits = new CurrentLimitManagment(_gptModel, BreakdownTypeMode.DCW, delay, getHighLimit: () => _config.HighCurrentLimit, setHighLimit: v => _config.HighCurrentLimit = v, getLowLimit: () => _config.LowCurrentLimit, setLowLimit: v => _config.LowCurrentLimit = v);
+      Time = new TimeManagment(_gptModel, BreakdownTypeMode.DCW, delay, getTestTime: () => _config.TestTime, setTestTime: v => _config.TestTime = v, getRampTime: () => _config.RampTime, setRampTime: v => _config.RampTime = v);
+      Offset = new OffsetManagment(_gptModel, BreakdownTypeMode.DCW, delay, getOffset: () => _config.Offset, setOffset: v => _config.Offset = v);
+      ArcCurrent = new ArcCurrentManagment(_gptModel, BreakdownTypeMode.DCW, delay, getArcCurrent: () => _config.ArcCurrent, setArcCurrent: v => _config.ArcCurrent = v);
       Measure = new MeasureManagment(_gptModel, delayBeforeCall, getTestTime: async () => await Time.GetTestTimeAsync(), getRampTime: async () => await Time.GetRampTimeAsync(), getIsIdleMode: async () => await GetIsIdleModeEnabled());
       Config = new DcwConfigManager(Voltage, CurrentLimits, Time, Offset, ArcCurrent);
-      Mode = new ModeManagment(_gptModel, TypeMode.DCW, delay, async () => _config = await Config.ReadConfigurationAsync());
+      Mode = new ModeManagment(_gptModel, BreakdownTypeMode.DCW, delay, async () => _config = await Config.ReadConfigurationAsync());
     }
 
   }

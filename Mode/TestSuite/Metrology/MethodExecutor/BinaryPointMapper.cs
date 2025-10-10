@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Mode.Models;
-using NewCore.Base.Interface.Main;
-using Utilities.Models;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor
 {

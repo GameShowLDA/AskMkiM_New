@@ -1,4 +1,5 @@
 ﻿using AppConfiguration.Protocol;
+using DTO.SettingsModels;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

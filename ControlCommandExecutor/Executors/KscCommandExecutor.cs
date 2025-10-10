@@ -1,16 +1,9 @@
 ﻿using AppConfiguration.Base;
 using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
-using NewCore.Base.Interface.Main;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Utilities.ResultProtocol;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using DTO.Base.Models;
+using EventCore.Adapters;
+using EventCore.Events;
 
 namespace ControlCommandExecutor.Executors
 {
@@ -20,8 +13,9 @@ namespace ControlCommandExecutor.Executors
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      EventAggregator.ProtocolInfoClose -= OnProtocolInfoClosing;
-      EventAggregator.ProtocolInfoClose += OnProtocolInfoClosing;
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+
       var command = context.Command as KscCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 
@@ -49,7 +43,7 @@ namespace ControlCommandExecutor.Executors
 
       if (await AppConfiguration.Protocol.ProtocolConfig.GetGenerateProtocol())
       {
-        EventAggregator.RaiseGetProtocolInfo(protocolModel);
+        FileInteractionEventAdapter.RaiseGetProtocolInfo(protocolModel);
       }
     }
 
@@ -59,10 +53,10 @@ namespace ControlCommandExecutor.Executors
       protocolModel.Executor = executor;
       protocolModel.Agent = agent;
       protocolModel.Customer = customer;
-      protocolModel.Mode = await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? "Холостой режим":"Рабочий режим" ;
+      protocolModel.Mode = await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? "Холостой режим" : "Рабочий режим";
       ProtocolModel.GetPathProtocol(protocolModel);
-      EventAggregator.RaiseViewProtocol(protocolModel);
-      EventAggregator.ProtocolInfoClose -= OnProtocolInfoClosing;
+      FileInteractionEventAdapter.RaiseViewProtocol(protocolModel);
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
     }
   }
 }

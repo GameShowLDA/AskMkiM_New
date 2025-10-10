@@ -1,8 +1,7 @@
-﻿using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
-using NewCore.Enum;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using DTO.Device.Base;
+using DTO.Device.PrecisionMeter;
+using static DTO.Enum.DeviceEnums;
 
 namespace DataBaseConfiguration.Models.Device
 {
@@ -30,7 +29,7 @@ namespace DataBaseConfiguration.Models.Device
     public string ConnectionDetails { get; set; }
 
     /// <inheritdoc />
-    public DeviceEnum.DeviceType DeviceType => DeviceEnum.DeviceType.PrecisionMeter;
+    public DeviceType DeviceType => DeviceType.PrecisionMeter;
 
     /// <inheritdoc />
     public string DeviceClass { get; set; }

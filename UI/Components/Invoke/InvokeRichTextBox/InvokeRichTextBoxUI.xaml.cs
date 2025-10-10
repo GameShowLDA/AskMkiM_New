@@ -4,10 +4,10 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Utilities.Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using DTO.Base.Models;
+using DTO.Service.Models;
 using static AppConfiguration.Protocol.ProtocolConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
 using static Utilities.LoggerUtility;
 
 namespace UI.Components.Invoke.InvokeRichTextBox

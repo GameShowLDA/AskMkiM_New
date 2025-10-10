@@ -1,5 +1,6 @@
 ﻿using AppConfiguration.Execution;
 using AppConfiguration.Parameter;
+using DTO.SettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace UI.Controls.Settings.UserInterface
   /// </summary>
   public partial class UiSettingsControl : UserControl
   {
-    ParameterModel _baseParameterModel { get; set; }
+    SettingsParameterModel _baseParameterModel { get; set; }
     private record LangOption(string Key, string Title);
 
     /// <summary>
@@ -139,14 +140,14 @@ namespace UI.Controls.Settings.UserInterface
     /// <summary>
     /// Формирует модель протокола из текущих значений элементов UI.
     /// </summary>
-    private ParameterModel GetModel()
+    private SettingsParameterModel GetModel()
     {
       var code =
           LanguageSelect.SelectedValue as string          
           ?? LanguageSelect.SelectedItem?.ToString()      
           ?? LanguageSettings.CurrentLanguage;            
 
-      return new ParameterModel
+      return new SettingsParameterModel
       {
         Language = code
       };
@@ -155,7 +156,7 @@ namespace UI.Controls.Settings.UserInterface
     /// <summary>
     /// Сравнивает две модели протокола по всем флагам.
     /// </summary>
-    private static bool ProtocolEquals(ParameterModel a, ParameterModel b) =>
+    private static bool ProtocolEquals(SettingsParameterModel a, SettingsParameterModel b) =>
       a.Language == b.Language;
   }
 }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
+using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule.Model;
+using DTO.Service;
 using Utilities;
-using Utilities.Interface;
-using Utilities.Models;
-using static ControlCommandExecutor.BaseStrategies.NodeAccumulationChecker;
+using static DTO.Enum.DeviceEnums;
 
 namespace ControlCommandExecutor.BaseStrategies
 {
@@ -144,7 +139,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task ConnectToBusBAsync(PointModel point, IUserMessageService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.B, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
       {
         throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
@@ -162,7 +157,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task ConnectToBusAAsync(PointModel point, IUserMessageService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.A, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
       {
         throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
@@ -181,7 +176,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task DisconnectFromBusAAsync(PointModel point, IUserMessageService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.A, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
       {
         throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
@@ -199,7 +194,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task DisconnectFromBusBAsync(PointModel point, IUserMessageService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.B, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
       {
         throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }

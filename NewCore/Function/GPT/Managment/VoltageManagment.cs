@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
-using NewCore.Function.GPT.Data;
 using NewCore.Function.GPT.Helper;
-using Utilities.Interface;
+using DTO.Service;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT.Managment
 {
@@ -17,7 +12,7 @@ namespace NewCore.Function.GPT.Managment
   public class VoltageManagment : IVoltageConfigurable
   {
     private readonly GPT79904 _gptModel;
-    private readonly TypeMode _mode;
+    private readonly BreakdownTypeMode _mode;
     private readonly int _delay;
     private readonly Func<double> _getConfigVoltage;
     private readonly Action<double> _setConfigVoltage;
@@ -32,7 +27,7 @@ namespace NewCore.Function.GPT.Managment
     /// <param name="setConfigVoltage">Действие обновления напряжения в конфигурации режима.</param>
     public VoltageManagment(
       GPT79904 gptModel,
-      TypeMode mode,
+      BreakdownTypeMode mode,
       int delay,
       Func<double> getConfigVoltage,
       Action<double> setConfigVoltage)

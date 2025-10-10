@@ -1,7 +1,7 @@
-﻿using NewCore.Base.Function.DBC;
+﻿using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Service;
 using NewCore.Communication;
-using Utilities.Interface;
-using static AppConfiguration.Execution.ExecutionConfig ;
+using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.DeviceBusCommutation
 {

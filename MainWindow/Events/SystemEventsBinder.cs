@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using Utilities.Models;
+﻿using System.Windows;
 using static Utilities.LoggerUtility;
 
 namespace MainWindowProgram.Events

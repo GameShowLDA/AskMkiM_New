@@ -4,9 +4,12 @@ using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.Execution;
 using Utilities;
-using Utilities.Interface;
-using Utilities.Models;
+using DTO.Service;
+using DTO.Device.RelaySwitchModule.Model;
 using static ControlCommandExecutor.BaseStrategies.NodeFullChecker;
+using static DTO.Enum.DeviceEnums;
+using DTO.Service.Models;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.BaseStrategies
 {
@@ -58,7 +61,7 @@ namespace ControlCommandExecutor.BaseStrategies
           showMessageModels.Add(new ShowMessageModel($"Ошибка при проверке разряда {step} ({HighestBitCount})", message: $"Измеренное значение - {result.Value}", type: ShowMessageModel.MessageType.Error));
 
           await messageService.ShowMessageAsync(new ShowMessageModel($"Выполение измерения методом полного узла"), IsBlockStart: true);
-          showMessageModels.AddRange(await BaseStrategies.NodeFullChecker.CheckSequenceAsync(schemeModel, performMeasurementAsync, manager, siCommandModel, messageService, resistance));
+          showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync(schemeModel, performMeasurementAsync, manager, siCommandModel, messageService, resistance));
 
           return showMessageModels;
         }
@@ -82,7 +85,7 @@ namespace ControlCommandExecutor.BaseStrategies
       foreach (var point in points.PointModels)
       {
         var module = EquipmentService.GetModuleByPoint(point);
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.B, point.PointNumber, messageService), messageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
         {
           throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
         }
@@ -103,7 +106,7 @@ namespace ControlCommandExecutor.BaseStrategies
       foreach (var point in points.PointModels)
       {
         var module = EquipmentService.GetModuleByPoint(point);
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.B, point.PointNumber, messageService), messageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
         {
           throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
         }
@@ -124,7 +127,7 @@ namespace ControlCommandExecutor.BaseStrategies
       foreach (var point in points.PointModels)
       {
         var module = EquipmentService.GetModuleByPoint(point);
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.A, point.PointNumber, messageService), messageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
         {
           throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
         }
@@ -145,7 +148,7 @@ namespace ControlCommandExecutor.BaseStrategies
       foreach (var point in points.PointModels)
       {
         var module = EquipmentService.GetModuleByPoint(point);
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: NewCore.Enum.DeviceEnum.BusPoint.A, point.PointNumber, messageService), messageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
         {
           throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
         }
@@ -275,7 +278,7 @@ namespace ControlCommandExecutor.BaseStrategies
       var str = string.Empty;
       for (int i = 0; i < HighestBitCount; i++)
       {
-        if (HighestBitCount + 1 - number == i+1)
+        if (HighestBitCount + 1 - number == i + 1)
         {
           str += '1';
         }

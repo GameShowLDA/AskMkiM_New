@@ -1,8 +1,9 @@
-﻿using NewCore.Communication;
+﻿using DTO.Device.Base;
+using NewCore.Communication;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using Utilities;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Base.Device
 {

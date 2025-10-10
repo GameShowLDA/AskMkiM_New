@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NewCore.Base.Function.DBC;
-using NewCore.Communication;
-using NewCore.Device;
+﻿using NewCore.Communication;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 
@@ -18,39 +12,39 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// <summary>
     /// Словарь допустимых комбинаций шины и контактов для каждого типа проверки.
     /// </summary>
-    public static readonly Dictionary<TypeConnector, List<int>> ValidBusContacts = new()
+    public static readonly Dictionary<SwitchingDeviceTypeConnector, List<int>> ValidBusContacts = new()
         {
-            { TypeConnector.BlockingRelay, new List<int> { 11, 21 } },
-            { TypeConnector.Multimeter, new List<int> { 11,12,13,14,21,22,23,24} },
-            { TypeConnector.ADC, new List<int> { 11,12,13,14,21,22,23,24} },
-            { TypeConnector.ADCReversed, new List<int> { 11,12,13,14,21,22,23,24} },
-            { TypeConnector.PINT, new List<int> { 12, 13, 22, 23 } },
-            { TypeConnector.Shunt, new List<int> { 1, 2 } },
-            { TypeConnector.BreakdownTester, new List<int> { 11, 21 } },
+            { SwitchingDeviceTypeConnector.BlockingRelay, new List<int> { 11, 21 } },
+            { SwitchingDeviceTypeConnector.Multimeter, new List<int> { 11,12,13,14,21,22,23,24} },
+            { SwitchingDeviceTypeConnector.ADC, new List<int> { 11,12,13,14,21,22,23,24} },
+            { SwitchingDeviceTypeConnector.ADCReversed, new List<int> { 11,12,13,14,21,22,23,24} },
+            { SwitchingDeviceTypeConnector.PINT, new List<int> { 12, 13, 22, 23 } },
+            { SwitchingDeviceTypeConnector.Shunt, new List<int> { 1, 2 } },
+            { SwitchingDeviceTypeConnector.BreakdownTester, new List<int> { 11, 21 } },
         };
 
     /// <summary>
     /// Словарь, содержащий названия цепей для каждого типа проверки.
     /// </summary>
-    public static readonly Dictionary<TypeConnector, string> CircuitNames = new()
+    public static readonly Dictionary<SwitchingDeviceTypeConnector, string> CircuitNames = new()
         {
-            { TypeConnector.BlockingRelay, "Блокировочное реле" },
-            { TypeConnector.Multimeter, "Мультиметр" },
-            { TypeConnector.ADC, "АЦП" },
-            { TypeConnector.ADCReversed, "АЦП с переполюсовкой" },
-            { TypeConnector.PINT, "ПИНТ" },
-            { TypeConnector.Shunt, "Шунт" },
-            { TypeConnector.BreakdownTester, "ППУ" },
+            { SwitchingDeviceTypeConnector.BlockingRelay, "Блокировочное реле" },
+            { SwitchingDeviceTypeConnector.Multimeter, "Мультиметр" },
+            { SwitchingDeviceTypeConnector.ADC, "АЦП" },
+            { SwitchingDeviceTypeConnector.ADCReversed, "АЦП с переполюсовкой" },
+            { SwitchingDeviceTypeConnector.PINT, "ПИНТ" },
+            { SwitchingDeviceTypeConnector.Shunt, "Шунт" },
+            { SwitchingDeviceTypeConnector.BreakdownTester, "ППУ" },
         };
 
     /// <inheritdoc />
-    static public List<int>? GetValidBusContacts(TypeConnector testType)
+    static public List<int>? GetValidBusContacts(SwitchingDeviceTypeConnector testType)
     {
       return ValidBusContacts.TryGetValue(testType, out var contacts) ? contacts : null;
     }
 
     /// <inheritdoc />
-    static public string GetCircuitName(TypeConnector testType, int busContact)
+    static public string GetCircuitName(SwitchingDeviceTypeConnector testType, int busContact)
     {
       if (CircuitNames.TryGetValue(testType, out string? circuitName))
       {
@@ -61,7 +55,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     }
 
     /// <inheritdoc />
-    static public async Task<int> GetRelayCountAsync(Device.DeviceBusCommutation _deviceBusCommutation, TypeConnector testType, int busContact)
+    static public async Task<int> GetRelayCountAsync(Device.DeviceBusCommutation _deviceBusCommutation, SwitchingDeviceTypeConnector testType, int busContact)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -80,7 +74,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
       LogError($"Ошибка получения количества реле для {testType}", isDeviceLog: true);
       return -1;
     }
-    
+
     static public IEnumerable<object> GetSupportedTestTypes()
     {
       return SelfTestMetadataProvider.ValidBusContacts.Keys.Cast<object>();
@@ -88,7 +82,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
 
     static public Type GetTestTypeEnum()
     {
-      return typeof(TypeConnector);
+      return typeof(SwitchingDeviceTypeConnector);
     }
   }
 }

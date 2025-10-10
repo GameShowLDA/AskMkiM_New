@@ -1,13 +1,11 @@
 ﻿using System.IO.Ports;
+using DTO.Device.Breakdown;
+using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using DTO.Enum;
 using NewCore.Base.Device;
-using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
-using NewCore.Enum;
-using NewCore.Function.GPT;
-using NewCore.Function.GPT.Data;
 using NewCore.FunctionAdapters.GPT;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Device
@@ -29,7 +27,7 @@ namespace NewCore.Device
       Parity = Parity.None;
       DeviceClass = GetType().FullName;
 
-      DeviceType = DeviceEnum.DeviceType.BreakdownTester;
+      DeviceType = DeviceEnums.DeviceType.BreakdownTester;
 
       AcwManger = new AcwModeAdapter(this);
       DcwManger = new DcwModeAdapter(this);
@@ -40,7 +38,7 @@ namespace NewCore.Device
       MaxVoltage = 600;
       LogWarning($"[{GetType().Name}] ctor вызван. Hash={GetHashCode()}", isDeviceLog: true);
 
-      Mode = TypeMode.None;
+      Mode = BreakdownTypeMode.None;
     }
 
     /// <inheritdoc />
@@ -73,7 +71,7 @@ namespace NewCore.Device
     /// <summary>
     /// Активный режим устройства.
     /// </summary>
-    public TypeMode Mode
+    public BreakdownTypeMode Mode
     {
       get => _mode;
       set
@@ -81,19 +79,19 @@ namespace NewCore.Device
         if (_mode == value)
           return;
 
-        LogInformation($"[{GetType().Name}] Переключение режима: {_mode} → {value}",isDeviceLog: true);
+        LogInformation($"[{GetType().Name}] Переключение режима: {_mode} → {value}", isDeviceLog: true);
 
-        if (value != TypeMode.ACW)
+        if (value != BreakdownTypeMode.ACW)
           AcwManger.Config.ResetConfiguration();
-        if (value != TypeMode.DCW)
+        if (value != BreakdownTypeMode.DCW)
           DcwManger.Config.ResetConfiguration();
-        if (value != TypeMode.IR)
+        if (value != BreakdownTypeMode.IR)
           IrManger.Config.ResetConfiguration();
 
         _mode = value;
       }
     }
 
-    private TypeMode _mode { get; set; }
+    private BreakdownTypeMode _mode { get; set; }
   }
 }

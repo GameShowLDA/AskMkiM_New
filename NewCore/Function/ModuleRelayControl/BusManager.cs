@@ -1,11 +1,10 @@
-﻿using System.Net;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.ModuleRelayControl

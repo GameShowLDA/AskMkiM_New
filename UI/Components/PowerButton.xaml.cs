@@ -4,11 +4,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using DataBaseConfiguration.Services.Device;
+using DTO.Device.Chassis;
+using EventCore.Adapters;
+using EventCore.Events;
+using EventCore.Services;
 using Message;
-using NewCore.Base.Interface.Main;
-using static AppConfiguration.Base.EventAggregator;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
 
 namespace UI.Components
 {
@@ -53,11 +55,7 @@ namespace UI.Components
     public PowerButton()
     {
       InitializeComponent();
-      PowerChanged += OnPowerChanged;
       this.Loaded += OnLoaded;
-      this.MouseEnter += OnMouseEnter;
-      this.MouseLeave += OnMouseLeave;
-      this.PreviewMouseDown += OnPowerButtonClick;
     }
 
     /// <summary>
@@ -66,22 +64,26 @@ namespace UI.Components
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
       UpdateToolTipVisibility();
+      EventAggregator.Subscribe<SystemStateEvents.PowerChanged>(OnPowerChanged);
+
+      this.MouseEnter += OnMouseEnter;
+      this.MouseLeave += OnMouseLeave;
+      this.PreviewMouseDown += OnPowerButtonClick;
     }
 
     /// <summary>
     /// Обработка изменения состояния питания для синхронизации с внешними изменениями.
     /// </summary>
-    private void OnPowerChanged(bool newValue)
+    private void OnPowerChanged(SystemStateEvents.PowerChanged e)
     {
-      active = newValue;
-      if (newValue)
-      {
-        SetConnectedState("Отключить систему");
-      }
+      // Получаем новое состояние питания
+      bool isPowered = e.IsPowered;
+
+      // Реакция на изменение состояния
+      if (isPowered)
+        Console.WriteLine("⚡ Питание включено");
       else
-      {
-        SetDisconnectedState("Подключить систему");
-      }
+        Console.WriteLine("❌ Питание отключено");
     }
 
     /// <summary>
@@ -248,10 +250,10 @@ namespace UI.Components
     {
       for (int i = seconds; i > 0; i--)
       {
-        RaiseInfoMessage($"{message} {i} сек.");
+        MessageEventAdapter.RaiseInfoMessage($"{message} {i} сек.");
         await Task.Delay(1000);
       }
-      RaiseClearMessage();
+      MessageEventAdapter.RaiseClearMessage();
 
     }
 

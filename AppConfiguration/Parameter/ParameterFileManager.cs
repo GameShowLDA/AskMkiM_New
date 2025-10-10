@@ -1,5 +1,6 @@
 ﻿using AppConfiguration.Base;
 using AppConfiguration.Protocol;
+using DTO.SettingsModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ using Utilities.FilesUtility;
 
 namespace AppConfiguration.Parameter
 {
-  internal class ParameterFileManager : ConfigurationManagerBase<ParameterModel>
+  internal class ParameterFileManager : ConfigurationManagerBase<SettingsParameterModel>
   {
-    private readonly YamlUtility<ParameterModel> _yamlHelper;
+    private readonly YamlUtility<SettingsParameterModel> _yamlHelper;
 
 
     /// <summary>
@@ -20,11 +21,11 @@ namespace AppConfiguration.Parameter
     /// <param name="pathFile">Путь к YAML файлу, в котором будет храниться конфигурация модели выполнения.</param>
     internal ParameterFileManager(string pathFile) : base(pathFile)
     {
-      _yamlHelper = new YamlUtility<ParameterModel>(pathFile);
+      _yamlHelper = new YamlUtility<SettingsParameterModel>(pathFile);
     }
 
-    public override async Task<ParameterModel> ReadFileAsync() => await _yamlHelper.ReadAsync();
+    public override async Task<SettingsParameterModel> ReadFileAsync() => await _yamlHelper.ReadAsync();
 
-    public override async Task RewriteFileAsync(ParameterModel data) => await _yamlHelper.RewriteAsync(data);
+    public override async Task RewriteFileAsync(SettingsParameterModel data) => await _yamlHelper.RewriteAsync(data);
   }
 }

@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using static AppConfiguration.Base.EventAggregator;
+using EventCore.Events;
+using EventCore.Services;
 
 namespace UI.Components.Invoke
 {
@@ -48,7 +49,7 @@ namespace UI.Components.Invoke
     public OpenFileButton()
     {
       InitializeComponent();
-      LockedChanged += ApplicationDataHandler_LockedChanged;
+      EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => ApplicationDataHandler_LockedChanged(e.IsLocked));
     }
 
     /// <summary>

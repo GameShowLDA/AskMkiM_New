@@ -1,10 +1,11 @@
 ﻿using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Base.Models;
+using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
+using DTO.Service.Models;
 using UI.Controls.ProtocolNew;
-using Utilities.Models;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
-using static Utilities.Models.ShowMessageModel;
 
 namespace Mode.SelfControl.NewModule.DeviceBusCommutation
 {
@@ -55,11 +56,11 @@ namespace Mode.SelfControl.NewModule.DeviceBusCommutation
     {
       if (deviceBusCommutation == null)
       {
-        await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("Модель УКШ не найдена!", SuccessMessage.TitleColor));
+        await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("Модель УКШ не найдена!", ShowMessageModel.SuccessMessage.TitleColor));
         return;
       }
 
-      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("Запуск проверки оборудования", SuccessMessage.TitleColor));
+      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("Запуск проверки оборудования", ShowMessageModel.SuccessMessage.TitleColor));
       ProtocolSelfCheckControl.GetCancellationToken().ThrowIfCancellationRequested();
 
       await deviceBusCommutation.ConnectableManager.ResetAsync(ProtocolSelfCheckControl);
@@ -89,7 +90,7 @@ namespace Mode.SelfControl.NewModule.DeviceBusCommutation
     {
       LogInformation($"Запущен метод завершения самоконтроля");
       await ProtocolSelfCheckControl.FinalizeAsync();
-      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("\tСамоконтроль", null, $"[{SuccessMessage.Title}]", SuccessMessage.TitleColor));
+      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("\tСамоконтроль", null, $"[{ShowMessageModel.SuccessMessage.Title}]", ShowMessageModel.SuccessMessage.TitleColor));
       LogInformation($"Завершён метод завершения самоконтроля");
     }
     #endregion

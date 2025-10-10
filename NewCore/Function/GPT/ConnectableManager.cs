@@ -2,11 +2,13 @@
 using System.IO.Ports;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using DTO.Device.Base;
 using Microsoft.Win32.SafeHandles;
 using NewCore.Base.Device;
 using NewCore.Communication;
 using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 /// <summary>
@@ -40,7 +42,7 @@ public class ConnectableManager : IConnectable
   /// <returns>Кортеж: <c>true</c>, если подключение выполнено успешно; строка с текстом ошибки или пустая строка.</returns>
   public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
   {
-    _gptModel.Mode = NewCore.Function.GPT.Data.TypeMode.None;
+    _gptModel.Mode = BreakdownTypeMode.None;
     if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
     {
       return (true, string.Empty);
@@ -79,7 +81,7 @@ public class ConnectableManager : IConnectable
   /// </summary>
   public async Task<bool> DisconnectAsync(IUserMessageService _ = null)
   {
-    _gptModel.Mode = NewCore.Function.GPT.Data.TypeMode.None;
+    _gptModel.Mode = BreakdownTypeMode.None;
     if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
     {
       return true;

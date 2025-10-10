@@ -1,14 +1,5 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
-using NewCore.Base.Interface.Main;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.KSC

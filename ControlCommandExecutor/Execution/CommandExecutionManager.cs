@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using ControlCommandAnalyser.Model;
 using ControlCommandExecutor.Executors;
-using Utilities.Interface;
-using Utilities.Models;
-using Utilities.ResultProtocol;
+using DTO.Base.Models;
+using DTO.Service;
+using DTO.Service.Models;
 using Utilities.TextEditor;
 
 namespace ControlCommandExecutor.Execution
@@ -21,7 +16,7 @@ namespace ControlCommandExecutor.Execution
     private readonly Dictionary<string, ICommandExecutor> _executors = new();
     private readonly IUserMessageService _console;
     private readonly ITextEditorAdapter translationControl;
-    private ProtocolModel protocolModel = new ProtocolModel(); 
+    private ProtocolModel protocolModel = new ProtocolModel();
     /// <summary>
     /// Событие, которое вызывается при изменении состояния блокировки.
     /// </summary>
@@ -39,7 +34,7 @@ namespace ControlCommandExecutor.Execution
     }
 
     public void AddErrorMethod(ErrorItem errorItem)
-    { 
+    {
       AddError?.Invoke(errorItem);
     }
 
@@ -83,7 +78,7 @@ namespace ControlCommandExecutor.Execution
         }
         else
         {
-          await _console.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Неизвестная команда", message: command.Mnemonic, type: Utilities.Models.ShowMessageModel.MessageType.Error));
+          await _console.ShowMessageAsync(new ShowMessageModel("Неизвестная команда", message: command.Mnemonic, type: ShowMessageModel.MessageType.Error));
         }
 
         i++;
@@ -102,7 +97,7 @@ namespace ControlCommandExecutor.Execution
       }
       else
       {
-        await _console.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Неизвестная команда", message: command.Mnemonic, type: Utilities.Models.ShowMessageModel.MessageType.Error));
+        await _console.ShowMessageAsync(new ShowMessageModel("Неизвестная команда", message: command.Mnemonic, type: ShowMessageModel.MessageType.Error));
       }
     }
 
@@ -132,10 +127,10 @@ namespace ControlCommandExecutor.Execution
 
       if (index < 0)
       {
-        await _console.ShowMessageAsync(new Utilities.Models.ShowMessageModel(
+        await _console.ShowMessageAsync(new ShowMessageModel(
             $"Команда с номером {commandNumber} не найдена.",
             message: "",
-            type: Utilities.Models.ShowMessageModel.MessageType.Error));
+            type: ShowMessageModel.MessageType.Error));
         return;
       }
 

@@ -1,25 +1,15 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using ICSharpCode.AvalonEdit;
-using Microsoft.Win32;
-using System.IO.Packaging;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows;
 using AppConfiguration.Base;
+using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
-using ICSharpCode.AvalonEdit;
+using DTO.Base.Models;
+using EventCore.Adapters;
+using EventCore.Events;
 using Microsoft.Win32;
-using UI.Components;
-using UI.Components.ArchiveControls;
-using UI.Components.ArchiveManager.Models;
 using UI.Components.FileComparerControls;
-using UI.Components.MultiEditorMethods;
 using UI.Controls.ProtocolNew;
 using UI.Controls.Search;
 using UI.Controls.TextEditor;
-using static UI.Components.Invoke.OpenFileButton;
-using Utilities.ResultProtocol;
 
 
 namespace MainWindowProgram.Services
@@ -55,13 +45,17 @@ namespace MainWindowProgram.Services
       _mainWindow = mainWindow;
       _mainWindow.SearchWindow = new SearchWindow();
       _isLockedProvider = isLockedProvider;
-      EventAggregator.SearchWindowClosing += OnSearchWindowClosing;
-      EventAggregator.ViewProtocol -= ViewProtocol;
-      EventAggregator.ViewProtocol += ViewProtocol;
-      EventAggregator.SaveSession += SaveSession;
-      EventAggregator.OpenSession += OpenSession;
-      EventAggregator.GetProtocolInfo -= OnGetProtocolInfo;
-      EventAggregator.GetProtocolInfo += OnGetProtocolInfo;
+      
+      EventCore.Services.EventAggregator.Subscribe<SearchEvents.SearchWindowClosing>(e => OnSearchWindowClosing(e.IsClosing));
+
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ViewProtocol>(e => ViewProtocol(e.Protocol));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ViewProtocol>(e => ViewProtocol(e.Protocol));
+
+      EventCore.Services.EventAggregator.Subscribe<SessionEvents.SaveSession>(e => SaveSession());
+      EventCore.Services.EventAggregator.Subscribe<SessionEvents.OpenSession>(e => SaveSession());
+
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.GetProtocolInfo>(e => OnGetProtocolInfo(e.Protocol));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.GetProtocolInfo>(e => OnGetProtocolInfo(e.Protocol));
     }
 
     private void OnGetProtocolInfo(ProtocolModel protocolModel)
@@ -78,7 +72,7 @@ namespace MainWindowProgram.Services
     private void OnSearchWindowClosing(bool closing)
     {
       _isSearchWindowOpen = false;
-      EventAggregator.RaiseInfoMessage(string.Empty);
+      MessageEventAdapter.RaiseInfoMessage(string.Empty);
     }
 
     /// <summary>
@@ -219,7 +213,7 @@ namespace MainWindowProgram.Services
 
         if (!string.IsNullOrEmpty(selectedText))
         {
-          EventAggregator.RaiseSearchTextRequested(selectedText);
+          SearchEventAdapter.RaiseSearchTextRequested(selectedText);
         }
       }
       else

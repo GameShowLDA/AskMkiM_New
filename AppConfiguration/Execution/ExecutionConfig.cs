@@ -1,4 +1,8 @@
-﻿namespace AppConfiguration.Execution
+﻿using DTO.SettingsModels;
+using EventCore.Adapters;
+using EventCore.Events;
+
+namespace AppConfiguration.Execution
 {
   /// <summary>
   /// Класс конфигурации выполнений режимов для <see cref="ExecutionConfig"/>.
@@ -7,9 +11,9 @@
   /// </summary>
   public static class ExecutionConfig
   {
-    static public Action<ExecutionModel> SaveExecutionEvent;
+    static public Action<SettingsExecutionModel> SaveExecutionEvent;
 
-    static ExecutionModel ExecutionModel = new ExecutionModel();
+    static SettingsExecutionModel SettingsExecutionModel = new SettingsExecutionModel();
 
     /// <summary>
     /// Событие на изменение холостого режима
@@ -26,7 +30,7 @@
     {
       await Task.Run(() =>
       {
-        ExecutionModel.IdleModeExecution = enable;
+        SettingsExecutionModel.IdleModeExecution = enable;
         IdleModeChange?.Invoke(null, enable);
       });
     }
@@ -39,8 +43,8 @@
     {
       await Task.Run(() =>
       {
-        ExecutionModel.StepByStepMode = enable;
-        Base.EventAggregator.StepByStepModeFlag = enable;
+        SettingsExecutionModel.StepByStepMode = enable;
+        ExecutionEventAdapter.RaiseStepByStepModeChanged(enable);
       });
     }
 
@@ -52,7 +56,7 @@
     {
       await Task.Run(() =>
       {
-        ExecutionModel.StopOnError = enable;
+        SettingsExecutionModel.StopOnError = enable;
       });
     }
 
@@ -64,15 +68,15 @@
     {
       await Task.Run(() =>
       {
-        ExecutionModel.IsErrorSimulationMode = enable;
+        SettingsExecutionModel.IsErrorSimulationMode = enable;
       });
     }
 
-    public static async Task SetExecutionModel(ExecutionModel protocolModel)
+    public static async Task SetExecutionModel(SettingsExecutionModel protocolModel)
     {
       await Task.Run(() =>
       {
-        ExecutionModel = protocolModel;
+        SettingsExecutionModel = protocolModel;
       });
     }
 
@@ -84,48 +88,48 @@
     /// Проверяет, активен ли холостой режим.
     /// </summary>
     /// <returns>true, если включен; false, если выключен.</returns>
-    public static Task<bool> GetIsIdleModeEnabled() => Task.FromResult(ExecutionModel?.IdleModeExecution ?? false);
+    public static Task<bool> GetIsIdleModeEnabled() => Task.FromResult(SettingsExecutionModel?.IdleModeExecution ?? false);
 
     /// <summary>
     /// Проверяет, установлен ли флаг остановки при ошибке.
     /// </summary>
     /// <returns>true, если включен; false, если выключен.</returns>
-    public static Task<bool> GetIsStopOnErrorEnabled() => Task.FromResult(ExecutionModel?.StopOnError ?? false);
+    public static Task<bool> GetIsStopOnErrorEnabled() => Task.FromResult(SettingsExecutionModel?.StopOnError ?? false);
 
     /// <summary>
     /// Возвращает, включена ли симуляция ошибок в холостом режиме.
     /// </summary>
     /// <returns>true, если включена; false, если выключена.</returns>
-    public static Task<bool> GetIsErrorSimulationEnabled() => Task.FromResult(ExecutionModel?.IsErrorSimulationMode ?? false);
+    public static Task<bool> GetIsErrorSimulationEnabled() => Task.FromResult(SettingsExecutionModel?.IsErrorSimulationMode ?? false);
 
     /// <summary>
     /// Возвращает, включен ли пошаговый режим.
     /// </summary>
     /// <returns>true, если включен; false, если выключена.</returns>
-    public static Task<bool> GetIsStepByStepModeEnabled() => Task.FromResult(ExecutionModel?.StepByStepMode ?? false);
+    public static Task<bool> GetIsStepByStepModeEnabled() => Task.FromResult(SettingsExecutionModel?.StepByStepMode ?? false);
 
-    public static async Task<ExecutionModel> GetExecitonModel()
+    public static async Task<SettingsExecutionModel> GetExecitonModel()
     {
       return await Task.Run(() =>
       {
-        ExecutionModel executionModel = new ExecutionModel();
-        executionModel.IdleModeExecution = ExecutionModel.IdleModeExecution;
-        executionModel.IsErrorSimulationMode = ExecutionModel.IsErrorSimulationMode;
-        executionModel.StepByStepMode = ExecutionModel.StepByStepMode;
-        executionModel.StopOnError = ExecutionModel.StopOnError;
+        SettingsExecutionModel executionModel = new SettingsExecutionModel();
+        executionModel.IdleModeExecution = SettingsExecutionModel.IdleModeExecution;
+        executionModel.IsErrorSimulationMode = SettingsExecutionModel.IsErrorSimulationMode;
+        executionModel.StepByStepMode = SettingsExecutionModel.StepByStepMode;
+        executionModel.StopOnError = SettingsExecutionModel.StopOnError;
         return executionModel;
       });
     }
     #endregion
 
-    public static async Task SaveExecutionModel(ExecutionModel execution)
+    public static async Task SaveExecutionModel(SettingsExecutionModel execution)
     {
-      await Task.Run(() =>
+      await Task.Run(async () =>
       {
-        ExecutionModel.IdleModeExecution = execution.IdleModeExecution;
-        ExecutionModel.IsErrorSimulationMode = execution.IsErrorSimulationMode;
-        ExecutionModel.StepByStepMode = execution.StepByStepMode;
-        ExecutionModel.StopOnError = execution.StopOnError;
+        await SetIdleMode(execution.IdleModeExecution);
+        await SetIsErrorSimulationMode(execution.IsErrorSimulationMode);
+        await SetStepByStepMode(execution.StepByStepMode);
+        await SetStopOnError(execution.StopOnError);
       });
 
       SaveExecutionEvent?.Invoke(execution);

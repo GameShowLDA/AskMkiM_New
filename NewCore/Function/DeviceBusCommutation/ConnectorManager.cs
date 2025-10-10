@@ -1,9 +1,8 @@
-﻿using System;
-using NewCore.Base.Function.DBC;
+﻿using DTO.Device.SwitchingDevice.Capabilities;
+using DTO.Service;
 using NewCore.Communication;
-using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.DeviceBusCommutation
@@ -40,7 +39,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
     private async Task<bool> SetMultimeterState(bool connect, SwitchingBusNew bus, IUserMessageService? userMessageService = null)
     {
-      int numberConnector = (int)TypeConnector.Multimeter;
+      int numberConnector = (int)SwitchingDeviceTypeConnector.Multimeter;
       if (TryGetBusNumber(bus, out int busNumber) && (busNumber >= 1 || busNumber <= 4))
       {
         if (await GetIsIdleModeEnabled())
@@ -77,7 +76,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
     private async Task<bool> SetADCState(bool connect, SwitchingBusNew bus, bool reversePolarity, IUserMessageService? userMessageService = null)
     {
-      int numberConnector = (int)TypeConnector.ADC;
+      int numberConnector = (int)SwitchingDeviceTypeConnector.ADC;
       if (reversePolarity)
       {
         numberConnector++;
@@ -118,7 +117,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
     private async Task<bool> SetPINTState(bool connect, SwitchingBusNew bus, IUserMessageService? userMessageService = null)
     {
-      int numberConnector = (int)TypeConnector.PINT;
+      int numberConnector = (int)SwitchingDeviceTypeConnector.PINT;
       if (TryGetBusNumber(bus, out int busNumber) && (busNumber < 2 || busNumber > 3))
       {
         if (await GetIsIdleModeEnabled())
@@ -153,7 +152,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
     private async Task<bool> SetBreakdownTesterState(bool connect, IUserMessageService? userMessageService = null)
     {
-      int numberConnector = (int)TypeConnector.BreakdownTester;
+      int numberConnector = (int)SwitchingDeviceTypeConnector.BreakdownTester;
 
       if (await GetIsIdleModeEnabled())
       {
@@ -221,7 +220,7 @@ namespace NewCore.Function.DeviceBusCommutation
       return false;
     }
 
-    public async Task<bool> GetSuccesCurrentMode(TypeConnector mode, IUserMessageService? userMessageService = null)
+    public async Task<bool> GetSuccesCurrentMode(SwitchingDeviceTypeConnector mode, IUserMessageService? userMessageService = null)
     {
       var command = new DeviceCommand(51);
       var answer = await _deviceBusCommutation.DeviceProtocol.QueryAsync(command.ToString(), timeout: 1000);

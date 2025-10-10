@@ -1,8 +1,9 @@
-﻿using NewCore.Base.Interface.Main;
-using NewCore.Device;
+﻿using DTO.Device.Breakdown;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor
 {

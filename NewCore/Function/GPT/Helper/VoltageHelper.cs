@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using NewCore.Base.Interface.Main;
-using NewCore.Function.GPT.Data;
+using DTO.Device.Breakdown;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
@@ -10,7 +10,7 @@ namespace NewCore.Function.GPT.Helper
 {
   internal static class VoltageHelper
   {
-    static public async Task<(bool Success, string Message)> SetVoltageAsync(IBreakdownTester breakDown, TypeMode typeCommand, double value, double kvValue, int delay)
+    static public async Task<(bool Success, string Message)> SetVoltageAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, double value, double kvValue, int delay)
     {
       LogInformation($"Начало {nameof(SetVoltageAsync)}: value={value:F3}", isDeviceLog: true);
 
@@ -27,9 +27,9 @@ namespace NewCore.Function.GPT.Helper
 
       ManualCommand manualCommand = typeCommand switch
       {
-        TypeMode.ACW => ManualCommand.MANU_ACW_VOLTAGE,
-        TypeMode.DCW => ManualCommand.MANU_DCW_VOLTAGE,
-        TypeMode.IR => ManualCommand.MANU_IR_VOLTAGE,
+        BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_VOLTAGE,
+        BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_VOLTAGE,
+        BreakdownTypeMode.IR => ManualCommand.MANU_IR_VOLTAGE,
         _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetVoltageAsync)}"),
       };
 
@@ -70,15 +70,15 @@ namespace NewCore.Function.GPT.Helper
         await Task.Delay(delay);
       }
     }
-    static public async Task<double> GetVoltageAsync(IBreakdownTester breakDown, TypeMode typeCommand, int delay)
+    static public async Task<double> GetVoltageAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, int delay)
     {
       LogInformation($"Начало {nameof(GetVoltageAsync)}", isDeviceLog: true);
 
       ManualCommand manualCommand = typeCommand switch
       {
-        TypeMode.ACW => ManualCommand.MANU_ACW_VOLTAGE,
-        TypeMode.DCW => ManualCommand.MANU_DCW_VOLTAGE,
-        TypeMode.IR => ManualCommand.MANU_IR_VOLTAGE,
+        BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_VOLTAGE,
+        BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_VOLTAGE,
+        BreakdownTypeMode.IR => ManualCommand.MANU_IR_VOLTAGE,
         _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetVoltageAsync)}"),
       };
 

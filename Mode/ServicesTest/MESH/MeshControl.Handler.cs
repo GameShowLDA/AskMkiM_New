@@ -1,5 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using DTO.Base.Models;
+using DTO.Service.Models;
 
 namespace Mode.ServicesTest.MESH
 {
@@ -82,7 +84,7 @@ namespace Mode.ServicesTest.MESH
     /// <returns>Задача, представляющая завершение асинхронной операции.</returns>
     private Task ShowMessageAsync(string text)
     {
-      ProtocolSelfCheckControl?.ShowMessageAsync(new Utilities.Models.ShowMessageModel(text));
+      ProtocolSelfCheckControl?.ShowMessageAsync(new ShowMessageModel(text));
       return Task.CompletedTask;
     }
   }

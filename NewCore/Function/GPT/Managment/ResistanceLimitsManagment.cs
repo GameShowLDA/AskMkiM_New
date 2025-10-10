@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using NewCore.Device;
-using NewCore.Function.GPT.Command;
-using Utilities.Interface;
+using DTO.Service;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
 

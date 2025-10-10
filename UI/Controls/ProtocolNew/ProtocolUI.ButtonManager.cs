@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Utilities.Interface;
+using DTO.Service;
 using static Utilities.LoggerUtility;
 
 namespace UI.Controls.ProtocolNew

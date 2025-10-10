@@ -1,20 +1,20 @@
 ﻿using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using AppConfiguration.Base;
+using DTO.Base.Models;
+using DTO.Service;
+using DTO.Service.Models;
+using DTO.Settings.SettingsModels;
 using Message;
 using Utilities;
-using Utilities.Interface;
-using Utilities.Models;
 using static AppConfiguration.Protocol.ProtocolConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
+using static DTO.Base.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
-using static Utilities.Models.ShowMessageModel;
 
 namespace UI.Controls.ProtocolNew
 {
@@ -480,7 +480,6 @@ namespace UI.Controls.ProtocolNew
     {
       Errors.AddError(errorItem);
     }
-
 
   }
 }

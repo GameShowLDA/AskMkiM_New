@@ -1,5 +1,4 @@
-﻿using Utilities.Errors;
-using Utilities.Models;
+﻿using DTO.Service.Models;
 namespace AppConfiguration.Error.Translation
 {
   /// <summary>

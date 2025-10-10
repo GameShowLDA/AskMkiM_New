@@ -1,13 +1,14 @@
-﻿using DataBaseConfiguration.Services.Device;
-using Mode.Models;
-using NewCore.Base.Interface.Main;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows;
-using static Utilities.Models.ShowMessageModel;
+using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule;
+using DTO.Service.Models;
+using Mode.Models;
 
 namespace Mode.ServicesTest.MKR
 {
@@ -24,12 +25,12 @@ namespace Mode.ServicesTest.MKR
     /// <summary>
     /// Статусное сообщение для успешного выполнения теста.
     /// </summary>
-    private readonly (string Title, Color TitleColor) goodText = SuccessMessage;
+    private readonly (string Title, Color TitleColor) goodText = ShowMessageModel.SuccessMessage;
 
     /// <summary>
     /// Статусное сообщение для ошибки в процессе выполнения теста.
     /// </summary>
-    private readonly (string Title, Color TitleColor) errorText = ErrorMessage;
+    private readonly (string Title, Color TitleColor) errorText = ShowMessageModel.ErrorMessage;
 
     /// <summary>
     /// Коллекция точек для привязки к пользовательскому интерфейсу.

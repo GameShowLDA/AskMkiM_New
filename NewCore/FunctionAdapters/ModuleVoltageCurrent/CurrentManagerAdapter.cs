@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.ModuleVoltageCurrent;
-using NewCore.Base.Function.ModuleVoltageCurrentSource;
-using NewCore.Base.Interface.Main;
+﻿using AppConfiguration.Error.Device.ModuleVoltageCurrent;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PowerSourceModule.Capabilities;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
-using Utilities.Interface;
-using static Utilities.LoggerUtility;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
 {

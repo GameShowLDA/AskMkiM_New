@@ -5,10 +5,15 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using AppConfiguration.Base;
+using EventCore.Adapters;
+using EventCore.Events;
+using EventCore.Services;
 using UI.Components.SearchControls;
 using UI.Controls.TextEditor;
+using static Utilities.LoggerUtility;
 using Application = System.Windows.Application;
 using Brush = System.Windows.Media.Brush;
 using ComboBox = System.Windows.Controls.ComboBox;
@@ -16,8 +21,6 @@ using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Point = System.Windows.Point;
 using TextBox = System.Windows.Controls.TextBox;
-using static Utilities.LoggerUtility;
-using System.Windows.Media.Animation;
 
 namespace UI.Controls.Search
 {
@@ -58,11 +61,13 @@ namespace UI.Controls.Search
     {
       InitializeComponent();
       this.Loaded += Window_Loaded;
-      EventAggregator.SearchButtonPressed += OnSearchButtonPressed;
-      EventAggregator.ReplaceWordButtonPressed += OnReplaceWordButtonPressed;
-      EventAggregator.ReplaceAllWordsButtonPressed += OnReplaceAllWordsButtonPressed;
-      EventAggregator.CloseSearchWindow += OnCloseSearchWindowRequested;
-      EventAggregator.SearchTextRequested += OnSearchTextRequested;
+
+      EventAggregator.Subscribe<SearchEvents.SearchButtonPressed>(e => OnSearchButtonPressed(e.SearchParameters));
+      EventAggregator.Subscribe<SearchEvents.ReplaceWordButtonPressed>(_ => OnReplaceWordButtonPressed());
+      EventAggregator.Subscribe<SearchEvents.ReplaceAllWordsButtonPressed>(_ => OnReplaceAllWordsButtonPressed());
+      EventAggregator.Subscribe<SearchEvents.CloseSearchWindow>(_ => OnCloseSearchWindowRequested());
+      EventAggregator.Subscribe<SearchEvents.SearchTextRequested>(e => OnSearchTextRequested(e.SelectedText));
+
       this.Focus();
       SearchTextBox.Focus();
       LogInformation("Окно поиска инициализировано");
@@ -201,7 +206,7 @@ namespace UI.Controls.Search
     public void CloseDialog()
     {
       ClearHighlights?.Invoke();
-      EventAggregator.RaiseSearchWindowClosing(false);
+      SearchEventAdapter.RaiseSearchWindowClosing(false);
       _allowClose = true;
       var hideAnimation = (Storyboard)Resources["HideAnimation"];
       hideAnimation.Completed += (s, e) => this.Hide();
@@ -371,7 +376,7 @@ namespace UI.Controls.Search
         searchAreaParameters.SelectedIndex = 0;
       }
 
-      EventAggregator.RaiseSearchText(searchText, wholeWord, caseWord, searchArea, searchParameters);
+      SearchEventAdapter.RaiseSearchText(searchText, wholeWord, caseWord, searchArea, searchParameters);
     }
 
     private void OnReplaceWordButtonPressed()
@@ -386,7 +391,7 @@ namespace UI.Controls.Search
         searchAreaParameters.SelectedIndex = 0;
       }
 
-      EventAggregator.RaiseReplaceText(replaceText, searchText, wholeWord, caseWord, searchArea, "FindNext");
+      SearchEventAdapter.RaiseReplaceText(replaceText, searchText, wholeWord, caseWord, searchArea, "FindNext");
     }
 
     private void OnReplaceAllWordsButtonPressed()
@@ -401,7 +406,7 @@ namespace UI.Controls.Search
         searchAreaParameters.SelectedIndex = 0;
       }
 
-      EventAggregator.RaiseReplaceText(replaceText, searchText, wholeWord, caseWord, searchArea, "FindAll");
+      SearchEventAdapter.RaiseReplaceText(replaceText, searchText, wholeWord, caseWord, searchArea, "FindAll");
     }
 
     private void OnCloseSearchWindowRequested()

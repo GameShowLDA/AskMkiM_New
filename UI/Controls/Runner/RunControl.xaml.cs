@@ -1,16 +1,16 @@
-﻿using AppConfiguration.Base;
-using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
-using ControlCommandExecutor.Execution;
-using Message;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using UI.Components;
+using AppConfiguration.Base;
+using ControlCommandAnalyser.Model;
+using ControlCommandAnalyser.Model.Ok;
+using ControlCommandExecutor.Execution;
+using DTO.Service.Models;
+using EventCore.Adapters;
+using Message;
 using UI.Controls.ProtocolNew;
 using UI.Controls.TextEditor;
-using Utilities.Models;
 using static Utilities.LoggerUtility;
 
 namespace UI.Controls.Runner
@@ -142,7 +142,7 @@ namespace UI.Controls.Runner
 
         if (ErrorCount > 0)
         {
-          AppConfiguration.Base.EventAggregator.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+          MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
         }
       });
     }
@@ -165,8 +165,8 @@ namespace UI.Controls.Runner
           && !string.IsNullOrEmpty(textEditor.TextEditorModel.FilePath)
           && File.Exists(textEditor.TextEditorModel.FilePath))
         {
-          EventAggregator.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
-          EventAggregator.RaiseCloseRunItem(this);
+          FileInteractionEventAdapter.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
+          EditorEventAdapter.RaiseCloseRunItem(this);
         }
       }
       else

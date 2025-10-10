@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device.Breakdown;
-using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using AppConfiguration.Error.Device.Breakdown;
+using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using DTO.Device.Breakdown.Model;
 using NewCore.Device;
 using NewCore.Function.GPT;
-using NewCore.Function.GPT.Data;
 using NewCore.Function.Helpers;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {

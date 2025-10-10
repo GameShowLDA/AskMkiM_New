@@ -1,16 +1,10 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Function.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using DTO.Device.Breakdown.Model;
 using NewCore.Device;
-using NewCore.Function.GPT.Data;
-using NewCore.Function.GPT.Helper;
 using NewCore.Function.GPT.Managment;
-using Utilities.Interface;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static NewCore.Function.GPT.Command.FunctionCommandManager;
-using static NewCore.Function.GPT.Command.ManualCommandManager;
-using static Utilities.LoggerUtility;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.GPT
 {
@@ -52,13 +46,13 @@ namespace NewCore.Function.GPT
     {
       _gptModel = gpt79904;
       _config = new IrConfiguration();
-      Voltage = new VoltageManagment(_gptModel, TypeMode.IR, delay, getConfigVoltage: () => _config.Voltage, setConfigVoltage: v => _config.Voltage = v);
-      Time = new TimeManagment(_gptModel, TypeMode.IR, delay, getTestTime: () => _config.TestTime, setTestTime: v => _config.TestTime = v, getRampTime: () => _config.RampTime, setRampTime: v => _config.RampTime = v);
-      Offset = new OffsetManagment(_gptModel, TypeMode.IR, delay, getOffset: () => _config.Offset, setOffset: v => _config.Offset = v);
+      Voltage = new VoltageManagment(_gptModel, BreakdownTypeMode.IR, delay, getConfigVoltage: () => _config.Voltage, setConfigVoltage: v => _config.Voltage = v);
+      Time = new TimeManagment(_gptModel, BreakdownTypeMode.IR, delay, getTestTime: () => _config.TestTime, setTestTime: v => _config.TestTime = v, getRampTime: () => _config.RampTime, setRampTime: v => _config.RampTime = v);
+      Offset = new OffsetManagment(_gptModel, BreakdownTypeMode.IR, delay, getOffset: () => _config.Offset, setOffset: v => _config.Offset = v);
       Measure = new IrMeasureManagment(_gptModel, delayBeforeCall, getTestTime: () => Task.FromResult(_config.TestTime), getRampTime: () => Task.FromResult(_config.RampTime), getIsIdleMode: GetIsIdleModeEnabled);
       ResistanceLimits = new ResistanceLimitsManagment(_gptModel, delay, GetIsIdleModeEnabled, () => _config.HighResistanceLimit, v => _config.HighResistanceLimit = v, () => _config.LowResistanceLimit, v => _config.LowResistanceLimit = v);
       Config = new IrConfigManager(Voltage, Time, Offset, ResistanceLimits.GetHighResistanceLimitAsync, ResistanceLimits.GetLowResistanceLimitAsync);
-      Mode = new ModeManagment(_gptModel, TypeMode.IR, delay, async () => _config = await Config.ReadConfigurationAsync());
+      Mode = new ModeManagment(_gptModel, BreakdownTypeMode.IR, delay, async () => _config = await Config.ReadConfigurationAsync());
     }
   }
 }

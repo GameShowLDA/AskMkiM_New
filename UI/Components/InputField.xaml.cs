@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using UI.Controls.ProtocolNew;
 using Utilities.Events;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace UI.Components
 {

@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
-using AppConfiguration.Enums;
-using NewCore.Base.Interface.Main;
-using NewCore.Function.GPT.Data;
+using DTO.Device.Breakdown;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Enum.DeviceEnums;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static NewCore.Function.GPT.Command.ManualCommandManager;
 using static Utilities.LoggerUtility;
@@ -12,7 +11,7 @@ namespace NewCore.Function.GPT.Helper
   static internal class ArcCurrentHelper
   {
     /// <inheritdoc />
-    static public async Task<(bool Success, string Message)> SetArcCurrentAsync(IBreakdownTester breakDown, TypeMode typeCommand, double value, int delay)
+    static public async Task<(bool Success, string Message)> SetArcCurrentAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, double value, int delay)
     {
       LogInformation($"Начало {nameof(SetArcCurrentAsync)}: value={value:F3}", isDeviceLog: true);
 
@@ -26,8 +25,8 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_ARCCURRENT,
-          TypeMode.DCW => ManualCommand.MANU_DCW_ARCCURRENT,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_ARCCURRENT,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_ARCCURRENT,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetArcCurrentAsync)}"),
         };
 
@@ -68,7 +67,7 @@ namespace NewCore.Function.GPT.Helper
     }
 
     /// <inheritdoc />
-    static public async Task<double> GetArcCurrentAsync(IBreakdownTester breakDown, TypeMode typeCommand, int delay)
+    static public async Task<double> GetArcCurrentAsync(IBreakdownTester breakDown, BreakdownTypeMode typeCommand, int delay)
     {
       LogInformation($"Начало {nameof(GetArcCurrentAsync)}", isDeviceLog: true);
 
@@ -82,8 +81,8 @@ namespace NewCore.Function.GPT.Helper
 
         ManualCommand manualCommand = typeCommand switch
         {
-          TypeMode.ACW => ManualCommand.MANU_ACW_ARCCURRENT,
-          TypeMode.DCW => ManualCommand.MANU_DCW_ARCCURRENT,
+          BreakdownTypeMode.ACW => ManualCommand.MANU_ACW_ARCCURRENT,
+          BreakdownTypeMode.DCW => ManualCommand.MANU_DCW_ARCCURRENT,
           _ => throw new NotSupportedException($"Тип команды {typeCommand} не поддерживается в {nameof(SetArcCurrentAsync)}"),
         };
 

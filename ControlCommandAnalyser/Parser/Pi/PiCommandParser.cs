@@ -1,10 +1,10 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using System.Text.RegularExpressions;
+using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using ControlCommandAnalyser.Parser.Si; // Для LoggerUtility
-using NewCore.Base.Interface.Main;
-using System.Text.RegularExpressions;
+using DTO.Device.Breakdown;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Pi
@@ -52,7 +52,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         .ToList();
 
       // Склеиваем всё в одну строку и удаляем \r \n \t
-      var body = string.Concat(processedLines.Count > 0 && processedLines.FindAll(l=>string.IsNullOrEmpty(l)||string.IsNullOrWhiteSpace(l)).Count == 0 ? 
+      var body = string.Concat(processedLines.Count > 0 && processedLines.FindAll(l => string.IsNullOrEmpty(l) || string.IsNullOrWhiteSpace(l)).Count == 0 ?
         processedLines : model.SourceLines)
         .Replace("\r", "")
         .Replace("\n", "");
@@ -175,7 +175,7 @@ namespace ControlCommandAnalyser.Parser.Pi
       if (firstStar >= 0 && lastStar > firstStar)
       {
         // Выделяем блок точек (включительно) — PointParser сам Trim('*')
-        string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);        
+        string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
         model.PointsSourse = pointsBlob;
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 

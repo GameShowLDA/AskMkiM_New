@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using NewCore.Base.Interface.Main;
+using DTO.Device.Base;
+using DTO.Device.FastMeter;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Communication
@@ -25,7 +24,7 @@ namespace NewCore.Communication
     /// TCP-клиент для установления соединения с устройством.
     /// </summary>
     static internal TcpClient Client { get; set; }
-    public SemaphoreSlim OperationLock { get ; set; }
+    public SemaphoreSlim OperationLock { get; set; }
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="KeysightDeviceProtocol"/>.
@@ -36,11 +35,11 @@ namespace NewCore.Communication
     {
       _device = device ?? throw new ArgumentNullException(nameof(device));
       _port = port;
-      OperationLock = new SemaphoreSlim(1,1);
+      OperationLock = new SemaphoreSlim(1, 1);
     }
 
     /// <inheritdoc />
-    public async Task<string> QueryAsync( string command, double responseDelay = 0, int timeout = 0, int port = 0, int delayBeforeCall = 0, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<string> QueryAsync(string command, double responseDelay = 0, int timeout = 0, int port = 0, int delayBeforeCall = 0, CancellationToken cancellationToken = new CancellationToken())
     {
       try
       {
@@ -101,7 +100,7 @@ namespace NewCore.Communication
     private async Task EstablishConnection()
     {
       Client = new TcpClient();
-      await Client.ConnectAsync(_device.ConnectionDetails, _port);
+      await Client.ConnectAsync(host: _device.ConnectionDetails, _port);
       Stream = Client.GetStream();
     }
 

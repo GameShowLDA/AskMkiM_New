@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
-using Utilities.Models;
+using DTO.Device.RelaySwitchModule.Model;
 
 namespace ControlCommandAnalyser.Parser
 {

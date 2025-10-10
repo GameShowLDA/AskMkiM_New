@@ -1,15 +1,12 @@
 ﻿using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using AppConfiguration;
-using ConsoleUI.ConsoleCommanding.Services;
 using ConsoleUI.ConsoleLogic;
 using DataBaseConfiguration.Services.Device;
-using Microsoft.Extensions;
+using DTO.Device.Breakdown;
+using EventCore.Adapters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
 using NewCore.Device;
 using static Utilities.LoggerUtility;
 
@@ -82,7 +79,13 @@ namespace MainWindowProgram
 
         ServiceLocator.Initialize(AppHost);
         var chassisNumber = new DataBaseConfiguration.Services.Device.ChassisManagerServices().GetAll().FirstOrDefault();
-        var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
+        try
+        {
+          var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
+        }
+        catch 
+        {
+        }
 
         await splashWindow.WaitForCloseAsync();
 
@@ -107,7 +110,7 @@ namespace MainWindowProgram
     {
       base.OnExit(e);
 
-      AppConfiguration.Base.EventAggregator.RaiseSaveSession();
+      SessionEventAdapter.RaiseSaveSession();
 
       try
       {

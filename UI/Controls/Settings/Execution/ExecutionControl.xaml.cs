@@ -1,11 +1,12 @@
-﻿using AppConfiguration.Execution;
-using AppConfiguration.Protocol;
-using Message;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AppConfiguration.Execution;
+using AppConfiguration.Protocol;
+using DTO.SettingsModels;
+using Message;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
 
 namespace UI.Controls.Settings.Execution
 {
@@ -19,7 +20,7 @@ namespace UI.Controls.Settings.Execution
     /// Базовая (сохранённая) модель выполнения, считанная при загрузке.
     /// Используется как эталон для сравнения с текущими значениями UI.
     /// </summary>
-    private ExecutionModel _baseExecutionModel { get; set; }
+    private SettingsExecutionModel _baseExecutionModel { get; set; }
 
     /// <summary>
     /// Глобальный флаг наличия несохранённых изменений в разделе.
@@ -117,9 +118,9 @@ namespace UI.Controls.Settings.Execution
     /// <summary>
     /// Формирует модель протокола из текущих значений элементов UI.
     /// </summary>
-    private ExecutionModel GetModel()
+    private SettingsExecutionModel GetModel()
     {
-      var model = new ExecutionModel
+      var model = new SettingsExecutionModel()
       {
         StopOnError = StopInError.IsChecked,
         StepByStepMode = StepByStepMode.IsChecked,
@@ -132,7 +133,7 @@ namespace UI.Controls.Settings.Execution
     /// <summary>
     /// Сравнивает две модели протокола по всем флагам.
     /// </summary>
-    private static bool ProtocolEquals(ExecutionModel a, ExecutionModel b) =>
+    private static bool ProtocolEquals(SettingsExecutionModel a, SettingsExecutionModel b) =>
       a.IdleModeExecution == b.IdleModeExecution &&
       a.IsErrorSimulationMode == b.IsErrorSimulationMode &&
       a.StepByStepMode == b.StepByStepMode &&

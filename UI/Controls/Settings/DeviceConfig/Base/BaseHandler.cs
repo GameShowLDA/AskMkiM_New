@@ -2,11 +2,19 @@
 using System.Net;
 using System.Windows;
 using DataBaseConfiguration.Models.Device;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
+using DTO.Device.Chassis;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.PrecisionMeter;
+using DTO.Device.Rack;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
 using Message;
-using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
 using NewCore.Base;
 using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
+using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
 
 
 namespace UI.Controls.Settings.DeviceConfig.Base

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Interface.Main;
-using Utilities.Interface;
-using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
-using static Utilities.LoggerUtility;
+﻿using DTO.Base.Models;
+using DTO.Device.FastMeter;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.SwitchingDevice;
+using DTO.Service;
+using DTO.Service.Models;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {
@@ -17,8 +13,8 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     static internal async Task CheckSwitching(CancellationToken cancellationToken, IUserMessageService messageService, IFastMeter fastMeter, IPowerSourceModule powerSourceModule, ISwitchingDevice switchingDevice)
     {
 
-      await messageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Начало проверки коммутации"));
-      await messageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Настройка оборудования"));
+      await messageService.ShowMessageAsync(new ShowMessageModel("Начало проверки коммутации"));
+      await messageService.ShowMessageAsync(new ShowMessageModel("Настройка оборудования"));
       await powerSourceModule.VoltageManager.SetSourceVoltageAsync(VoltageSources.Supply12V, messageService);
       await powerSourceModule.VoltageManager.SetVoltageLevelAsync(5, 0, messageService);
       await Task.Delay(1000);
@@ -49,7 +45,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
         await CheckBus(messageService, bus, switchingDevice, powerSourceModule, fastMeter);
       }
 
-      await messageService.ShowMessageAsync(new Utilities.Models.ShowMessageModel("Настройка оборудования"));
+      await messageService.ShowMessageAsync(new ShowMessageModel("Настройка оборудования"));
       foreach (var item in busesB)
       {
         cancellationToken.ThrowIfCancellationRequested();

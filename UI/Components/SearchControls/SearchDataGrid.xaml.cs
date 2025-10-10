@@ -1,4 +1,5 @@
 ﻿using AppConfiguration.Base;
+using EventCore.Adapters;
 using System.Windows;
 using System.Windows.Controls;
 using static Utilities.LoggerUtility;
@@ -29,7 +30,7 @@ namespace UI.Components.SearchControls
         var startOffset = row.StartOffset; 
         var lineText = row.SubstringFromWord;
 
-        EventAggregator.RaiseFoundTextSelectRow(fileName, lineNumber, startOffset, lineText, row.SearchText);
+        SearchEventAdapter.RaiseFoundTextSelectRow(fileName, lineNumber, startOffset, lineText, row.SearchText);
         LogInformation("Сработало событие нажатия на строку dataGrid с результатами поиска");
       }
     }

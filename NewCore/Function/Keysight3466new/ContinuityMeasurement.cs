@@ -1,6 +1,6 @@
-﻿using NewCore.Base.Function.FastMeter;
+﻿using DTO.Device.FastMeter.Capabilities;
 using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.Keysight3466new
@@ -80,7 +80,7 @@ namespace NewCore.Function.Keysight3466new
       string count = (response.Split("+")).Last();
       int intCount = int.Parse(count);
 
-      response = (response.Substring(0, 6).Split("+"))[1].Replace('.',',');
+      response = (response.Substring(0, 6).Split("+"))[1].Replace('.', ',');
       double result = -1;
       double.TryParse(response, out result);
 

@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.DirectoryServices.ActiveDirectory;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Interface;
-using NewCore.Base.Device;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
+﻿using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Capabilities;
+using DTO.Device.SwitchingDevice;
+using DTO.Service;
 using NewCore.Communication;
-using NewCore.Device;
-using Newtonsoft.Json.Linq;
 using Utilities;
-using Utilities.Interface;
-using Utilities.Models;
-using YamlDotNet.Core.Tokens;
 using static AppConfiguration.Execution.ExecutionConfig;
-using static Utilities.DelegateManager;
-using static Utilities.LoggerUtility;
-using static Utilities.Models.ShowMessageModel;
+using static DTO.Base.Models.ShowMessageModel;
+using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.Function.ModuleRelayControl.SelfCheck
 {
@@ -37,7 +25,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
     public SelfTestManager(Device.ModuleRelayControl moduleRelay) => _moduleRelay = moduleRelay;
     public Type GetTestTypeEnum()
     {
-      return typeof(TypeConnector);
+      return typeof(RelaySwitchTypeConnector);
     }
 
     /// <inheritdoc />
@@ -45,15 +33,15 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
     {
       switch (typeConnector)
       {
-        case TypeConnector.Points:
+        case RelaySwitchTypeConnector.Points:
           await PerformClosureCycle(cancellationToken, _moduleRelay, userMessageService);
           break;
 
-        case TypeConnector.BusCommutation:
+        case RelaySwitchTypeConnector.BusCommutation:
           await CheckBusesConnection(cancellationToken, _moduleRelay, device, userMessageService);
           break;
 
-        case TypeConnector.FullCheck:
+        case RelaySwitchTypeConnector.FullCheck:
           await PerformClosureCycle(cancellationToken, _moduleRelay, userMessageService);
           await CheckBusesConnection(cancellationToken, _moduleRelay, device, userMessageService);
           break;
@@ -82,7 +70,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       }
     }
 
-    private async Task CheckBusesConnection(CancellationToken token,IRelaySwitchModule relaySwitchModule, ISwitchingDevice switchingDevice, IUserMessageService? userMessageService = null)
+    private async Task CheckBusesConnection(CancellationToken token, IRelaySwitchModule relaySwitchModule, ISwitchingDevice switchingDevice, IUserMessageService? userMessageService = null)
     {
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка устройств"));
       if (!(await switchingDevice.ConnectableManager.InitializeAsync(userMessageService)).Connect || !(await _moduleRelay.ConnectableManager.InitializeAsync(userMessageService)).Connect)

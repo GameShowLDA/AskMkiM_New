@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Device;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
+﻿using AppConfiguration.Error.Device;
+using DTO.Device.Base;
 using NewCore.Device;
-using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
-using Utilities.Interface;
+using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {

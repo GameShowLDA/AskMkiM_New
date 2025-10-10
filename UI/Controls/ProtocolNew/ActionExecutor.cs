@@ -1,17 +1,17 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using DTO.Base.Models;
+using DTO.Service;
+using EventCore.Adapters;
+using EventCore.Events;
 using Message;
-using NewCore.Communication;
-using Utilities.Interface;
-using Utilities.Models;
 using WindowsInput;
-using static AppConfiguration.Base.EventAggregator;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static AppConfiguration.Protocol.ProtocolConfig;
-using static AppConfiguration.SystemState.SystemStateManager;
+using static AppConfiguration.SystemStateManager;
+using static DTO.Base.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
-using static Utilities.Models.ShowMessageModel;
 
 namespace UI.Controls.ProtocolNew
 {
@@ -23,10 +23,7 @@ namespace UI.Controls.ProtocolNew
   {
     public ActionExecutor()
     {
-      StepByStepModeChanged += (s) =>
-      {
-        StepMode = s;
-      };
+      EventCore.Services.EventAggregator.Subscribe<ExecutionEvents.StepByStepModeChanged>(e => StepMode = e.IsEnabled);
     }
 
     static public event Action<bool> StartProcessing;
@@ -583,7 +580,7 @@ namespace UI.Controls.ProtocolNew
           _stopwatch.Stop();
         }
 
-        RaiseInfoMessage("");
+        MessageEventAdapter.RaiseInfoMessage("");
       });
     }
 

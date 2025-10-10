@@ -7,7 +7,7 @@ using System.Windows;
 using ControlCommandAnalyser;
 using ControlCommandAnalyser.Model;
 using ControlCommandExecutor.Execution;
-using Utilities.ResultProtocol;
+using DTO.Base.Models;
 
 namespace ControlCommandExecutor.Executors
 {

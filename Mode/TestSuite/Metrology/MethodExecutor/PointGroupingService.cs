@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Mode.Models;
-using NewCore.Base.Interface.Main;
-using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+﻿using DTO.Device.RelaySwitchModule;
+using DTO.Device.RelaySwitchModule.Model;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor
 {

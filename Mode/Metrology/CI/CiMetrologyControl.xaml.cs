@@ -4,14 +4,15 @@ using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
+using DTO.Base.Models;
+using DTO.Device.Breakdown;
+using DTO.Service;
+using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
-using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.CI

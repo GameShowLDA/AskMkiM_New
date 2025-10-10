@@ -7,6 +7,7 @@ using AppConfiguration.Execution;
 using AppConfiguration.MeasurementError;
 using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
+using DTO.SettingsModels;
 
 namespace AppConfiguration.Base
 {
@@ -19,7 +20,7 @@ namespace AppConfiguration.Base
     /// Устанавливает текущую модель выполнения (ExecutionModel).
     /// </summary>
     /// <param name="executionModel">Модель выполнения.</param>
-    static public async Task SetExecutionModelAsync(ExecutionModel executionModel)
+    static public async Task SetExecutionModelAsync(SettingsExecutionModel executionModel)
     {
       await ExecutionConfig.SetStopOnError(executionModel.StopOnError);
       await ExecutionConfig.SetIsErrorSimulationMode(executionModel.IsErrorSimulationMode);
@@ -45,7 +46,7 @@ namespace AppConfiguration.Base
     /// Устанавливает текущую модель протокола (ProtocolModel).
     /// </summary>
     /// <param name="executionModel">Модель протокола.</param>
-    static public async Task SerParametrModelAsync(ParameterModel executionModel)
+    static public async Task SerParametrModelAsync(SettingsParameterModel executionModel)
     {
       await ParameterConfig.SetLanguage(executionModel.Language);
     }

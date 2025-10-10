@@ -1,10 +1,8 @@
 ﻿using AppConfiguration;
-using DataBaseConfiguration.Services;
 using DataBaseConfiguration.Services.Device;
-using Mode.Models;
-using NewCore.Base.Device;
-using Utilities.Interface;
-using Utilities.Models;
+using DTO.Device.Base;
+using DTO.Device.RelaySwitchModule.Model;
+using DTO.Service;
 
 namespace Mode.TestSuite.Metrology.MethodExecutor
 {

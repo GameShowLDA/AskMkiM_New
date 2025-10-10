@@ -1,11 +1,14 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using AppConfiguration.Base;
+using AppConfiguration.Base;
+using AppConfiguration.Protocol;
 using DataBaseConfiguration.Models.Session;
+using DTO.Base.Models;
+using EventCore.Events;
+using EventCore.Services;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
 using UI.Components.SearchControls;
@@ -113,7 +116,9 @@ namespace UI.Components
 
       this.KeyDown -= MultiWindowControl_KeyDown;
       this.KeyDown += MultiWindowControl_KeyDown;
-      EventAggregator.FoundTextSelectRow += OnFoundTextSelectRow;
+
+      EventAggregator.Subscribe<SearchEvents.FoundTextSelectRow>(e => OnFoundTextSelectRow(e.FileName, e.LineNumber, e.StartOffset, e.LineText, e.SearchText));
+
       ProtocolUI.AnotherKeyPressed -= MultiWindowControl_KeyDown;
       ProtocolUI.AnotherKeyPressed += MultiWindowControl_KeyDown;
       InitializeManagers();
@@ -254,7 +259,7 @@ namespace UI.Components
     /// Открывает диалоговое окно для открытия файла.
     /// </summary>
     /// <param name="path">Путь к файлу.</param>
-    public void ViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol, bool showInSoftware)
+    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware)
     {
       fileManager.ViewProtocol(protocol, showInSoftware);
     }

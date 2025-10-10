@@ -1,8 +1,8 @@
-﻿using Mode.Models;
-using NewCore.Enum;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Utilities.Models;
+﻿using System.Windows.Controls;
+using DTO.Base.Models;
+using DTO.Enum;
+using DTO.Service.Models;
+using Mode.Models;
 
 
 namespace Mode.ServicesTest.MKR
@@ -166,14 +166,14 @@ namespace Mode.ServicesTest.MKR
 
         // Логика подключения/отключения точек из вашего кода:
         if (point.A)
-          await currentDevice.PointManager.ConnectRelayAsync(DeviceEnum.BusPoint.A, buttonNumber);
+          await currentDevice.PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.A, buttonNumber);
         else
-          await currentDevice.PointManager.DisconnectRelayAsync(DeviceEnum.BusPoint.A, buttonNumber);
+          await currentDevice.PointManager.DisconnectRelayAsync(DeviceEnums.BusPoint.A, buttonNumber);
 
         if (point.B)
-          await currentDevice.PointManager.ConnectRelayAsync(DeviceEnum.BusPoint.B, buttonNumber);
+          await currentDevice.PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.B, buttonNumber);
         else
-          await currentDevice.PointManager.DisconnectRelayAsync(DeviceEnum.BusPoint.B, buttonNumber);
+          await currentDevice.PointManager.DisconnectRelayAsync(DeviceEnums.BusPoint.B, buttonNumber);
 
         // Выводим сообщение, в зависимости от комбинации флагов:
         if (point.A && point.B)

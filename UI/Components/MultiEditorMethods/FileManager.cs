@@ -1,21 +1,18 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Base;
-using AppConfiguration.Protocol;
-using DataBaseConfiguration.Models.Session;
-using DataBaseConfiguration.Services;
-using ICSharpCode.AvalonEdit.Highlighting;
-using Message;
-using Message;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
+using DataBaseConfiguration.Models.Session;
+using DataBaseConfiguration.Services;
+using DTO.Base.Models;
+using DTO.Settings.SettingsModels;
+using EventCore.Adapters;
+using EventCore.Events;
+using Message;
 using Ude;
 using UI.Components.ArchiveControls;
 using UI.Components.ArchiveManager.Models;
@@ -108,7 +105,8 @@ namespace UI.Components.MultiEditorMethods
           {
             textEditor.IsReadOnly = true;
           }
-          EventAggregator.RaiseTextEditorActivated(textEditor);
+
+          EditorEventAdapter.RaiseTextEditorActivated(textEditor);
 
           ShowNewDockItem(newFileName, textEditorContainer, textEditor);
 
@@ -126,17 +124,17 @@ namespace UI.Components.MultiEditorMethods
     /// Открывает файл, который находится по заданному пути, в текстовом редакторе.
     /// </summary>
     /// <param name="protocol">Путь к файлу.</param>
-    public void ViewProtocol(Utilities.ResultProtocol.ProtocolModel protocol, bool showInSoftware)
+    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware)
     {
       // TODO: проверять каким способоом нужно открыть протокол
       var protocolText = string.Empty;
       if (protocol.Errors.Count > 0)
       {
-        protocolText = Utilities.ResultProtocol.ProtocolModel.GetProtocolWithErrorsText(protocol);
+        protocolText = ProtocolModel.GetProtocolWithErrorsText(protocol);
       }
       else
       {
-        protocolText = Utilities.ResultProtocol.ProtocolModel.GetProtocolText(protocol);
+        protocolText = ProtocolModel.GetProtocolText(protocol);
       }
       if (!string.IsNullOrEmpty(protocolText))
       {
@@ -157,7 +155,7 @@ namespace UI.Components.MultiEditorMethods
       SaveAsPdf(programName, protocolText);
     }
 
-    private void ViewProtocolInSoftware(Utilities.ResultProtocol.ProtocolModel protocol, string? protocolText)
+    private void ViewProtocolInSoftware(ProtocolModel protocol, string? protocolText)
     {
       Application.Current.Dispatcher.BeginInvoke(() =>
       {
@@ -175,7 +173,8 @@ namespace UI.Components.MultiEditorMethods
           var textEditorModel = new TextEditorModel(newPath);
           var textEditor = CreateTextEditor(textEditorModel, protocolText, FileType.Protocol);
           textEditor.IsReadOnly = true;
-          EventAggregator.RaiseTextEditorActivated(textEditor);
+
+          EditorEventAdapter.RaiseTextEditorActivated(textEditor);
 
           ShowNewDockItem(newFileName, protocolContainer, textEditor, containerType);
 
@@ -405,8 +404,8 @@ namespace UI.Components.MultiEditorMethods
         Content = textEditor
       };
 
-      EventAggregator.OpenOpk -= OnOpenOpk;
-      EventAggregator.OpenOpk += OnOpenOpk;
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.OpenOpk>(e => OnOpenOpk(e.Control, e.FileName));
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.OpenOpk>(e => OnOpenOpk(e.Control, e.FileName));
 
       if (dockItem.Content is TextEditorUI && editorType == EditorType.Archive || dockItem.Content is RunControl && editorType == EditorType.Run)
       {
@@ -472,7 +471,9 @@ namespace UI.Components.MultiEditorMethods
             LogDebug($"Закрытие контейнера типа \"{editorType.ToString()}\".");
             RemoveTextEditorContainer(textEditorContainer, editorType);
           }
-          EventAggregator.RaiseTextEditorContainerClosing(true, nameFile);
+
+          EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
+
         }
       };
     }
@@ -510,7 +511,8 @@ namespace UI.Components.MultiEditorMethods
           {
             RemoveTextEditorContainer(translatorContainer, EditorType.Translator);
           }
-          EventAggregator.RaiseTextEditorContainerClosing(true, nameFile);
+
+          EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
         };
 
 

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using NewCore.Base.Interface.Additionally;
+using DTO.Device.Base;
 
 namespace UI.Controls.Settings.DeviceConfig.DeviceManager
 {

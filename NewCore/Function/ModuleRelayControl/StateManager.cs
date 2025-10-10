@@ -1,11 +1,7 @@
-﻿using System.Net;
-using NewCore.Base.Device;
+﻿using DTO.Device.Base;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.ModuleRelayControl;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
-using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.ModuleRelayControl
@@ -28,6 +24,10 @@ namespace NewCore.Function.ModuleRelayControl
     /// </summary>
     /// <param name="moduleRelayControl">Экземпляр интерфейса модуля реле.</param>
     public StateManager(Device.ModuleRelayControl moduleRelayControl) => _moduleRelayControl = moduleRelayControl;
+
+    public StateManager()
+    {
+    }
 
     /// <inheritdoc />
     public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)

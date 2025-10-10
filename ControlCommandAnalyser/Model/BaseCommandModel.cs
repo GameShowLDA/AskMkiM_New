@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Error.Translation;
-using Utilities.Errors;
-using Utilities.Models;
-
+﻿using AppConfiguration.Error.Translation;
+using DTO.Service.Models;
 namespace ControlCommandAnalyser.Model
 {
   /// <summary>

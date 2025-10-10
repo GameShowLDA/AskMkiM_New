@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using NewCore.Base.Device;
-using NewCore.Base.Interface.Main;
-using static NewCore.Enum.DeviceEnum;
+using DTO.Device.Base;
+using DTO.Device.PowerSourceModule;
+using DTO.Device.RelaySwitchModule;
+using DTO.Device.SwitchingDevice;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.SelfControl.NewModule
 {

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.Models;
+﻿using DTO.Device.RelaySwitchModule.Model;
+using DTO.Service.Models;
 
 namespace AppConfiguration.Error.Translation
 {

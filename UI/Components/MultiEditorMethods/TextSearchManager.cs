@@ -1,10 +1,11 @@
-﻿using AppConfiguration.Base;
-using ICSharpCode.AvalonEdit.Rendering;
-using Message;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AppConfiguration.Base;
+using EventCore.Adapters;
+using ICSharpCode.AvalonEdit.Rendering;
+using Message;
 using UI.Components.SearchControls;
 using UI.Controls;
 using UI.Controls.TextEditor;
@@ -263,8 +264,6 @@ namespace UI.Components.MultiEditorMethods
         return;
       }
 
-      EventAggregator.RaiseRequestShowProgress();
-
       List<DockItem> searchPages = SetSearchAreaPages(searchArea);
       ClearPreviousSearchResults();
 
@@ -274,10 +273,6 @@ namespace UI.Components.MultiEditorMethods
       if (showResults)
       {
         HandleSearchResults(searchText);
-      }
-      else
-      {
-        EventAggregator.RaiseRequestCloseProgress();
       }
     }
 
@@ -313,12 +308,10 @@ namespace UI.Components.MultiEditorMethods
         if (lastFoundResultsDictionary?.Count > 0)
         {
           DisplaySearchResults(searchText, _caseWord, foundInOpenedFiles);
-          EventAggregator.RaiseRequestCloseProgress();
         }
       }
       else
       {
-        EventAggregator.RaiseRequestCloseProgress();
         MessageBoxCustom.Show("Текст не найден в открытых документах.", image: MessageBoxImage.Warning);
         LogInformation("Текст не найден в открытых документах.");
       }
@@ -561,7 +554,7 @@ namespace UI.Components.MultiEditorMethods
       MatchCollection matches = FindMatches(fullText, pattern, options);
       ProcessMatches(matches);
 
-      EventAggregator.RaiseInfoMessage($"Найдено {foundResults.Count} вхождений");
+      MessageEventAdapter.RaiseInfoMessage($"Найдено {foundResults.Count} вхождений");
       return foundResults.Count > 0 ? foundResults : HandleNoMatches(searchText);
     }
 

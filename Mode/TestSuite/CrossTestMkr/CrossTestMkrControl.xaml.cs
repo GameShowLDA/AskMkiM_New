@@ -1,14 +1,13 @@
-﻿using DataBaseConfiguration.Services.Device;
-using Mode.Base;
-using NewCore.Base.Interface.Main;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
-using UI.Controls.ProtocolNew;
+using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
+using DTO.Device.RelaySwitchModule;
+using DTO.Service.Models;
+using Mode.Base;
 using Utilities.Help;
-using Utilities.Models;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
-using static Utilities.Models.ShowMessageModel;
 
 namespace Mode.TestSuite.CrossTestMkr
 {
@@ -31,12 +30,12 @@ namespace Mode.TestSuite.CrossTestMkr
     /// <summary>
     /// Статусное сообщение для успешного выполнения теста.
     /// </summary>
-    private readonly (string Title, Color TitleColor) goodText = SuccessMessage;
+    private readonly (string Title, Color TitleColor) goodText = ShowMessageModel.SuccessMessage;
 
     /// <summary>
     /// Статусное сообщение для ошибки в процессе выполнения теста.
     /// </summary>
-    private readonly (string Title, Color TitleColor) errorText = ErrorMessage;
+    private readonly (string Title, Color TitleColor) errorText = ShowMessageModel.ErrorMessage;
 
     /// <summary>
     /// Флаг, указывающий на необходимость сброса модулей и системы после теста.

@@ -1,6 +1,6 @@
 ﻿using UI.Components;
 using UI.Controls.ProtocolNew;
-using static NewCore.Enum.DeviceEnum;
+using static DTO.Enum.DeviceEnums;
 
 namespace Mode.Base
 {

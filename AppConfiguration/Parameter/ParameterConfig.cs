@@ -1,12 +1,14 @@
 ﻿using AppConfiguration.Base;
 using AppConfiguration.Execution;
 using AppConfiguration.Protocol;
+using DTO.Settings.SettingsModels;
+using DTO.SettingsModels;
 
 namespace AppConfiguration.Parameter
 {
   public static class ParameterConfig
   {
-    static ParameterModel ParameterModel = new ParameterModel();
+    static SettingsParameterModel ParameterModel = new SettingsParameterModel();
 
 
     /// <summary>
@@ -14,7 +16,7 @@ namespace AppConfiguration.Parameter
     /// </summary>
     public static async void RewriteProtocolConfig()
     {
-      ParameterModel protocolModel = new ParameterModel();
+      SettingsParameterModel protocolModel = new SettingsParameterModel();
 
       ParameterFileManager protocolFileManager = new ParameterFileManager(FileLocations.ParameterConfigPath);
       await protocolFileManager.RewriteFileAsync(protocolModel);
@@ -44,17 +46,17 @@ namespace AppConfiguration.Parameter
     /// <returns>true, если отображается; false, если скрывается.</returns>
     public static async Task<string> GetLanguage() => await Task.Run(() => ParameterModel.Language);
 
-    public static async Task<ParameterModel> GetParameterModel()
+    public static async Task<SettingsParameterModel> GetParameterModel()
     {
       return await Task.Run(() =>
       {
-        ParameterModel parametrModel = new ParameterModel();
+        SettingsParameterModel parametrModel = new SettingsParameterModel();
         parametrModel.Language = ParameterModel.Language;
         return parametrModel;
       });
     }
 
-    public static async Task SaveProtocolModel(ParameterModel protocolModel)
+    public static async Task SaveProtocolModel(SettingsParameterModel protocolModel)
     {
       await Task.Run(() =>
       {
@@ -72,7 +74,7 @@ namespace AppConfiguration.Parameter
     /// <returns></returns>
     public static async Task RewriteExecutionConfigAsync()
     {
-      ParameterModel executionModel = new ParameterModel();
+      SettingsParameterModel executionModel = new SettingsParameterModel();
       executionModel.Language = ParameterModel.Language;
 
       ParameterFileManager executionFileManager = new ParameterFileManager(FileLocations.ParameterConfigPath);

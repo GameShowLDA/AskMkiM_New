@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using EventCore.Adapters;
 
 namespace UI.Controls.EmptyWorkspace
 {
@@ -73,7 +74,7 @@ namespace UI.Controls.EmptyWorkspace
 
     private void GreetingBar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-      AppConfiguration.Base.EventAggregator.RaiseOpenSession();
+      SessionEventAdapter.RaiseOpenSession();
       GreetingBar.Visibility = Visibility.Collapsed;
     }
 

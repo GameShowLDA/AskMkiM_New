@@ -1,14 +1,14 @@
 ﻿using System.Globalization;
-using System.Windows;
 using DataBaseConfiguration.Services.Device;
-using NewCore.Base.Interface.Main;
+using DTO.Base.Models;
+using DTO.Device.FastMeter;
+using DTO.Device.SwitchingDevice;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using Utilities.Models;
 using static AppConfiguration.Execution.ExecutionConfig;
+using static DTO.Base.Models.ShowMessageModel;
 using static Utilities.DelegateManager;
 using static Utilities.LoggerUtility;
-using static Utilities.Models.ShowMessageModel;
 
 namespace Mode.SelfControl.NewModule.Meter
 {
@@ -49,8 +49,6 @@ namespace Mode.SelfControl.NewModule.Meter
       { 6 , 0.13 },
     };
 
-    bool returnMeasure = false;
-
     /// <summary>
     /// Конструктор Handler, принимающий ProtocolSelfCheckControl и модель устройства.
     /// </summary>
@@ -90,8 +88,7 @@ namespace Mode.SelfControl.NewModule.Meter
     {
       LogInformation("Запущен метод завершения самоконтроля");
       await ProtocolSelfCheckControl.FinalizeAsync();
-      await ProtocolSelfCheckControl.ShowMessageAsync(
-        new ShowMessageModel("\tСамоконтроль", null, type: MessageType.Success));
+      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("\tСамоконтроль", null, type: MessageType.Success));
       LogInformation("Завершён метод завершения самоконтроля");
     }
 

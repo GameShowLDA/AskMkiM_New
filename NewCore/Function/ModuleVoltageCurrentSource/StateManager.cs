@@ -1,11 +1,8 @@
-﻿using System.Net;
-using NewCore.Base.Device;
+﻿using DTO.Device.Base;
+using DTO.Device.PowerSourceModule;
 using NewCore.Base.DeviceResponses;
-using NewCore.Base.Function.ModuleVoltageCurrentSource;
-using NewCore.Base.Interface.Main;
 using NewCore.Communication;
-using NewCore.Device;
-using Utilities.Interface;
+using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource

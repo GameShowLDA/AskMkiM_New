@@ -68,7 +68,7 @@ namespace AppConfiguration.Error.Device.Adapters
 
     private static bool? CheckAdmin()
     {
-      if (Admin.AdminConfig.ErrorDebug)
+      if (AdminConfig.ErrorDebug)
       {
         var task = Services.UserMessageServiceProvider.Instance?.WaitAdminButtonAsync();
         bool? result = task?.GetAwaiter().GetResult();

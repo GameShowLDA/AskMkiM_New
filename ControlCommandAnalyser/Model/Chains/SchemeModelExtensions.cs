@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Utilities.Models;
+﻿using DTO.Device.RelaySwitchModule.Model;
 
 namespace ControlCommandAnalyser.Model.Chains
 {

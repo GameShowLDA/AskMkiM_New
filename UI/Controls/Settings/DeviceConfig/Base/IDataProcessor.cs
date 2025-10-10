@@ -1,5 +1,6 @@
 ﻿using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
 using NewCore.Base.Device;
+using DTO.Device.Base;
 
 namespace UI.Controls.Settings.DeviceConfig.Base
 {

@@ -2,15 +2,16 @@
 using System.Windows.Controls;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
+using DTO.Base.Models;
+using DTO.Device.FastMeter;
+using DTO.Service;
+using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using Mode.Metrology.PI;
-using NewCore.Base.Interface.Main;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using Utilities.Interface;
-using Utilities.Models;
 using static NewCore.Enum.MetrologyEnum;
 namespace Mode.Metrology.KN
 {

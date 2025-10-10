@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using NewCore.Base.Device;
-using NewCore.Base.Function.Breakdown;
-using NewCore.Base.Interface.Additionally;
-using NewCore.Base.Interface.Main;
-using NewCore.Communication;
-using NewCore.Enum;
-using NewCore.Function.GPT.Data;
+using DTO.Device.Base;
+using DTO.Device.Breakdown;
+using DTO.Device.Breakdown.Capabilities;
+using DTO.Device.Breakdown.Mode;
+using static DTO.Enum.DeviceEnums;
 
 namespace DataBaseConfiguration.Models.Device
 {
@@ -40,7 +38,7 @@ namespace DataBaseConfiguration.Models.Device
 
 
     /// <inheritdoc />
-    public DeviceEnum.DeviceType DeviceType => DeviceEnum.DeviceType.BreakdownTester;
+    public DeviceType DeviceType => DeviceType.BreakdownTester;
 
     /// <inheritdoc />
     [NotMapped]
@@ -72,6 +70,6 @@ namespace DataBaseConfiguration.Models.Device
 
     /// <inheritdoc />
     [NotMapped]
-    public TypeMode Mode { get ; set; }
+    public BreakdownTypeMode Mode { get; set; }
   }
 }
