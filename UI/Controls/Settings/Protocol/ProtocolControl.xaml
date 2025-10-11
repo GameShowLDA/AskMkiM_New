@@ -195,7 +195,7 @@
                             </Grid>
                         </Grid>
 
-                        <local:ProtocolTemplateEditorControl Grid.Row="1" Margin="10" x:Name="BaseTextProtocol">
+                        <local:ProtocolTemplateEditorControl Grid.Row="1" Margin="10" x:Name="BaseTextProtocol" IsErrorsTemplate="False">
                             <local:ProtocolTemplateEditorControl.Style>
                                 <Style TargetType="local:ProtocolTemplateEditorControl">
                                     <Setter Property="Visibility" Value="Visible"/>
@@ -264,7 +264,7 @@
                             </Grid>
                         </Grid>
 
-                        <local:ProtocolTemplateEditorControl Grid.Row="1" Margin="10" x:Name="BaseTextProtocolErrors">
+                        <local:ProtocolTemplateEditorControl Grid.Row="1" Margin="10" x:Name="BaseTextProtocolErrors" IsErrorsTemplate="True">
                             <local:ProtocolTemplateEditorControl.Style>
                                 <Style TargetType="local:ProtocolTemplateEditorControl">
                                     <Setter Property="Visibility" Value="Visible"/>

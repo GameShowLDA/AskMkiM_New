@@ -1,10 +1,5 @@
 ﻿using DataBaseConfiguration.Configurations;
 using DataBaseConfiguration.Configurations.Measurement;
-using DTO.Base.Models;
-using DTO.Base.Models.MeasurementError;
-using DTO.Base.Models.Session;
-using DTO.Device.Entity;
-using DTO.SettingsModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseConfiguration.Context

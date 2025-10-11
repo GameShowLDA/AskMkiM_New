@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using ControlCommandAnalyser.Model;
+using ControlCommandAnalyser.Parser;
 
 namespace ControlCommandAnalyser.ComandBody
 {

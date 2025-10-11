@@ -234,6 +234,8 @@ namespace AppConfiguration.Protocol
 
     public static async Task<string> GetBaseTextErrorsProtocol() => await Task.Run(() =>
 @"Протокол($РЕЖИМ) от $ДАТА
+проверки электрических параметров сборочной единицы $ОБОЗНАЧЕНИЕ Зав.N $НОМЕР
+Программа проверки: $ПРОГРАММА
 
 Зав.N сборочной единицы: $НОМЕР
 
