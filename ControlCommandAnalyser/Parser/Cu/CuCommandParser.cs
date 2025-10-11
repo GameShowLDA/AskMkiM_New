@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.Parser.Cu
@@ -68,8 +63,8 @@ namespace ControlCommandAnalyser.Parser.Cu
       {
         model.CuType = CuCommandType.Information;
       }
-      
-            
+
+
       return model;
     }
   }

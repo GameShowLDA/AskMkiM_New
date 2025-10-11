@@ -1,10 +1,7 @@
-﻿using DataBaseConfiguration.Models.Hotkey;
-using DataBaseConfiguration.Services.Hotkey.Defaults.DataBaseConfiguration.Services.Hotkey.Defaults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataBaseConfiguration.Context;
+using DTO.Base.Dictionary;
+using DTO.Base.Models;
+using static DTO.Enum.HotKey;
 
 namespace DataBaseConfiguration.Services.Hotkey.Defaults
 {

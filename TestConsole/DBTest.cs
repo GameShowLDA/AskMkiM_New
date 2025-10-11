@@ -1,7 +1,6 @@
-﻿using AppConfiguration.Base;
-using DataBaseConfiguration;
-using DataBaseConfiguration.Models;
-using DataBaseConfiguration.Models.Device;
+﻿using DataBaseConfiguration;
+using DataBaseConfiguration.Context;
+using DTO.Device.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace TestConsole

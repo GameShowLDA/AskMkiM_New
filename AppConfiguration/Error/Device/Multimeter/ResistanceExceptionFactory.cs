@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AppConfiguration.Error.Device.Multimeter
+﻿namespace AppConfiguration.Error.Device.Multimeter
 {
   public static class ResistanceExceptionFactory
   {
@@ -22,4 +16,4 @@ namespace AppConfiguration.Error.Device.Multimeter
 
     private static string Format(string reason) => string.IsNullOrWhiteSpace(reason) ? string.Empty : $": {reason}";
   }
-}          
+}

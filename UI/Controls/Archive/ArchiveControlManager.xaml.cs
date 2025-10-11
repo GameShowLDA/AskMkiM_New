@@ -1,14 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using AppConfiguration;
 using EventCore.Events;
 using EventCore.Services;
-using Microsoft.Win32;
 using UI.Components.Archive;
 using UI.Controls.Archive.Models;
 using UI.Controls.Archive.Services;

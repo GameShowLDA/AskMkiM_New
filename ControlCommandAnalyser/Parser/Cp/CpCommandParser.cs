@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Ok;
+﻿using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.Parser.KSC
 {

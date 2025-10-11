@@ -1,6 +1,5 @@
 ﻿using DTO.Base.Models;
 using DTO.Service;
-using DTO.Service.Models;
 
 namespace AppConfiguration.Services
 {

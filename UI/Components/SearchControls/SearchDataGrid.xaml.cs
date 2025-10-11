@@ -1,7 +1,6 @@
-﻿using AppConfiguration.Base;
-using EventCore.Adapters;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using EventCore.Adapters;
 using static Utilities.LoggerUtility;
 
 namespace UI.Components.SearchControls
@@ -27,7 +26,7 @@ namespace UI.Components.SearchControls
       {
         var fileName = row.FileName;
         var lineNumber = row.LineNumber;
-        var startOffset = row.StartOffset; 
+        var startOffset = row.StartOffset;
         var lineText = row.SubstringFromWord;
 
         SearchEventAdapter.RaiseFoundTextSelectRow(fileName, lineNumber, startOffset, lineText, row.SearchText);

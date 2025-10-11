@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DTO.SettingsModels
 {
@@ -14,6 +10,7 @@ namespace DTO.SettingsModels
     /// <summary>
     /// Уникальный идентификатор модели.
     /// </summary>
+    [Key]
     public int Id { get; set; } = 1;
 
     /// <summary>

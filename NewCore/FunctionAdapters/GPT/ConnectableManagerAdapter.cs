@@ -1,8 +1,8 @@
 ﻿using AppConfiguration.Error.Device;
 using DTO.Device.Base;
+using DTO.Service;
 using NewCore.Device;
 using NewCore.Function.Helpers;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.GPT
 {

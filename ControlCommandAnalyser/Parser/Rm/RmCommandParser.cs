@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 
 namespace ControlCommandAnalyser.Parser.Rm
 {

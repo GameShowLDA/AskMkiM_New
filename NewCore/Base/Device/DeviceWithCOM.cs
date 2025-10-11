@@ -1,7 +1,6 @@
-﻿using DTO.Device.Base;
+﻿using System.IO.Ports;
+using DTO.Device.Base;
 using NewCore.Communication;
-using System.IO.Ports;
-using System.Management;
 using static DTO.Enum.DeviceEnums;
 using static Utilities.LoggerUtility;
 

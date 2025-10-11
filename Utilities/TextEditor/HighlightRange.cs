@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-
-namespace Utilities.TextEditor
+﻿namespace Utilities.TextEditor
 {
   /// <summary>
   /// Представляет диапазон текста, который должен быть подсвечен в редакторе.
@@ -56,6 +49,6 @@ namespace Utilities.TextEditor
     Parameter,
 
     RmPoint,
-    RmAddress, 
+    RmAddress,
   }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.Execution;
-using AppConfiguration.MeasurementError;
+﻿using AppConfiguration.Execution;
 using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
 using DTO.SettingsModels;

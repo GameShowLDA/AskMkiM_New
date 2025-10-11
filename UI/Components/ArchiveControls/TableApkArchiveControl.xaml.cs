@@ -3,12 +3,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
 using AppConfiguration;
-using AppConfiguration.Base;
 using EventCore.Adapters;
 using EventCore.Events;
-using EventCore.Services;
 using Message;
 using Microsoft.Win32;
 using UI.Components.ArchiveManager;
@@ -16,13 +13,11 @@ using UI.Components.ArchiveManager.ArchiveFiles;
 using UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive;
 using UI.Components.ArchiveManager.ArchiveFiles.Index;
 using UI.Components.ArchiveManager.Models;
-using UI.Components.MultiEditorMethods;
 using UI.Controls.TextEditor;
 using Utilities.Help;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static UI.Controls.ProtocolNew.ProtocolUI;
 using static UI.Controls.TextEditor.TextEditorUI;
-using static Utilities.LoggerUtility; 
+using static Utilities.LoggerUtility;
 using Path = System.IO.Path;
 
 namespace UI.Components.ArchiveControls
@@ -49,7 +44,7 @@ namespace UI.Components.ArchiveControls
       this.Loaded += async (s, e) => await ShowOpkFiles();
 
       EventCore.Services.EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => ApplicationDataHandler_AdminRightsChanged(e.IsAdmin));
-      
+
       MouseMove += (s, e) =>
       {
         HelpProvider.SetHelpKey(this, "FuncArchive");
@@ -182,7 +177,7 @@ namespace UI.Components.ArchiveControls
       }
     }
 
-    private static OpenFileDialog OpenPkFile(bool  multiselect)
+    private static OpenFileDialog OpenPkFile(bool multiselect)
     {
       return new OpenFileDialog
       {

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using AppConfiguration.Enums;
-using DataBaseConfiguration.Models.MeasurementError;
-using UI.Components.MeasurementErrorCard;
+﻿using System.Windows.Controls;
 using UI.Helpers;
 
 namespace UI.Components.MeasurementErrorCardControl

@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
+using Newtonsoft.Json.Linq;
 using UI.Components.ArchiveControls;
 using UI.Components.ArchiveManager.ArchiveFiles.Index;
 using UI.Components.ArchiveManager.Models;
@@ -57,7 +57,7 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive
           }
           return false;
         },
-        archiveFullPath, 
+        archiveFullPath,
         isNewArchive: true);
       }
       catch (Exception ex)
@@ -80,7 +80,7 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive
         return await archiveEncryption.ExecuteSecureOperation<bool>(async tempPath =>
         {
           return OpenArchiveInternal(tempPath);
-        }, 
+        },
         path);
       }
       catch (CryptographicException ex)
@@ -105,7 +105,6 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive
       try
       {
         var archiveEncryption = new ArchiveEncryption();
-        ZipArchiveEntry arhiveEntry;
         return await archiveEncryption.ExecuteSecureOperation<string>(async tempPath =>
         {
           return GetFileArchiveEntry(tempPath, fileName);
@@ -147,7 +146,7 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive
       var controlSumFound1 = ControlSum.ComputeControlSum(tempPath, ArchiveSettings.YamlName);
       LogInformation($"Original checksum: {controlSumOriginal}");
       LogInformation($"Computed checksum: {controlSumFound1}");
-        
+
       if (yamlData.TotalControlSum == ControlSum.ComputeControlSum(tempPath, ArchiveSettings.YamlName))
       {
         LogInformation("Контрольная сумма архива совпала.");

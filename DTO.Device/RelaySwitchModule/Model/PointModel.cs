@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 
 namespace DTO.Device.RelaySwitchModule.Model
 {
@@ -27,7 +22,7 @@ namespace DTO.Device.RelaySwitchModule.Model
     /// </summary>
     public int PointNumber { get; set; }
 
-    public PointType.Type PointType { get; set; } 
+    public PointType.Type PointType { get; set; }
     public string Mnemonic { get; set; }
 
     /// <summary>

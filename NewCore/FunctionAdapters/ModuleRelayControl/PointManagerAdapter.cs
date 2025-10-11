@@ -1,9 +1,9 @@
 ﻿using AppConfiguration.Error.Device.ModuleRelayControl;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Capabilities;
+using DTO.Service;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
-using DTO.Service;
 using static DTO.Enum.DeviceEnums;
 
 namespace NewCore.FunctionAdapters.ModuleRelayControl

@@ -1,20 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media.Effects;
-using AppConfiguration.Base;
-using EventCore.Adapters;
 using EventCore.Events;
 using EventCore.Services;
 using ICSharpCode.AvalonEdit;
 using MainWindowProgram.HotkeyBindings;
-using MainWindowProgram.Services;
 using MainWindowProgram.ViewModels;
 using UI.Components;
 using UI.Components.FileComparerControls;
-using UI.Controls.Search;
 using UI.Controls.TextEditor;
 using static UI.Components.Invoke.OpenFileButton;
 

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using DataBaseConfiguration;
+using DataBaseConfiguration.Context;
 using static Utilities.LoggerUtility;
 
 namespace MainWindowProgram.HotkeyBindings

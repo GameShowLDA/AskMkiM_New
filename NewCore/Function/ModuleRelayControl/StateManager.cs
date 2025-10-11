@@ -1,7 +1,7 @@
 ﻿using DTO.Device.Base;
+using DTO.Service;
 using NewCore.Base.DeviceResponses;
 using NewCore.Communication;
-using DTO.Service;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.ModuleRelayControl

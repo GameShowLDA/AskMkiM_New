@@ -1,27 +1,25 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 
 namespace UI.Windows.WpfDocking.Windows.Docking
 {
-    partial class DockItem
+  partial class DockItem
+  {
+    private sealed class ShowAsFloatingEventArgs : ShowActionEventArgs<ShowAsFloatingAction>
     {
-        private sealed class ShowAsFloatingEventArgs : ShowActionEventArgs<ShowAsFloatingAction>
-        {
-            public ShowAsFloatingEventArgs(DockItem dockItem, DockControl dockControl, Rect floatingWindowBounds, DockItemShowMethod showMethod)
-                : base(dockItem, dockControl, showMethod)
-            {
-                ShowAsFloatingAction showAction = StrongTypeShowAction;
-                showAction.Left = floatingWindowBounds.Left;
-                showAction.Top = floatingWindowBounds.Top;
-                showAction.Width = floatingWindowBounds.Width;
-                showAction.Height = floatingWindowBounds.Height;
-            }
+      public ShowAsFloatingEventArgs(DockItem dockItem, DockControl dockControl, Rect floatingWindowBounds, DockItemShowMethod showMethod)
+          : base(dockItem, dockControl, showMethod)
+      {
+        ShowAsFloatingAction showAction = StrongTypeShowAction;
+        showAction.Left = floatingWindowBounds.Left;
+        showAction.Top = floatingWindowBounds.Top;
+        showAction.Width = floatingWindowBounds.Width;
+        showAction.Height = floatingWindowBounds.Height;
+      }
 
-            public override DockItemStateChangeMethod StateChangeMethod
-            {
-                get { return DockItemStateChangeMethod.ShowAsFloating; }
-            }
-        }
+      public override DockItemStateChangeMethod StateChangeMethod
+      {
+        get { return DockItemStateChangeMethod.ShowAsFloating; }
+      }
     }
+  }
 }

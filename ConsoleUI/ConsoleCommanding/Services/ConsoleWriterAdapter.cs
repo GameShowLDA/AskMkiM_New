@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using ConsoleUI.ConsoleCommanding.Core;
+﻿using ConsoleUI.ConsoleCommanding.Core;
 using ConsoleUI.ConsoleLogic;
-using ConsoleUI.ConsoleUI;
 
 namespace ConsoleUI.ConsoleCommanding.Services
 {

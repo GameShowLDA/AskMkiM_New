@@ -23,9 +23,9 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive
       var archiveName = Path.GetFileName(Path.GetFullPath(archivePath));
       LogInformation($"Начало операции с файлом: {archiveName}");
 
-      string tempPath = string.Empty; 
+      string tempPath = string.Empty;
       tempPath = ChoseTempPath(archiveName); // Создает временный файл
-      
+
       try
       {
         if (!isNewArchive && File.Exists(archivePath))
@@ -49,7 +49,7 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive
         LogInformation($"Операция успешно завершена");
         return result;
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         LogError($"Ошибка при выполнении операции с файлом: {archiveName}");
         throw;

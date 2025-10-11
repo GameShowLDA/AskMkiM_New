@@ -87,7 +87,7 @@ namespace MainWindowProgram.Services
      await Test.ConsoleTest.TestData.PrintTestData();
 
     public async Task ProtocolTest()
-    { 
+    {
       await _multiWindow.AddControlAsync("Тест протокола", new TestProtocol(), TypeWindow.DeviceControl);
     }
 

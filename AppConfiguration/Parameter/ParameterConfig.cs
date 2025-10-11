@@ -1,7 +1,4 @@
-﻿using AppConfiguration.Base;
-using AppConfiguration.Execution;
-using AppConfiguration.Protocol;
-using DTO.Settings.SettingsModels;
+﻿using DTO.Settings.SettingsModels;
 using DTO.SettingsModels;
 
 namespace AppConfiguration.Parameter

@@ -1,5 +1,5 @@
 ﻿using AppConfiguration.Error.DataBase;
-using DataBaseConfiguration.Models.Device;
+using DTO.Device.Entity;
 using DTO.Device.FastMeter;
 
 namespace DataBaseConfiguration.Services.Device

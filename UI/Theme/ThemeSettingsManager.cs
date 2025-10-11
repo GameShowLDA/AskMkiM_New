@@ -1,5 +1,4 @@
-﻿using AppConfiguration.Base;
-using DTO.Settings.SettingsModels;
+﻿using DTO.Settings.SettingsModels;
 
 namespace UI.Theme
 {

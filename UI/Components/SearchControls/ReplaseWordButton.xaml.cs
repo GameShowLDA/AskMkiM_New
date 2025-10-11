@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
-using AppConfiguration.Base;
 using EventCore.Adapters;
 
 namespace UI.Components.SearchControls

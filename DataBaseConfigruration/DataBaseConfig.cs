@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AppConfiguration.MeasurementError;
+﻿using AppConfiguration.MeasurementError;
+using DataBaseConfiguration.Context;
 using DataBaseConfiguration.Services.Hotkey.Defaults;
 using DataBaseConfiguration.Services.MeasurementError;
 using Microsoft.EntityFrameworkCore;

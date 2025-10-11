@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DTO.SettingsModels
 {
   public class SettingsProtocolModel
   {
-
+    [Key]
     public int Id { get; set; } = 1;
 
     /// <summary>

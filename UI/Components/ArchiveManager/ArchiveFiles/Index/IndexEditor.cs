@@ -1,10 +1,10 @@
-﻿using Message;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
+using Message;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UI.Components.ArchiveManager.ArchiveFiles.ApkwArchive;
 using UI.Components.ArchiveManager.Models;
 using static Utilities.LoggerUtility;
@@ -33,7 +33,7 @@ namespace UI.Components.ArchiveManager.ArchiveFiles.Index
             RewriteIndexEntry(archive, jsonArray);
           }
           return true;
-        }, 
+        },
         filePath);
       }
       catch (Exception ex)

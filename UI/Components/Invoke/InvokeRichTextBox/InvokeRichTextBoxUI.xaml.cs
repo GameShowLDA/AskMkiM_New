@@ -5,7 +5,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using DTO.Base.Models;
-using DTO.Service.Models;
 using static AppConfiguration.Protocol.ProtocolConfig;
 using static AppConfiguration.SystemStateManager;
 using static Utilities.LoggerUtility;

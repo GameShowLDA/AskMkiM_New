@@ -1,7 +1,6 @@
 ﻿using DTO.Base.Models;
 using DTO.Device.Base;
 using DTO.Service;
-using DTO.Service.Models;
 using static Utilities.LoggerUtility;
 
 namespace NewCore.Function.Helpers

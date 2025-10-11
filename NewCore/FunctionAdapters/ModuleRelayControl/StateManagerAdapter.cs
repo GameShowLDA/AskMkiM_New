@@ -1,10 +1,9 @@
 ﻿using AppConfiguration.Error.Device;
 using DTO.Device.Base;
-using NewCore.Base.Device;
+using DTO.Service;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
 using Utilities;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.ModuleRelayControl
 {

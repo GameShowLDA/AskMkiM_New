@@ -1,5 +1,4 @@
-﻿using System;
-using EventCore.Interfaces;
+﻿using EventCore.Interfaces;
 
 namespace EventCore.Events
 {

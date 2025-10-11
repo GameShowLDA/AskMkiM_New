@@ -1,9 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using DTO.SettingsModels;
 using Microsoft.EntityFrameworkCore;
-using AppConfiguration.Protocol;
-using DataBaseConfiguration.Models.Session;
-using DTO.SettingsModels;
 
 namespace DataBaseConfiguration.Services.Settings
 {

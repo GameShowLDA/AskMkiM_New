@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using NewCore.Device;
 using static Utilities.LoggerUtility;
 
-
 namespace MainWindowProgram
 {
   /// <summary>
@@ -22,8 +21,6 @@ namespace MainWindowProgram
     public static IHost AppHost { get; private set; }
     [DllImport("kernel32.dll")] private static extern IntPtr GetConsoleWindow();
     [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-    private const int SW_HIDE = 0;
 
     [Flags]
     public enum EXECUTION_STATE : uint

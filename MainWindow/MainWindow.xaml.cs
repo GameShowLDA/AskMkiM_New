@@ -1,12 +1,11 @@
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using MainWindowProgram.Engine;
 using MainWindowProgram.HotkeyBindings;
 using MainWindowProgram.Services;
 using MainWindowProgram.ViewModels;
 using Message;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using UI.Controls.ProtocolNew;
 using UI.Controls.Search;
 using static Utilities.LoggerUtility;
 

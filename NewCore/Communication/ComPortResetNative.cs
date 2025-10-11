@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Management;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Management;
 
 public static class ComPortResetNative
 {

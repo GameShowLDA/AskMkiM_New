@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using AppConfiguration.Base;
 using DTO.Base.Models;
 using EventCore.Adapters;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
@@ -174,24 +172,24 @@ namespace ControlCommandAnalyser.Parser.Ok
 
           key = "ПРИМ";
 
-        if (key.Length > 39)
-        {
-          model.Errors.Add(OkErrors.ParameterKeyTooLong(numberLine + i, $"{commandNumber} {mnemonic}", key));
-        }
+          if (key.Length > 39)
+          {
+            model.Errors.Add(OkErrors.ParameterKeyTooLong(numberLine + i, $"{commandNumber} {mnemonic}", key));
+          }
 
-        int maxLen = key == "ПРИМ" ? 63 : 39;
-        if (value.Length > maxLen)
-        {
-          model.Errors.Add(OkErrors.ParameterValueTooLong(numberLine + i, $"{commandNumber} {mnemonic}", key, maxLen));
-        }
+          int maxLen = key == "ПРИМ" ? 63 : 39;
+          if (value.Length > maxLen)
+          {
+            model.Errors.Add(OkErrors.ParameterValueTooLong(numberLine + i, $"{commandNumber} {mnemonic}", key, maxLen));
+          }
 
-        // Проверка уникальности идентификаторов (кроме разрешённых)
-        if (!multiKeys.Contains(key))
-        {
-          if (!uniqueKeys.Add(key))
-            model.Errors.Add(OkErrors.DuplicateParameterKey(numberLine + i, $"{commandNumber} {mnemonic}", key));
-        }
-        model.Comments = value.Trim();
+          // Проверка уникальности идентификаторов (кроме разрешённых)
+          if (!multiKeys.Contains(key))
+          {
+            if (!uniqueKeys.Add(key))
+              model.Errors.Add(OkErrors.DuplicateParameterKey(numberLine + i, $"{commandNumber} {mnemonic}", key));
+          }
+          model.Comments = value.Trim();
         }
 
         // Добавление в Parameters

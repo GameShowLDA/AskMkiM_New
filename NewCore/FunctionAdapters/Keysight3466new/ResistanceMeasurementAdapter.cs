@@ -1,9 +1,9 @@
 ﻿using AppConfiguration.Services;
 using DTO.Device.FastMeter.Capabilities;
+using DTO.Service;
 using NewCore.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.Keysight3466new;
-using DTO.Service;
 
 namespace NewCore.FunctionAdapters.Keysight3466new
 {

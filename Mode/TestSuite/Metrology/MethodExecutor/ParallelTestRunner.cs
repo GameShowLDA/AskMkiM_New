@@ -1,7 +1,6 @@
 ﻿using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
-using DTO.Service.Models;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;

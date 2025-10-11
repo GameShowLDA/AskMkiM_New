@@ -1,8 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Threading;
-
-namespace Utilities.Events
+﻿namespace Utilities.Events
 {
   /// <summary>
   /// Глобальные события, связанные с валидацией ввода данных.

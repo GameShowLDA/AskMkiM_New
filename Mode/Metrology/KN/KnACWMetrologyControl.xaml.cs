@@ -1,19 +1,18 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using AppConfiguration.Enums;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Service;
-using DTO.Service.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using Mode.Metrology.PI;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
+using static DTO.Enum.Metrology;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.KN
@@ -112,7 +111,7 @@ namespace Mode.Metrology.KN
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения напряжения(ACW)"));
 
-        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(TypeCommand.KC, param);
+        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.KC, param);
         await fastMeter.AcVoltageManager.MeasureACVoltageAsync(param, userMessageService: protocolUI);
 
         string result = await Application.Current.Dispatcher.InvokeAsync(() =>

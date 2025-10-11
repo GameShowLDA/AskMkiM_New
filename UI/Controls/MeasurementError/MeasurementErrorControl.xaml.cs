@@ -1,10 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using AppConfiguration.Enums;
-using DataBaseConfiguration.Services.MeasurementError;
 using UI.Components.MeasurementErrorCard;
 using UI.Components.MeasurementErrorCardControl;
-using static Utilities.LoggerUtility;
+using static DTO.Enum.Metrology;
 
 namespace UI.Controls.MeasurementError
 {
@@ -15,7 +13,7 @@ namespace UI.Controls.MeasurementError
   public partial class MeasurementErrorControl : UserControl
   {
     // Словарь для быстрого доступа к карточкам по TypeCommand
-    private Dictionary<TypeCommand, MeasurementErrorCard> _cards;
+    private Dictionary<MetrologyTypeCommand, MeasurementErrorCard> _cards;
 
     public MeasurementErrorControl()
     {
@@ -83,7 +81,7 @@ namespace UI.Controls.MeasurementError
     /// <summary>
     /// Универсальный метод обновления карточки по данным.
     /// </summary>
-    public void UpdateCard(TypeCommand type, double percentage, double numeric)
+    public void UpdateCard(MetrologyTypeCommand type, double percentage, double numeric)
     {
       //if (_cards.TryGetValue(type, out var card))
       //{

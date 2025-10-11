@@ -1,22 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace UI.Windows.WpfDocking.Windows.Docking
 {
-    partial class DockControl
+  partial class DockControl
+  {
+    private struct ResizeDockTreeData
     {
-        private struct ResizeDockTreeData
-        {
-            public Dock Dock;
-            public SplitterDistance Value;
+      public Dock Dock;
+      public SplitterDistance Value;
 
-            public ResizeDockTreeData(Dock dock, SplitterDistance value)
-            {
-                Dock = dock;
-                Value = value;
-            }
-        }
+      public ResizeDockTreeData(Dock dock, SplitterDistance value)
+      {
+        Dock = dock;
+        Value = value;
+      }
     }
+  }
 }

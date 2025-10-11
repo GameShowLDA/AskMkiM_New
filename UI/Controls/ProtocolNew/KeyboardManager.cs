@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using EventCore.Adapters;
 using static Utilities.LoggerUtility;
@@ -72,7 +67,7 @@ namespace UI.Controls.ProtocolNew
       if (args == null || args.RoutedEvent != Keyboard.KeyDownEvent) return;
 
       var key = args.Key == Key.System ? args.SystemKey : args.Key;
-      
+
       LogInformation($"[KEYBOARD] Detected key: {key}");
 
       switch (key)

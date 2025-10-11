@@ -1,8 +1,7 @@
 ﻿// MkrContent.xaml.cs
-using Mode.Models;
-using System;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Mode.Models;
 
 namespace Mode.ServicesTest.MKR
 {

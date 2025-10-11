@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 
 namespace ControlCommandAnalyser.Formatter
@@ -146,7 +141,7 @@ namespace ControlCommandAnalyser.Formatter
           yield return str.Remove(str.Length - 1);
         }
       }
-      
+
 
       yield return string.Empty;
     }

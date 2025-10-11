@@ -4,37 +4,37 @@
 
 namespace DataBaseConfiguration.Migrations
 {
+  /// <inheritdoc />
+  public partial class MaxContinuityResistance : Migration
+  {
     /// <inheritdoc />
-    public partial class MaxContinuityResistance : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<string>(
-                name: "CleanTextErrorsProtocol",
-                table: "SettingsProtocol",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: "");
+      migrationBuilder.AddColumn<string>(
+          name: "CleanTextErrorsProtocol",
+          table: "SettingsProtocol",
+          type: "TEXT",
+          nullable: false,
+          defaultValue: "");
 
-            migrationBuilder.AddColumn<int>(
-                name: "MaxContinuityResistance",
-                table: "FastMeters",
-                type: "INTEGER",
-                nullable: false,
-                defaultValue: 0);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "CleanTextErrorsProtocol",
-                table: "SettingsProtocol");
-
-            migrationBuilder.DropColumn(
-                name: "MaxContinuityResistance",
-                table: "FastMeters");
-        }
+      migrationBuilder.AddColumn<int>(
+          name: "MaxContinuityResistance",
+          table: "FastMeters",
+          type: "INTEGER",
+          nullable: false,
+          defaultValue: 0);
     }
+
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+      migrationBuilder.DropColumn(
+          name: "CleanTextErrorsProtocol",
+          table: "SettingsProtocol");
+
+      migrationBuilder.DropColumn(
+          name: "MaxContinuityResistance",
+          table: "FastMeters");
+    }
+  }
 }

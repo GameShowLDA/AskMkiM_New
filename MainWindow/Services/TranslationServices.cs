@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Windows;
-using AppConfiguration.Base;
 using ControlCommandAnalyser;
 using ControlCommandAnalyser.Model.Ok;
 using EventCore.Adapters;
@@ -46,7 +45,7 @@ namespace MainWindowProgram.Services
     /// </summary>
     /// <returns>Задача, представляющая асинхронную операцию трансляции.</returns>
     public async Task BuildAsync()
-     {
+    {
       var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
       var translationContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
 
@@ -125,8 +124,8 @@ namespace MainWindowProgram.Services
       var models = translator.TranslationModels;
 
       await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
-      
-      
+
+
       RunControl runControl = new RunControl();
       runControl.OpkFilePath = editor.TextEditorModel.FilePath;
       runControl.SetLeftEditor(editor);
@@ -135,7 +134,7 @@ namespace MainWindowProgram.Services
       {
         runControl.FileName = okCommandModel.ObjectCode;
       }
-      runControl.HeaderFile = string.IsNullOrEmpty(editor.TextEditorModel.FileName) ? 
+      runControl.HeaderFile = string.IsNullOrEmpty(editor.TextEditorModel.FileName) ?
         Path.GetFileName(editor.TextEditorModel.FilePath) : editor.TextEditorModel.FileName;
 
       await _multiWindow.AddRunItem(runControl, EditorType.Run);

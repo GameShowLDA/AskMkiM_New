@@ -1,7 +1,7 @@
 ﻿using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Capabilities;
-using NewCore.Communication;
 using DTO.Service;
+using NewCore.Communication;
 using static AppConfiguration.Execution.ExecutionConfig;
 
 namespace NewCore.Function.ModuleRelayControl

@@ -1,6 +1,6 @@
-﻿using ConsoleUI.ConsoleUI;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Threading;
+using ConsoleUI.ConsoleUI;
 
 namespace ConsoleUI.ConsoleLogic
 {

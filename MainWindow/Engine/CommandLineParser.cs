@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using MainWindowProgram.Services;
+﻿using MainWindowProgram.Services;
 
 namespace MainWindowProgram.Engine
 {

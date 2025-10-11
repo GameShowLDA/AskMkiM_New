@@ -1,6 +1,5 @@
 ﻿using DTO.SettingsModels;
 using EventCore.Adapters;
-using EventCore.Events;
 
 namespace AppConfiguration.Execution
 {
