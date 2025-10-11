@@ -79,6 +79,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
 
@@ -213,6 +214,76 @@
                         </local:ProtocolTemplateEditorControl>
                     </Grid>
                 </Border>
+                
+                <Border Grid.Row="2" Background="{StaticResource IsCheckedColorSolidColorBrush80}" Margin="15,10" CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource ForegroundSolidColorBrush60}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+
+
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <TextBlock 
+                                Text="Текст протокола с ошибками" 
+                                FontSize="18" 
+                                Padding="10,10"
+                                Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                FontFamily="{StaticResource WinstonMedium}"
+                                VerticalAlignment="Center"  
+                                Grid.Row="0"/>
+
+                            <Grid Grid.Column="1"  Margin="20,0">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Icons:ArrowButton x:Name="ToggleSettingsTextProtocolErrorsButton" 
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Right"
+                                    Width="30" Height="30"
+                                    ButtonBackground="{StaticResource IsCheckedColorSolidColorBrush}"
+                                    ButtonBorder="{StaticResource PrimarySolidColorBrush}"
+                                    ArrowBrush="{StaticResource ForegroundSolidColorBrush}"
+                                    ArrowHoverBrush="{StaticResource ActiveForegroundSolidColorBrush80}"
+                                    VerticalAlignment="Center"/>
+
+                                <Icons:RepeatIcon x:Name="RestartClearProtocolErrors" Grid.Column="1" Margin="10,0" Size="20" PreviewMouseDown="RepeatErrorIcon_PreviewMouseDown"/>
+                            </Grid>
+                        </Grid>
+
+                        <local:ProtocolTemplateEditorControl Grid.Row="1" Margin="10" x:Name="BaseTextProtocolErrors">
+                            <local:ProtocolTemplateEditorControl.Style>
+                                <Style TargetType="local:ProtocolTemplateEditorControl">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=ToggleSettingsButton, Path=IsArrowUp}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding ElementName=ToggleSettingsTextProtocolErrorsButton, Path=IsArrowUp}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </local:ProtocolTemplateEditorControl.Style>
+                        </local:ProtocolTemplateEditorControl>
+                    </Grid>
+                </Border>
+
 
             </Grid>
 
