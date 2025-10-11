@@ -177,15 +177,18 @@ namespace DTO.Base.Models
     // TODO: формировать текст протокола с ошибками
     public static string GetProtocolWithErrorsText(ProtocolModel protocolModel)
     {
+      // TODO: изначально в template не тот текст протокола, нужно как-то добавить протокол с ошибками вместо
+      // протокола без ошибок
       string formattedText = Template
           .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
           .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
           .Replace("$РЕЖИМ", protocolModel.Mode)
           .Replace("$НОМЕР", protocolModel.Number.ToString())
           .Replace("$ПРОГРАММА", protocolModel.ProgramName)
-          .Replace("$НАЧАЛО", protocolModel.StartTime.ToString("HH:mm:ss:ff"))
-          .Replace("$КОНЕЦ", protocolModel.EndTime.ToString("HH:mm:ss:ff"))
-          .Replace("$ВРЕМЯ", protocolModel.ExecutionTime.ToString(@"hh\:mm\:ss\:ff"))
+
+          .Replace("$БРАК(не )", "не ")
+          //.Replace("$НАИМЕНОВАНИЕ", protocolModel..ProgramName)
+
           .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
           .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
           .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
