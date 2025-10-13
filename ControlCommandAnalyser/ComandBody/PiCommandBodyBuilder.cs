@@ -7,7 +7,6 @@ namespace ControlCommandAnalyser.ComandBody
 {
   public class PiCommandBodyBuilder : ICommandBody
   {
-    // TODO: ключи для ПИ и СИ перезаписывать
     public bool CanCreate(BaseCommandModel model) => model is PiCommandModel;
 
     public StringBuilder Create(BaseCommandModel model, StringBuilder newSourseLines)

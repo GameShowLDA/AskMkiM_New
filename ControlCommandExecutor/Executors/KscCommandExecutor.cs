@@ -29,6 +29,7 @@ namespace ControlCommandExecutor.Executors
     private async Task GetProtocol(CommandExecutionContext context, KscCommandModel command, ProtocolModel protocolModel)
     {
       protocolModel.Designation = command.OkCommandModel.ObjectCode;
+      protocolModel.ControlObjectName = command.OkCommandModel.ControlObjectName;
       protocolModel.Date = DateTime.Now.Date;
       protocolModel.EndTime = DateTime.Now;
 

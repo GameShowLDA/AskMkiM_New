@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace DTO.Base.Models
 {
@@ -13,6 +14,11 @@ namespace DTO.Base.Models
     /// Обозначение сборочной единицы.
     /// </summary>
     public string Designation { get; set; }
+
+    /// <summary>
+    /// Наименование объекта контроля.
+    /// </summary>
+    public string ControlObjectName { get; set; }
 
 
     /// <summary>
@@ -81,6 +87,7 @@ namespace DTO.Base.Models
     }
 
     private static string Template { get; set; } = string.Empty;
+    private static string ErrorsTemplate { get; set; } = string.Empty;
 
     public ProtocolModel()
     {
@@ -90,6 +97,11 @@ namespace DTO.Base.Models
     static public void SetTemplate(string templatePath)
     {
       Template = templatePath;
+    }
+
+    static public void SetErrorsTemplate(string templatePath)
+    {
+      ErrorsTemplate = templatePath;
     }
 
     static public string GetPathProtocol(ProtocolModel protocolModel)
@@ -174,38 +186,79 @@ namespace DTO.Base.Models
       return formattedText;
     }
 
-    // TODO: формировать текст протокола с ошибками
     public static string GetProtocolWithErrorsText(ProtocolModel protocolModel)
     {
-      // TODO: изначально в template не тот текст протокола, нужно как-то добавить протокол с ошибками вместо
-      // протокола без ошибок
-      string formattedText = Template
+      //int totalErrors = protocolModel.Errors.Values.Sum(list => list.Count);
+      //var errorsText = $"\r\nОшибки программы (всего: {totalErrors}):";
+
+      //foreach (var item in protocolModel.Errors.Keys)
+      //{
+      //  errorsText += $"\r\n\tОшибки команды: {item}";
+      //  foreach (var error in protocolModel.Errors[item])
+      //  {
+      //    errorsText += $"\r\n\t\t{error}";
+      //  }
+      //}
+
+      /*string formattedText = ErrorsTemplate
           .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
           .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
           .Replace("$РЕЖИМ", protocolModel.Mode)
           .Replace("$НОМЕР", protocolModel.Number.ToString())
           .Replace("$ПРОГРАММА", protocolModel.ProgramName)
 
+          .Replace("$ОШИБКИ", errorsText)
+
           .Replace("$БРАК(не )", "не ")
-          //.Replace("$НАИМЕНОВАНИЕ", protocolModel..ProgramName)
+          .Replace("$НАИМЕНОВАНИЕ", protocolModel.ControlObjectName)
 
           .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
           .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
           .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
 
+
+      return formattedText;*/
+      // 1. Формируем список ошибок
       int totalErrors = protocolModel.Errors.Values.Sum(list => list.Count);
-      formattedText += $"\r\n\r\nОшибки программы (всего: {totalErrors}):";
+      var errorsText = $"\r\nОшибки программы (всего: {totalErrors}):";
 
       foreach (var item in protocolModel.Errors.Keys)
       {
-        formattedText += $"\r\n\tОшибки команды: {item}";
-
-        var errors = protocolModel.Errors[item];
-        foreach (var error in errors)
+        errorsText += $"\r\n\tОшибки команды: {item}";
+        foreach (var error in protocolModel.Errors[item])
         {
-          formattedText += $"\r\n\t\t{error.ToString()}";
+          errorsText += $"\r\n\t\t{error}";
         }
       }
+
+      // 2. Разделяем шаблон на две части — до и после строки с "$ПРОГРАММА"
+      const string marker = "$ПРОГРАММА";
+      int markerIndex = ErrorsTemplate.IndexOf(marker);
+      if (markerIndex == -1)
+        throw new InvalidOperationException("В шаблоне не найден маркер $ПРОГРАММА.");
+
+      string before = ErrorsTemplate.Substring(0, markerIndex + marker.Length);
+      string after = ErrorsTemplate.Substring(markerIndex + marker.Length);
+
+      // 3. Выполняем подстановку в обеих частях отдельно
+      before = before
+          .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
+          .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
+          .Replace("$РЕЖИМ", protocolModel.Mode)
+          .Replace("$НОМЕР", protocolModel.Number.ToString())
+          .Replace("$ПРОГРАММА", protocolModel.ProgramName);
+
+      after = after
+          .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
+          .Replace("$НАИМЕНОВАНИЕ", protocolModel.ControlObjectName)
+          .Replace("$НОМЕР", protocolModel.Number.ToString())
+          .Replace("$БРАК(не )", "не ")
+          .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
+          .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
+          .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
+
+      // 4. Склеиваем финальный текст: до → ошибки → после
+      string formattedText = before + "\r\n" + errorsText + "\r\n" + after;
 
       return formattedText;
     }

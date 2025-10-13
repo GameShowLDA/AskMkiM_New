@@ -27,6 +27,7 @@
 		<Rule color="ProtocolMain">^\s*Заключение:</Rule>
 		<Rule color="PKData">^\s*Исполнитель:</Rule>
 		<Rule color="PKData">^\s*Представитель\s+ОК:</Rule>
+		<Rule color="PKData">^\s*Представитель\s+ОТК:</Rule>
 		<Rule color="PKData">^\s*Представитель\s+заказчика\s*\(ВП\):</Rule>
 
 		<Rule color="Error">^\s*Ошибки\s+программы.*:</Rule>
