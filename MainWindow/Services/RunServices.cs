@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using DTO.Base.Models;
 using EventCore.Events;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;

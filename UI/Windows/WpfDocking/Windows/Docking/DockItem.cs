@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using DTO.Base.Interface;
 using Utilities;
 
 namespace UI.Windows.WpfDocking.Windows.Docking
@@ -72,7 +73,7 @@ namespace UI.Windows.WpfDocking.Windows.Docking
   /// to return a DockItem reference for undo/redo.</para>
   /// </remarks>
   [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-  public partial class DockItem : ContentControl, IDockItemUndoRedoReference
+  public partial class DockItem : ContentControl, IDockItemUndoRedoReference, IDockItem
   {
     private static readonly DependencyPropertyKey DockControlPropertyKey;
     /// <summary>Identifies the <see cref="DockControl"/> dependency property.</summary>

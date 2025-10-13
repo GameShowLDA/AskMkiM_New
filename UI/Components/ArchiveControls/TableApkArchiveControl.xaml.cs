@@ -15,6 +15,7 @@ using UI.Components.ArchiveManager.ArchiveFiles.Index;
 using UI.Components.ArchiveManager.Models;
 using UI.Controls.TextEditor;
 using Utilities.Help;
+using static DTO.Enum.FileEnums;
 using static UI.Controls.ProtocolNew.ProtocolUI;
 using static UI.Controls.TextEditor.TextEditorUI;
 using static Utilities.LoggerUtility;

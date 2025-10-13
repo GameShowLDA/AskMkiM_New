@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -120,17 +121,16 @@ namespace UI.Components
       ProtocolUI.AnotherKeyPressed += MultiWindowControl_KeyDown;
       InitializeManagers();
 
-      Counts = fileManager.GetCountConrols();
-      fileManager.UserControls.CollectionChanged += (s, a) =>
+      Counts = fileManager.EditorWorkspaceModel.UserControls.Count;
+      fileManager.EditorWorkspaceModel.UserControls.CollectionChanged += (s, a) =>
       {
-        Counts = fileManager.UserControls.Count;
+        Counts = fileManager.EditorWorkspaceModel.UserControls.Count;
       };
     }
 
-    private void OnFoundTextSelectRow(string fileName, int lineNumber, int startOffset, string lineText, string searchText)
-    {
+    #region События.
+    private void OnFoundTextSelectRow(string fileName, int lineNumber, int startOffset, string lineText, string searchText) =>
       textSearchManager.GetLineOccurrences(fileName, lineNumber, startOffset, lineText);
-    }
 
     /// <summary>
     /// Обрабатывает событие нажатия левой кнопки мыши на верхней панели.
@@ -155,156 +155,21 @@ namespace UI.Components
     }
 
     /// <summary>
-    /// Получает активный текстовый редактор.
-    /// </summary>
-    /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
-    public TextEditorUI GetActiveTextEditor(EditorType editorType)
-    {
-      return fileManager.GetActiveTextEditor(editorType);
-    }
-
-    /// <summary>
-    /// Получает активный текстовый редактор.
-    /// </summary>
-    /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
-    public TextEditorUI GetActiveTextEditor()
-    {
-      return fileManager.GetActiveTextEditor();
-    }
-
-    /// <summary>
-    /// Закрывает вкладку с активным текстовым редактором.
-    /// </summary>
-    /// <param name="isTranslation">Переменная, показывающая, выполняется закрытие вкладки при трансляции или нет.</param>
-    /// <returns>Возвращает <c>true</c>, если вкладка была закрыта, <c>false</c> в противном случае.</returns>
-    public bool RemoveActiveTextEditor(bool isTranslation)
-    {
-      return fileManager.RemoveActiveTextEditor(isTranslation);
-    }
-
-    public void RemoveControl(EditorType editorType)
-    {
-      var control = fileManager.GetContainer(editorType);
-      var page = fileManager.OpenPages.FirstOrDefault(item => item.Text == editorType.ToString());
-      if (control != null && page != null)
-      {
-        controlManager.RemoveControl(page, control).ConfigureAwait(true);
-      }
-    }
-
-    /// <summary>
-    /// Получает активный текстовый редактор.
-    /// </summary>
-    /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
-    public TextEditorContainer GetActiveTextEditorContainer(EditorType editorType)
-    {
-      return fileManager.GetContainer(editorType);
-    }
-
-    /// <summary>
-    /// Получает активный текстовый редактор.
-    /// </summary>
-    /// <returns>
-    /// Возвращает активный экземпляр <see cref="TextEditorUI"/>.
-    /// </returns>
-    public TextEditorUI CreateTranslationFileAsync()
-    {
-      return fileManager.CreateTranslationFileAsync();
-    }
-
-    /// <summary>
-    /// Добавляет элемент управления и соответствующую вкладку в панель управления.
-    /// </summary>
-    /// <param name="header">Заголовок для кнопки, отображаемой в панели вкладок.</param>
-    /// <param name="control">Элемент управления для отображения в панели управления.</param>
-    /// <param name="description">Дополнительное описание для вкладки (опционально).</param>
-    public void AddControl(string header, UserControl control, TypeWindow tabType, string description = null)
-    {
-      controlManager.AddControl(header, control, tabType, description);
-    }
-
-    public bool GetEmtyControl() => controlManager.GetEmtyControl();
-
-    /// <summary>
-    /// Открывает диалоговое окно для открытия файла.
-    /// </summary>
-    /// <param name="path">Путь к файлу.</param>
-    public void OpenFile(string path)
-    {
-      fileManager.OpenFile(path);
-    }
-
-    /// <summary>
-    /// Сохраняет активную сессию файлов.
-    /// </summary>
-    /// <param name="path">Путь к файлу.</param>
-    public async Task SaveSession()
-    {
-      await fileManager.SaveSession();
-    }
-
-    /// <summary>
-    /// Сохраняет активную сессию файлов.
-    /// </summary>
-    public async Task OpenSession(SessionModel sessionModel)
-    {
-      await fileManager.RestoreSessionAsync(sessionModel);
-    }
-
-
-    /// <summary>
-    /// Открывает диалоговое окно для открытия файла.
-    /// </summary>
-    /// <param name="path">Путь к файлу.</param>
-    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware)
-    {
-      fileManager.ViewProtocol(protocol, showInSoftware);
-    }
-
-    /// <summary>
-    /// Создаёт новый файл.
-    /// </summary>
-    public void CreateNewFile()
-    {
-      fileManager.CreateNewFile();
-    }
-
-    /// <summary>
-    /// Открывает диалоговое окно для сохранения файла в новом месте.
-    /// В случае успешного сохранения, возвращает true, в противном случае false.
-    /// </summary>
-    /// <returns>True, если файл был успешно сохранен, иначе false.</returns>
-    public bool SaveFileAs()
-    {
-      return saveFileManager.SaveFileAs();
-    }
-
-    /// <summary>
-    /// Удаляет указанный элемент управления и соответствующую вкладку.
-    /// </summary>
-    /// <param name="tabButton">Вкладка для удаления.</param>
-    /// <param name="control">Элемент управления для удаления.</param>
-    private void RemoveControl(OpenFileButton tabButton, UserControl control)
-    {
-      controlManager.RemoveControl(tabButton, control);
-    }
-
-    /// <summary>
     /// Обрабатывает событие нажатия клавиш. 
     /// Позволяет закрыть активную вкладку при нажатии Alt+System+X.
     /// </summary>
     /// <param name="sender">Источник события.</param>
     /// <param name="e">Данные события клавиатуры.</param>
-    private void MultiWindowControl_KeyDown(object sender, KeyEventArgs e)
+    private async void MultiWindowControl_KeyDown(object sender, KeyEventArgs e)
     {
       if (e.Key == Key.System && e.SystemKey == Key.X && Keyboard.Modifiers == ModifierKeys.Alt)
       {
-        var activeTab = fileManager.OpenPages.FirstOrDefault(page =>
+        var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page =>
           page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
         if (activeTab != null)
         {
-          int index = fileManager.OpenPages.IndexOf(activeTab);
-          if (fileManager.UserControls[index] is TextEditorContainer textEditorContainer)
+          int index = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
+          if (fileManager.EditorWorkspaceModel.UserControls[index] is TextEditorContainer textEditorContainer)
           {
             var foundItem = textEditorContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveDocument == true);
             if (foundItem != null)
@@ -314,7 +179,7 @@ namespace UI.Components
           }
           else
           {
-            RemoveControl(activeTab, fileManager.UserControls[index]);
+            await RemoveControl(activeTab, fileManager.EditorWorkspaceModel.UserControls[index]);
           }
         }
       }
@@ -323,10 +188,127 @@ namespace UI.Components
     /// <summary>
     /// Обрабатывает событие закрытия окна поиска.
     /// </summary>
-    public void OnSearchWindowClosing()
+    public void OnSearchWindowClosing() => textSearchManager.OnSearchWindowClosing();
+
+    private void OnSearchResultsReady(string searchText, bool? isCaseSensitive, Dictionary<string, List<SearchResult>> results) =>
+     SearchResultsReady?.Invoke(searchText, isCaseSensitive, results);
+
+    #endregion
+
+    #region TextEditor
+
+    /// <summary>
+    /// Получает активный текстовый редактор.
+    /// </summary>
+    /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
+    public TextEditorUI GetActiveTextEditor(EditorType editorType) => fileManager.TextEditorService.GetActiveTextEditor(editorType);
+
+    /// <summary>
+    /// Получает активный текстовый редактор.
+    /// </summary>
+    /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
+    public TextEditorUI GetActiveTextEditor() => fileManager.TextEditorService.GetActiveTextEditor();
+
+    /// <summary>
+    /// Закрывает вкладку с активным текстовым редактором.
+    /// </summary>
+    /// <param name="isTranslation">Переменная, показывающая, выполняется закрытие вкладки при трансляции или нет.</param>
+    /// <returns>Возвращает <c>true</c>, если вкладка была закрыта, <c>false</c> в противном случае.</returns>
+    public bool RemoveActiveTextEditor(bool isTranslation) => fileManager.TextEditorService.RemoveActiveTextEditor(isTranslation);
+
+    #endregion
+
+    #region Container
+
+    /// <summary>
+    /// Получает активный текстовый редактор.
+    /// </summary>
+    /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
+    public TextEditorContainer GetActiveTextEditorContainer(EditorType editorType) => fileManager.ContainerService.GetContainer(editorType);
+
+    #endregion
+
+    #region Session
+
+    /// <summary>
+    /// Сохраняет активную сессию файлов.
+    /// </summary>
+    /// <param name="path">Путь к файлу.</param>
+    public async Task SaveSession() => await fileManager.SessionService.SaveSession();
+
+    /// <summary>
+    /// Сохраняет активную сессию файлов.
+    /// </summary>
+    public async Task OpenSession(SessionModel sessionModel) => await fileManager.SessionService.RestoreSessionAsync(sessionModel);
+
+    #endregion
+
+    #region Translator
+
+    /// <summary>
+    /// Получает активный текстовый редактор.
+    /// </summary>
+    /// <returns>
+    /// Возвращает активный экземпляр <see cref="TextEditorUI"/>.
+    /// </returns>
+    public TextEditorUI CreateTranslationFileAsync() => fileManager.TranslationService.CreateTranslationFileAsync();
+
+    #endregion
+
+    /// <summary>
+    /// Удаляет указанный элемент управления и соответствующую вкладку.
+    /// </summary>
+    public void RemoveControl(EditorType editorType)
     {
-      textSearchManager.OnSearchWindowClosing();
+      var control = fileManager.ContainerService.GetContainer(editorType);
+      var page = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(item => item.Text == editorType.ToString());
+      if (control != null && page != null)
+      {
+        controlManager.RemoveControl(page, control).ConfigureAwait(true);
+      }
     }
+
+    /// <summary>
+    /// Добавляет элемент управления и соответствующую вкладку в панель управления.
+    /// </summary>
+    /// <param name="header">Заголовок для кнопки, отображаемой в панели вкладок.</param>
+    /// <param name="control">Элемент управления для отображения в панели управления.</param>
+    /// <param name="description">Дополнительное описание для вкладки (опционально).</param>
+    public void AddControl(string header, UserControl control, TypeWindow tabType, string description = null) => controlManager.AddControl(header, control, tabType, description);
+
+    public bool GetEmtyControl() => controlManager.GetEmtyControl();
+
+    /// <summary>
+    /// Открывает диалоговое окно для открытия файла.
+    /// </summary>
+    /// <param name="path">Путь к файлу.</param>
+    public void OpenFile(string path) => fileManager.FileService.Opening.OpenFile(path);
+
+
+    /// <summary>
+    /// Открывает диалоговое окно для открытия файла.
+    /// </summary>
+    /// <param name="path">Путь к файлу.</param>
+    public void ViewProtocol(ProtocolModel protocol, bool showInSoftware) => fileManager.ProtocolService.DisplayProtocol(protocol, showInSoftware);
+
+    /// <summary>
+    /// Создаёт новый файл.
+    /// </summary>
+    public void CreateNewFile() => fileManager.FileService.Creation.CreateNewFile();
+
+    /// <summary>
+    /// Открывает диалоговое окно для сохранения файла в новом месте.
+    /// В случае успешного сохранения, возвращает true, в противном случае false.
+    /// </summary>
+    /// <returns>True, если файл был успешно сохранен, иначе false.</returns>
+    public bool SaveFileAs() => saveFileManager.SaveFileAs();
+
+    /// <summary>
+    /// Удаляет указанный элемент управления и соответствующую вкладку.
+    /// </summary>
+    /// <param name="tabButton">Вкладка для удаления.</param>
+    /// <param name="control">Элемент управления для удаления.</param>
+    private async Task RemoveControl(OpenFileButton tabButton, UserControl control) => await controlManager.RemoveControl(tabButton, control);
 
     /// <summary>
     /// Обрабатывает сохранение файла.
@@ -334,12 +316,12 @@ namespace UI.Components
     /// <returns>Результат сохранения файла. <c>true</c>, если файл был успешно сохранен, иначе <c>false</c>.</returns>
     public bool SaveFile()
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page =>
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page =>
         page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      int index = fileManager.OpenPages.IndexOf(activeTab);
-      if (fileManager.UserControls[index] is TextEditorContainer)
+      int index = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
+      if (fileManager.EditorWorkspaceModel.UserControls[index] is TextEditorContainer)
       {
-        var activeTextEditorContainer = fileManager.UserControls[index] as TextEditorContainer;
+        var activeTextEditorContainer = fileManager.EditorWorkspaceModel.UserControls[index] as TextEditorContainer;
         if (activeTextEditorContainer != null)
         {
           var activeDockItem = activeTextEditorContainer.DockManager.DockItems.FirstOrDefault(tab =>
@@ -353,10 +335,7 @@ namespace UI.Components
     /// <summary>
     /// Выводит файл на печать.
     /// </summary>
-    public void PrintFile()
-    {
-      PrintFileManager.PrintFile(fileManager.OpenPages, fileManager.UserControls);
-    }
+    public void PrintFile() => PrintFileManager.PrintFile(fileManager.EditorWorkspaceModel.OpenPages, fileManager.EditorWorkspaceModel.UserControls);
 
     /// <summary>
     /// Выполняет поиск по тектсу.
@@ -443,39 +422,23 @@ namespace UI.Components
       }
     }
 
-    private void OnSearchResultsReady(string searchText, bool? isCaseSensitive, Dictionary<string, List<SearchResult>> results)
-    {
-      SearchResultsReady?.Invoke(searchText, isCaseSensitive, results);
-    }
+    internal Task<TranslatorItem> AddTranslatorItem(TextEditorUI editor, TextEditorUI translateEditor, EditorType editorType) =>
+      fileManager.TranslationService.AddTranslatorItem(editor, translateEditor, editorType);
 
-    internal Task<TranslatorItem> AddTranslatorItem(TextEditorUI editor, TextEditorUI translateEditor, EditorType editorType)
-    {
-      return fileManager.AddTranslatorItem(editor, translateEditor, editorType);
-    }
+    internal Task AddRunItem(RunControl runControl, EditorType editorType) =>
+      fileManager.RunControlService.AddRunItem(runControl, editorType);
 
-    internal Task AddRunItem(RunControl runControl, EditorType editorType)
-    {
-      return fileManager.AddRunItem(runControl, editorType);
-    }
+    internal async Task DeleteTranslatorItem(TranslatorItem translatorItem, EditorType editorType) =>
+      await fileManager.TranslationService.DeleteTranslatorItem(translatorItem, editorType);
 
-    internal async Task DeleteTranslatorItem(TranslatorItem translatorItem, EditorType editorType)
-    {
-      await fileManager.DeleteTranslatorItem(translatorItem, editorType);
-    }
+    internal void OpenFolder() =>
+      fileManager.FolderService.OpenFolder();
 
-    internal void OpenFolder()
-    {
-      fileManager.OpenFolder();
-    }
+    internal async Task OpenArchiveAsync() =>
+      await fileManager.ArchiveService.OpenArchiveBrowserAsync();
 
-    internal async Task OpenArchiveAsync()
-    {
-      await fileManager.OpenArchiveAsync();
-    }
+    internal async Task CloseRunItem(RunControl runControl, EditorType editorType) =>
+      await fileManager.RunControlService.CloseRunItem(runControl, editorType);
 
-    internal async Task CloseRunItem(RunControl runControl, EditorType editorType)
-    {
-      await fileManager.CloseRunItem(runControl, editorType);
-    }
   }
 }

@@ -16,5 +16,7 @@
     /// Установить маркер на указанную строку, очищая остальные.
     /// </summary>
     public void SetActiveLine(int lineNumber);
+
+    public string Text { get; set; }
   }
 }

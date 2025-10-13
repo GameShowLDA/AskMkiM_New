@@ -14,6 +14,7 @@ using Message;
 using UI.Components;
 using Utilities.Help;
 using Utilities.TextEditor;
+using static DTO.Enum.FileEnums;
 using static Utilities.LoggerUtility;
 
 namespace UI.Controls.TextEditor
@@ -23,17 +24,6 @@ namespace UI.Controls.TextEditor
   /// </summary>
   public partial class TextEditorUI : UserControl, ITextEditorAdapter
   {
-    public enum FileType
-    {
-      None,
-      PK,
-      PKW,
-      OPK,
-      OPKW,
-      Protocol
-    }
-
-
     public new Brush Background
     {
       get

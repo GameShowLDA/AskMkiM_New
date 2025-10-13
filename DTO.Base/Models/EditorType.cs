@@ -1,4 +1,4 @@
-﻿namespace UI.Controls.TextEditor
+﻿namespace DTO.Base.Models
 {
   public sealed class EditorType
   {
