@@ -81,10 +81,10 @@ namespace ControlCommandExecutor
         var point = chainModels.PointModels[i].Mnemonic;
 
         result += $"*{point}*";
-        if (i + 1 != count)
-        {
-          result += $" ** ";
-        }
+        //if (i + 1 != count)
+        //{
+        //  result += $" ** ";
+        //}
       }
 
       return result;

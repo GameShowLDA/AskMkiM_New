@@ -117,10 +117,10 @@ namespace ControlCommandExecutor.BaseStrategies
           var chainStr = PointFormater.GetFormatConnectPoint(chain);
 
           var error = new ShowMessageModel($"{chainStr}", message: $"{errorChain.GetValueOrDefault(item)}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          errorsMessage.Add(error);
 
           await messageService.ShowMessageAsync(error);
           manager.AddErrorMethod(baseCommandModel.PointErrors.DisconnectChainError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", chainStr));
-          errorsMessage.Add(error);
         }
       }
 

@@ -188,46 +188,18 @@ namespace DTO.Base.Models
 
     public static string GetProtocolWithErrorsText(ProtocolModel protocolModel)
     {
-      //int totalErrors = protocolModel.Errors.Values.Sum(list => list.Count);
-      //var errorsText = $"\r\nОшибки программы (всего: {totalErrors}):";
-
-      //foreach (var item in protocolModel.Errors.Keys)
-      //{
-      //  errorsText += $"\r\n\tОшибки команды: {item}";
-      //  foreach (var error in protocolModel.Errors[item])
-      //  {
-      //    errorsText += $"\r\n\t\t{error}";
-      //  }
-      //}
-
-      /*string formattedText = ErrorsTemplate
-          .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
-          .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
-          .Replace("$РЕЖИМ", protocolModel.Mode)
-          .Replace("$НОМЕР", protocolModel.Number.ToString())
-          .Replace("$ПРОГРАММА", protocolModel.ProgramName)
-
-          .Replace("$ОШИБКИ", errorsText)
-
-          .Replace("$БРАК(не )", "не ")
-          .Replace("$НАИМЕНОВАНИЕ", protocolModel.ControlObjectName)
-
-          .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
-          .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
-          .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
-
-
-      return formattedText;*/
       // 1. Формируем список ошибок
       int totalErrors = protocolModel.Errors.Values.Sum(list => list.Count);
       var errorsText = $"\r\nОшибки программы (всего: {totalErrors}):";
 
+      int i = 1;
       foreach (var item in protocolModel.Errors.Keys)
       {
-        errorsText += $"\r\n\tОшибки команды: {item}";
+        //errorsText += $"\r\n\tОшибки команды: {item}";
         foreach (var error in protocolModel.Errors[item])
         {
-          errorsText += $"\r\n\t\t{error}";
+          errorsText += $"\r\n{i}. {item}: {error}";
+          i++;
         }
       }
 

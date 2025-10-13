@@ -55,7 +55,7 @@ namespace Mode.Device.DBC
           if (clickedButton.Background == Brushes.Red)
           {
             var result = await dbc.RelayManager.ConnectRelay(parseNumber, Protocol);
-            await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Подключение {(result ? "НОМРА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
+            await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Подключение {(result ? "НОРМА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
             if (result)
             {
               clickedButton.Background = Brushes.Green;
@@ -64,7 +64,7 @@ namespace Mode.Device.DBC
           else
           {
             var result = await dbc.RelayManager.DisconnectRelay(parseNumber, Protocol);
-            await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Отключение {(result ? "НОМРА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
+            await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Отключение {(result ? "НОРМА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
             if (result)
             {
               clickedButton.Background = Brushes.Red;

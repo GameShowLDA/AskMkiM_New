@@ -314,7 +314,9 @@ namespace UI.Controls.ProtocolNew
         }
         else
         {
-          showMessageModel.Message += " " + showMessageModel.GetQualityPrefix();
+          var prefix = showMessageModel.GetQualityPrefix();
+          if (!showMessageModel.Message.Contains(prefix))
+            showMessageModel.Message += " " + prefix;
         }
         showMessageModel.MessageColor = showMessageModel.GetColorMessage();
       }

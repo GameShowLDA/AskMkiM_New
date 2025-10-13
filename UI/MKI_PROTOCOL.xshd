@@ -33,6 +33,8 @@
 		<Rule color="Error">^\s*Ошибки\s+программы.*:</Rule>
 		<Rule color="Error">^\s*Ошибки\s+команды:</Rule>
 
+		<Rule color="Error">:\s*(.*)$</Rule>
+
 	</RuleSet>
 
 
