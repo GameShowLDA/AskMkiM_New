@@ -1,32 +1,19 @@
-﻿using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Windows;
-using AppConfiguration;
-using ConsoleUI.ConsoleCommanding.Services;
-using ConsoleUI.ConsoleLogic;
+﻿using AppConfiguration;
 using DataBaseConfiguration.Services.Device;
-using Microsoft.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewCore.Base.Interface.Main;
-using NewCore.Communication;
 using NewCore.Device;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Threading;
 using static Utilities.LoggerUtility;
-
 
 namespace MainWindowProgram
 {
-  /// <summary>
-  /// Interaction logic for App.xaml.
-  /// Класс приложения, отвечающий за запуск и обработку необработанных исключений.
-  /// </summary>
   public partial class App : Application
   {
     public static IHost AppHost { get; private set; }
-    [DllImport("kernel32.dll")] private static extern IntPtr GetConsoleWindow();
-    [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-    private const int SW_HIDE = 0;
 
     [Flags]
     public enum EXECUTION_STATE : uint
@@ -39,37 +26,24 @@ namespace MainWindowProgram
     [DllImport("kernel32.dll")]
     public static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
 
-    /// <summary>
-    /// Содержит аргументы командной строки, переданные при запуске приложения.
-    /// </summary>
-    public static string[] CommandLineArgs { get; private set; }
+    private Thread? _splashThread;
+    private readonly ManualResetEventSlim _splashShown = new(false);
+    private SplashWindow? _splash;
 
-    /// <summary>
-    /// Запускает приложение.
-    /// </summary>
-    /// <param name="e"></param>
+    public static string[] CommandLineArgs { get; private set; } = Array.Empty<string>();
+
     protected override async void OnStartup(StartupEventArgs e)
     {
       base.OnStartup(e);
 
-      CommandLineArgs = e.Args;
-      Console.SetOut(new ConsoleRedirector());
+      CommandLineArgs = e?.Args ?? Array.Empty<string>();
 
-      var splashWindow = new SplashWindow();
-      await Task.Run(() =>
-      {
-        Current.Dispatcher.InvokeAsync(() =>
-        {
-          splashWindow.Show();
-        });
-      });
+      StartSplashOnDedicatedSta();
+      _splashShown.Wait();
 
       try
       {
-        var mainWindow = new MainWindow
-        {
-          Visibility = Visibility.Hidden
-        };
+        var mainWindow = new MainWindow { Visibility = Visibility.Hidden };
 
         await mainWindow.InitializeAsync();
 
@@ -78,29 +52,68 @@ namespace MainWindowProgram
           {
             svc.AddSingleton<IBreakdownTester, GPT79904>();
             svc.AddSingleton<BreakdownTesterServices>();
-          }).Build();
+          })
+          .Build();
 
         ServiceLocator.Initialize(AppHost);
-        var chassisNumber = new DataBaseConfiguration.Services.Device.ChassisManagerServices().GetAll().FirstOrDefault();
-        var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
 
-        await splashWindow.WaitForCloseAsync();
+        var chassisNumber = new ChassisManagerServices().GetAll().FirstOrDefault();
+        var tester = ServiceLocator
+          .GetRequired<BreakdownTesterServices>()
+          .GetDevicesByNumberChassis(chassisNumber.Number)
+          .FirstOrDefault();
+
+        if (_splash is not null)
+          await _splash.WaitForCloseAsync();
+
+        _splashThread?.Join();
 
         SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
-        mainWindow.Visibility = Visibility.Visible;
-        mainWindow.Closed += (s, _) =>
-        {
-          SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
-        };
 
-        Application.Current.MainWindow = mainWindow;
+        mainWindow.Visibility = Visibility.Visible;
+        mainWindow.Closed += (_, __) => SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
+
+        Current.MainWindow = mainWindow;
       }
       catch (Exception ex)
       {
+        try
+        {
+          if (_splash is not null)
+            await _splash.WaitForCloseAsync();
+          _splashThread?.Join();
+        }
+        catch { }
+
         LogException(ex, "Произошла ошибка запуска приложения.");
-        Message.MessageBoxCustom.Show("Произошла ошибка запуска приложения. Сообщите о данной ошибке вашему администратору или повторите попытку.", "FATAL ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-        Application.Current.Shutdown();
+        Message.MessageBoxCustom.Show(
+          "Произошла ошибка запуска приложения. Сообщите о данной ошибке вашему администратору или повторите попытку.",
+          "FATAL ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+
+        Current.Shutdown();
       }
+    }
+
+    private void StartSplashOnDedicatedSta()
+    {
+      _splashThread = new Thread(() =>
+      {
+        var dispatcher = Dispatcher.CurrentDispatcher;
+        SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(dispatcher));
+
+        _splash = new SplashWindow();
+        _splash.Closed += (_, __) => dispatcher.BeginInvokeShutdown(DispatcherPriority.Background);
+        _splash.SourceInitialized += (_, __) => _splashShown.Set();
+
+        _splash.Show();
+        Dispatcher.Run();
+      })
+      {
+        IsBackground = true
+      };
+
+      _splashThread.SetApartmentState(ApartmentState.STA);
+      _splashThread.Start();
     }
 
     protected override async void OnExit(ExitEventArgs e)
@@ -113,7 +126,6 @@ namespace MainWindowProgram
       {
         var svc = ServiceLocator.GetRequired<IBreakdownTester>();
         LogInformation($"OnExit: IBreakdownTester instance = {svc.GetHashCode()} | {svc.GetType().FullName}");
-
         svc?.ConnectableManager?.DisconnectAsync().GetAwaiter().GetResult();
       }
       catch { }

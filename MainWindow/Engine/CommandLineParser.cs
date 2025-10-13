@@ -28,31 +28,26 @@ namespace MainWindowProgram.Engine
     {
       ResetDefaults();
 
-      string[] args = App.CommandLineArgs;
+      bool isAdmin = false;
 
-      // Обработка специфических аргументов
-      if (!args.Contains("admin"))
+      foreach (var raw in App.CommandLineArgs /*?? Array.Empty<string>()*/)
       {
-        _usbServices.SetUsbMonitoring(false);
-      }
-      else
-      {
-        _usbServices.SetUsbMonitoring(true);
-      }
+        //if (string.IsNullOrWhiteSpace(raw)) continue;
 
-      foreach (var arg in args.Select(a => a.ToLowerInvariant()))
-      {
-        switch (arg)
+        var token = raw.TrimStart('-', '/');
+
+        if (token.Equals("admin", StringComparison.OrdinalIgnoreCase))
         {
-          case "admin":
-            HandleAdminMode();
-            break;
-
-          default:
-            HandleUnknownArgument(arg);
-            break;
+          isAdmin = true;
+          HandleAdminMode();
+        }
+        else
+        {
+          HandleUnknownArgument(raw);
         }
       }
+
+      _usbServices.SetUsbMonitoring(isAdmin);
     }
 
     /// <summary>
