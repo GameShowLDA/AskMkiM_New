@@ -14,29 +14,54 @@ namespace DTO.Enum
     /// </summary>
     public enum MetrologyTypeCommand
     {
-      [CommandDisplayInfo("КС", "Ом", 1.0, 0.5)]
+      [CommandDisplayInfo("КС", "Ом")]
       /// <summary>
       /// Тип команды KC.
       /// </summary>
       KC,
 
-      [CommandDisplayInfo("ПР", "Ом", 1.0, 0.1)]
+      [CommandDisplayInfo("ПР", "Ом")]
       /// <summary>
       /// Тип команды PR.
       /// </summary>
       PR,
 
-      [CommandDisplayInfo("СИ", "МОм", 1.0, 0.1)]
+      [CommandDisplayInfo("СИ", "МОм")]
       /// <summary>
       /// Тип команды CI.
       /// </summary>
       CI,
 
-      [CommandDisplayInfo("ИЕ", "нФ", 1.0, 0.1)]
+      [CommandDisplayInfo("ИЕ", "нФ")]
       /// <summary>
       /// Тип команды IE.
       /// </summary>
       IE,
+
+      [CommandDisplayInfo("КН_ACW", "В")]
+      /// <summary>
+      /// Тип команды KN переменным током.
+      /// </summary>
+      KN_ACW,
+
+      [CommandDisplayInfo("КН_DCW", "В")]
+
+      /// <summary>
+      /// Тип команды KN постоянным током.
+      /// </summary>
+      KN_DCW,
+
+      [CommandDisplayInfo("PI_ACW", "В")]
+      /// <summary>
+      /// Тип команды PI переменным током.
+      /// </summary>
+      PI_ACW,
+
+      [CommandDisplayInfo("PI_DCW", "В")]
+      /// <summary>
+      /// Тип команды PI постоянным током.
+      /// </summary>
+      PI_DCW,
     }
   }
 }

@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using DTO.Base.Models;
+using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Mode.Base;
@@ -11,6 +12,7 @@ using Mode.Metrology.PI;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
+using static DTO.Enum.Metrology;
 using static NewCore.Enum.MetrologyEnum;
 namespace Mode.Metrology.KN
 {
@@ -112,9 +114,7 @@ namespace Mode.Metrology.KN
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения напряжения(DCW)"));
 
-        double firstNorm = param - ((param / 100.0 * 1) + 0.01);
-        double lastNorm = param + ((param / 100.0 * 1) + 0.01);
-
+        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.KN_DCW, param);
         await fastMeter.DcVoltageManager.MeasureDCVoltageAsync(param, protocolUI);
 
         string result = await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -140,7 +140,7 @@ namespace Mode.Metrology.KN
         {
           double pog = value - param;
 
-          var answer = (value >= firstNorm && value <= lastNorm) ? false : true; ;
+          var answer = (value >= firstNorm && value <= lastNorm) ? false : true;
 
           ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения напряжения", null, $"{result:F2}");
           showMessageModel.Status = (!answer ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error);

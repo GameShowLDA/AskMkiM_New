@@ -3,6 +3,7 @@ using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
+using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Mode.Base;
@@ -112,7 +113,7 @@ namespace Mode.Metrology.IE
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения ёмкости"));
-        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.IE, param);
+        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.IE, param);
 
         var result = await fastMeter.CapacitanceManager.MeasureCapacitanceAsync(param, protocolUI);
 
