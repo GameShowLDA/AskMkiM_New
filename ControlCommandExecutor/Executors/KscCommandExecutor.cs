@@ -55,7 +55,7 @@ namespace ControlCommandExecutor.Executors
       protocolModel.Customer = customer;
       protocolModel.Mode = await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? "Холостой режим" : "Рабочий режим";
       // TODO: формирование протокола с ошибкой
-      ProtocolModel.GetPathProtocol(protocolModel); 
+      //ProtocolModel.GetPathProtocol(protocolModel); 
       FileInteractionEventAdapter.RaiseViewProtocol(protocolModel);
       EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
     }

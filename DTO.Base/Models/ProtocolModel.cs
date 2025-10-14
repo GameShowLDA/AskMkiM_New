@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using DTO.Settings.SettingsModels;
+
 
 namespace DTO.Base.Models
 {
@@ -104,23 +106,8 @@ namespace DTO.Base.Models
       ErrorsTemplate = templatePath;
     }
 
-    static public string GetPathProtocol(ProtocolModel protocolModel)
+    static public bool GetPathProtocol(ProtocolModel protocolModel, string protocolText)
     {
-
-      // Формируем финальный текст протокола
-      string formattedText = Template
-          .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
-          .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
-          .Replace("$РЕЖИМ", protocolModel.Mode)
-          .Replace("$НОМЕР", protocolModel.Number.ToString())
-          .Replace("$ПРОГРАММА", protocolModel.ProgramName)
-          .Replace("$НАЧАЛО", protocolModel.StartTime.ToString("HH:mm:ss:ff"))
-          .Replace("$КОНЕЦ", protocolModel.EndTime.ToString("HH:mm:ss:ff"))
-          .Replace("$ВРЕМЯ", protocolModel.ExecutionTime.ToString(@"hh\:mm\:ss\:ff"))
-          .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
-          .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
-          .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
-
       try
       {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
@@ -129,7 +116,7 @@ namespace DTO.Base.Models
 
         if (parent2 != null)
         {
-          var historyPath = Path.Combine(parent2.FullName, "History");
+          var historyPath = Path.Combine(parent2.FullName, FileLocations.DataSaveDirectory);
           if (!Directory.Exists(historyPath))
           {
             Directory.CreateDirectory(historyPath);
@@ -148,24 +135,29 @@ namespace DTO.Base.Models
 
           using (StreamWriter writer = new StreamWriter(fullFilePath))
           {
-            writer.WriteLine(formattedText);
+            writer.WriteLine(protocolText);
           }
 
-
-          return fullFilePath;
+          if (File.Exists(fullFilePath))
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
         }
         else
         {
           Console.WriteLine("Не удалось получить родительскую директорию");
-          return null;
+          return false;
         }
       }
       catch (Exception ex)
       {
         Console.WriteLine($"Произошла ошибка: {ex.Message}");
-        return null;
+        return false;
       }
-
     }
 
     static public string GetProtocolText(ProtocolModel protocolModel)
