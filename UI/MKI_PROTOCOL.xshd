@@ -7,6 +7,8 @@
 	<Color name="Voltage" foreground="#FFD700" />
 	<Color name="Time" foreground="#FFD700" />
 	<Color name="Error" foreground="#f1301b" />
+	<Color name="Mnemonic" foreground="#90EE90" />
+	<Color name="CommandNumber" foreground="#00BFFF" />
 
 	<RuleSet ignoreCase="true">
 
@@ -33,7 +35,17 @@
 		<Rule color="Error">^\s*Ошибки\s+программы.*:</Rule>
 		<Rule color="Error">^\s*Ошибки\s+команды:</Rule>
 
-		<Rule color="Error">:\s*(.*)$</Rule>
+		<!-- Номер команды (вместе с номером строки, чтобы не перекрывало) -->
+		<Rule color="CommandNumber">^ERR\s*\d+\.\s*\d+</Rule>
+
+		<!-- Мнемоника -->
+		<Rule color="Mnemonic">\b(СИ|ОК|СП|РМ|ЦУ|ПР|ПИ|КЦ|УП|КС|ИЕ|ЭТ|НЭ)\b</Rule>
+
+		<!-- Между двоеточиями -->
+		<Rule>:\s*[^:]+:</Rule>
+
+		<Rule color="Error">\[БРАК\]</Rule>
+
 
 	</RuleSet>
 

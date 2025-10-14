@@ -67,7 +67,7 @@ namespace ControlCommandExecutor
         }
       }
 
-
+      result = result.Replace("* ## *", "##");
       return result;
     }
 
