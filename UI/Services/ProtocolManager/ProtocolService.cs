@@ -3,10 +3,7 @@ using DTO.Settings.SettingsModels;
 using EventCore.Adapters;
 using Message;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using UI.Controls.TextEditor;
@@ -40,83 +37,130 @@ namespace UI.Services.ProtocolManager
 
     /// <summary>
     /// Отображает протокол проверки, сформированный по данным <see cref="ProtocolModel"/>.
-    /// 
-    /// В зависимости от параметра <paramref name="showInSoftware"/> протокол будет открыт в интерфейсе программы
-    /// или сохранён и открыт в формате PDF.
     /// </summary>
-    /// <param name="protocol">Модель протокола, содержащая результаты проверки.</param>
-    /// <param name="showInSoftware">
-    /// Если <c>true</c> — протокол откроется внутри приложения.  
-    /// Если <c>false</c> — будет сформирован PDF-документ.
-    /// </param>
+    /// <param name="protocol">Модель протокола.</param>
+    /// <param name="showInSoftware">Если <c>true</c> — открыть в редакторе, иначе — экспортировать в PDF.</param>
     public void DisplayProtocol(ProtocolModel protocol, bool showInSoftware)
     {
-      var protocolText = string.Empty;
-      if (protocol.Errors.Count > 0)
-      {
-        protocolText = ProtocolModel.GetProtocolWithErrorsText(protocol);
-      }
+      string protocolText = BuildProtocolText(protocol);
+      if (string.IsNullOrEmpty(protocolText))
+        return;
+
+      if (showInSoftware)
+        OpenProtocolInEditor(protocol, protocolText);
       else
-      {
-        protocolText = ProtocolModel.GetProtocolText(protocol);
-      }
-      if (!string.IsNullOrEmpty(protocolText))
-      {
-        if (showInSoftware == true)
-        {
-          OpenProtocolInEditor(protocol, protocolText);
-        }
-        else
-        {
-          ExportProtocolAsPdf(protocol.ProgramName, protocolText);
-        }
-      }
+        ExportProtocolAsPdf(protocol.ProgramName, protocolText);
     }
+
+    #region 📄 Формирование текста протокола
+
+    /// <summary>
+    /// Формирует текст протокола с ошибками или без них.
+    /// </summary>
+    private string BuildProtocolText(ProtocolModel protocol)
+    {
+      return protocol.Errors.Count > 0
+          ? ProtocolModel.GetProtocolWithErrorsText(protocol)
+          : ProtocolModel.GetProtocolText(protocol);
+    }
+
+    #endregion
+
+    #region 📤 Экспорт в PDF
 
     /// <summary>
     /// Сохраняет протокол в формате PDF и открывает его в стандартном приложении.
     /// </summary>
-    public void ExportProtocolAsPdf(string programName, string protocolText)
+    private void ExportProtocolAsPdf(string programName, string protocolText)
     {
       var generator = new PdfProtocolGenerator();
       generator.GenerateAndSavePdfProtocol(programName, protocolText);
     }
 
+    #endregion
+
+    #region 📝 Открытие в редакторе
+
     /// <summary>
     /// Открывает протокол внутри интерфейса программы в виде вкладки текстового редактора.
     /// </summary>
-    /// <param name="protocol">Модель протокола, содержащая метаданные (имя программы, путь и т.д.).</param>
-    /// <param name="protocolText">Содержимое протокола.</param>
-    private void OpenProtocolInEditor(ProtocolModel protocol, string? protocolText)
+    private void OpenProtocolInEditor(ProtocolModel protocol, string protocolText)
     {
-      Application.Current.Dispatcher.BeginInvoke(() =>
+      Application.Current.Dispatcher.BeginInvoke(new Action(() =>
       {
         try
         {
-          var containerType = EditorType.Protocol;
-          TextEditorContainer protocolContainer = _fileManager.ContainerService.GetContainer(containerType);
-          if (protocolContainer == null)
-          {
-            protocolContainer = _fileManager.ContainerService.CreateContainer(containerType);
-          }
+          var container = GetOrCreateProtocolContainer();
+          string newFileName = BuildProtocolFileName(protocol);
+          string newFilePath = BuildProtocolFilePath(protocol, newFileName);
 
-          var newFileName = $"{Path.GetFileNameWithoutExtension(protocol.ProgramName)} от {DateTime.Now:dd-mm-yyyy HH-mm-ss}.lstw";
-          var newPath = Path.Combine(Path.GetDirectoryName(protocol.ProgramPath), newFileName);
-          var textEditorModel = new TextEditorModel(newPath);
-          var textEditor = _fileManager.TextEditorService.CreateTextEditor(textEditorModel, protocolText, FileType.Protocol);
-          textEditor.IsReadOnly = true;
+          var textEditor = CreateReadOnlyProtocolEditor(newFilePath, protocolText);
 
-          EditorEventAdapter.RaiseTextEditorActivated(textEditor);
-
-          _fileManager.DockItemService.ShowNewDockItem(newFileName, protocolContainer, textEditor, containerType);
-          _fileManager.ControlManagerService.ShowControl(protocolContainer, containerType);
+          ShowProtocolInEditor(container, newFileName, textEditor);
         }
         catch (Exception ex)
         {
-          MessageBoxCustom.Show($"Ошибка при чтении файла: {ex.Message}", "Ошибка", image: MessageBoxImage.Error);
-          LogException($"Ошибка при чтении файла", ex);
+          ShowEditorError(ex);
         }
-      });
+      }));
     }
+
+    /// <summary>
+    /// Получает или создаёт контейнер для протоколов.
+    /// </summary>
+    private TextEditorContainer GetOrCreateProtocolContainer()
+    {
+      var container = _fileManager.ContainerService.GetEditorContainer(EditorType.Protocol);
+      return container ?? _fileManager.ContainerService.CreateEditorContainer(EditorType.Protocol);
+    }
+
+    /// <summary>
+    /// Формирует имя файла протокола.
+    /// </summary>
+    private string BuildProtocolFileName(ProtocolModel protocol)
+    {
+      return $"{Path.GetFileNameWithoutExtension(protocol.ProgramName)} от {DateTime.Now:dd-MM-yyyy HH-mm-ss}.lstw";
+    }
+
+    /// <summary>
+    /// Формирует путь сохранения протокола.
+    /// </summary>
+    private string BuildProtocolFilePath(ProtocolModel protocol, string newFileName)
+    {
+      var directory = Path.GetDirectoryName(protocol.ProgramPath) ?? string.Empty;
+      return Path.Combine(directory, newFileName);
+    }
+
+    /// <summary>
+    /// Создаёт экземпляр текстового редактора с протоколом в режиме только для чтения.
+    /// </summary>
+    private TextEditorUI CreateReadOnlyProtocolEditor(string filePath, string protocolText)
+    {
+      var textEditorModel = new TextEditorModel(filePath);
+      var textEditor = _fileManager.TextEditorService.CreateTextEditor(textEditorModel, protocolText, FileType.Protocol);
+      textEditor.IsReadOnly = true;
+      EditorEventAdapter.RaiseTextEditorActivated(textEditor);
+      return textEditor;
+    }
+
+    /// <summary>
+    /// Отображает протокол в редакторе.
+    /// </summary>
+    private void ShowProtocolInEditor(TextEditorContainer container, string fileName, TextEditorUI editor)
+    {
+      _fileManager.DockItemService.ShowEditorDockItem(fileName, container, editor, EditorType.Protocol);
+      _fileManager.ControlManagerService.ShowEditorContainer(container, EditorType.Protocol);
+    }
+
+    /// <summary>
+    /// Отображает сообщение об ошибке при открытии протокола.
+    /// </summary>
+    private void ShowEditorError(Exception ex)
+    {
+      MessageBoxCustom.Show($"Ошибка при открытии протокола: {ex.Message}", "Ошибка", image: MessageBoxImage.Error);
+      LogException("Ошибка при открытии протокола", ex);
+    }
+
+    #endregion
   }
 }

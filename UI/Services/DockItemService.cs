@@ -21,13 +21,37 @@ using static Utilities.LoggerUtility;
 
 namespace UI.Services
 {
+  /// <summary>
+  /// Сервис управления вкладками (DockItem) внутри контейнеров редактора.
+  /// 
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Создание и отображение новых вкладок редактора.</item>
+  ///   <item>Открытие парных редакторов для трансляции.</item>
+  ///   <item>Обработка логики закрытия вкладок и удаления контейнеров.</item>
+  ///   <item>Регистрация событий открытия и закрытия редакторов.</item>
+  /// </list>
+  /// </summary>
   public class DockItemService
   {
+
+    private readonly UI.Components.MultiEditorMethods.FileManager _fileManager;
+
     /// <summary>
-    /// Отображает новую вкладку в контейнере.
+    /// Создаёт новый экземпляр сервиса управления вкладками редактора.
     /// </summary>
-    /// <param name="textEditorContainer">Контейнер с текстовыми редакторами, в котором необходимо открыть файл.</param>
-    /// <param name="dockItem">Новая вкладка.</param>
+    /// <param name="fileManager">Главный файловый менеджер для работы с контейнерами и редакторами.</param>
+    public DockItemService(UI.Components.MultiEditorMethods.FileManager fileManager)
+    {
+      _fileManager = fileManager;
+    }
+
+    /// <summary>
+    /// Отображает указанную вкладку <see cref="DockItem"/> в переданном контейнере редактора.
+    /// Если контейнер ещё не загружен — вкладка будет показана после его инициализации.
+    /// </summary>
+    /// <param name="container">Контейнер редактора, в котором требуется отобразить вкладку.</param>
+    /// <param name="dockItem">Вкладка для отображения.</param>
     public void ShowDockItem(TextEditorContainer textEditorContainer, DockItem dockItem)
     {
       try
@@ -74,14 +98,14 @@ namespace UI.Services
     }
 
     /// <summary>
-    /// Отображает новую вкладку с транслятором.
+    /// Создаёт и отображает новую вкладку-транслятор, содержащую два редактора (оригинал и результат трансляции).
     /// </summary>
-    /// <param name="nameFile">Название файла.</param>
-    /// <param name="textEditorContainer">Контейнер для транслятора.</param>
-    /// <param name="textEditor">Текстовый редактор с транслируемым документом.</param>
-    /// <param name="translatorEditor">Текстовый редактор с странслированным документом.</param>
-    /// <returns>Асинхронную задачу, представляющую результат создания экземпляра <see cref="TranslatorItem"/>.</returns>
-    public async Task<TranslatorItem> ShowNewDockItem(string nameFile, TextEditorContainer textEditorContainer, TextEditorUI textEditor, TextEditorUI translatorEditor)
+    /// <param name="nameFile">Имя вкладки.</param>
+    /// <param name="container">Контейнер, в котором будет отображён транслятор.</param>
+    /// <param name="leftEditor">Левый редактор с исходным содержимым.</param>
+    /// <param name="rightEditor">Правый редактор с результатом трансляции.</param>
+    /// <returns>Экземпляр <see cref="TranslatorItem"/>, отображающий оба редактора.</returns>
+    public async Task<TranslatorItem> ShowTranslatorDockItemAsync(string nameFile, TextEditorContainer textEditorContainer, TextEditorUI textEditor, TextEditorUI translatorEditor)
     {
       try
       {
@@ -101,10 +125,10 @@ namespace UI.Services
         {
           var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
           var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.Translator.ToString());
-          TextEditorContainer translatorContainer = _fileManager.ContainerService.GetContainer(EditorType.Translator);
+          TextEditorContainer translatorContainer = _fileManager.ContainerService.GetEditorContainer(EditorType.Translator);
           if (translatorContainer != null && translatorContainer.DockManager.DockItems.Count(item => item.DockPosition != DockPosition.Hidden) == 0)
           {
-            _fileManager.ContainerService.RemoveTextEditorContainer(translatorContainer, EditorType.Translator);
+            _fileManager.ContainerService.RemoveEditorContainer(translatorContainer, EditorType.Translator);
           }
 
           EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
@@ -127,13 +151,14 @@ namespace UI.Services
 
 
     /// <summary>
-    /// Обрабатывает добавление или открытие файла с учётом уже открытых файлов в редакторе.
-    /// При необходимости добавляет новый DockItem или показывает существующий.
+    /// Создаёт и отображает новую вкладку редактора.  
+    /// При необходимости обрабатывает повторное открытие, назначает события и задаёт режимы.
     /// </summary>
-    /// <param name="nameFile">Имя файла.</param>
-    /// <param name="textEditorContainer">Контейнер редактора, в котором будут размещаться DockItem'ы.</param>
-    /// <param name="textEditor">Экземпляр редактора для отображения содержимого файла.</param>
-    internal async void ShowNewDockItem(string nameFile, TextEditorContainer textEditorContainer, UserControl textEditor, EditorType editorType = null)
+    /// <param name="nameFile">Имя вкладки.</param>
+    /// <param name="textEditorContainer">Контейнер редактора.</param>
+    /// <param name="textEditor">Содержимое вкладки (например, редактор, архив, панель сравнения).</param>
+    /// <param name="editorType">Тип редактора (по умолчанию — текстовый редактор).</param>
+    internal async void ShowEditorDockItem(string nameFile, TextEditorContainer textEditorContainer, UserControl textEditor, EditorType editorType = null)
     {
       LogDebug($"Создание DockItem для файла {nameFile}");
       var dockItem = new DockItem
@@ -148,7 +173,7 @@ namespace UI.Services
 
       if (dockItem.Content is TextEditorUI && editorType == EditorType.Archive || dockItem.Content is RunControl && editorType == EditorType.Run)
       {
-        InitializeItemWithoutSave(dockItem, editorType);
+        InitializeWithoutSave(dockItem, editorType);
       }
       else if (dockItem.Content is TextEditorUI || dockItem.Content is FileCompareControl)
       {
@@ -161,37 +186,44 @@ namespace UI.Services
           (dockItem.Content as TextEditorUI).IsReadOnly = true;
         }
 
-        InitializeItemNeedSave(nameFile, textEditorContainer, textEditor, editorType, dockItem);
+        InitializeWithSave(nameFile, textEditorContainer, textEditor, editorType, dockItem);
       }
       else if (dockItem.Content is TableAllArchivesControl || dockItem.Content is TableApkArchiveControl)
       {
         editorType = EditorType.Archive;
-        editorType = InitializeItemWithoutSave(dockItem, editorType);
+        editorType = InitializeWithoutSave(dockItem, editorType);
       }
 
       await Task.Delay(1).ConfigureAwait(true);
 
       ShowDockItem(textEditorContainer, dockItem);
-      _fileManager.ControlManagerService.ShowControl(textEditorContainer, editorType);
+      _fileManager.ControlManagerService.ShowEditorContainer(textEditorContainer, editorType);
     }
 
-    private EditorType InitializeItemWithoutSave(DockItem dockItem, EditorType editorType)
+    /// <summary>
+    /// Настраивает DockItem, который не требует сохранения состояния.
+    /// </summary>
+    private EditorType InitializeWithoutSave(DockItem dockItem, EditorType editorType)
     {
       dockItem.ItemClosed += (sender) =>
       {
         var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
         var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == editorType.ToString());
-        TextEditorContainer translatorContainer = _fileManager.ContainerService.GetContainer(editorType);
+        TextEditorContainer translatorContainer = _fileManager.ContainerService.GetEditorContainer(editorType);
 
         if (translatorContainer != null && translatorContainer.DockManager.DockItems.Count(item => item.DockPosition != DockPosition.Hidden) == 0)
         {
-          _fileManager.ContainerService.RemoveTextEditorContainer(translatorContainer, editorType);
+          _fileManager.ContainerService.RemoveEditorContainer(translatorContainer, editorType);
         }
       };
       return editorType;
     }
 
-    private void InitializeItemNeedSave(string nameFile, TextEditorContainer textEditorContainer, UserControl textEditor, EditorType editorType, DockItem dockItem)
+
+    /// <summary>
+    /// Настраивает DockItem, который требует сохранения состояния (например, файл, открытый в редакторе).
+    /// </summary>
+    private void InitializeWithSave(string nameFile, TextEditorContainer textEditorContainer, UserControl textEditor, EditorType editorType, DockItem dockItem)
     {
       LogDebug($"Тип редактора для файла {nameFile}: {editorType.ToString()}");
 
@@ -208,20 +240,12 @@ namespace UI.Services
           if (_fileManager.EditorWorkspaceModel.FilePaths.Count == 0)
           {
             LogDebug($"Закрытие контейнера типа \"{editorType.ToString()}\".");
-            _fileManager.ContainerService.RemoveTextEditorContainer(textEditorContainer, editorType);
+            _fileManager.ContainerService.RemoveEditorContainer(textEditorContainer, editorType);
           }
 
           EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
-
         }
       };
     }
-
-    public DockItemService(UI.Components.MultiEditorMethods.FileManager fileManager)
-    {
-      _fileManager = fileManager;
-    }
-
-    UI.Components.MultiEditorMethods.FileManager _fileManager;
   }
 }

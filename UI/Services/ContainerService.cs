@@ -1,10 +1,6 @@
-﻿using DTO.Base.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows.Controls;
+using DTO.Base.Models;
 using UI.Components;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
@@ -13,73 +9,127 @@ using static Utilities.LoggerUtility;
 
 namespace UI.Services
 {
+  /// <summary>
+  /// Сервис управления контейнерами вкладок текстового редактора.
+  /// 
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Создание новых контейнеров для заданного типа редакторов.</item>
+  ///   <item>Получение существующих контейнеров по их типу.</item>
+  ///   <item>Добавление и удаление контейнеров из менеджера вкладок.</item>
+  /// </list>
+  /// </summary>
   public class ContainerService
   {
-    /// <summary>
-    /// Создает контейнер для вкладок заданного типа.
-    /// </summary>
-    /// <param name="editorType">Тип вкладок.</param>
-    /// <returns>Контейнер для вкладок заданного типа.</returns>
-    public TextEditorContainer CreateContainer(EditorType editorType, OpenFileButton.TypeWindow fileType = OpenFileButton.TypeWindow.Files)
-    {
-      var textEditorContainer = new TextEditorContainer();
-      AddFileToControlManager(editorType.ToString(), textEditorContainer, fileType);
-      return textEditorContainer;
-    }
+    private readonly UI.Components.MultiEditorMethods.FileManager _fileManager;
 
     /// <summary>
-    /// Получает контейнер заданного типа.
+    /// Инициализирует новый экземпляр сервиса управления контейнерами.
     /// </summary>
-    /// <param name="editorType">Тип контейнера.</param>
-    /// <returns>Найденный контейнер или <c>null</c>, если контнейнер не был найден.</returns>
-    public TextEditorContainer GetContainer(EditorType editorType)
-    {
-      var containerPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == editorType.DisplayName);
-      if (containerPage == null)
-      {
-        return null;
-      }
-      else
-      {
-        var foundElement = _fileManager.EditorWorkspaceModel.UserControls[_fileManager.EditorWorkspaceModel.OpenPages.IndexOf(containerPage)];
-        if (foundElement != null && foundElement is TextEditorContainer textEditorContainer)
-        {
-          return textEditorContainer;
-        }
-        else
-        {
-          return null;
-        }
-      }
-    }
-
-    /// <summary>
-    /// Удаляет контрол с котейнером для текстовых редакторов.
-    /// </summary>
-    /// <param name="textEditorContainer">Контейнер с текстовыми редакторами.</param>
-    public void RemoveTextEditorContainer(TextEditorContainer textEditorContainer, EditorType editorType)
-    {
-      var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
-      var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == editorType.ToString());
-      controlManager.RemoveControl(foundPage, textEditorContainer);
-    }
-
-    /// <summary>
-    /// Добавляет контрол в мультиэдитор.
-    /// </summary>
-    /// <param name="nameFile">Имя добавляемого файла.</param>
-    /// <param name="container">Экземпляр класса <see cref="UserControl"/>, представляющий собой контейнер.</param>
-    public void AddFileToControlManager(string nameFile, UserControl container, OpenFileButton.TypeWindow fileType)
-    {
-      var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
-      controlManager.AddControl(nameFile, container, fileType);
-    }
-
     public ContainerService(UI.Components.MultiEditorMethods.FileManager fileManager)
     {
       _fileManager = fileManager;
     }
 
-    UI.Components.MultiEditorMethods.FileManager _fileManager;
+    #region 📁 Создание контейнера
+
+    /// <summary>
+    /// Создаёт новый контейнер для вкладок указанного типа редактора и добавляет его в менеджер интерфейса.
+    /// </summary>
+    /// <param name="editorType">Тип редактора, для которого создаётся контейнер.</param>
+    /// <param name="fileType">Тип окна, в котором будет открыт контейнер (по умолчанию — <see cref="OpenFileButton.TypeWindow.Files"/>).</param>
+    /// <returns>Созданный экземпляр <see cref="TextEditorContainer"/>.</returns>
+    public TextEditorContainer CreateEditorContainer(
+        EditorType editorType,
+        OpenFileButton.TypeWindow fileType = OpenFileButton.TypeWindow.Files)
+    {
+      var container = new TextEditorContainer();
+      AddContainerToManager(editorType.ToString(), container, fileType);
+      return container;
+    }
+
+    #endregion
+
+    #region 🔍 Получение контейнера
+
+    /// <summary>
+    /// Получает существующий контейнер для заданного типа редактора.
+    /// </summary>
+    /// <param name="editorType">Тип редактора.</param>
+    /// <returns>Контейнер, если он существует, иначе <c>null</c>.</returns>
+    public TextEditorContainer GetEditorContainer(EditorType editorType)
+    {
+      var page = FindPageByEditorType(editorType);
+      return page == null ? null : ExtractContainerFromPage(page);
+    }
+
+    /// <summary>
+    /// Находит страницу контейнера по типу редактора.
+    /// </summary>
+    private OpenFileButton FindPageByEditorType(EditorType editorType)
+    {
+      return _fileManager.EditorWorkspaceModel.OpenPages
+          .FirstOrDefault(page => page.Text == editorType.DisplayName);
+    }
+
+    /// <summary>
+    /// Извлекает контейнер из найденной страницы, если он существует.
+    /// </summary>
+    private TextEditorContainer ExtractContainerFromPage(OpenFileButton page)
+    {
+      int index = _fileManager.EditorWorkspaceModel.OpenPages.IndexOf(page);
+      if (index < 0 || index >= _fileManager.EditorWorkspaceModel.UserControls.Count)
+        return null;
+
+      return _fileManager.EditorWorkspaceModel.UserControls[index] as TextEditorContainer;
+    }
+
+    #endregion
+
+    #region 🗑️ Удаление контейнера
+
+    /// <summary>
+    /// Удаляет указанный контейнер редактора из интерфейса и менеджера вкладок.
+    /// </summary>
+    public void RemoveEditorContainer(TextEditorContainer container, EditorType editorType)
+    {
+      var controlManager = CreateControlManager();
+      var page = _fileManager.EditorWorkspaceModel.OpenPages
+          .FirstOrDefault(p => p.Text == editorType.ToString());
+
+      if (page != null)
+      {
+        controlManager.RemoveControl(page, container);
+        LogDebug($"Контейнер для {editorType} удалён из интерфейса.");
+      }
+    }
+
+    #endregion
+
+    #region ➕ Добавление контейнера
+
+    /// <summary>
+    /// Добавляет контейнер вкладок в менеджер интерфейса.
+    /// </summary>
+    private void AddContainerToManager(string name, UserControl container, OpenFileButton.TypeWindow fileType)
+    {
+      var controlManager = CreateControlManager();
+      controlManager.AddControl(name, container, fileType);
+      LogDebug($"Контейнер \"{name}\" добавлен в интерфейс ({fileType}).");
+    }
+
+    #endregion
+
+    #region ⚙️ Вспомогательное
+
+    /// <summary>
+    /// Создаёт экземпляр <see cref="ControlManager"/> для работы с контейнерами.
+    /// </summary>
+    private ControlManager CreateControlManager()
+    {
+      return new ControlManager(_fileManager.EditorWorkspaceModel);
+    }
+
+    #endregion
   }
 }

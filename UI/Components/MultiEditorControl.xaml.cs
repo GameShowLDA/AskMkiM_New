@@ -214,7 +214,7 @@ namespace UI.Components
     /// </summary>
     /// <param name="isTranslation">Переменная, показывающая, выполняется закрытие вкладки при трансляции или нет.</param>
     /// <returns>Возвращает <c>true</c>, если вкладка была закрыта, <c>false</c> в противном случае.</returns>
-    public bool RemoveActiveTextEditor(bool isTranslation) => fileManager.TextEditorService.RemoveActiveTextEditor(isTranslation);
+    public bool RemoveActiveTextEditor(bool isTranslation) => fileManager.TextEditorService.CloseActiveTextEditor(isTranslation);
 
     #endregion
 
@@ -224,7 +224,7 @@ namespace UI.Components
     /// Получает активный текстовый редактор.
     /// </summary>
     /// <returns>Если редатор найден возвращает экземпляр <see cref="TextEditorUI"/>, иначе возвраает null.</returns>
-    public TextEditorContainer GetActiveTextEditorContainer(EditorType editorType) => fileManager.ContainerService.GetContainer(editorType);
+    public TextEditorContainer GetActiveTextEditorContainer(EditorType editorType) => fileManager.ContainerService.GetEditorContainer(editorType);
 
     #endregion
 
@@ -234,7 +234,7 @@ namespace UI.Components
     /// Сохраняет активную сессию файлов.
     /// </summary>
     /// <param name="path">Путь к файлу.</param>
-    public async Task SaveSession() => await fileManager.SessionService.SaveSession();
+    public async Task SaveSession() => await fileManager.SessionService.SaveSessionAsync();
 
     /// <summary>
     /// Сохраняет активную сессию файлов.
@@ -251,7 +251,7 @@ namespace UI.Components
     /// <returns>
     /// Возвращает активный экземпляр <see cref="TextEditorUI"/>.
     /// </returns>
-    public TextEditorUI CreateTranslationFileAsync() => fileManager.TranslationService.CreateTranslationFileAsync();
+    public TextEditorUI CreateTranslationFileAsync() => fileManager.TranslationService.CreateTranslationEditor();
 
     #endregion
 
@@ -260,7 +260,7 @@ namespace UI.Components
     /// </summary>
     public void RemoveControl(EditorType editorType)
     {
-      var control = fileManager.ContainerService.GetContainer(editorType);
+      var control = fileManager.ContainerService.GetEditorContainer(editorType);
       var page = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(item => item.Text == editorType.ToString());
       if (control != null && page != null)
       {
@@ -426,19 +426,19 @@ namespace UI.Components
       fileManager.TranslationService.AddTranslatorItem(editor, translateEditor, editorType);
 
     internal Task AddRunItem(RunControl runControl, EditorType editorType) =>
-      fileManager.RunControlService.AddRunItem(runControl, editorType);
+      fileManager.RunControlService.AddRunTabAsync(runControl, editorType);
 
     internal async Task DeleteTranslatorItem(TranslatorItem translatorItem, EditorType editorType) =>
-      await fileManager.TranslationService.DeleteTranslatorItem(translatorItem, editorType);
+      await fileManager.TranslationService.RemoveTranslatorTabAsync(translatorItem, editorType);
 
     internal void OpenFolder() =>
-      fileManager.FolderService.OpenFolder();
+      fileManager.FolderService.OpenActiveFileFolder();
 
     internal async Task OpenArchiveAsync() =>
       await fileManager.ArchiveService.OpenArchiveBrowserAsync();
 
     internal async Task CloseRunItem(RunControl runControl, EditorType editorType) =>
-      await fileManager.RunControlService.CloseRunItem(runControl, editorType);
+      await fileManager.RunControlService.CloseRunTabAsync(runControl, editorType);
 
   }
 }

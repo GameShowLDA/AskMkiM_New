@@ -1,13 +1,11 @@
 ﻿using DTO.Base.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Controls.TextEditor;
 
 namespace UI.Services.FileManager
 {
+  /// <summary>
+  /// Сервис для создания новых файлов и их регистрации в рабочем пространстве редактора.
+  /// </summary>
   public class FileCreateService
   {
     private readonly UI.Components.MultiEditorMethods.FileManager _fileManager;
@@ -24,42 +22,83 @@ namespace UI.Services.FileManager
     /// <summary>
     /// Создаёт новый пустой файл и добавляет его в рабочее пространство редактора.
     /// 
-    /// При создании:
-    /// <list type="bullet">
-    ///   <item>Проверяет, существует ли контейнер текстового редактора, и создаёт его при необходимости.</item>
-    ///   <item>Генерирует уникальное имя файла (например, "Новый", "Новый1", "Новый2" и т.д.).</item>
-    ///   <item>Создаёт новый экземпляр <see cref="TextEditorUI"/> и отображает его в рабочем пространстве.</item>
-    ///   <item>Добавляет запись о новом файле в систему путей (<see cref="EditorWorkspaceModel.FilePaths"/>).</item>
+    /// Алгоритм:
+    /// <list type="number">
+    ///   <item>Проверяет и при необходимости создаёт контейнер текстового редактора.</item>
+    ///   <item>Генерирует уникальное имя файла.</item>
+    ///   <item>Создаёт модель файла и сам редактор.</item>
+    ///   <item>Отображает редактор в UI и регистрирует файл в системе путей.</item>
     /// </list>
     /// </summary>
     public void CreateNewFile()
     {
-      TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetContainer(EditorType.TextEditor);
+      var container = EnsureTextEditorContainer();
+      var fileName = GenerateUniqueFileName();
+      var editor = CreateTextEditor(fileName);
 
-      if (textEditorContainer == null)
-      {
-        textEditorContainer = _fileManager.ContainerService.CreateContainer(EditorType.TextEditor);
-      }
+      ShowEditorInUI(container, fileName, editor);
+      RegisterFile(fileName);
+    }
 
-      var controlName = "Новый";
+    #region 🔧 Подметоды (SRP)
+
+    /// <summary>
+    /// Проверяет наличие контейнера текстового редактора и создаёт его при необходимости.
+    /// </summary>
+    private TextEditorContainer EnsureTextEditorContainer()
+    {
+      return _fileManager.ContainerService.GetEditorContainer(EditorType.TextEditor)
+             ?? _fileManager.ContainerService.CreateEditorContainer(EditorType.TextEditor);
+    }
+
+    /// <summary>
+    /// Генерирует уникальное имя для нового файла (например: "Новый", "Новый1", "Новый2" и т.д.).
+    /// </summary>
+    private string GenerateUniqueFileName()
+    {
+      var baseName = "Новый";
+      var controlName = baseName;
       var counter = 0;
+
       while (_fileManager.EditorWorkspaceModel.FilePaths.ContainsKey(controlName))
       {
         counter++;
-        if (controlName != "Новый")
-        {
-          controlName = controlName.Remove(controlName.Length - (counter - 1).ToString().Length, (counter - 1).ToString().Length);
-        }
-
-        controlName += $"{counter}";
+        controlName = baseName + counter;
       }
 
-      var textEditor = new TextEditorUI();
-
-      var textEditorModel = new TextEditorModel(controlName);
-      textEditor.TextEditorModel = textEditorModel;
-      _fileManager.DockItemService.ShowNewDockItem(controlName, textEditorContainer, textEditor);
-      _fileManager.EditorWorkspaceModel.FilePaths.Add(controlName, string.Empty);
+      return controlName;
     }
+
+    /// <summary>
+    /// Создаёт новый экземпляр текстового редактора для указанного файла.
+    /// </summary>
+    private TextEditorUI CreateTextEditor(string fileName)
+    {
+      var textEditorModel = new TextEditorModel(fileName);
+      var textEditor = new TextEditorUI
+      {
+        TextEditorModel = textEditorModel
+      };
+
+      return textEditor;
+    }
+
+    /// <summary>
+    /// Отображает редактор в UI в указанном контейнере.
+    /// </summary>
+    private void ShowEditorInUI(TextEditorContainer container, string fileName, TextEditorUI textEditor)
+    {
+      _fileManager.DockItemService.ShowEditorDockItem(fileName, container, textEditor);
+    }
+
+    /// <summary>
+    /// Добавляет новый файл в систему путей рабочего пространства.
+    /// </summary>
+    private void RegisterFile(string fileName)
+    {
+      _fileManager.EditorWorkspaceModel.FilePaths.Add(fileName, string.Empty);
+    }
+
+    #endregion
   }
 }

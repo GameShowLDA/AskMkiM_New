@@ -1,49 +1,27 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using DataBaseConfiguration.Services;
-using DTO.Base.Models;
-using DTO.Base.Models.Session;
-using DTO.Settings.SettingsModels;
-using EventCore.Adapters;
-using EventCore.Events;
-using Message;
-using Ude;
-using UI.Components.ArchiveControls;
-using UI.Components.ArchiveManager.Models;
-using UI.Components.FileComparerControls;
-using UI.Components.Invoke;
-using UI.Controls;
-using UI.Controls.Runner;
-using UI.Controls.TextEditor;
+﻿using UI.Controls.TextEditor;
 using UI.Services;
 using UI.Services.FileManager;
 using UI.Services.ProtocolManager;
 using UI.Services.Services;
-using UI.Windows.WpfDocking.Windows.Docking;
-using Utilities.Services;
-using static DTO.Enum.FileEnums;
-using static UI.Controls.TextEditor.TextEditorUI;
-using static Utilities.LoggerUtility;
-using Path = System.IO.Path;
-using UserControl = System.Windows.Controls.UserControl;
 
 namespace UI.Components.MultiEditorMethods
 {
   /// <summary>
-  /// Класс для работы с файлами.
+  /// Главный менеджер для работы с файлами и текстовыми редакторами в приложении.  
+  /// Отвечает за инициализацию и связывание всех файловых сервисов, необходимых для функционирования редактора.
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Инициализация всех сервисов, отвечающих за работу с файлами, вкладками, контейнерами и сессиями.</item>
+  ///   <item>Предоставление централизованного доступа к сервисам через единый объект.</item>
+  ///   <item>Хранение и управление состоянием рабочего пространства редактора.</item>
+  /// </list>
   /// </summary>
   public class FileManager
   {
     /// <summary>
-    /// Конструктор для инициализации файлового менеджера.
+    /// Инициализирует новый экземпляр <see cref="FileManager"/> и создаёт все связанные сервисы.
     /// </summary>
-    /// <param name="multiEditorControl">Экземпляр класса MultiEditorControl.</param>
+    /// <param name="multiEditorControl">Экземпляр <see cref="MultiEditorControl"/>, представляющий основное рабочее пространство редактора.</param>
     public FileManager(MultiEditorControl multiEditorControl)
     {
       EditorWorkspaceModel = new EditorWorkspaceModel(multiEditorControl);
@@ -60,17 +38,64 @@ namespace UI.Components.MultiEditorMethods
       SessionService = new SessionManager(this);
     }
 
+    /// <summary>
+    /// Модель рабочего пространства редактора, содержащая информацию о состоянии вкладок, контейнеров, путей и активных редакторов.
+    /// </summary>
     public EditorWorkspaceModel EditorWorkspaceModel;
+
+    /// <summary>
+    /// Сервис управления файловыми операциями: открытие, сохранение, создание, сравнение и работа с именами файлов.
+    /// </summary>
     public FileService FileService;
+
+    /// <summary>
+    /// Сервис для работы с архивами: открытие, просмотр, извлечение и отображение содержимого архивных файлов.
+    /// </summary>
     public ArchiveService ArchiveService;
+
+    /// <summary>
+    /// Сервис управления контейнерами вкладок редактора: создание, получение и удаление контейнеров.
+    /// </summary>
     public ContainerService ContainerService;
+
+    /// <summary>
+    /// Сервис формирования и отображения протоколов испытаний, включая экспорт в PDF и открытие в редакторе.
+    /// </summary>
     public ProtocolService ProtocolService;
+
+    /// <summary>
+    /// Сервис управления отображением контейнеров и вкладок в пользовательском интерфейсе.
+    /// </summary>
     public ControlManagerService ControlManagerService;
+
+    /// <summary>
+    /// Сервис управления вкладками (DockItem): создание, показ, закрытие и обработка событий вкладок редактора.
+    /// </summary>
     public DockItemService DockItemService;
+
+    /// <summary>
+    /// Сервис для работы с файловой структурой и директориями (создание папок, навигация и т.д.).
+    /// </summary>
     public FolderService FolderService;
+
+    /// <summary>
+    /// Сервис для работы с панелью запуска тестов и управлением запуском сценариев.
+    /// </summary>
     public RunControlService RunControlService;
+
+    /// <summary>
+    /// Сервис для создания и управления экземплярами <see cref="TextEditorUI"/> в приложении.
+    /// </summary>
     public TextEditorService TextEditorService;
+
+    /// <summary>
+    /// Сервис для создания и управления трансляцией текстовых файлов, включая отображение результатов трансляции.
+    /// </summary>
     public TranslationService TranslationService;
+
+    /// <summary>
+    /// Сервис управления сессиями: сохранение состояния открытых вкладок и их восстановление при повторном запуске приложения.
+    /// </summary>
     public SessionManager SessionService;
   }
 }

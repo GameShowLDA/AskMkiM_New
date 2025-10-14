@@ -14,13 +14,34 @@ using static Utilities.LoggerUtility;
 
 namespace UI.Services
 {
+  /// <summary>
+  /// Сервис управления процессом трансляции файлов и их отображением в редакторе.
+  /// 
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Создание редактора с результатом трансляции.</item>
+  ///   <item>Добавление и отображение вкладок транслятора (<see cref="TranslatorItem"/>).</item>
+  ///   <item>Удаление вкладок транслятора и освобождение ресурсов контейнера.</item>
+  /// </list>
+  /// </summary>
   public class TranslationService
   {
+    private readonly UI.Components.MultiEditorMethods.FileManager _fileManager;
+
     /// <summary>
-    /// Создает текстовый редактор с результатами трансляции файла.
+    /// Инициализирует новый экземпляр сервиса трансляции.
     /// </summary>
-    /// <returns>Текстовый редактор с странслированным файлом.</returns>
-    public TextEditorUI CreateTranslationFileAsync()
+    /// <param name="fileManager">Главный файловый менеджер, обеспечивающий доступ к контейнерам и редакторам.</param>
+    public TranslationService(UI.Components.MultiEditorMethods.FileManager fileManager)
+    {
+      _fileManager = fileManager;
+    }
+
+    /// <summary>
+    /// Создаёт новый текстовый редактор для отображения результатов трансляции.
+    /// </summary>
+    /// <returns>Экземпляр <see cref="TextEditorUI"/> с предзаполненным сообщением и режимом только для чтения
+    public TextEditorUI CreateTranslationEditor()
     {
       string fileName = $"Трансляция_{DateTime.Now:HHmmss}.opkw";
       var textEditorModel = new TextEditorModel(fileName);
@@ -35,24 +56,24 @@ namespace UI.Services
     }
 
     /// <summary>
-    /// Выполняет добавление <see cref="TranslatorItem"/> в качестве новой вкладки в DockControl.
+    /// Добавляет вкладку транслятора в редактор, объединяя исходный файл и результат трансляции.
     /// </summary>
-    /// <param name="editor">Текстовый редактор с транслируемым файлом.</param>
-    /// <param name="translateEditor">Текстовый редактор с странслированным файлом.</param>
-    /// <param name="editorType">Тип контейнера.</param>
-    /// <returns>Асинхронную задачу, представляющую результат выполнения.</returns>
+    /// <param name="sourceEditor">Редактор с исходным файлом.</param>
+    /// <param name="translatedEditor">Редактор с результатом трансляции.</param>
+    /// <param name="editorType">Тип контейнера для размещения вкладки.</param>
+    /// <returns>Экземпляр <see cref="TranslatorItem"/>, отображающий оба редактора.</returns>
     public async Task<TranslatorItem> AddTranslatorItem(TextEditorUI editor, TextEditorUI translateEditor, EditorType editorType)
     {
       try
       {
-        TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetContainer(editorType);
+        TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetEditorContainer(editorType);
         if (textEditorContainer == null)
         {
-          textEditorContainer = _fileManager.ContainerService.CreateContainer(editorType);
+          textEditorContainer = _fileManager.ContainerService.CreateEditorContainer(editorType);
         }
-        var item = await _fileManager.DockItemService.ShowNewDockItem($"Трансляция {editor.TextEditorModel.FileName}", textEditorContainer, editor, translateEditor);
+        var item = await _fileManager.DockItemService.ShowTranslatorDockItemAsync($"Трансляция {editor.TextEditorModel.FileName}", textEditorContainer, editor, translateEditor);
 
-        _fileManager.ControlManagerService.ShowControl(textEditorContainer, EditorType.Translator);
+        _fileManager.ControlManagerService.ShowEditorContainer(textEditorContainer, EditorType.Translator);
         return item;
       }
       catch (Exception ex)
@@ -63,11 +84,16 @@ namespace UI.Services
       }
     }
 
-    public async Task DeleteTranslatorItem(TranslatorItem translatorItem, EditorType editorType)
+    /// <summary>
+    /// Удаляет вкладку транслятора из контейнера и освобождает ресурсы, если контейнер пуст.
+    /// </summary>
+    /// <param name="translatorItem">Экземпляр <see cref="TranslatorItem"/>, который необходимо удалить.</param>
+    /// <param name="editorType">Тип контейнера, из которого удаляется элемент.</param>
+    public async Task RemoveTranslatorTabAsync(TranslatorItem translatorItem, EditorType editorType)
     {
       try
       {
-        TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetContainer(editorType);
+        TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetEditorContainer(editorType);
         if (textEditorContainer == null)
         {
           return;
@@ -76,7 +102,7 @@ namespace UI.Services
         textEditorContainer.RemoveTranslatorItem(translatorItem);
         if (textEditorContainer.DockManager.DockItems.Count == 0)
         {
-          _fileManager.ContainerService.RemoveTextEditorContainer(textEditorContainer, EditorType.Translator);
+          _fileManager.ContainerService.RemoveEditorContainer(textEditorContainer, EditorType.Translator);
         }
       }
       catch (Exception ex)
@@ -86,12 +112,5 @@ namespace UI.Services
         return;
       }
     }
-
-    public TranslationService(UI.Components.MultiEditorMethods.FileManager fileManager)
-    {
-      _fileManager = fileManager;
-    }
-
-    UI.Components.MultiEditorMethods.FileManager _fileManager;
   }
 }

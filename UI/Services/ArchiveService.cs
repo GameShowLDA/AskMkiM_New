@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DTO.Base.Models;
 using UI.Components.ArchiveControls;
 using UI.Components.ArchiveManager.Models;
-using UI.Components.MultiEditorMethods;
 using UI.Controls.TextEditor;
 using static Utilities.LoggerUtility;
 
@@ -31,7 +27,6 @@ namespace UI.Services
     /// <summary>
     /// Создаёт новый экземпляр сервиса для работы с архивами.
     /// </summary>
-    /// <param name="fileManager">Главный файловый менеджер, предоставляющий доступ к контейнерам и вкладкам редактора.</param>
     public ArchiveService(UI.Components.MultiEditorMethods.FileManager fileManager)
     {
       _fileManager = fileManager;
@@ -39,70 +34,119 @@ namespace UI.Services
 
     /// <summary>
     /// Асинхронно открывает интерфейс архивов и отображает таблицу со всеми доступными архивами.
-    /// 
-    /// Если вкладка со списком архивов уже существует — активирует её.  
-    /// Если нет — создаёт новую вкладку с таблицей архивов.
     /// </summary>
     public async Task OpenArchiveBrowserAsync()
     {
-      TextEditorContainer archiveContainer = _fileManager.ContainerService.GetContainer(EditorType.Archive);
-      TableAllArchivesControl allArchives = null;
-      if (archiveContainer == null)
-      {
-        archiveContainer = _fileManager.ContainerService.CreateContainer(EditorType.Archive);
-      }
-      if (archiveContainer.DockManager.DockItems.FirstOrDefault(item => item.TabText == "Все архивы") != null)
-      {
-        var foundDockItem = archiveContainer.DockManager.DockItems.FirstOrDefault(item => item.TabText == "Все архивы");
-        if (foundDockItem.Content is TableAllArchivesControl archivesTable)
-        {
-          allArchives = archivesTable;
-          _fileManager.DockItemService.ShowDockItem(archiveContainer, foundDockItem);
-        }
-      }
-      else
-      {
-        allArchives = new TableAllArchivesControl();
-        _fileManager.DockItemService.ShowNewDockItem("Все архивы", archiveContainer, allArchives);
-      }
+      var container = GetOrCreateArchiveContainer();
+      var archivesControl = await ShowArchiveListAsync(container);
 
-      _fileManager.ControlManagerService.ShowControl(archiveContainer, EditorType.Archive);
-      allArchives.ArchiveSelected -= OnArchiveSelectedAsync;
-      allArchives.ArchiveSelected += OnArchiveSelectedAsync;
+      SubscribeToArchiveSelection(archivesControl);
+      _fileManager.ControlManagerService.ShowEditorContainer(container, EditorType.Archive);
+    }
+
+    #region 📁 Открытие списка архивов
+
+    /// <summary>
+    /// Получает существующий контейнер архивов или создаёт новый.
+    /// </summary>
+    private TextEditorContainer GetOrCreateArchiveContainer()
+    {
+      return _fileManager.ContainerService.GetEditorContainer(EditorType.Archive)
+          ?? _fileManager.ContainerService.CreateEditorContainer(EditorType.Archive);
     }
 
     /// <summary>
-    /// Обрабатывает выбор архива пользователем в таблице.  
-    /// Загружает и отображает содержимое выбранного архива в новой вкладке.
+    /// Отображает вкладку со списком архивов, создавая её при необходимости.
+    /// </summary>
+    private async Task<TableAllArchivesControl> ShowArchiveListAsync(TextEditorContainer container)
+    {
+      var existingDockItem = container.DockManager.DockItems
+          .FirstOrDefault(item => item.TabText == "Все архивы");
+
+      if (existingDockItem?.Content is TableAllArchivesControl existingControl)
+      {
+        _fileManager.DockItemService.ShowDockItem(container, existingDockItem);
+        return existingControl;
+      }
+
+      var newControl = new TableAllArchivesControl();
+      _fileManager.DockItemService.ShowEditorDockItem("Все архивы", container, newControl);
+      return newControl;
+    }
+
+    /// <summary>
+    /// Подписывает сервис на событие выбора архива пользователем.
+    /// </summary>
+    private void SubscribeToArchiveSelection(TableAllArchivesControl archivesControl)
+    {
+      archivesControl.ArchiveSelected -= OnArchiveSelectedAsync;
+      archivesControl.ArchiveSelected += OnArchiveSelectedAsync;
+    }
+
+    #endregion
+
+    #region 📂 Обработка выбора архива
+
+    /// <summary>
+    /// Обрабатывает выбор архива пользователем и открывает его содержимое в новой вкладке.
     /// </summary>
     private async void OnArchiveSelectedAsync(object sender, MouseButtonEventArgs e)
     {
-      var dataGrid = e.Source as DataGrid;
-      if (dataGrid?.SelectedItem is ApkArchive selectedArchive)
+      if (TryGetSelectedArchive(e, out ApkArchive selectedArchive))
       {
-        if (selectedArchive != null)
-        {
-          TextEditorContainer archiveContainer = _fileManager.ContainerService.GetContainer(EditorType.Archive);
-          var archiveName = selectedArchive.ArchiveName;
-          _fileManager.DockItemService.ShowNewDockItem(archiveName, archiveContainer, new TableApkArchiveControl(archiveName));
-          _fileManager.ControlManagerService.ShowControl(archiveContainer, EditorType.Archive);
-        }
+        await OpenArchiveContentsAsync(selectedArchive);
       }
     }
+
+    /// <summary>
+    /// Извлекает выбранный архив из события мыши.
+    /// </summary>
+    private bool TryGetSelectedArchive(MouseButtonEventArgs e, out ApkArchive selectedArchive)
+    {
+      selectedArchive = null;
+      if (e.Source is DataGrid grid && grid.SelectedItem is ApkArchive archive)
+      {
+        selectedArchive = archive;
+        return true;
+      }
+      return false;
+    }
+
+    /// <summary>
+    /// Открывает содержимое выбранного архива в новой вкладке.
+    /// </summary>
+    private Task OpenArchiveContentsAsync(ApkArchive archive)
+    {
+      var container = GetOrCreateArchiveContainer();
+      _fileManager.DockItemService.ShowEditorDockItem(
+          archive.ArchiveName,
+          container,
+          new TableApkArchiveControl(archive.ArchiveName));
+
+      _fileManager.ControlManagerService.ShowEditorContainer(container, EditorType.Archive);
+      return Task.CompletedTask;
+    }
+
+    #endregion
+
+    #region 📄 Открытие OPK-файла
 
     /// <summary>
     /// Открывает OPK-файл в режиме только для чтения в контейнере архивов.
     /// </summary>
-    /// <param name="userControl">Контрол, содержащий содержимое OPK-файла.</param>
-    /// <param name="elementName">Имя файла или элемента, которое будет отображаться на вкладке.</param>
     public void OpenOpkFile(UserControl userControl, string elementName)
     {
       LogDebug($"Происходит открытие opk файла {elementName}.");
-      TextEditorContainer archiveContainer = _fileManager.ContainerService.GetContainer(EditorType.Archive);
-      var textEditor = userControl as TextEditorUI;
-      textEditor.IsReadOnly = true;
-      _fileManager.DockItemService.ShowNewDockItem(elementName, archiveContainer, textEditor, EditorType.Archive);
-      _fileManager.ControlManagerService.ShowControl(archiveContainer, EditorType.Archive);
+
+      var container = GetOrCreateArchiveContainer();
+      if (userControl is TextEditorUI textEditor)
+      {
+        textEditor.IsReadOnly = true;
+        _fileManager.DockItemService.ShowEditorDockItem(elementName, container, textEditor, EditorType.Archive);
+        _fileManager.ControlManagerService.ShowEditorContainer(container, EditorType.Archive);
+      }
     }
+
+    #endregion
   }
 }

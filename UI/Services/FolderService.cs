@@ -12,14 +12,43 @@ using UI.Controls.TextEditor;
 
 namespace UI.Services.Services
 {
+  /// <summary>
+  /// Сервис для работы с файловой системой, связанной с редактором.
+  /// 
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Открытие папки, содержащей текущий открытый файл.</item>
+  ///   <item>Поддержка как обычного текстового редактора, так и режима трансляции.</item>
+  ///   <item>Интеграция с проводником ОС для быстрого перехода к файлу.</item>
+  /// </list>
+  /// </summary>
   public class FolderService
   {
-    public void OpenFolder()
+    private readonly UI.Components.MultiEditorMethods.FileManager _fileManager;
+
+    /// <summary>
+    /// Инициализирует новый экземпляр сервиса работы с папками.
+    /// </summary>
+    /// <param name="fileManager">Главный файловый менеджер, предоставляющий доступ к контейнерам редактора.</param>
+    public FolderService(UI.Components.MultiEditorMethods.FileManager fileManager)
     {
-      TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetContainer(EditorType.TextEditor);
+      _fileManager = fileManager;
+    }
+
+    /// <summary>
+    /// Открывает в проводнике операционной системы папку, в которой находится файл, открытый в текущем редакторе.
+    /// Поддерживает два режима:
+    /// <list type="bullet">
+    ///   <item>Если открыт стандартный текстовый редактор — открывает папку активного файла.</item>
+    ///   <item>Если активен транслятор — открывает папку исходного (левого) файла.</item>
+    /// </list>
+    /// </summary>
+    public void OpenActiveFileFolder()
+    {
+      TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetEditorContainer(EditorType.TextEditor);
       if (textEditorContainer == null)
       {
-        textEditorContainer = _fileManager.ContainerService.GetContainer(EditorType.Translator);
+        textEditorContainer = _fileManager.ContainerService.GetEditorContainer(EditorType.Translator);
         if (textEditorContainer == null)
         {
           return;
@@ -45,9 +74,9 @@ namespace UI.Services.Services
     }
 
     /// <summary>
-    /// Открывает папку в проводнике, в которой содержится файл.
+    /// Открывает в проводнике операционной системы папку, содержащую указанный файл.
     /// </summary>
-    /// <param name="path">Путь к файлу.</param>
+    /// <param name="path">Полный путь к файлу.</param>
     public static void OpenFileFolder(string path)
     {
       string folder = Path.GetDirectoryName(path);
@@ -61,12 +90,5 @@ namespace UI.Services.Services
         });
       }
     }
-
-    public FolderService(UI.Components.MultiEditorMethods.FileManager fileManager)
-    {
-      _fileManager = fileManager;
-    }
-
-    UI.Components.MultiEditorMethods.FileManager _fileManager;
   }
 }

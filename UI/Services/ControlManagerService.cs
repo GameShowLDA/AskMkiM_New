@@ -1,39 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 using UI.Components;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
 using UI.Controls.TextEditor;
 using static Utilities.LoggerUtility;
 
-
 namespace UI.Services
 {
+  /// <summary>
+  /// Сервис управления отображением контейнеров редактора в пользовательском интерфейсе.
+  /// 
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Отображение контейнера вкладок указанного типа.</item>
+  ///   <item>Создание кнопки вкладки и её привязка к контейнеру.</item>
+  ///   <item>Регистрация контейнера в системе управления вкладками.</item>
+  /// </list>
+  /// </summary>
   public class ControlManagerService
   {
-    /// <summary>
-    /// Отображает контейнер для вкладок заданного типа.
-    /// </summary>
-    /// <param name="textEditorContainer">Контейнер, содержащий вкладки заданного типа.</param>
-    /// <param name="editorType">Тип вкладок контейнера.</param>
-    public void ShowControl(TextEditorContainer textEditorContainer, EditorType editorType)
-    {
-      LogDebug($"Отображение контейнера для типа \"{editorType.ToString()}\"");
-      var controlManager = new ControlManager(_context);
-      var tabButton = new OpenFileButton();
-      tabButton.Header.Text = editorType.ToString();
-      controlManager.ShowControl(textEditorContainer, tabButton);
-    }
+    private readonly EditorWorkspaceModel _context;
 
+    /// <summary>
+    /// Создаёт новый экземпляр сервиса управления отображением контейнеров.
+    /// </summary>
     public ControlManagerService(EditorWorkspaceModel editorWorkspaceModel)
     {
       _context = editorWorkspaceModel;
     }
 
-    EditorWorkspaceModel _context;
+    /// <summary>
+    /// Отображает контейнер с вкладками заданного типа в интерфейсе.
+    /// </summary>
+    /// <param name="container">Контейнер, содержащий вкладки указанного типа.</param>
+    /// <param name="editorType">Тип вкладок (например, редактор текста, архив, протокол и т.д.).</param>
+    public void ShowEditorContainer(TextEditorContainer container, EditorType editorType)
+    {
+      LogDebug($"Отображение контейнера для типа \"{editorType}\"");
+
+      var controlManager = CreateControlManager();
+      var tabButton = CreateTabButton(editorType);
+
+      controlManager.ShowControl(container, tabButton);
+    }
+
+    #region 🔧 Вспомогательные методы
+
+    /// <summary>
+    /// Создаёт новый экземпляр <see cref="ControlManager"/> для работы с контейнерами.
+    /// </summary>
+    private ControlManager CreateControlManager()
+    {
+      return new ControlManager(_context);
+    }
+
+    /// <summary>
+    /// Формирует кнопку вкладки для указанного типа редактора.
+    /// </summary>
+    private OpenFileButton CreateTabButton(EditorType editorType)
+    {
+      return new OpenFileButton
+      {
+        Header = { Text = editorType.ToString() }
+      };
+    }
+
+    #endregion
   }
 }

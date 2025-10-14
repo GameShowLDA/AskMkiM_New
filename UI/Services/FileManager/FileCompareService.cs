@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using DTO.Base.Interface;
 using Message;
@@ -14,22 +10,13 @@ namespace UI.Services.FileManager
   /// <summary>
   /// Сервис для сравнения содержимого открытого файла с содержимым редактора.
   /// Предназначен для определения, были ли внесены изменения в текст по сравнению с сохранённой версией на диске.
-  /// 
-  /// Основные функции:
-  /// <list type="bullet">
-  ///   <item>Проверяет, отличается ли содержимое редактора от сохранённого файла.</item>
-  ///   <item>Определяет, является ли файл новым (ещё не сохранённым на диск).</item>
-  ///   <item>Отображает уведомление, если файл был удалён или повреждён на диске.</item>
-  /// </list>
-  /// 
-  /// Данный сервис обычно используется перед сохранением файла или при закрытии вкладки, чтобы предупредить пользователя о несохранённых изменениях.
   /// </summary>
   public class FileCompareService
   {
     private readonly EditorWorkspaceModel _context;
 
     /// <summary>
-    /// Создаёт новый экземпляр сервиса сравнения файлов.
+    /// Инициализирует новый экземпляр сервиса сравнения файлов.
     /// </summary>
     /// <param name="editorWorkspaceModel">Контекст редактора, содержащий пути к открытым файлам.</param>
     public FileCompareService(EditorWorkspaceModel editorWorkspaceModel)
@@ -47,44 +34,79 @@ namespace UI.Services.FileManager
     /// </returns>
     public bool HasFileChanged(IDockItem control)
     {
-      var fileName = control.Title;
-      if (string.IsNullOrEmpty(fileName))
-        return false;
+      if (!IsValidDockItem(control)) return false;
+      if (IsIgnoredFile(control.Title)) return false;
 
-      if (fileName.Contains(".opk"))
-        return false;
-
-      if (!_context.FilePaths.TryGetValue(fileName, out var filePath))
-      {
+      if (!TryGetFilePath(control.Title, out var filePath))
         return true;
-      }
 
-      if (string.IsNullOrEmpty(filePath))
-      {
-        if (control.Content is ITextEditorAdapter textEditor)
-        {
-          return !string.IsNullOrWhiteSpace(textEditor.Text);
-        }
-
-        return false;
-      }
-
-      if (File.Exists(filePath))
-      {
-        var diskContent = File.ReadAllText(filePath);
-
-        if (control.Content is ITextEditorAdapter textEditor)
-        {
-          return diskContent != textEditor.Text;
-        }
-
-        return false;
-      }
-      else
-      {
-        MessageBoxCustom.Show("Файл был удален или поврежден", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-        return true;
-      }
+      return string.IsNullOrEmpty(filePath)
+        ? CheckUnsavedFile(control)
+        : CompareWithSavedFile(control, filePath);
     }
+
+    #region 🔍 Подметоды проверки состояния файла
+
+    /// <summary>
+    /// Проверяет корректность объекта <see cref="IDockItem"/>.
+    /// </summary>
+    private static bool IsValidDockItem(IDockItem control)
+    {
+      return !string.IsNullOrEmpty(control?.Title);
+    }
+
+    /// <summary>
+    /// Проверяет, относится ли файл к игнорируемым (например, служебные файлы OPK).
+    /// </summary>
+    private static bool IsIgnoredFile(string fileName)
+    {
+      return fileName.Contains(".opk", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Пытается получить путь к файлу из контекста.
+    /// </summary>
+    private bool TryGetFilePath(string fileName, out string filePath)
+    {
+      return _context.FilePaths.TryGetValue(fileName, out filePath);
+    }
+
+    /// <summary>
+    /// Проверяет состояние несохранённого файла: если в редакторе есть содержимое — он считается изменённым.
+    /// </summary>
+    private static bool CheckUnsavedFile(IDockItem control)
+    {
+      if (control.Content is ITextEditorAdapter editor)
+        return !string.IsNullOrWhiteSpace(editor.Text);
+
+      return false;
+    }
+
+    /// <summary>
+    /// Сравнивает содержимое редактора с сохранённым файлом на диске.
+    /// </summary>
+    private static bool CompareWithSavedFile(IDockItem control, string filePath)
+    {
+      if (!File.Exists(filePath))
+        return HandleMissingFile();
+
+      var diskContent = File.ReadAllText(filePath);
+
+      if (control.Content is ITextEditorAdapter editor)
+        return diskContent != editor.Text;
+
+      return false;
+    }
+
+    /// <summary>
+    /// Обрабатывает ситуацию, когда файл отсутствует на диске.
+    /// </summary>
+    private static bool HandleMissingFile()
+    {
+      MessageBoxCustom.Show("Файл был удалён или повреждён", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+      return true;
+    }
+
+    #endregion
   }
 }

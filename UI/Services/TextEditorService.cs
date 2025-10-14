@@ -14,124 +14,122 @@ using static DTO.Enum.FileEnums;
 
 namespace UI.Services
 {
+  /// <summary>
+  /// Сервис управления текстовыми редакторами в пользовательском интерфейсе.
+  /// 
+  /// Основные задачи:
+  /// <list type="bullet">
+  ///   <item>Создание и инициализация экземпляров <see cref="TextEditorUI"/>.</item>
+  ///   <item>Получение активного текстового редактора.</item>
+  ///   <item>Закрытие активной вкладки и освобождение ресурсов.</item>
+  /// </list>
+  /// </summary>
   public class TextEditorService
   {
-    /// <summary>
-    /// Закрывает вкладку с активным текстовым редактором.
-    /// </summary>
-    /// <param name="isTranslation">Переменная, показывающая, выполняется закрытие вкладки при трансляции или нет.</param>
-    /// <returns>Возвращает <c>true</c>, если вкладка была закрыта, <c>false</c> в противном случае.</returns>
-    public bool RemoveActiveTextEditor(bool isTranslation)
-    {
-      TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetContainer(EditorType.TextEditor);
-      var foundDockItem = textEditorContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
-      if (foundDockItem != null && foundDockItem.Content is TextEditorUI textEditor)
-      {
-        var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
-        var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.TextEditor.ToString());
-        controlManager.RemoveControl(foundPage, textEditor, isTranslation);
-        _fileManager.EditorWorkspaceModel.FilePaths.Remove(foundDockItem.TabText);
-
-        bool closed = foundDockItem.Close();
-
-        if (textEditorContainer.DockManager.DockItems.Count == 0)
-        {
-          _fileManager.ContainerService.RemoveTextEditorContainer(textEditorContainer, EditorType.TextEditor);
-        }
-
-        return closed;
-      }
-      return false;
-    }
+    private readonly UI.Components.MultiEditorMethods.FileManager _fileManager;
 
     /// <summary>
-    /// Создает новый экземпляр <see cref="TextEditorUI"/> и устанавливает его текст.
+    /// Инициализирует новый экземпляр сервиса управления текстовыми редакторами.
     /// </summary>
-    /// <param name="fileContent">Содержимое файла, которое будет установлено в редактор.</param>
-    /// <returns>Новый экземпляр <see cref="TextEditorUI"/>.</returns>
-    public TextEditorUI CreateTextEditor(TextEditorModel textEditorModel, string fileContent, FileType fileType = FileType.None)
-    {
-      var textEditor = new TextEditorUI(fileType, textEditorModel);
-      textEditor.Text = fileContent;
-      return textEditor;
-    }
-
-    /// <summary>
-    /// Получает активный текстовый редактор.
-    /// </summary>
-    /// <returns></returns>
-    public TextEditorUI GetActiveTextEditor(EditorType editorType)
-    {
-      var activeTab = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && _fileManager.EditorWorkspaceModel.UserControls[_fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
-      {
-        TextEditorContainer foundContainer = _fileManager.ContainerService.GetContainer(editorType);
-        if (foundContainer == null)
-        {
-          return null;
-        }
-        else if (editorType == EditorType.TextEditor && string.Equals(activeTab.Text, editorType.ToString()))
-        {
-          return foundContainer.GetTextEditor();
-        }
-        else
-        {
-          return null;
-        }
-      }
-      else
-      {
-        return null;
-      }
-    }
-
-    public TextEditorUI GetActiveTextEditor()
-    {
-      var activeTab = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-
-      if (activeTab != null)
-      {
-        int index = _fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
-        if (_fileManager.EditorWorkspaceModel.UserControls[index] is TextEditorContainer textEditorContainer)
-        {
-          var foundItem = textEditorContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveDocument == true);
-          if (foundItem != null)
-          {
-            if (foundItem.Content is TranslatorItem translatorItem)
-            {
-              return translatorItem.GetLeftEditor();
-            }
-            else if (foundItem.Content is TextEditorUI foundTextEditor)
-            {
-              return foundTextEditor;
-            }
-            else
-            {
-              return null;
-            }
-          }
-          else
-          {
-            return null;
-          }
-        }
-        else
-        {
-          return null;
-        }
-      }
-      else
-      {
-        return null;
-      }
-    }
-
-
+    /// <param name="fileManager">Главный файловый менеджер, предоставляющий доступ к модели рабочего пространства.</param>
     public TextEditorService(UI.Components.MultiEditorMethods.FileManager fileManager)
     {
       _fileManager = fileManager;
     }
 
-    UI.Components.MultiEditorMethods.FileManager _fileManager;
+    /// <summary>
+    /// Закрывает вкладку с активным текстовым редактором.
+    /// </summary>
+    /// <param name="isTranslation">Флаг, указывающий, выполняется ли закрытие в процессе трансляции.</param>
+    /// <returns><c>true</c>, если вкладка была успешно закрыта; <c>false</c>, если активный редактор не найден.</returns>
+    public bool CloseActiveTextEditor(bool isTranslation)
+    {
+      var container = _fileManager.ContainerService.GetEditorContainer(EditorType.TextEditor);
+      if (container == null) return false;
+
+      var activeDockItem = container.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem);
+      if (activeDockItem?.Content is not TextEditorUI textEditor) return false;
+
+      var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
+      var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.TextEditor.ToString());
+
+      controlManager.RemoveControl(foundPage, textEditor, isTranslation);
+      _fileManager.EditorWorkspaceModel.FilePaths.Remove(activeDockItem.TabText);
+
+      bool closed = activeDockItem.Close();
+
+      if (container.DockManager.DockItems.Count == 0)
+      {
+        _fileManager.ContainerService.RemoveEditorContainer(container, EditorType.TextEditor);
+      }
+
+      return closed;
+    }
+
+    /// <summary>
+    /// Создаёт и инициализирует новый экземпляр текстового редактора.
+    /// </summary>
+    /// <param name="textEditorModel">Модель редактора, содержащая путь и имя файла.</param>
+    /// <param name="fileContent">Содержимое, которое будет отображено в редакторе.</param>
+    /// <param name="fileType">Тип файла (по умолчанию <see cref="FileType.None"/>).</param>
+    /// <returns>Экземпляр <see cref="TextEditorUI"/> с установленным содержимым.</returns>
+    public TextEditorUI CreateTextEditor(TextEditorModel textEditorModel, string fileContent, FileType fileType = FileType.None)
+    {
+      var editor = new TextEditorUI(fileType, textEditorModel)
+      {
+        Text = fileContent
+      };
+      return editor;
+    }
+
+    /// <summary>
+    /// Получает активный текстовый редактор для указанного типа редактора.
+    /// </summary>
+    /// <param name="editorType">Тип редактора (<see cref="EditorType.TextEditor"/> и т.д.).</param>
+    /// <returns>Активный <see cref="TextEditorUI"/> или <c>null</c>, если активный редактор не найден.</returns>
+    public TextEditorUI GetActiveTextEditor(EditorType editorType)
+    {
+      var activeTab = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(
+        page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]
+      );
+
+      if (activeTab == null) return null;
+
+      if (_fileManager.EditorWorkspaceModel.UserControls[_fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is not TextEditorContainer)
+        return null;
+
+      var container = _fileManager.ContainerService.GetEditorContainer(editorType);
+      if (container == null) return null;
+
+      return editorType == EditorType.TextEditor && activeTab.Text == editorType.ToString()
+        ? container.GetTextEditor()
+        : null;
+    }
+
+    /// <summary>
+    /// Получает активный текстовый редактор в текущем открытом контейнере.
+    /// </summary>
+    /// <returns>Активный экземпляр <see cref="TextEditorUI"/> или <c>null</c>, если активный редактор не найден.</returns>
+    public TextEditorUI GetActiveTextEditor()
+    {
+      var activeTab = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(
+        page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]
+      );
+
+      if (activeTab == null) return null;
+
+      int index = _fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
+      if (_fileManager.EditorWorkspaceModel.UserControls[index] is not TextEditorContainer container) return null;
+
+      var activeDockItem = container.DockManager.DockItems.FirstOrDefault(item => item.IsActiveDocument);
+      if (activeDockItem == null) return null;
+
+      return activeDockItem.Content switch
+      {
+        TranslatorItem translatorItem => translatorItem.GetLeftEditor(),
+        TextEditorUI textEditor => textEditor,
+        _ => null
+      };
+    }
   }
 }

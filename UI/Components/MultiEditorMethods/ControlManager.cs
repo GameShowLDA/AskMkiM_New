@@ -231,13 +231,13 @@ namespace UI.Components.MultiEditorMethods
     private void AddFileCompareControl(string header, UserControl control)
     {
       var fileManager = new FileManager(multiEditorControl);
-      var textEditorContainer = fileManager.ContainerService.GetContainer(EditorType.TextEditor);
+      var textEditorContainer = fileManager.ContainerService.GetEditorContainer(EditorType.TextEditor);
       if (textEditorContainer == null)
       {
-        textEditorContainer = fileManager.ContainerService.CreateContainer(EditorType.TextEditor);
+        textEditorContainer = fileManager.ContainerService.CreateEditorContainer(EditorType.TextEditor);
       }
 
-      fileManager.DockItemService.ShowNewDockItem(header, textEditorContainer, control);
+      fileManager.DockItemService.ShowEditorDockItem(header, textEditorContainer, control);
     }
 
     /// <summary>
