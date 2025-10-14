@@ -4,6 +4,7 @@ using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
+using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Mode.Base;
@@ -124,7 +125,7 @@ namespace Mode.Metrology.CI
       {
         var meterDevice = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции"));
-        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.CI, param);
+        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.CI, param);
 
         var result = await meterDevice.IrManger.Measure.MeasureAsync(param, firstNorm, lastNorm, protocolUI);
 

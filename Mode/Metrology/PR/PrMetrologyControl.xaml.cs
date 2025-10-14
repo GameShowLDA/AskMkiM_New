@@ -3,6 +3,7 @@ using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
+using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Mode.Base;
@@ -125,7 +126,7 @@ namespace Mode.Metrology.PR
         for (int i = 0; i < 10; i++)
         {
           await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления"), IsBlockStart: true);
-          var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.PR, param);
+          var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PR, param);
 
           var result = await fastMeter.ContinuityManager.CheckContinuityAsync(param);
 

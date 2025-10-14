@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using DTO.Base.Models;
 using EventCore.Adapters;
 using UI.Components.FileComparerControls;
 using UI.Components.Invoke;
@@ -31,9 +32,9 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="control">Элемент управления для удаления.</param>
     public async Task RemoveControl(OpenFileButton tabButton, UserControl control, bool isTranslation = false)
     {
-      var contains = fileManager.OpenPages.Contains(tabButton);
+      var contains = fileManager.EditorWorkspaceModel.OpenPages.Contains(tabButton);
       if (contains
-        && fileManager.UserControls.Contains(control)
+        && fileManager.EditorWorkspaceModel.UserControls.Contains(control)
         || control is TextEditorUI && isTranslation == false
         || control is RunControl)
       {
@@ -44,10 +45,10 @@ namespace UI.Components.MultiEditorMethods
           if (tabButton.Text == EditorType.TextEditor.ToString())
           {
             editorType = EditorType.TextEditor;
-            var container = fileManager.OpenPages.FirstOrDefault(textEditorContainer
+            var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
               => textEditorContainer.Text == editorType.ToString());
-            var containerIndex = fileManager.OpenPages.IndexOf(container);
-            if (fileManager.UserControls[containerIndex] is TextEditorContainer foundContainer)
+            var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
+            if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
             {
               var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
               if (foundDockItem != null)
@@ -62,10 +63,10 @@ namespace UI.Components.MultiEditorMethods
         else if (control is RunControl runControl)
         {
           editorType = EditorType.Run;
-          var container = fileManager.OpenPages.FirstOrDefault(textEditorContainer
+          var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
             => textEditorContainer.Text == editorType.ToString());
-          var containerIndex = fileManager.OpenPages.IndexOf(container);
-          if (fileManager.UserControls[containerIndex] is TextEditorContainer foundContainer)
+          var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
+          if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
           {
             var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
             if (foundDockItem != null)
@@ -91,9 +92,9 @@ namespace UI.Components.MultiEditorMethods
 
         RemoveTabAndControl(tabButton, control);
         ShowNextTab(index);
-        var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-        if (fileManager.UserControls.OfType<TextEditorContainer>().Count() == 0 || activeTab == null
-          || !(fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer))
+        var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+        if (fileManager.EditorWorkspaceModel.UserControls.OfType<TextEditorContainer>().Count() == 0 || activeTab == null
+          || !(fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer))
         {
           SearchEventAdapter.RaiseCloseSearchWindow();
         }
@@ -135,8 +136,8 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="control">Элемент управления для удаления.</param>
     private void RemoveTabAndControl(OpenFileButton tabButton, UserControl control)
     {
-      fileManager.OpenPages.Remove(tabButton);
-      fileManager.UserControls.Remove(control);
+      fileManager.EditorWorkspaceModel.OpenPages.Remove(tabButton);
+      fileManager.EditorWorkspaceModel.UserControls.Remove(control);
 
       multiEditorControl.TopPanel.Children.Remove(tabButton);
       multiEditorControl.ContentPanel.Children.Remove(control);
@@ -150,7 +151,7 @@ namespace UI.Components.MultiEditorMethods
     {
       if (multiEditorControl.ContentPanel.Children.Count > 0)
       {
-        ShowControl(fileManager.UserControls[index > 0 ? index - 1 : 0], fileManager.OpenPages[index > 0 ? index - 1 : 0]);
+        ShowControl(fileManager.EditorWorkspaceModel.UserControls[index > 0 ? index - 1 : 0], fileManager.EditorWorkspaceModel.OpenPages[index > 0 ? index - 1 : 0]);
       }
     }
 
@@ -230,13 +231,13 @@ namespace UI.Components.MultiEditorMethods
     private void AddFileCompareControl(string header, UserControl control)
     {
       var fileManager = new FileManager(multiEditorControl);
-      var textEditorContainer = fileManager.GetContainer(EditorType.TextEditor);
+      var textEditorContainer = fileManager.ContainerService.GetEditorContainer(EditorType.TextEditor);
       if (textEditorContainer == null)
       {
-        textEditorContainer = fileManager.CreateContainer(EditorType.TextEditor);
+        textEditorContainer = fileManager.ContainerService.CreateEditorContainer(EditorType.TextEditor);
       }
 
-      fileManager.ShowNewDockItem(header, textEditorContainer, control);
+      fileManager.DockItemService.ShowEditorDockItem(header, textEditorContainer, control);
     }
 
     /// <summary>
@@ -245,12 +246,12 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="tabType">Тип вкладки для удаления.</param>
     private void RemoveControlsByType(TypeWindow tabType)
     {
-      for (int i = fileManager.OpenPages.Count - 1; i >= 0; i--)
+      for (int i = fileManager.EditorWorkspaceModel.OpenPages.Count - 1; i >= 0; i--)
       {
-        var tab = fileManager.OpenPages[i];
+        var tab = fileManager.EditorWorkspaceModel.OpenPages[i];
         if (tab.TabType == tabType)
         {
-          var control = fileManager.UserControls[i];
+          var control = fileManager.EditorWorkspaceModel.UserControls[i];
           RemoveControl(tab, control);
         }
       }
@@ -287,12 +288,12 @@ namespace UI.Components.MultiEditorMethods
     {
       if (description != null)
       {
-        foreach (OpenFileButton page in fileManager.OpenPages)
+        foreach (OpenFileButton page in fileManager.EditorWorkspaceModel.OpenPages)
         {
           if (page.Description == description)
           {
-            var index = fileManager.OpenPages.IndexOf(page);
-            var userControl = fileManager.UserControls[index];
+            var index = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(page);
+            var userControl = fileManager.EditorWorkspaceModel.UserControls[index];
             ShowControl(userControl, page);
             return true;
           }
@@ -300,12 +301,12 @@ namespace UI.Components.MultiEditorMethods
       }
       else
       {
-        foreach (OpenFileButton page in fileManager.OpenPages)
+        foreach (OpenFileButton page in fileManager.EditorWorkspaceModel.OpenPages)
         {
           if (page.Header.Text == tabButton.Header.Text)
           {
-            var index = fileManager.OpenPages.IndexOf(page);
-            var userControl = fileManager.UserControls[index];
+            var index = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(page);
+            var userControl = fileManager.EditorWorkspaceModel.UserControls[index];
             ShowControl(userControl, page);
             return true;
           }
@@ -340,8 +341,8 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="control">Контрол, который будет добавлен.</param>
     private void AddTabAndControl(OpenFileButton tabButton, UserControl control)
     {
-      fileManager.OpenPages.Add(tabButton);
-      fileManager.UserControls.Add(control);
+      fileManager.EditorWorkspaceModel.OpenPages.Add(tabButton);
+      fileManager.EditorWorkspaceModel.UserControls.Add(control);
 
       try
       {
@@ -360,7 +361,7 @@ namespace UI.Components.MultiEditorMethods
     /// <returns></returns>
     public bool GetEmtyControl()
     {
-      return fileManager.OpenPages.Count == 0 && fileManager.UserControls.Count == 0;
+      return fileManager.EditorWorkspaceModel.OpenPages.Count == 0 && fileManager.EditorWorkspaceModel.UserControls.Count == 0;
     }
 
     /// <summary>
@@ -411,10 +412,26 @@ namespace UI.Components.MultiEditorMethods
     public ControlManager(ObservableCollection<OpenFileButton> openPages, ObservableCollection<UserControl> userControls, Dictionary<string, string> filePaths, MultiEditorControl multiEditorControl)
     {
       this.fileManager = new FileManager(multiEditorControl);
-      this.fileManager.OpenPages = openPages;
-      this.fileManager.UserControls = userControls;
-      this.fileManager.FilePaths = filePaths;
+      this.fileManager.EditorWorkspaceModel.OpenPages = openPages;
+      this.fileManager.EditorWorkspaceModel.UserControls = userControls;
+      this.fileManager.EditorWorkspaceModel.FilePaths = filePaths;
       this.multiEditorControl = multiEditorControl;
+    }
+
+    /// <summary>
+    /// Инициализирует новый экземпляр класса <see cref="ControlManager"/> с передачей списка открытых страниц, пользовательских контролов, путей к файлам и экземпляра <see cref="MultiEditorControl"/>.
+    /// </summary>
+    /// <param name="openPages">Список открытых страниц, представленных кнопками <see cref="OpenFileButton"/>.</param>
+    /// <param name="userControls">Список пользовательских контролов, представленных элементами <see cref="UserControl"/>.</param>
+    /// <param name="filePaths">Словарь, содержащий пути к файлам, где ключ — имя файла, а значение — путь к файлу.</param>
+    /// <param name="multiEditorControl">Экземпляр <see cref="MultiEditorControl"/> для взаимодействия с редактором.</param>
+    public ControlManager(EditorWorkspaceModel editorWorkspaceModel)
+    {
+      this.fileManager = new FileManager(multiEditorControl);
+      this.fileManager.EditorWorkspaceModel.OpenPages = editorWorkspaceModel.OpenPages;
+      this.fileManager.EditorWorkspaceModel.UserControls = editorWorkspaceModel.UserControls;
+      this.fileManager.EditorWorkspaceModel.FilePaths = editorWorkspaceModel.FilePaths;
+      this.multiEditorControl = editorWorkspaceModel.MultiEditorControl;
     }
   }
 }

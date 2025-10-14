@@ -4,6 +4,7 @@ using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
 using DTO.Base.Models;
+using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Mode.Base;
@@ -11,6 +12,7 @@ using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
+using static DTO.Enum.Metrology;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.PI
@@ -139,8 +141,7 @@ namespace Mode.Metrology.PI
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции", headerColor: ShowMessageModel.SuccessMessage.TitleColor));
 
         // TODO : позже прописать погрешность в настрйоках
-        double firstNorm = param - (param / 100.0 * 5);
-        double lastNorm = param + (param / 100.0 * 5);
+        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PI_ACW, param);
 
         // double firstNorm = param - ((param / 100.0 * GetPercentageError(TypeCommand.CI)) + GetNumericError(TypeCommand.CI));
         // double lastNorm = param + (param / 100.0 * GetPercentageError(TypeCommand.CI)) + GetNumericError(TypeCommand.CI);

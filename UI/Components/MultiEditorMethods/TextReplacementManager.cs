@@ -31,8 +31,8 @@ namespace UI.Components.MultiEditorMethods
 
     internal void ReplaceWord(string fileName, SearchResult searchResult, int startOffset, string replaceText, string searchText)
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         if (textEditorContainer != null)
         {

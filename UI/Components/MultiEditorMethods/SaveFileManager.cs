@@ -32,7 +32,7 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="index">Индекс открытой страницы, для которой проверяется необходимость сохранения.</param>
     public void SaveFileDialog(ref MessageBoxResult result, ref bool saveFileResult, DockItem control)
     {
-      var needToSave = fileManager.CompareFiles(control);
+      var needToSave = fileManager.FileService.Comparison.HasFileChanged(control);
       if (needToSave)
       {
         result = MessageBoxCustom.Show(
@@ -57,15 +57,15 @@ namespace UI.Components.MultiEditorMethods
       if (control != null)
       {
         var fileName = control.Title;
-        if (fileManager.FilePaths.ContainsKey(fileName))
+        if (fileManager.EditorWorkspaceModel.FilePaths.ContainsKey(fileName))
         {
-          if (fileManager.FilePaths[fileName] == string.Empty)
+          if (fileManager.EditorWorkspaceModel.FilePaths[fileName] == string.Empty)
           {
             return SaveFileAs();
           }
           else
           {
-            var filePath = fileManager.FilePaths[fileName];
+            var filePath = fileManager.EditorWorkspaceModel.FilePaths[fileName];
             if (control.Content is TextEditorUI)
             {
               var textEditor = control.Content as TextEditorUI;
@@ -98,8 +98,8 @@ namespace UI.Components.MultiEditorMethods
       {
         string filePath = saveFileDialog.FileName;
         var activeTab = GetActiveTab();
-        int index = fileManager.OpenPages.IndexOf(activeTab);
-        if (fileManager.UserControls[index] is TextEditorContainer control)
+        int index = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
+        if (fileManager.EditorWorkspaceModel.UserControls[index] is TextEditorContainer control)
         {
           if (control != null)
           {
@@ -153,7 +153,7 @@ namespace UI.Components.MultiEditorMethods
     /// <returns>Активная вкладка типа <see cref="OpenFileButton"/>.</returns>
     private OpenFileButton GetActiveTab()
     {
-      return fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      return fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
     }
 
     /// <summary>
@@ -164,8 +164,8 @@ namespace UI.Components.MultiEditorMethods
     {
       var activeTab = GetActiveTab();
 
-      int index = fileManager.OpenPages.IndexOf(activeTab);
-      if (fileManager.UserControls[index] is TextEditorContainer activeTextEditorContainer)
+      int index = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
+      if (fileManager.EditorWorkspaceModel.UserControls[index] is TextEditorContainer activeTextEditorContainer)
       {
         var activeTextEditorTab = activeTextEditorContainer.DockManager.DockItems.FirstOrDefault(tab => tab.IsActiveItem == true);
         if (activeTextEditorTab.Content is TextEditorUI textEditor)
@@ -190,13 +190,13 @@ namespace UI.Components.MultiEditorMethods
     {
       var fileName = Path.GetFileName(filePath);
 
-      if (!fileManager.FilePaths.ContainsKey(fileName))
+      if (!fileManager.EditorWorkspaceModel.FilePaths.ContainsKey(fileName))
       {
-        fileManager.FilePaths.Add(fileName, filePath);
+        fileManager.EditorWorkspaceModel.FilePaths.Add(fileName, filePath);
       }
       else
       {
-        fileManager.FilePaths[fileName] = filePath;
+        fileManager.EditorWorkspaceModel.FilePaths[fileName] = filePath;
       }
     }
 

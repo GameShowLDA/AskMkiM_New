@@ -4,6 +4,7 @@ using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
+using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Service;
@@ -151,7 +152,7 @@ namespace Mode.Metrology.PR
         var data = SelectOptimalCurrentAndVoltage(param, mint);
         double currentGenerial = (data.DecimalCurrent / 1000.0) + data.IntegerCurrent;
 
-        var (firstNorm, lastNorm) = ErrorProviderLocator.Provider.GetRange(MetrologyTypeCommand.PR, param);
+        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PR, param);
 
         var voltage = await meterDevice.DcVoltageManager.MeasureDCVoltageAsync(param * (currentGenerial / 1000), protocolUI);
         double fakeCurrent = GetInterpolatedCurrent(param, mint);

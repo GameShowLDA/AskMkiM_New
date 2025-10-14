@@ -161,13 +161,13 @@ namespace UI.Components.MultiEditorMethods
       }
       else
       {
-        var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+        var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
 
         if (activeTab != null)
         {
-          int pageIndex = fileManager.OpenPages.IndexOf(activeTab);
+          int pageIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
 
-          if (fileManager.UserControls[pageIndex] is TextEditorContainer textEditorContainer)
+          if (fileManager.EditorWorkspaceModel.UserControls[pageIndex] is TextEditorContainer textEditorContainer)
           {
             var foundDockItem = textEditorContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
             if (foundDockItem != null)
@@ -205,13 +205,13 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="fullText">Полный текст всех документов для поиска.</param>
     private async void HandleSearchNavigation(string searchParameters, Dictionary<UserControl, string> fullText)
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
 
       if (activeTab != null)
       {
-        int pageIndex = fileManager.OpenPages.IndexOf(activeTab);
+        int pageIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab);
 
-        if (fileManager.UserControls[pageIndex] is TextEditorContainer textEditorContainer)
+        if (fileManager.EditorWorkspaceModel.UserControls[pageIndex] is TextEditorContainer textEditorContainer)
         {
           var foundDockItem = textEditorContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
           if (foundDockItem != null)
@@ -370,8 +370,8 @@ namespace UI.Components.MultiEditorMethods
     /// <returns>Коллекцию вкладок, в которых находятся текстовые редакторы, где необходимо провести поиск по тексту.</returns>
     private List<DockItem> SetSearchAreaPages(int searchArea)
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer activeTextEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer activeTextEditorContainer)
       {
         var searchPages = new List<DockItem>();
         if (searchArea == 0 || searchArea == 2)
@@ -438,8 +438,8 @@ namespace UI.Components.MultiEditorMethods
 
       if (searchArea == 0 || searchArea == 2)
       {
-        var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-        if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+        var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+        if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
         {
           var activeDockItem = textEditorContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true
           && (item.Content.GetType() == typeof(TextEditorUI) || item.Content.GetType() == typeof(TranslatorItem)));
@@ -470,8 +470,8 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="fullText">Словарь для хранения текста.</param>
     private void AddTextFromAllDocuments(Dictionary<UserControl, string> fullText)
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         foreach (var item in textEditorContainer.DockManager.DockItems)
         {
@@ -638,7 +638,7 @@ namespace UI.Components.MultiEditorMethods
     /// </summary>
     private void ClearAllHighlights()
     {
-      foreach (var userControl in fileManager.UserControls)
+      foreach (var userControl in fileManager.EditorWorkspaceModel.UserControls)
       {
         if (userControl is TextEditorUI textEditor)
         {
@@ -787,8 +787,8 @@ namespace UI.Components.MultiEditorMethods
     private int SwitchToNextDocument()
     {
       int currentIndex = GetCurrentIndex();
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         if (currentIndex >= 0 && currentIndex < textEditorContainer.DockManager.DockItems.Count - 1)
         {
@@ -819,8 +819,8 @@ namespace UI.Components.MultiEditorMethods
     /// <returns>Индекс текущей активной вкладки, или -1 если активная вкладка не найдена.</returns>
     private int GetCurrentIndex()
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         if (textEditorContainer != null)
         {
@@ -838,8 +838,8 @@ namespace UI.Components.MultiEditorMethods
     /// <returns>Индекс следующей вкладки с текстовым редактором, или -1, если таковой не найден.</returns>
     private int GetNextValidIndex(int startIndex)
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         if (textEditorContainer != null)
         {
@@ -863,8 +863,8 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="nextIndex">Индекс следующей вкладки, которую нужно отобразить.</param>
     private void ShowNextPage(int nextIndex)
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         if (textEditorContainer != null)
         {
@@ -906,8 +906,8 @@ namespace UI.Components.MultiEditorMethods
     {
       if (index >= 0 && index < foundResults.Count)
       {
-        var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-        if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+        var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+        if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
         {
           if (textEditorContainer != null)
           {
@@ -959,8 +959,8 @@ namespace UI.Components.MultiEditorMethods
     /// </summary>
     public void OnSearchWindowClosing()
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         if (textEditorContainer != null)
         {
@@ -1008,9 +1008,9 @@ namespace UI.Components.MultiEditorMethods
       }
       else
       {
-        foreach (var tab in fileManager.OpenPages)
+        foreach (var tab in fileManager.EditorWorkspaceModel.OpenPages)
         {
-          if (fileManager.UserControls[fileManager.OpenPages.IndexOf(tab)] is TextEditorContainer editorContainer)
+          if (fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(tab)] is TextEditorContainer editorContainer)
           {
             foreach (var item in editorContainer.DockManager.DockItems)
             {
@@ -1069,8 +1069,8 @@ namespace UI.Components.MultiEditorMethods
     /// <returns>Страница с данным файлом, или null, если не найдена.</returns>
     private TextEditorContainer FindFilePage()
     {
-      var activeTab = fileManager.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
-      if (activeTab != null && fileManager.UserControls[fileManager.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
+      var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
+      if (activeTab != null && fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer textEditorContainer)
       {
         return textEditorContainer;
       }

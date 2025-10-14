@@ -2,6 +2,7 @@
 using System.Windows;
 using ControlCommandAnalyser;
 using ControlCommandAnalyser.Model.Ok;
+using DTO.Base.Models;
 using EventCore.Adapters;
 using Message;
 using UI.Controls;

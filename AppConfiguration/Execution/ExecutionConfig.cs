@@ -73,9 +73,12 @@ namespace AppConfiguration.Execution
 
     public static async Task SetExecutionModel(SettingsExecutionModel protocolModel)
     {
-      await Task.Run(() =>
+      await Task.Run(async () =>
       {
-        SettingsExecutionModel = protocolModel;
+        await SetIdleMode(protocolModel.IdleModeExecution);
+        await SetIsErrorSimulationMode(protocolModel.IsErrorSimulationMode);
+        await SetStepByStepMode(protocolModel.StepByStepMode);
+        await SetStopOnError(protocolModel.StopOnError);
       });
     }
 
