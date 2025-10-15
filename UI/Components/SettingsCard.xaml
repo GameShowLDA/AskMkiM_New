@@ -22,40 +22,40 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
                         <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" SnapsToDevicePixels="True">
-                            
+
                             <!-- база -->
                             <Border x:Name="Box"
-                                Background="{DynamicResource SecondarySolidColorBrush}"
+                                Background="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
                                 BorderBrush="#415163"
                                 BorderThickness="1"
                                 CornerRadius="4"
                                 SnapsToDevicePixels="True"
                                 RenderOptions.EdgeMode="Aliased"/>
-                            
+
                             <Border x:Name="Inset"
                                 CornerRadius="4"
                                 BorderThickness="1"
                                 BorderBrush="#20FFFFFF"
                                 IsHitTestVisible="False"/>
 
-                           
+
                         </Grid>
 
                         <ControlTemplate.Triggers>
                             <!-- Checked -->
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
-                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource ActiveForegroundSolidColorBrush80}"/>
+                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource SettingsInteractiveActiveSolidColorBrush}"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource SettingsInteractiveActiveSolidColorBrush}"/>
                             </Trigger>
 
                             <!-- Hover -->
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Box" Property="BorderBrush" Value="#50657B"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource SettingsInteractiveHoverSolidColorBrush}"/>
                             </Trigger>
 
                             <!-- Pressed (слегка темнее) -->
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource ActiveForegroundSolidColorBrush80}"/>
+                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource SettingsInteractivePressedSolidColorBrush}"/>
                             </Trigger>
 
                             <!-- Disabled -->
@@ -71,10 +71,8 @@
     </UserControl.Resources>
 
     <!-- Карточка -->
-    <Border Background="{DynamicResource SecondarySolidColorBrush}"
-          BorderBrush="{DynamicResource CardBorder}"
-          BorderThickness="1"
-          CornerRadius="14"
+    <Border 
+        Style="{DynamicResource SettingCardStyle}"
           Padding="10"
           SnapsToDevicePixels="True">
         <Grid>
@@ -99,20 +97,13 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0"
-             Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
-             FontSize="15"
-             FontWeight="SemiBold"
-             Foreground="{StaticResource ForegroundSolidColorBrush}"
-             Margin="0,0,0,2"
-             FontFamily="{DynamicResource WinstonMedium}"
-             TextWrapping="Wrap"/>
+                           Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                           Margin="0,0,0,2"
+                             Style="{DynamicResource SettingsHeaderStyle}" />
 
                 <TextBlock Grid.Row="1"
              Text="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}"
-             FontSize="12"
-             Foreground="{StaticResource ForegroundSolidColorBrush}"
-             FontFamily="{DynamicResource WinstonLight}"
-             TextWrapping="Wrap"/>
+             Style="{DynamicResource SettingsDescriptionStyle}" />
             </Grid>
         </Grid>
     </Border>

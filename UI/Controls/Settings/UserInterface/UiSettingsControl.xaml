@@ -8,7 +8,10 @@
              xmlns:Components ="clr-namespace:UI.Components"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border Background="{StaticResource IsCheckedColorSolidColorBrush80}" Margin="15,10" CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource ForegroundSolidColorBrush60}">
+    <Border 
+        Style="{DynamicResource SettingPanelStyle}"
+        Margin="15,10" 
+        >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -46,8 +49,8 @@
                      Margin="10,0,0,0"
                      Height="30" 
                      CheckThickness="4"
-                     CircleBackground ="{StaticResource IsCheckedColorSolidColorBrush}"
-                     CircleBorder="{StaticResource PrimarySolidColorBrush}"
+                     CircleBackground ="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
+                     CircleBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
                      />
 
                     <Icons:ErrorIconControlV2 
@@ -57,8 +60,8 @@
                       Height="30" 
                         Margin="10,0,0,0"
                         CrossThickness="4"
-                      CircleBackground ="{StaticResource IsCheckedColorSolidColorBrush}"
-                      CircleBorder="{StaticResource PrimarySolidColorBrush}"
+                      CircleBackground ="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
+                      CircleBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
                       />
 
 
@@ -66,10 +69,10 @@
                         Grid.Column="0"
                         HorizontalAlignment="Right"
                         Width="30" Height="30"
-                        ButtonBackground="{DynamicResource PrimarySolidColorBrush}"
-                        ButtonBorder="{StaticResource PrimarySolidColorBrush}"
-                        ArrowBrush="{StaticResource ForegroundSolidColorBrush}"
-                        ArrowHoverBrush="{StaticResource ActiveForegroundSolidColorBrush80}"
+                        ButtonBackground="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                        ButtonBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                        ArrowBrush="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                        ArrowHoverBrush="{StaticResource SettingsInteractivePressedSolidColorBrush}"
                         VerticalAlignment="Center"/>
                 </Grid>
             </Grid>

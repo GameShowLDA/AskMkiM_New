@@ -25,6 +25,7 @@
         <ResourceDictionary Source="/UI;component/Resources/StyleApp/DataGridStyle.xaml"/>
         <ResourceDictionary Source="/UI;component/Resources/StyleApp/MetrologyStyle.xaml"/>
         <ResourceDictionary Source="/UI;component/Components/Archive/ArchiveMenu/ArchiveContextMenu.xaml"/>
+        <ResourceDictionary Source="/UI;component/Resources/Settings/SettingsStyle.xaml"/>
 
     </ResourceDictionary.MergedDictionaries>
 
@@ -363,7 +364,7 @@
                               MinWidth="{TemplateBinding ActualWidth}"
                               MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border x:Name="DropDownBorder"
-                                    Background="{DynamicResource ComboBoxSecondActiveBorderColor}"
+                                    Background="{DynamicResource SettingsCongifButtonBackgroundSolidColorBrush}"
                                     BorderThickness="1">
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />

@@ -40,7 +40,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Background="{StaticResource ActiveForegroundSolidColorBrush}" x:Name="addChassisButton"
+                <Border 
+                        x:Name="addChassisButton"
+                        Background="{DynamicResource SettingsCongifButtonBackgroundSolidColorBrush}" 
+                        BorderBrush="{DynamicResource SettingsCongifButtonBorderSolidColorBrush}"
+                        BorderThickness="1"
                         MouseEnter="addChassisButton_MouseEnter"
                         MouseLeave="addChassisButton_MouseLeave"
                         PreviewMouseDown="addChassisButton_PreviewMouseDown"
@@ -90,12 +94,16 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Background="{StaticResource ActiveForegroundSolidColorBrush}" x:Name="addRackButton"
-                MouseEnter="addChassisButton_MouseEnter"
-                MouseLeave="addChassisButton_MouseLeave"
-                PreviewMouseDown="addRackButton_PreviewMouseDown"
-                CornerRadius="5"
-                Height="40"
+                <Border
+                    Background="{DynamicResource SettingsCongifButtonBackgroundSolidColorBrush}" 
+                    BorderBrush="{DynamicResource SettingsCongifButtonBorderSolidColorBrush}"
+                    BorderThickness="1" 
+                    x:Name="addRackButton"
+                    MouseEnter="addChassisButton_MouseEnter"
+                    MouseLeave="addChassisButton_MouseLeave"
+                    PreviewMouseDown="addRackButton_PreviewMouseDown"
+                    CornerRadius="5"
+                    Height="40"
                 >
 
                     <TextBlock 

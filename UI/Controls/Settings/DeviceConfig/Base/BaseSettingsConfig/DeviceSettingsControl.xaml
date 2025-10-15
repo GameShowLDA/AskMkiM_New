@@ -24,7 +24,7 @@
                                 </Track.DecreaseRepeatButton>
                                 <Track.Thumb>
                                     <Thumb Name="Thumb" 
-                                   Background="{DynamicResource PrimarySolidColorBrush}" 
+                                   Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" 
                                    BorderThickness="0"
                                    Cursor="ScrollNS">
                                         <Thumb.Template>
@@ -60,7 +60,7 @@
     <Border Background="{DynamicResource SecondarySolidColorBrush}" 
             CornerRadius="15"
             Padding="20,10"
-            Margin="10"
+            Margin="10,10,10,15"
             Effect="{DynamicResource ShadowEffect}">
         <Grid>
             <Grid.RowDefinitions>
@@ -94,7 +94,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                            <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
                                 <TextBlock Text="Модель устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                    FontSize="20" FontWeight="Bold" Margin="7,0"
                                    />
@@ -123,13 +123,13 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                            <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
                                 <TextBlock Text="Номер устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
                             </Border>
 
-                            <Border Grid.Row="1" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" Margin="5,5">
+                            <Border Grid.Row="1" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" Margin="5,5">
                                 <TextBox 
                                     Background="Transparent" 
                                      BorderThickness="0" 
@@ -155,7 +155,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                            <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
                                 <TextBlock Text="Тип подключения устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                              FontSize="20" FontWeight="Bold" Margin="7,0"
                              />
@@ -189,7 +189,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                            <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
                                 <TextBlock Text="IP Address" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
@@ -206,7 +206,7 @@
                                     <ColumnDefinition Width="60"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="0" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent" 
                                          BorderThickness="0" VerticalAlignment="Center" 
                                          HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
@@ -219,7 +219,7 @@
                                        />
 
 
-                                <Border Grid.Column="2" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="2" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
                                          HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart2"
@@ -230,7 +230,7 @@
                                        />
 
 
-                                <Border Grid.Column="4" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="4" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent" BorderThickness="0" VerticalAlignment="Center" 
                                          HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart3"
@@ -241,7 +241,7 @@
                                        />
 
 
-                                <Border Grid.Column="6" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="6" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
                                          HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart4"
@@ -264,7 +264,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                            <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
                                 <TextBlock Text="COM PORT" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
@@ -316,7 +316,7 @@
                                             <TextBlock Text="VID:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                    FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
-                                            <Border Grid.Column="1" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                            <Border Grid.Column="1" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                                 <TextBox x:Name="VIDData" Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
                                          HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"/>
                                             </Border>
@@ -333,7 +333,7 @@
                                             <TextBlock Text="PID:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                    FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
-                                            <Border Grid.Column="1" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                            <Border Grid.Column="1" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                                 <TextBox x:Name="PIDData" Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
                                                      HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"/>
                                             </Border>

@@ -7,17 +7,6 @@
              d:DesignHeight="84" d:DesignWidth="320" MaxWidth="300">
 
     <UserControl.Resources>
-        <!-- те же локальные кисти, что и в SettingsCard -->
-        <SolidColorBrush x:Key="CardBorder" Color="{DynamicResource SecondaryColor}"/>
-        <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource ForegroundColor}"/>
-        <SolidColorBrush x:Key="DescBrush" Color="{DynamicResource ForegroundColor60}"/>
-
-        <!-- hover/active для бордеров как у чекбокса -->
-        <SolidColorBrush x:Key="HoverBorder" Color="{DynamicResource ActiveColor80}"/>
-        <SolidColorBrush x:Key="TileBg"     Color="{DynamicResource SecondaryColor}"/>
-        <!-- фон плитки выпадающего списка -->
-        <SolidColorBrush x:Key="ItemHover"  Color="{DynamicResource ActiveColor80}"/>
-        <SolidColorBrush x:Key="ItemSelected" Color="{DynamicResource ActiveColor}"/>
 
         <!-- Стиль комбобокса в духе SettingsCheckBox -->
         <Style x:Key="SettingsComboBox" TargetType="ComboBox">
@@ -25,9 +14,9 @@
             <Setter Property="MinWidth" Value="200"/>
             <Setter Property="Height" Value="44"/>
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="{DynamicResource TitleBrush}"/>
-            <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SettingsHeaderSolidColorBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SettingsSliderBackgroundSolidColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsSliderBorderSolidColorBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="14,0,44,0"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -38,10 +27,10 @@
                         <Grid>
                             <!-- плитка -->
                             <Border x:Name="Bd"
-                  CornerRadius="12"
-                  Background="{TemplateBinding Background}"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  BorderThickness="{TemplateBinding BorderThickness}"/>
+                                CornerRadius="12"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"/>
 
                             <!-- текст выбранного -->
                             <ContentPresenter Margin="{TemplateBinding Padding}"
@@ -60,7 +49,7 @@
                                 <Path x:Name="Arrow"
                                         HorizontalAlignment="Center" VerticalAlignment="Center"
                                         Data="M 2 8 L 9 14 L 16 8"    
-                                        Stroke="{DynamicResource TitleBrush}"
+                                        Stroke="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
                                         StrokeThickness="2.2"
                                         StrokeStartLineCap="Round"
                                         StrokeEndLineCap="Round"
@@ -74,16 +63,16 @@
 
                             <!-- выпадающий список на полную ширину -->
                             <Popup x:Name="PART_Popup"
-                 Placement="Bottom"
-                 IsOpen="{TemplateBinding IsDropDownOpen}"
-                 StaysOpen="False"
-                 AllowsTransparency="True"
-                 PopupAnimation="Fade">
+                                    Placement="Bottom"
+                                    IsOpen="{TemplateBinding IsDropDownOpen}"
+                                    StaysOpen="False"
+                                    AllowsTransparency="True"
+                                    PopupAnimation="Fade">
                                 <Border CornerRadius="12"
-                    Background="{DynamicResource TileBg}"
-                    BorderBrush="{DynamicResource CardBorder}"
-                    BorderThickness="1"
-                    MinWidth="{Binding ActualWidth, ElementName=Bd}">
+                                    Background="{DynamicResource SettingsSelectorBackgroundSolidColorBrush}"
+                                    BorderBrush="{DynamicResource SettingsSliderBorderSolidColorBrush}"
+                                    BorderThickness="1"
+                                    MinWidth="{Binding ActualWidth, ElementName=Bd}">
                                     <!-- ширина = ширине поля -->
                                     <ScrollViewer CanContentScroll="True" MaxHeight="340">
                                         <ItemsPresenter/>
@@ -94,10 +83,10 @@
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource HoverBorder}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource SettingsSliderBorderSolidColorBrush}"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource HoverBorder}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource SettingsSliderBorderSolidColorBrush}"/>
                             </Trigger>
                             <!-- открыто: стрелка ВВЕРХ -->
                             <Trigger SourceName="PART_DropDownButton" Property="IsChecked" Value="True">
@@ -116,11 +105,11 @@
                 </Setter.Value>
             </Setter>
 
-            <!-- пункты выпадашки выше/шире -->
+            <!-- пункты выпадашки -->
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ComboBoxItem">
-                        <Setter Property="Foreground" Value="{DynamicResource TitleBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource SettingsTitleSolidColorBrush}"/>
                         <Setter Property="FontSize" Value="15"/>
                         <Setter Property="MinHeight" Value="40"/>
                         <Setter Property="Padding" Value="14,10"/>
@@ -128,15 +117,15 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ComboBoxItem">
-                                    <Border x:Name="ItemBd" Background="{TemplateBinding Background}" CornerRadius="8">
+                                    <Border x:Name="ItemBd" Background="{TemplateBinding Background}" CornerRadius="7">
                                         <ContentPresenter VerticalAlignment="Center" Margin="6,0"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsHighlighted" Value="True">
-                                            <Setter TargetName="ItemBd" Property="Background" Value="{DynamicResource ItemHover}"/>
+                                            <Setter TargetName="ItemBd" Property="Background" Value="{DynamicResource SettingsSelectorHoverSolidColorBrush}"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="ItemBd" Property="Background" Value="{DynamicResource ItemSelected}"/>
+                                            <Setter TargetName="ItemBd" Property="Background" Value="{DynamicResource SettingsSelectorSelectedSolidColorBrush}"/>
                                         </Trigger>
                                         <Trigger Property="IsEnabled" Value="False">
                                             <Setter TargetName="ItemBd" Property="Opacity" Value="0.6"/>
@@ -154,10 +143,8 @@
     </UserControl.Resources>
 
     <!-- Карточка -->
-    <Border Background="{StaticResource SecondarySolidColorBrush}"
-          BorderBrush="{StaticResource CardBorder}"
-          BorderThickness="1"
-          CornerRadius="14"
+    <Border 
+        Style="{DynamicResource SettingCardStyle}"
           Padding="10"
           SnapsToDevicePixels="True">
 
@@ -178,7 +165,7 @@
                  Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  FontSize="15"
                  FontWeight="SemiBold"
-                 Foreground="{DynamicResource TitleBrush}"
+                 Foreground="{DynamicResource SettingsTitleSolidColorBrush}"
                  Margin="0,0,0,2"
                  FontFamily="{DynamicResource WinstonMedium}"
                  TextWrapping="Wrap"/>

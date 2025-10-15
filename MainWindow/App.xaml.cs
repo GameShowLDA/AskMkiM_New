@@ -46,7 +46,7 @@ namespace MainWindowProgram
     protected override async void OnStartup(StartupEventArgs e)
     {
 
-      ThemeManager.ApplyTheme("Dark");
+      ThemeManager.ApplyTheme("Light");
       base.OnStartup(e);
 
       CommandLineArgs = e.Args;

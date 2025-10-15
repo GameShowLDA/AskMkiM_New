@@ -61,7 +61,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Border Background="{StaticResource SecondarySolidColorBrush}" CornerRadius="20" Margin="20">
+    <Border Background="{DynamicResource SettingsMainBackgroundSolidColorBrush}" CornerRadius="20" Margin="20">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -71,11 +71,10 @@
 
             <TextBlock 
                 Text="Параметры" 
-                FontSize="22" 
                 Padding="15,10"
-                Foreground="{StaticResource ForegroundSolidColorBrush}"
-                FontFamily="{StaticResource WinstonBold}"
-                VerticalAlignment="Center"  
+                Style="{DynamicResource SettingsTitleStyle}"
+                FontFamily="{DynamicResource WinstonBold}"
+                FontSize="22" 
                 Grid.Row="0"/>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
@@ -88,7 +87,10 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0" x:Name="ConfigManager" Background="{StaticResource IsCheckedColorSolidColorBrush80}" Margin="15,10" CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource ForegroundSolidColorBrush60}">
+                    <Border Grid.Row="0" x:Name="ConfigManager" 
+                            Style="{DynamicResource SettingPanelStyle}"
+                            Margin="15,10" 
+                            >
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>

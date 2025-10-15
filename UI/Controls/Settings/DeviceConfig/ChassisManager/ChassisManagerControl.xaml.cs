@@ -160,7 +160,7 @@ namespace UI.Controls.Settings.DeviceConfig.ChassisManager
     {
       if (sender is Border border)
       {
-        border.Background = (Brush)Application.Current.Resources["IsCheckedColorSolidColorBrush"];
+        border.Background = (Brush)Application.Current.Resources["SettingsCongifButtonHoverBackgroundSolidColorBrush"];
         border.Cursor = Cursors.Hand;
       }
     }
@@ -174,7 +174,7 @@ namespace UI.Controls.Settings.DeviceConfig.ChassisManager
     {
       if (sender is Border border)
       {
-        border.Background = (Brush)Application.Current.Resources["ActiveForegroundSolidColorBrush"];
+        border.Background = (Brush)Application.Current.Resources["SettingsCongifButtonBackgroundSolidColorBrush"];
         border.Cursor = Cursors.Wait;
       }
     }
