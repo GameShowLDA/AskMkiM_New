@@ -51,9 +51,9 @@
     <SolidColorBrush x:Key="ToggleButtonSecondActiveBorderColor" Color="{DynamicResource IsCheckedColor}"/>
 
     <SolidColorBrush x:Key="ComboBoxBackgroundColor" Color="Transparent"/>
-    <SolidColorBrush x:Key="ComboBoxAcriveBackgroundColor" Color="{StaticResource SecondaryColor}"/>
-    <SolidColorBrush x:Key="ComboBoxForegroundColor" Color="{StaticResource ForegroundColor}"/>
-    <SolidColorBrush x:Key="ComboBoxBorderColor" Color="{StaticResource SecondaryColor}"/>
+    <SolidColorBrush x:Key="ComboBoxAcriveBackgroundColor" Color="{DynamicResource SecondaryColor}"/>
+    <SolidColorBrush x:Key="ComboBoxForegroundColor" Color="{DynamicResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="ComboBoxBorderColor" Color="{DynamicResource SecondaryColor}"/>
     <SolidColorBrush x:Key="ComboBoxSecondActiveBorderColor" Color="{DynamicResource IsCheckedColor}"/>
 
     <Style x:Key="AnimatedSwitch" TargetType="{x:Type ToggleButton}">
@@ -118,8 +118,8 @@
     <Style x:Key="ConfigButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="50"/>
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Background" Value="{StaticResource PrimarySolidColorBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
 
         <Setter Property="Template">
@@ -137,11 +137,11 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource ActiveBorderSolidColorBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
                 <!-- Меняем фон на красный -->
-                <Setter Property="Foreground" Value="{StaticResource PrimarySolidColorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimarySolidColorBrush}"/>
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="BorderBrush" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
         </Style.Triggers>
@@ -153,8 +153,8 @@
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Padding" Value="10"/>
-        <Setter Property="Background" Value="{StaticResource LightPrimarySolidColorBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource LightPrimarySolidColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
 
@@ -170,21 +170,21 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource ActiveBorderSolidColorBrush}"/>
-                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource PrimarySolidColorBrush}"/>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimarySolidColorBrush}"/>
                             <Setter Property="Cursor" Value="Hand"/>
                         </Trigger>
 
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource ActiveBorderSolidColorBrush}"/>
-                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource PrimarySolidColorBrush}"/>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimarySolidColorBrush}"/>
                         </Trigger>
 
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource SecondarySolidColorBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondarySolidColorBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -195,8 +195,8 @@
     <Style x:Key="CustomButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="50"/>
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Background" Value="{StaticResource PrimarySolidColorBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
 
         <Setter Property="Template">
@@ -214,10 +214,10 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource SecondarySolidColorBrush}"/>
-                <Setter Property="Foreground" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
                 <Setter Property="BorderThickness" Value="5,0,0,0"/>
-                <Setter Property="BorderBrush" Value="{StaticResource ActiveBorderSolidColorBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -226,8 +226,8 @@
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Margin" Value="0,5,0,7"/>
         <Setter Property="Padding" Value="5"/>
-        <Setter Property="Background" Value="{StaticResource ToggleButtonActiveBackgroundColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource ToggleButtonForegroundColor}"/>
+        <Setter Property="Background" Value="{DynamicResource ToggleButtonActiveBackgroundColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForegroundColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -244,48 +244,48 @@
         <Style.Triggers>
             <!-- Триггер для изменения цвета фона и текста при наведении -->
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource ToggleButtonActiveBackgroundColor}"/>
-                <Setter Property="Foreground" Value="{StaticResource ToggleButtonActiveForegroundColor}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource ToggleButtonActiveBorderColor}"/>
+                <Setter Property="Background" Value="{DynamicResource ToggleButtonActiveBackgroundColor}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ToggleButtonActiveForegroundColor}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonActiveBorderColor}"/>
                 <Setter Property="BorderThickness" Value="5,0,0,0"/>
             </Trigger>
             <!-- Триггер для изменения цвета фона и текста при нажатии -->
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{StaticResource ToggleButtonSecondActiveBorderColor}" />
-                <Setter Property="Foreground" Value="{StaticResource ToggleButtonActiveForegroundColor}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource ToggleButtonActiveBorderColor}"/>
+                <Setter Property="Background" Value="{DynamicResource ToggleButtonSecondActiveBorderColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource ToggleButtonActiveForegroundColor}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonActiveBorderColor}"/>
                 <Setter Property="BorderThickness" Value="5,0,0,0"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="CustomComboBoxStyle" TargetType="ComboBox">
-        <Setter Property="Background" Value="{StaticResource ComboBoxBackgroundColor}"/>
-        <Setter Property="Foreground" Value="{StaticResource ComboBoxForegroundColor}"/>
+        <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="BorderThickness" Value="0,0,0,2"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ComboBoxBorderColor}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderColor}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ComboBoxItem">
-                    <Setter Property="Foreground" Value="{StaticResource ComboBoxForegroundColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
                     <Setter Property="FontSize" Value="18"/>
                     <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                     <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ComboBoxItem">
-                                <Border x:Name="Border" Background="{StaticResource ComboBoxBackgroundColor}" BorderThickness="0">
+                                <Border x:Name="Border" Background="{DynamicResource ComboBoxBackgroundColor}" BorderThickness="0">
                                     <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="{StaticResource ComboBoxBackgroundColor}"/>
-                                        <Setter Property="Foreground" Value="{StaticResource ComboBoxForegroundColor}"/>
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource ComboBoxBackgroundColor}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="{StaticResource ComboBoxAcriveBackgroundColor}"/>
-                                        <Setter Property="Foreground"  Value="{StaticResource ComboBoxForegroundColor}"/>
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource ComboBoxAcriveBackgroundColor}"/>
+                                        <Setter Property="Foreground"  Value="{DynamicResource ComboBoxForegroundColor}"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -303,7 +303,7 @@
                                   Focusable="false"
                                   IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                   ClickMode="Press"
-                                  Background="{StaticResource ComboBoxBackgroundColor}"
+                                  Background="{DynamicResource ComboBoxBackgroundColor}"
                                   BorderThickness="0">
                             <Grid>
                                 <ContentPresenter Name="ContentSite"
@@ -316,7 +316,7 @@
                                               VerticalAlignment="Center">
                                     <ContentPresenter.Resources>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="Foreground" Value="{StaticResource ComboBoxForegroundColor}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
                                         </Style>
                                     </ContentPresenter.Resources>
                                 </ContentPresenter>
@@ -326,14 +326,14 @@
                                      VerticalAlignment="Center"
                                      Margin="3,3,23,3"
                                      Focusable="True"
-                                     Background="{StaticResource ComboBoxBackgroundColor}"
-                                     Foreground="{StaticResource ComboBoxForegroundColor}"
+                                     Background="{DynamicResource ComboBoxBackgroundColor}"
+                                     Foreground="{DynamicResource ComboBoxForegroundColor}"
                                      FontSize="18"
                                      Visibility="Hidden"
                                      IsReadOnly="{TemplateBinding IsReadOnly}" />
                                 <Path x:Name="Arrow" 
                                   Data="M 0 0 L 4 4 L 8 0 Z" 
-                                  Fill="{StaticResource ComboBoxForegroundColor}"
+                                  Fill="{DynamicResource ComboBoxForegroundColor}"
                                   HorizontalAlignment="Right" 
                                   VerticalAlignment="Center"
                                   Margin="0,0,10,0"/>
@@ -343,7 +343,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="ToggleButton">
-                                                <Border Background="{StaticResource ComboBoxBackgroundColor}" BorderThickness="0">
+                                                <Border Background="{DynamicResource ComboBoxBackgroundColor}" BorderThickness="0">
                                                     <ContentPresenter />
                                                 </Border>
                                             </ControlTemplate>
@@ -363,7 +363,7 @@
                               MinWidth="{TemplateBinding ActualWidth}"
                               MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border x:Name="DropDownBorder"
-                                    Background="{StaticResource ComboBoxSecondActiveBorderColor}"
+                                    Background="{DynamicResource ComboBoxSecondActiveBorderColor}"
                                     BorderThickness="1">
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
@@ -377,7 +377,7 @@
                             <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{StaticResource ComboBoxForegroundColor}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
                         </Trigger>
                         <Trigger Property="IsGrouping" Value="true">
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
@@ -413,7 +413,7 @@
     </Style>
 
     <Style x:Key="ScrollBarThumbStyle" TargetType="Thumb">
-        <Setter Property="Background" Value="{StaticResource ActiveBorderSolidColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
         <Setter Property="BorderBrush" Value="#1e2828"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
@@ -433,7 +433,7 @@
                             </Track.DecreaseRepeatButton>
                             <Track.Thumb>
                                 <Thumb Name="Thumb" 
-                          Background="{StaticResource SecondarySolidColorBrush}" 
+                          Background="{DynamicResource SecondarySolidColorBrush}" 
                           BorderThickness="0"
                           Cursor="ScrollNS">
                                     <Thumb.Template>
@@ -460,7 +460,7 @@
     </Style>
     
     <Style TargetType="Thumb">
-        <Setter Property="Background" Value="{StaticResource SecondarySolidColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
@@ -491,11 +491,11 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="#303843"/>
-                            <Setter Property="Foreground" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="#1f242b"/>
-                            <Setter Property="Foreground" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -512,7 +512,7 @@
 
     <Style x:Key="BorderStyle" TargetType="Border">
         <Setter Property="BorderThickness" Value="0,0,0,2"/>
-        <Setter Property="BorderBrush" Value="{StaticResource BackButtonForegroundColor}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BackButtonForegroundColor}"/>
         <Setter Property="Margin" Value="0,0,0,15"/>
     </Style>
 
@@ -550,20 +550,20 @@
     </Style>
 
     <Style x:Key="RichBoxBorder" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource RichBoxBackgroundColor}"/>
+        <Setter Property="Background" Value="{DynamicResource RichBoxBackgroundColor}"/>
         <Setter Property="CornerRadius" Value="25"/>
     </Style>
 
     <Style x:Key="RichBoxText" TargetType="RichTextBox">
-        <Setter Property="Foreground" Value="{StaticResource RichBoxForegroundColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource RichBoxForegroundColor}"/>
         <Setter Property="Background" Value="Transparent"/>
     </Style>
 
 
     <!-- Стиль для Slider -->
     <Style x:Key="CustomSliderStyle" TargetType="Slider">
-        <Setter Property="Background" Value="{StaticResource IsCheckedColorSolidColorBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource IsCheckedColorSolidColorBrush}" />
+        <Setter Property="Background" Value="{DynamicResource IsCheckedColorSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource IsCheckedColorSolidColorBrush}" />
         <Setter Property="Height" Value="20" />
         <Setter Property="Template">
             <Setter.Value>
@@ -598,7 +598,7 @@
                                     <Thumb.Template>
                                         <ControlTemplate TargetType="Thumb">
                                             <Ellipse Width="16" Height="16"
-                                                     Fill="{StaticResource ActiveBorderSolidColorBrush}"
+                                                     Fill="{DynamicResource ActiveBorderSolidColorBrush}"
                                                      VerticalAlignment="Center" />
                                         </ControlTemplate>
                                     </Thumb.Template>
@@ -614,7 +614,7 @@
     <!-- Стиль для текстового поля -->
     <Style x:Key="ComboBoxTextBoxStyle" TargetType="TextBox">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -622,7 +622,7 @@
 
     <Style x:Name="comboBox" TargetType="ComboBox">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -633,7 +633,7 @@
     <!-- Стиль для ToggleButton -->
     <Style TargetType="ToggleButton">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderThickness" Value="0" />
@@ -652,7 +652,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
         </Style.Triggers>
@@ -660,15 +660,15 @@
 
     <!-- Стиль для элементов списка -->
     <Style TargetType="ComboBoxItem">
-        <Setter Property="Background" Value="{StaticResource SecondarySolidColorBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{StaticResource ActiveBorderSolidColorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
         </Style.Triggers>
@@ -699,13 +699,13 @@
     <!-- Контекстное меню -->
     <Style x:Key="AppContextMenuStyle" TargetType="{x:Type ContextMenu}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Background"   Value="{StaticResource SecondarySolidColorBrush}"/>
-        <Setter Property="BorderBrush"  Value="{StaticResource ActiveBorderSolidColorBrush}"/>
+        <Setter Property="Background"   Value="{DynamicResource SecondarySolidColorBrush}"/>
+        <Setter Property="BorderBrush"  Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Foreground"   Value="{StaticResource ForegroundSolidColorBrush}"/>
+        <Setter Property="Foreground"   Value="{DynamicResource ForegroundSolidColorBrush}"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Padding"      Value="2"/>
-        <Setter Property="ItemContainerStyle" Value="{StaticResource AppMenuItemStyle}"/>
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource AppMenuItemStyle}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
@@ -728,7 +728,7 @@
     <!-- Пункты меню -->
     <Style x:Key="AppMenuItemStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
         <Setter Property="Padding"    Value="12,6"/>
         <Setter Property="Cursor"     Value="Hand"/>
         <Setter Property="Template">
@@ -772,8 +772,8 @@
                  AllowsTransparency="True"
                  Focusable="False"
                  PopupAnimation="Fade">
-                            <Border Background="{StaticResource SecondarySolidColorBrush}"
-                    BorderBrush="{StaticResource ActiveBorderSolidColorBrush}"
+                            <Border Background="{DynamicResource SecondarySolidColorBrush}"
+                    BorderBrush="{DynamicResource ActiveBorderSolidColorBrush}"
                     BorderThickness="1"
                     CornerRadius="6"
                     SnapsToDevicePixels="True">
@@ -787,8 +787,8 @@
                     <ControlTemplate.Triggers>
                         <!-- Hover / выделение -->
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="Bg" Property="Background" Value="{StaticResource IsCheckedColorSolidColorBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource IsCheckedColorSolidColorBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
                         </Trigger>
 
                         <!-- Disabled -->
@@ -799,7 +799,7 @@
 
                         <!-- Открыто подменю -->
                         <Trigger Property="IsSubmenuOpen" Value="True">
-                            <Setter TargetName="Bg" Property="Background" Value="{StaticResource IsCheckedColorSolidColorBrush}"/>
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource IsCheckedColorSolidColorBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -813,7 +813,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
-                    <Border Background="{StaticResource ActiveBorderSolidColorBrush}" Height="1"/>
+                    <Border Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="1"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

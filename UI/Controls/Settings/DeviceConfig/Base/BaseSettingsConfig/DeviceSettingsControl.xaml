@@ -24,7 +24,7 @@
                                 </Track.DecreaseRepeatButton>
                                 <Track.Thumb>
                                     <Thumb Name="Thumb" 
-                                   Background="{StaticResource PrimarySolidColorBrush}" 
+                                   Background="{DynamicResource PrimarySolidColorBrush}" 
                                    BorderThickness="0"
                                    Cursor="ScrollNS">
                                         <Thumb.Template>
@@ -57,7 +57,7 @@
                          Color="Black"/>
     </UserControl.Resources>
 
-    <Border Background="{StaticResource SecondarySolidColorBrush}" 
+    <Border Background="{DynamicResource SecondarySolidColorBrush}" 
             CornerRadius="15"
             Padding="20,10"
             Margin="10"
@@ -70,7 +70,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Name="Header" Text="Настройка устройства:  Имя устройства" VerticalAlignment="Center" HorizontalAlignment="Center"
-      Foreground="{StaticResource ForegroundSolidColorBrush}" FontSize="25" FontWeight="Bold"/>
+      Foreground="{DynamicResource ForegroundSolidColorBrush}" FontSize="25" FontWeight="Bold"/>
 
             <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
                 <Grid>
@@ -84,7 +84,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Модель устройства-->
-                    <Border Grid.Row="0" Background="{StaticResource PrimarySolidColorBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource PrimarySolidColorBrush}"
                         CornerRadius="10" Margin="0,10"
                         Name="DeviceModelContainer"
                         >
@@ -94,8 +94,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{StaticResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="Модель устройства" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                                <TextBlock Text="Модель устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                    FontSize="20" FontWeight="Bold" Margin="7,0"
                                    />
                             </Border>
@@ -113,7 +113,7 @@
                     </Border>
 
                     <!--Номер устройства-->
-                    <Border Grid.Row="1" Background="{StaticResource PrimarySolidColorBrush}" 
+                    <Border Grid.Row="1" Background="{DynamicResource PrimarySolidColorBrush}" 
                         CornerRadius="10" Margin="0,10"
                         Name="DeviceNumberContainer"
                         >
@@ -123,18 +123,18 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{StaticResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="Номер устройства" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                                <TextBlock Text="Номер устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
                             </Border>
 
-                            <Border Grid.Row="1" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" Margin="5,5">
+                            <Border Grid.Row="1" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" Margin="5,5">
                                 <TextBox 
                                     Background="Transparent" 
                                      BorderThickness="0" 
                                     VerticalAlignment="Center" 
-                                     FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                     FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                      PreviewTextInput="NumberDevice_PreviewTextInput"
                                      TextChanged="NumberDevice_TextChanged"
                                      Name="DeviceNumberTextBox"
@@ -145,7 +145,7 @@
 
                     <!--Тип подлючения устройства-->
                     <Border Grid.Row="2" 
-                        Background="{StaticResource PrimarySolidColorBrush}" 
+                        Background="{DynamicResource PrimarySolidColorBrush}" 
                         CornerRadius="10" Margin="0,10"
                         Name="ConnectionTypeContainer"
                         >
@@ -155,8 +155,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{StaticResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="Тип подключения устройства" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                                <TextBlock Text="Тип подключения устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                              FontSize="20" FontWeight="Bold" Margin="7,0"
                              />
                             </Border>
@@ -179,7 +179,7 @@
                     </Border>
 
                     <!--IP address устройства-->
-                    <Border Grid.Row="3" Background="{StaticResource PrimarySolidColorBrush}" 
+                    <Border Grid.Row="3" Background="{DynamicResource PrimarySolidColorBrush}" 
                         CornerRadius="10" Margin="0,10"
                         Name="IPAddressContainer"
                         >
@@ -189,8 +189,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{StaticResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="IP Address" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                                <TextBlock Text="IP Address" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
                             </Border>
@@ -206,44 +206,44 @@
                                     <ColumnDefinition Width="60"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Border Grid.Column="0" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="0" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent" 
                                          BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart1"
                                          />
                                 </Border>
 
-                                <TextBlock Grid.Column="1" Text="." FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                <TextBlock Grid.Column="1" Text="." FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                        />
 
 
-                                <Border Grid.Column="2" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="2" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart2"
                                          />
                                 </Border>
-                                <TextBlock Grid.Column="3" Text="." FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                <TextBlock Grid.Column="3" Text="." FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                        />
 
 
-                                <Border Grid.Column="4" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="4" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent" BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart3"
                                          />
                                 </Border>
-                                <TextBlock Grid.Column="5" Text="." FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                <TextBlock Grid.Column="5" Text="." FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                        />
 
 
-                                <Border Grid.Column="6" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                <Border Grid.Column="6" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
                                          Name="IpPart4"
                                          />
                                 </Border>
@@ -254,7 +254,7 @@
                     </Border>
 
                     <!--COM устройства-->
-                    <Border Grid.Row="4" Background="{StaticResource PrimarySolidColorBrush}" 
+                    <Border Grid.Row="4" Background="{DynamicResource PrimarySolidColorBrush}" 
                         CornerRadius="10" Margin="0,10"
                         Name="COMContainer"
                         >
@@ -264,8 +264,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Border CornerRadius="10" Background="{StaticResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="COM PORT" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                            <Border CornerRadius="10" Background="{DynamicResource ActiveBorderSolidColorBrush}" Height="40" Padding="5">
+                                <TextBlock Text="COM PORT" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
                             </Border>
@@ -293,7 +293,7 @@
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Text="COM-порт:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                            <TextBlock Text="COM-порт:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                    FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
                                             <ComboBox Grid.Column="1"
@@ -313,12 +313,12 @@
                                             </Grid.ColumnDefinitions>
 
 
-                                            <TextBlock Text="VID:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                            <TextBlock Text="VID:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                    FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
-                                            <Border Grid.Column="1" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                            <Border Grid.Column="1" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
                                                 <TextBox x:Name="VIDData" Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"/>
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"/>
                                             </Border>
                                         </Grid>
 
@@ -330,12 +330,12 @@
                                             </Grid.ColumnDefinitions>
 
 
-                                            <TextBlock Text="PID:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                            <TextBlock Text="PID:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                    FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
-                                            <Border Grid.Column="1" Background="{StaticResource LightPrimarySolidColorBrush}" CornerRadius="5" >
+                                            <Border Grid.Column="1" Background="{DynamicResource LightPrimarySolidColorBrush}" CornerRadius="5" >
                                                 <TextBox x:Name="PIDData" Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
-                                                     HorizontalAlignment="Center" FontSize="20" Foreground="{StaticResource ForegroundSolidColorBrush}"/>
+                                                     HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"/>
                                             </Border>
                                         </Grid>
                                     </Grid>
@@ -354,7 +354,7 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="Бит в секунду:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                                <TextBlock Text="Бит в секунду:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                        FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
                                                 <ComboBox Grid.Column="1"
@@ -383,7 +383,7 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="Стоповые биты:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                                <TextBlock Text="Стоповые биты:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                 FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
                                                 <ComboBox Grid.Column="1"
@@ -414,7 +414,7 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="Биты данных:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                                <TextBlock Text="Биты данных:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                        FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
 
@@ -440,7 +440,7 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="Чётность:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                                <TextBlock Text="Чётность:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                             FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
                                                 <ComboBox Grid.Column="1"
@@ -473,7 +473,7 @@
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Text="Управление потоком:" Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                                                <TextBlock Text="Управление потоком:" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                                        FontSize="20" FontWeight="Bold" Margin="7,0"/>
 
                                                 <ComboBox Grid.Column="1"

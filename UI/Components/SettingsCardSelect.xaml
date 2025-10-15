@@ -8,16 +8,16 @@
 
     <UserControl.Resources>
         <!-- те же локальные кисти, что и в SettingsCard -->
-        <SolidColorBrush x:Key="CardBorder" Color="#415163"/>
-        <SolidColorBrush x:Key="TitleBrush" Color="#E7EDF4"/>
-        <SolidColorBrush x:Key="DescBrush" Color="#A9B5C3"/>
+        <SolidColorBrush x:Key="CardBorder" Color="{DynamicResource SecondaryColor}"/>
+        <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource ForegroundColor}"/>
+        <SolidColorBrush x:Key="DescBrush" Color="{DynamicResource ForegroundColor60}"/>
 
         <!-- hover/active для бордеров как у чекбокса -->
-        <SolidColorBrush x:Key="HoverBorder" Color="#50657B"/>
-        <SolidColorBrush x:Key="TileBg"     Color="#2B333D"/>
+        <SolidColorBrush x:Key="HoverBorder" Color="{DynamicResource ActiveColor80}"/>
+        <SolidColorBrush x:Key="TileBg"     Color="{DynamicResource SecondaryColor}"/>
         <!-- фон плитки выпадающего списка -->
-        <SolidColorBrush x:Key="ItemHover"  Color="#2F3B49"/>
-        <SolidColorBrush x:Key="ItemSelected" Color="#344352"/>
+        <SolidColorBrush x:Key="ItemHover"  Color="{DynamicResource ActiveColor80}"/>
+        <SolidColorBrush x:Key="ItemSelected" Color="{DynamicResource ActiveColor}"/>
 
         <!-- Стиль комбобокса в духе SettingsCheckBox -->
         <Style x:Key="SettingsComboBox" TargetType="ComboBox">
@@ -25,9 +25,9 @@
             <Setter Property="MinWidth" Value="200"/>
             <Setter Property="Height" Value="44"/>
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="{StaticResource TitleBrush}"/>
-            <Setter Property="Background" Value="{StaticResource SecondarySolidColorBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource CardBorder}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TitleBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SecondarySolidColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="14,0,44,0"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -60,7 +60,7 @@
                                 <Path x:Name="Arrow"
                                         HorizontalAlignment="Center" VerticalAlignment="Center"
                                         Data="M 2 8 L 9 14 L 16 8"    
-                                        Stroke="{StaticResource TitleBrush}"
+                                        Stroke="{DynamicResource TitleBrush}"
                                         StrokeThickness="2.2"
                                         StrokeStartLineCap="Round"
                                         StrokeEndLineCap="Round"
@@ -80,8 +80,8 @@
                  AllowsTransparency="True"
                  PopupAnimation="Fade">
                                 <Border CornerRadius="12"
-                    Background="{StaticResource TileBg}"
-                    BorderBrush="{StaticResource CardBorder}"
+                    Background="{DynamicResource TileBg}"
+                    BorderBrush="{DynamicResource CardBorder}"
                     BorderThickness="1"
                     MinWidth="{Binding ActualWidth, ElementName=Bd}">
                                     <!-- ширина = ширине поля -->
@@ -94,10 +94,10 @@
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource HoverBorder}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource HoverBorder}"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource HoverBorder}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource HoverBorder}"/>
                             </Trigger>
                             <!-- открыто: стрелка ВВЕРХ -->
                             <Trigger SourceName="PART_DropDownButton" Property="IsChecked" Value="True">
@@ -120,7 +120,7 @@
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ComboBoxItem">
-                        <Setter Property="Foreground" Value="{StaticResource TitleBrush}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TitleBrush}"/>
                         <Setter Property="FontSize" Value="15"/>
                         <Setter Property="MinHeight" Value="40"/>
                         <Setter Property="Padding" Value="14,10"/>
@@ -133,10 +133,10 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsHighlighted" Value="True">
-                                            <Setter TargetName="ItemBd" Property="Background" Value="{StaticResource ItemHover}"/>
+                                            <Setter TargetName="ItemBd" Property="Background" Value="{DynamicResource ItemHover}"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="ItemBd" Property="Background" Value="{StaticResource ItemSelected}"/>
+                                            <Setter TargetName="ItemBd" Property="Background" Value="{DynamicResource ItemSelected}"/>
                                         </Trigger>
                                         <Trigger Property="IsEnabled" Value="False">
                                             <Setter TargetName="ItemBd" Property="Opacity" Value="0.6"/>
@@ -178,14 +178,14 @@
                  Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  FontSize="15"
                  FontWeight="SemiBold"
-                 Foreground="{StaticResource TitleBrush}"
+                 Foreground="{DynamicResource TitleBrush}"
                  Margin="0,0,0,2"
                  FontFamily="{DynamicResource WinstonMedium}"
                  TextWrapping="Wrap"/>
             <TextBlock Grid.Row="1" Grid.Column="0"
                  Text="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  FontSize="12"
-                 Foreground="{StaticResource DescBrush}"
+                 Foreground="{DynamicResource ForegroundSolidColorBrush}"
                  TextWrapping="Wrap"/>
 
             <!-- Select: выглядит как «плитка» как у чекбокса -->

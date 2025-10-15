@@ -28,7 +28,7 @@
 
         <Style TargetType="DefaultGUI:WindowButtons">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Foreground" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
@@ -156,7 +156,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TopPanel" Background="{StaticResource SecondarySolidColorBrush}" Cursor="SizeAll">
+        <Grid x:Name="TopPanel" Background="{DynamicResource SecondarySolidColorBrush}" Cursor="SizeAll">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -171,7 +171,7 @@
             </Grid.ColumnDefinitions>
 
             <Menu Name="mainMenu" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" Background="Transparent" 
-                Foreground="{StaticResource ForegroundSolidColorBrush}" Grid.Column="0" BorderThickness="0">
+                Foreground="{DynamicResource ForegroundSolidColorBrush}" Grid.Column="0" BorderThickness="0">
 
                 <MenuItem 
                    Header="{Binding Source={StaticResource LS_Menu_File}, Path=Value}"
@@ -277,7 +277,7 @@
                     <MenuItem Header="Console" Name="SendCommandMenuItem" Command="{Binding Admin.SendCommandCommand}"/>
                     <MenuItem Header="Logger" Name="LoggerMenuItem" Command="{Binding Admin.LoggerCommand}"/>
 
-                    <Separator Background="{StaticResource ActiveBorderSolidColorBrush}"/>
+                    <Separator Background="{DynamicResource ActiveBorderSolidColorBrush}"/>
 
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_Management}, Path=Value}" Name="DeviceManagment">
                         <MenuItem Header="GPT" Name="GptManagment" Command="{Binding Admin.GptCommand}"/>
@@ -342,14 +342,14 @@
 
         <Components:MultiWindowControl 
             x:Name="MultiWindow" 
-            Grid.Row="1" Background="{StaticResource PrimarySolidColorBrush}"
+            Grid.Row="1" Background="{DynamicResource PrimarySolidColorBrush}"
             />
 
         <Grid 
             Name="BottomPanel"
             Grid.Row="2" 
             Height="30" 
-            Background="{StaticResource SecondarySolidColorBrush}"
+            Background="{DynamicResource SecondarySolidColorBrush}"
             >
 
             <Grid.ColumnDefinitions>
@@ -365,7 +365,7 @@
                 VerticalAlignment="Center" 
                 Padding="10,0,0,0" 
                 FontSize="14" 
-                Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                Foreground="{DynamicResource ForegroundSolidColorBrush}" 
 				/>
 
 
@@ -381,7 +381,7 @@
                 x:Name="TimeBlock" 
                 Margin="0,0,10,0" 
                 FontSize="13" 
-                Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                 Grid.Column="3" 
                 Cursor="Hand"
 				/>
@@ -390,7 +390,7 @@
                 x:Name="LanguageBlock" 
                 VerticalAlignment="Center" 
                 FontSize="15" 
-                Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                 Grid.Column="2" 
 				/>
 

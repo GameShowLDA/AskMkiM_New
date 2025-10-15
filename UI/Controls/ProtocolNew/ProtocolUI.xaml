@@ -46,7 +46,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Background="{StaticResource IsCheckedColorSolidColorBrush}" Name="TopMenuButton" Visibility="{Binding IsTopMenuVisible, Converter={StaticResource BoolToVis}}">
+        <Grid Background="{DynamicResource IsCheckedColorSolidColorBrush}" Name="TopMenuButton" Visibility="{Binding IsTopMenuVisible, Converter={StaticResource BoolToVis}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -58,7 +58,7 @@
             </Grid.ColumnDefinitions>
 
             <Icons:ContinueIcon x:Name="ContinueButtonTop" Grid.Column="0"  Size="20"/>
-            <Grid x:Name="StartButtonTop" Grid.Column="1" Background="{StaticResource IsCheckedColorSolidColorBrush}" Cursor="Hand" Margin="5,0">
+            <Grid x:Name="StartButtonTop" Grid.Column="1" Background="{DynamicResource IsCheckedColorSolidColorBrush}" Cursor="Hand" Margin="5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -79,7 +79,7 @@
 
         </Grid>
 
-        <Border  Name="ButtonPanels" CornerRadius="0,0,0,0" Grid.Row="1" Background="{StaticResource PrimarySolidColorBrush}">
+        <Border  Name="ButtonPanels" CornerRadius="0,0,0,0" Grid.Row="1" Background="{DynamicResource PrimarySolidColorBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -89,7 +89,7 @@
                 <Border  Padding="0,0" Margin="5" CornerRadius="20" Name="MenuButton" Height="Auto" Width="Auto" Visibility="{Binding IsTopMenuVisible, Converter={StaticResource InverseBoolToVis}}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="{StaticResource IsCheckedColor}" Offset="1"/>
+                            <GradientStop Color="{DynamicResource IsCheckedColor}" Offset="1"/>
                         </LinearGradientBrush>
                     </Border.Background>
 
@@ -100,14 +100,14 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <Border Background="{StaticResource SecondarySolidColorBrush}" CornerRadius="20,20,0,0">
+                        <Border Background="{DynamicResource SecondarySolidColorBrush}" CornerRadius="20,20,0,0">
                             <Grid >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Icons:ArrowButton x:Name="ArrowButton" Margin="10" RenderTransformOrigin="0.5,0.5" ArrowBrush="{StaticResource ForegroundSolidColorBrush}" Click="ArrowButton_Click">
+                                <Icons:ArrowButton x:Name="ArrowButton" Margin="10" RenderTransformOrigin="0.5,0.5" ArrowBrush="{DynamicResource ForegroundSolidColorBrush}" Click="ArrowButton_Click">
                                     <Icons:ArrowButton.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -120,7 +120,7 @@
 
                                 <TextBlock Name="header"  Grid.Column="1"
                                Text="{Binding Source={StaticResource LS_Protocol_Header_Title}, Path=Value}" 
-                               Foreground="{StaticResource ForegroundSolidColorBrush}" 
+                               Foreground="{DynamicResource ForegroundSolidColorBrush}" 
                                VerticalAlignment="Center" 
                                HorizontalAlignment="Left"
                                TextAlignment="Center"

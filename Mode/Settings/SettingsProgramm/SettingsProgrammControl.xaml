@@ -123,7 +123,7 @@
                                         Grid.Column="0"
                                         HorizontalAlignment="Right"
                                         Width="30" Height="30"
-                                        ButtonBackground="{StaticResource IsCheckedColorSolidColorBrush}"
+                                        ButtonBackground="{StaticResource PrimarySolidColorBrush}"
                                         ButtonBorder="{StaticResource PrimarySolidColorBrush}"
                                         ArrowBrush="{StaticResource ForegroundSolidColorBrush}"
                                         ArrowHoverBrush="{StaticResource ActiveForegroundSolidColorBrush80}"

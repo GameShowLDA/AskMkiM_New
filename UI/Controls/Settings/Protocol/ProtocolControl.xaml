@@ -26,8 +26,8 @@
                     Text="Протокол"
                     FontSize="18"
                     Padding="10,10"
-                    Foreground="{StaticResource ForegroundSolidColorBrush}"
-                    FontFamily="{StaticResource WinstonMedium}"
+                    Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                    FontFamily="{DynamicResource WinstonMedium}"
                     VerticalAlignment="Center"/>
 
                 <Grid Grid.Column="1"  Margin="20,0">
@@ -45,8 +45,8 @@
                         Margin="10,0,0,0"
                         Height="30" 
                         CheckThickness="4"
-                        CircleBackground ="{StaticResource IsCheckedColorSolidColorBrush}"
-                        CircleBorder="{StaticResource PrimarySolidColorBrush}"
+                        CircleBackground ="{DynamicResource IsCheckedColorSolidColorBrush}"
+                        CircleBorder="{DynamicResource PrimarySolidColorBrush}"
                         />
 
                     <Icons:ErrorIconControlV2 
@@ -56,8 +56,8 @@
                       Height="30" 
                         Margin="10,0,0,0"
                         CrossThickness="4"
-                      CircleBackground ="{StaticResource IsCheckedColorSolidColorBrush}"
-                      CircleBorder="{StaticResource PrimarySolidColorBrush}"
+                      CircleBackground ="{DynamicResource IsCheckedColorSolidColorBrush}"
+                      CircleBorder="{DynamicResource PrimarySolidColorBrush}"
                       />
 
 
@@ -65,10 +65,10 @@
                                            Grid.Column="0"
                                            HorizontalAlignment="Right"
                                            Width="30" Height="30"
-                                           ButtonBackground="{StaticResource IsCheckedColorSolidColorBrush}"
-                                           ButtonBorder="{StaticResource PrimarySolidColorBrush}"
-                                           ArrowBrush="{StaticResource ForegroundSolidColorBrush}"
-                                           ArrowHoverBrush="{StaticResource ActiveForegroundSolidColorBrush80}"
+                                           ButtonBackground="{DynamicResource PrimarySolidColorBrush}"
+                                           ButtonBorder="{DynamicResource PrimarySolidColorBrush}"
+                                           ArrowBrush="{DynamicResource ForegroundSolidColorBrush}"
+                                           ArrowHoverBrush="{DynamicResource ActiveForegroundSolidColorBrush80}"
                                            VerticalAlignment="Center"/>
                 </Grid>
 
@@ -145,7 +145,7 @@
                         x:Name="ProtocolGeneration"/>
                 </WrapPanel>
 
-                <Border Grid.Row="1" Background="{StaticResource IsCheckedColorSolidColorBrush80}" Margin="15,10" CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource ForegroundSolidColorBrush60}">
+                <Border Grid.Row="1" Background="{DynamicResource IsCheckedColorSolidColorBrush80}" Margin="15,10" CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource ForegroundSolidColorBrush60}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -166,8 +166,8 @@
                                     Text="Текст протокола без ошибок" 
                                     FontSize="18" 
                                     Padding="10,10"
-                                    Foreground="{StaticResource ForegroundSolidColorBrush}"
-                                    FontFamily="{StaticResource WinstonMedium}"
+                                    Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                    FontFamily="{DynamicResource WinstonMedium}"
                                     VerticalAlignment="Center"  
                                     Grid.Row="0"/>
 
@@ -184,10 +184,10 @@
                                                     Grid.Column="0"
                                                     HorizontalAlignment="Right"
                                                     Width="30" Height="30"
-                                                    ButtonBackground="{StaticResource IsCheckedColorSolidColorBrush}"
-                                                    ButtonBorder="{StaticResource PrimarySolidColorBrush}"
-                                                    ArrowBrush="{StaticResource ForegroundSolidColorBrush}"
-                                                    ArrowHoverBrush="{StaticResource ActiveForegroundSolidColorBrush80}"
+                                                    ButtonBackground="{DynamicResource PrimarySolidColorBrush}"
+                                                    ButtonBorder="{DynamicResource PrimarySolidColorBrush}"
+                                                    ArrowBrush="{DynamicResource ForegroundSolidColorBrush}"
+                                                    ArrowHoverBrush="{DynamicResource ActiveForegroundSolidColorBrush80}"
                                                     VerticalAlignment="Center"/>
 
                                 <Icons:RepeatIcon x:Name="RestartClearProtocol" Grid.Column="1" Margin="10,0" Size="20" PreviewMouseDown="RepeatIcon_PreviewMouseDown"/>

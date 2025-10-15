@@ -16,6 +16,7 @@
     <ProjectReference Include="..\DTO\DTO.Settings.csproj" />
     <ProjectReference Include="..\Mode\Mode.csproj" />
     <ProjectReference Include="..\NewCore\NewCore.csproj" />
+    <ProjectReference Include="..\UI\UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

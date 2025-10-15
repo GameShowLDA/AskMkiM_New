@@ -6,6 +6,7 @@ using AppConfiguration.Theme;
 using DataBaseConfiguration;
 using DTO.Base.Models;
 using EventCore.Services;
+using UI.Theme;
 using static EventCore.Events.Message;
 using static Utilities.LoggerUtility;
 

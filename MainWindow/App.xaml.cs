@@ -8,6 +8,7 @@ using EventCore.Adapters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewCore.Device;
+using UI.Theme;
 using static Utilities.LoggerUtility;
 
 namespace MainWindowProgram
@@ -44,6 +45,8 @@ namespace MainWindowProgram
     /// <param name="e"></param>
     protected override async void OnStartup(StartupEventArgs e)
     {
+
+      ThemeManager.ApplyTheme("Dark");
       base.OnStartup(e);
 
       CommandLineArgs = e.Args;
@@ -80,7 +83,7 @@ namespace MainWindowProgram
         {
           var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
         }
-        catch 
+        catch
         {
         }
 

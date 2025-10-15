@@ -297,7 +297,7 @@ namespace UI.Components
       Application.Current.Dispatcher.Invoke(() =>
       {
         nameTextBlock.Text = text;
-        GridBlock.Background = new SolidColorBrush(color);
+        GridBlock.SetResourceReference(BackgroundProperty, color);
         nameTextBlock.Foreground = (SolidColorBrush)Application.Current.Resources["ForegroundSolidColorBrush"];
         GridBlock.Opacity = 1;
       });
@@ -311,7 +311,7 @@ namespace UI.Components
       Application.Current.Dispatcher.Invoke(() =>
       {
         nameTextBlock.Text = text;
-        GridBlock.Background = (Brush)FindResource("GreenColorSolidColorBrush");
+        GridBlock.SetResourceReference(BackgroundProperty, "GreenColorSolidColorBrush");
         nameTextBlock.Foreground = (SolidColorBrush)Application.Current.Resources["ActiveForegroundSolidColorBrush"];
         GridBlock.Opacity = 0.5;
         active = true;
@@ -326,7 +326,7 @@ namespace UI.Components
       Application.Current.Dispatcher.Invoke(() =>
       {
         nameTextBlock.Text = text;
-        GridBlock.Background = (Brush)FindResource("RedColorSolidColorBrush");
+        GridBlock.SetResourceReference(BackgroundProperty, "RedColorSolidColorBrush");
         nameTextBlock.Foreground = (SolidColorBrush)Application.Current.Resources["ForegroundSolidColorBrush"];
         GridBlock.Opacity = 0.5;
         active = false;
