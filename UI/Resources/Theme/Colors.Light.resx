@@ -159,7 +159,76 @@
   <data name="SecondaryColor" xml:space="preserve">
     <value>#DEDDDF</value>
   </data>
+  <data name="settings.background.config.button" xml:space="preserve">
+    <value>#80465945</value>
+  </data>
+  <data name="settings.hover.config.button.background" xml:space="preserve">
+    <value>#90465945</value>
+  </data>
+  <data name="settings.background.config.dataInputTablo" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="settings.background.config.infoTablo" xml:space="preserve">
+    <value>#90465945</value>
+  </data>
+  <data name="settings.background.interactive" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="settings.background.main" xml:space="preserve">
+    <value>#DDDDDD</value>
+  </data>
+  <data name="settings.background.panel" xml:space="preserve">
+    <value>#EBEBEB</value>
+  </data>
+  <data name="settings.background.selector" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="settings.background.slider" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="settings.border.config.button" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="settings.border.interactive" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="settings.border.panel" xml:space="preserve">
+    <value>#EBEBEB</value>
+  </data>
+  <data name="settings.border.slider" xml:space="preserve">
+    <value>#000000</value>
+  </data>
   <data name="YellowColor" xml:space="preserve">
     <value>#465945</value>
+  </data>
+  <data name="settings.hover.interactive.background" xml:space="preserve">
+    <value>#A4EB9E</value>
+  </data>
+  <data name="settings.hover.selector.background" xml:space="preserve">
+    <value>#A4EB9E</value>
+  </data>
+  <data name="settings.text.title.color" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="settings.text.header.color" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="settings.text.description.color" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="settings.active.interactive" xml:space="preserve">
+    <value>#A4EB9E</value>
+  </data>
+  <data name="settings.pressed.interactive" xml:space="preserve">
+    <value>#79E171</value>
+  </data>
+  <data name="settings.selected.selector" xml:space="preserve">
+    <value>#79E171</value>
+  </data>
+  <data name="settings.background.card" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="settings.border.card" xml:space="preserve">
+    <value>#000000</value>
   </data>
 </root>
