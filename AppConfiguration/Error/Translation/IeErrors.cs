@@ -113,5 +113,16 @@ namespace AppConfiguration.Error.Translation
       error.Description = $"Ошибка при проверке цепи {str} при методе полного узла.";
       return error;
     }
+
+    /// <summary>
+     /// Ошибка: конфликт нижней границы электрической емкости и верхней границы.
+     /// </summary>
+    public static ErrorItem CapacityLimitsConflict(int startLineNumber, string command, string description) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = ErrorCode.Ie_CapacityLimitsConflict,
+      Description = description
+    };
   }
 }

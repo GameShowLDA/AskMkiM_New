@@ -112,12 +112,12 @@ namespace AppConfiguration.Error.Translation
     /// <summary>
     /// Ошибка: нижняя граница сопротивления больше верхней границы сопротивления.
     /// </summary>
-    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command) => new()
+    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command, string description) => new()
     {
       SourceLineNumber = startLineNumber,
       Command = command,
       Code = ErrorCode.Pr_ResistanceLimitsConflict,
-      Description = "Нижняя граница сопротивления больше верхней границы сопротивления."
+      Description = description
     };
 
 

@@ -104,6 +104,7 @@ namespace ControlCommandAnalyser.Parser.Pr
       LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
 
       var meter = new DataBaseConfiguration.Services.Device.FastMeterServices().GetAll().FirstOrDefault();
+      var minResistance = 1;
       if (meter == null)
       {
         LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивлене не задано.");
@@ -116,9 +117,21 @@ namespace ControlCommandAnalyser.Parser.Pr
           if (CommonParameterParser.ParseToDouble(lowerLimitResistance) > CommonParameterParser.ParseToDouble(higherLimitResistance))
           {
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше верхней границы сопротивления.");
-            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}"));
+            var description = "Нижняя граница сопротивления больше верхней границы сопротивления.";
+            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", description));
           }
           else if (CommonParameterParser.ParseToDouble(lowerLimitResistance) > meter.MaxContinuityResistance)
+          {
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально допустимой границы сопротивления({meter.MaxContinuityResistance}).");
+            model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", meter.MaxContinuityResistance));
+          }
+          else if (CommonParameterParser.ParseToDouble(lowerLimitResistance) < minResistance)
+          {
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) Нижняя граница сопротивления меньше минимально возможной границы сопротивления ППУ({minResistance}).");
+            var description = "Нижняя граница сопротивления меньше минимально возможной границы сопротивления ППУ.";
+            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", description));
+          }
+          else if (CommonParameterParser.ParseToDouble(higherLimitResistance) > meter.MaxContinuityResistance)
           {
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально допустимой границы сопротивления({meter.MaxContinuityResistance}).");
             model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", meter.MaxContinuityResistance));
@@ -136,9 +149,7 @@ namespace ControlCommandAnalyser.Parser.Pr
               model.ResistanceUnit = unit;
             }
           }
-
         }
-
 
         if (!string.IsNullOrWhiteSpace(higherLimitResistance) && !string.IsNullOrEmpty(higherLimitResistance))
         {

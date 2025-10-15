@@ -147,5 +147,16 @@ namespace AppConfiguration.Error.Translation
       eroror.Description = $"Замкнутая пара цепей: {firstChain} и {secondChain}";
       return eroror;
     }
+
+    /// <summary>
+    /// Ошибка: конфликт границ сопротивления.
+    /// </summary>
+    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command, string description) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = ErrorCode.Si_ResistanceLimitsConflict,
+      Description = description
+    };
   }
 }

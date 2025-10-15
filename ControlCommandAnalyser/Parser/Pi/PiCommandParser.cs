@@ -1,11 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using ControlCommandAnalyser.Parser.Si; // Для LoggerUtility
 using DTO.Device.Breakdown;
+using System.Text.RegularExpressions;
 using Utilities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
@@ -72,7 +73,7 @@ namespace ControlCommandAnalyser.Parser.Pi
       }
 
       var modelSi = new SiCommandModel();
-      var siRemainder = SiCommandParser.ManageSiParametersParse(modelSi, commandNumber, mnemonic, numberLine, siPart, maxVoltage);
+      var siRemainder = SiCommandParser.ManageSiParametersParse(modelSi, commandNumber, mnemonic, numberLine, siPart, breakDown);
 
       // Если СИ что-то не допарсила, логни отдельно (в модель СИ, не ПИ)
       if (!string.IsNullOrEmpty(siRemainder))
@@ -140,8 +141,9 @@ namespace ControlCommandAnalyser.Parser.Pi
 
         if (model.Voltage.HasValue && model.Voltage > maxVoltage)
         {
-          LoggerUtility.LogError($"В команде ПИ указан вольтаж, превышающий максимально допустимый вольтаж пробойной установки.");
-          model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", (int)model.Voltage.Value, maxVoltage));
+          LoggerUtility.LogError($"В команде ПИ указано напряжение, превышающий максимально допустимое напряжение пробойной установки.");
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({model.Voltage.Value}), превышающий максимально допустимое напряжение пробойной установки({maxVoltage}).";
+          model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
         }
       }
       else
