@@ -106,10 +106,8 @@
 
                                 <TextBlock 
                                     Text="Конфигурация" 
-                                    FontSize="18" 
                                     Padding="10,10"
-                                    Foreground="{StaticResource ForegroundSolidColorBrush}"
-                                    FontFamily="{StaticResource WinstonMedium}"
+                                    Style="{DynamicResource SettingsTitleStyle}"
                                     VerticalAlignment="Center"  
                                     Grid.Row="0"/>
 
@@ -125,10 +123,10 @@
                                         Grid.Column="0"
                                         HorizontalAlignment="Right"
                                         Width="30" Height="30"
-                                        ButtonBackground="{StaticResource PrimarySolidColorBrush}"
-                                        ButtonBorder="{StaticResource PrimarySolidColorBrush}"
-                                        ArrowBrush="{StaticResource ForegroundSolidColorBrush}"
-                                        ArrowHoverBrush="{StaticResource ActiveForegroundSolidColorBrush80}"
+                                        ButtonBackground="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
+                                        ButtonBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                                        ArrowBrush="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                                        ArrowHoverBrush="{StaticResource SettingsInteractivePressedSolidColorBrush}"
                                         IsArrowUp ="True"
                                         VerticalAlignment="Center"/>
                                 </Grid>

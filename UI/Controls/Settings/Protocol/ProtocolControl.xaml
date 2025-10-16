@@ -25,11 +25,9 @@
 
                 <TextBlock 
                     Text="Протокол"
-                    FontSize="18"
                     Padding="10,10"
-                    Foreground="{DynamicResource ForegroundSolidColorBrush}"
-                    FontFamily="{DynamicResource WinstonMedium}"
-                    VerticalAlignment="Center"/>
+                    Style="{DynamicResource SettingsTitleStyle}"
+                    />
 
                 <Grid Grid.Column="1"  Margin="20,0">
 
@@ -170,11 +168,8 @@
 
                             <TextBlock 
                                     Text="Текст протокола без ошибок" 
-                                    FontSize="18" 
+                                        Style="{DynamicResource SettingsTitleStyle}"
                                     Padding="10,10"
-                                    Foreground="{DynamicResource ForegroundSolidColorBrush}"
-                                    FontFamily="{DynamicResource WinstonMedium}"
-                                    VerticalAlignment="Center"  
                                     Grid.Row="0"/>
 
                             <Grid Grid.Column="1"  Margin="20,0">

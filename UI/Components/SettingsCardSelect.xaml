@@ -163,17 +163,13 @@
             <!-- Заголовок/описание -->
             <TextBlock Grid.Row="0" Grid.Column="0"
                  Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 FontSize="15"
-                 FontWeight="SemiBold"
-                 Foreground="{DynamicResource SettingsTitleSolidColorBrush}"
                  Margin="0,0,0,2"
-                 FontFamily="{DynamicResource WinstonMedium}"
-                 TextWrapping="Wrap"/>
+                 Style="{DynamicResource SettingsHeaderStyle}"
+                 />
             <TextBlock Grid.Row="1" Grid.Column="0"
                  Text="{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 FontSize="12"
-                 Foreground="{DynamicResource ForegroundSolidColorBrush}"
-                 TextWrapping="Wrap"/>
+                 Style="{DynamicResource SettingsDescriptionStyle}"
+                 />
 
             <!-- Select: выглядит как «плитка» как у чекбокса -->
             <ComboBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"

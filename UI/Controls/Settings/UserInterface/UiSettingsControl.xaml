@@ -27,11 +27,8 @@
 
                 <TextBlock 
                  Text="Интерфейс" 
-                 FontSize="18" 
                  Padding="10,10"
-                 Foreground="{StaticResource ForegroundSolidColorBrush}"
-                 FontFamily="{StaticResource WinstonMedium}"
-                 VerticalAlignment="Center"  
+                 Style="{DynamicResource SettingsTitleStyle}"
                  Grid.Row="0"/>
 
                 <Grid Grid.Column="1"  Margin="20,0">
