@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using AppConfiguration.Protocol;
 using DTO.Base.Models;
 using DTO.Service;
 using DTO.Service.Models;
@@ -233,8 +234,9 @@ namespace UI.Controls.ProtocolNew
       {
         showMessageModel.Time = _stopwatch.Elapsed.ToString(@"mm\:ss\.fff", CultureInfo.InvariantCulture);
       }
+
       await ShouldShowDetailedProtocol(showMessageModel);
-      CheckStatus(ref showMessageModel);
+      await CheckStatus(showMessageModel);
 
       await protocolTextBox.AppendLineAsync(showMessageModel);
 
@@ -304,7 +306,7 @@ namespace UI.Controls.ProtocolNew
     /// Проверяет статус сообщения и добавляет текстовую приставку и цвет, если статус не является информационным.
     /// </summary>
     /// <param name="showMessageModel">Модель отображаемого сообщения, передаётся по ссылке.</param>
-    private void CheckStatus(ref ShowMessageModel showMessageModel)
+    private async Task CheckStatus(ShowMessageModel showMessageModel)
     {
       if (showMessageModel.Status != MessageType.Info)
       {
@@ -318,6 +320,8 @@ namespace UI.Controls.ProtocolNew
         }
         showMessageModel.MessageColor = showMessageModel.GetColorMessage();
       }
+
+      await CheckSyntaxHighlighting(showMessageModel);
     }
 
     /// <summary>
@@ -347,6 +351,16 @@ namespace UI.Controls.ProtocolNew
         }
 
         LastModelMeassage = showMessageModel;
+      }
+    }
+
+    private async Task CheckSyntaxHighlighting(ShowMessageModel showMessageModel)
+    {
+      if (!GetSyntaxHighlighting())
+      {
+        showMessageModel.HeaderColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
+        showMessageModel.MessageColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
+        showMessageModel.TimeColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
       }
     }
 

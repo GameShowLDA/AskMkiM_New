@@ -3,6 +3,7 @@ using System;
 using DataBaseConfiguration.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBaseConfiguration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251017110529_SyntaxHighlighting")]
+    partial class SyntaxHighlighting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -478,6 +481,9 @@ namespace DataBaseConfiguration.Migrations
                     b.Property<bool>("GenerateProtocol")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsSyntaxHighlightingEnabled")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("ShowDetailedProtocol")
                         .HasColumnType("INTEGER");
 
@@ -485,9 +491,6 @@ namespace DataBaseConfiguration.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("ShowProtocolInSoftware")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("UseSyntaxHighlighting")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

@@ -1,4 +1,5 @@
-﻿using DTO.Settings.SettingsModels;
+﻿using DTO.Enum;
+using DTO.Settings.SettingsModels;
 using DTO.SettingsModels;
 
 namespace AppConfiguration.Parameter
@@ -33,6 +34,20 @@ namespace AppConfiguration.Parameter
         await LanguageSettings.SetLanguageAsync(lang);
       });
     }
+
+    /// <summary>
+    /// Устанавливает тему оформления интерфейса программы.
+    /// </summary>
+    /// <param name="theme">Название темы: "Light" или "Dark".</param>
+    public static async Task SetTheme(DTO.Enum.ThemeEnums.Theme theme)
+    {
+      await Task.Run(() =>
+      {
+        ParameterModel.Theme = theme;
+        EventCore.Adapters.ThemeEventAdapter.RaiseChangeTheme(theme);
+      });
+    }
+
     #endregion
 
     #region Get.
@@ -42,6 +57,7 @@ namespace AppConfiguration.Parameter
     /// </summary>
     /// <returns>true, если отображается; false, если скрывается.</returns>
     public static async Task<string> GetLanguage() => await Task.Run(() => ParameterModel.Language);
+    public static async Task<ThemeEnums.Theme> GetTheme() => await Task.Run(() => ParameterModel.Theme);
 
     public static async Task<SettingsParameterModel> GetParameterModel()
     {
@@ -58,11 +74,11 @@ namespace AppConfiguration.Parameter
       await Task.Run(() =>
       {
         ParameterModel.Language = protocolModel.Language;
+        ParameterModel.Theme = protocolModel.Theme;
       });
 
       await RewriteExecutionConfigAsync();
       await LanguageSettings.SetLanguageAsync(ParameterModel.Language);
-
     }
 
     /// <summary>
@@ -73,6 +89,7 @@ namespace AppConfiguration.Parameter
     {
       SettingsParameterModel executionModel = new SettingsParameterModel();
       executionModel.Language = ParameterModel.Language;
+      executionModel.Theme = ParameterModel.Theme;
 
       ParameterFileManager executionFileManager = new ParameterFileManager(FileLocations.ParameterConfigPath);
       await executionFileManager.RewriteFileAsync(executionModel);

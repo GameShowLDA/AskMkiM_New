@@ -1,16 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO.Enum
 {
-  public class ThemeEnums
+  /// <summary>
+  /// Содержит перечисление доступных тем оформления интерфейса приложения.
+  /// </summary>
+  public static class ThemeEnums
   {
+    /// <summary>
+    /// Перечисление тем оформления интерфейса.
+    /// </summary>
     public enum Theme
     {
+      /// <summary>
+      /// Светлая тема интерфейса.
+      /// </summary>
       Light,
+
+      /// <summary>
+      /// Тёмная тема интерфейса.
+      /// </summary>
       Dark
     }
   }

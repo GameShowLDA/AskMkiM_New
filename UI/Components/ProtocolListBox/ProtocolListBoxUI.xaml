@@ -16,7 +16,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Border CornerRadius="20,20,0,0" Background="{StaticResource SecondarySolidColorBrush}">
+        <Border CornerRadius="20,20,0,0" Background="{DynamicResource TestsProtocolBackgroundBrush}">
             <ListBox x:Name="ProtocolListBox"
                  Background="Transparent"
                  BorderThickness="0"
@@ -44,8 +44,8 @@
                             </Run>
                             <Run Text="{Binding Message, Converter={StaticResource MessageToColonConverter}}"  Foreground="{Binding HeaderColor, Converter={StaticResource ColorToBrushConverter}}"/>
                             <Run Text="{Binding Message}" Foreground="{Binding MessageColor, Converter={StaticResource ColorToBrushConverter}}" />
-                            <Run Text="{Binding Time, Converter={StaticResource TimeToSeparatorConverter}}" Foreground="YellowGreen"/>
-                            <Run Text="{Binding Time}" Foreground="YellowGreen" />
+                            <Run Text="{Binding Time, Converter={StaticResource TimeToSeparatorConverter}}" Foreground="{Binding TimeColor, Converter={StaticResource ColorToBrushConverter}}"/>
+                            <Run Text="{Binding Time}" Foreground="{Binding TimeColor, Converter={StaticResource ColorToBrushConverter}}"/>
                         </TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

@@ -6,7 +6,6 @@ using DTO.SettingsModels;
 using UI.Localization;
 using static AppConfiguration.Parameter.ParameterConfig;
 
-
 namespace UI.Controls.Settings.UserInterface
 {
   /// <summary>
@@ -16,6 +15,7 @@ namespace UI.Controls.Settings.UserInterface
   {
     SettingsParameterModel _baseParameterModel { get; set; }
     private record LangOption(string Key, string Title);
+    private record ThemeOption(string Key, string Title);
 
     /// <summary>
     /// Глобальный флаг наличия несохранённых изменений в разделе.
@@ -27,7 +27,7 @@ namespace UI.Controls.Settings.UserInterface
     {
       InitializeComponent();
       Loaded += UiSettingsControl_Loaded;
-
+      Unloaded += UiSettingsControl_Unloaded;
     }
 
     /// <summary>
@@ -43,7 +43,6 @@ namespace UI.Controls.Settings.UserInterface
     private void Error_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
       DefalultData();
-
       Error.Visibility = Visibility.Collapsed;
       Success.Visibility = Visibility.Collapsed;
       HasUnsavedChanges = false;
@@ -80,7 +79,7 @@ namespace UI.Controls.Settings.UserInterface
       _baseParameterModel = await GetParameterModel();
 
       LanguageSelect.ValueChanged += ValueChanged;
-
+      ThemeSelect.ValueChanged += ValueChanged;
       Success.PreviewMouseDown += Success_PreviewMouseDown;
       Error.PreviewMouseDown += Error_PreviewMouseDown;
 
@@ -88,31 +87,53 @@ namespace UI.Controls.Settings.UserInterface
       Success.Visibility = Visibility.Collapsed;
       HasUnsavedChanges = false;
 
-      // 1) Собираем доступные языки из ресурсов
+      LoadLanguageOptions();
+      LoadThemeOptions(_baseParameterModel.Theme);
+
+      EventCore.Services.EventAggregator.Subscribe<EventCore.Events.ThemeEvent.Change>(OnThemeChanged);
+    }
+
+    private void UiSettingsControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+      EventCore.Services.EventAggregator.Unsubscribe<EventCore.Events.ThemeEvent.Change>(OnThemeChanged);
+    }
+
+    /// <summary>
+    /// Загружает список доступных языков интерфейса и устанавливает текущий.
+    /// </summary>
+    private void LoadLanguageOptions()
+    {
       var cultures = LocalizationService.GetAvailableCultures();
 
       var options = cultures
         .Select(c => new LangOption(
-            Key: c.Name,                          // "ru" / "en" / "ru-RU"
-            Title: LocalizationService.GetDisplayName(c))) // "Русский (Россия)" и т.п.
+            Key: c.Name,
+            Title: LocalizationService.GetDisplayName(c)))
         .ToList();
 
-      // 2) Кладём в карточку выбора
       LanguageSelect.ItemsSource = options;
 
-      // 3) Текущее значение + дефолт
-      var current = LanguageSettings.CurrentLanguage;   // "ru" или "en"
-      LanguageSelect.DefaultValue = current;           // подставится, если пусто
-      LanguageSelect.SelectedValue = current;          // отобразим как выбранный
+      var current = LanguageSettings.CurrentLanguage;
+      LanguageSelect.DefaultValue = current;
+      LanguageSelect.SelectedValue = current;
+    }
 
-      // 4) Реакция на смену значения
-      // LanguageSelect.ValueChanged += async (_, val) =>
-      // {
-      //   var lang = val as string;
-      //   if (string.IsNullOrWhiteSpace(lang)) return;
-      // 
-      //   await LanguageSettings.SetLanguageAsync(lang);
-      // };
+    /// <summary>
+    /// Загружает список доступных тем интерфейса и устанавливает текущую.
+    /// </summary>
+    private void LoadThemeOptions(DTO.Enum.ThemeEnums.Theme currentTheme)
+    {
+      var themes = new List<ThemeOption>
+      {
+        new ThemeOption("Dark", "Тёмная тема"),
+        new ThemeOption("Light", "Светлая тема")
+      };
+
+      ThemeSelect.ItemsSource = themes;
+
+      var themeString = currentTheme.ToString();
+      ThemeSelect.DefaultValue = themeString;
+      ThemeSelect.SelectedValue = themeString;
     }
 
     /// <summary>
@@ -120,31 +141,52 @@ namespace UI.Controls.Settings.UserInterface
     /// </summary>
     private void DefalultData()
     {
-      var current = LanguageSettings.CurrentLanguage;
+      var current = _baseParameterModel.Language;
       LanguageSelect.DefaultValue = current;
       LanguageSelect.SelectedValue = current;
+
+      var currentTheme = _baseParameterModel.Theme.ToString();
+      ThemeSelect.DefaultValue = currentTheme;
+      ThemeSelect.SelectedValue = currentTheme;
     }
 
     /// <summary>
-    /// Формирует модель протокола из текущих значений элементов UI.
+    /// Формирует модель параметров из текущих значений элементов UI.
     /// </summary>
     private SettingsParameterModel GetModel()
     {
-      var code =
+      var languageCode =
           LanguageSelect.SelectedValue as string
           ?? LanguageSelect.SelectedItem?.ToString()
           ?? LanguageSettings.CurrentLanguage;
 
+      var themeValue = ThemeSelect.SelectedValue as string ?? "Dark";
+      var parsedTheme = Enum.TryParse<DTO.Enum.ThemeEnums.Theme>(themeValue, out var theme) ? theme : DTO.Enum.ThemeEnums.Theme.Dark;
+
       return new SettingsParameterModel
       {
-        Language = code
+        Language = languageCode,
+        Theme = parsedTheme
       };
     }
 
+
     /// <summary>
-    /// Сравнивает две модели протокола по всем флагам.
+    /// Сравнивает две модели параметров.
     /// </summary>
     private static bool ProtocolEquals(SettingsParameterModel a, SettingsParameterModel b) =>
-      a.Language == b.Language;
+      a.Language == b.Language && 
+      b.Theme == a.Theme;
+
+    /// <summary>
+    /// Обработчик события смены темы. Вызывается, когда тема меняется глобально.
+    /// </summary>
+    private void OnThemeChanged(EventCore.Events.ThemeEvent.Change e)
+    {
+      Theme.ThemeManager.ApplyThemeAsync(e.NewTheme);
+
+      ThemeSelect.DefaultValue = e.NewTheme.ToString();
+      ThemeSelect.SelectedValue = e.NewTheme.ToString();
+    }
   }
 }

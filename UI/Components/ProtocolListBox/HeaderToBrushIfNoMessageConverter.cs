@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using DTO.Base.Models;
@@ -18,7 +19,12 @@ namespace UI.Components.ProtocolListBox
 
       if (!string.IsNullOrEmpty(header) && string.IsNullOrEmpty(message))
       {
-        return SuccessBrush;
+        if (AppConfiguration.Protocol.ProtocolConfig.GetSyntaxHighlighting())
+        {
+          return SuccessBrush;
+        }
+
+        return (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
       }
       return headerColor ?? new SolidColorBrush(Colors.White); // Цвет по умолчанию
     }

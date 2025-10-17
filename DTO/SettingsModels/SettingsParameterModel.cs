@@ -1,4 +1,6 @@
-﻿namespace DTO.SettingsModels
+﻿using DTO.Enum;
+
+namespace DTO.SettingsModels
 {
   public class SettingsParameterModel
   {
@@ -6,5 +8,10 @@
     /// Выбранный язык интерфейса программы.
     /// </summary>
     public string Language { get; set; }
+    
+    /// <summary>
+    /// Выбранная тема оформления интерфейса программы.
+    /// </summary>
+    public ThemeEnums.Theme Theme { get; set; }
   }
 }

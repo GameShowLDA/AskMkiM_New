@@ -31,8 +31,8 @@ namespace MainWindowProgram.Engine
     public async Task InitializeAsync()
     {
       CheckStatusProgram();
-      await LanguageSettings.InitializeAsync();
       await StartSettingsAsync();
+      await LanguageSettings.InitializeAsync();
     }
 
     /// <summary>

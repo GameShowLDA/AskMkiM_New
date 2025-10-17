@@ -42,6 +42,10 @@ namespace DTO.SettingsModels
     /// </summary>
     public bool GenerateProtocol { get; set; }
 
+    /// <summary>
+    /// Флаг, указывающий, нужно ли включить подсветку синтаксиса в редакторе.
+    /// </summary>
+    public bool UseSyntaxHighlighting { get; set; }
 
     /// <summary>
     /// Базовый текст протокола (без ошибок).

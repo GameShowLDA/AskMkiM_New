@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Resources;
 using System.Windows;
 using System.Windows.Media;
+using AppConfiguration.Parameter;
 using UI.Resources.Theme;
 
 namespace UI.Theme
@@ -12,7 +13,7 @@ namespace UI.Theme
     /// <summary>
     /// Применяет тему: "Dark" или "Light"
     /// </summary>
-    public static void ApplyTheme(DTO.Enum.ThemeEnums.Theme theme)
+    public static void ApplyThemeAsync(DTO.Enum.ThemeEnums.Theme theme)
     {
       ResourceManager manager;
 
