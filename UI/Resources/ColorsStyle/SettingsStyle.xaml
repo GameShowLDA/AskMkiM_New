@@ -3,9 +3,9 @@
 
     <!--#region Текст -->
     
-    <Color x:Key="settings.text.title.color">#000000</Color>
-    <Color x:Key="settings.text.header.color">#000000</Color>
-    <Color x:Key="settings.text.description.color">#414149</Color>
+    <Color x:Key="settings.text.title.color">#FFFFFF</Color>
+    <Color x:Key="settings.text.header.color">#FFFFFF</Color>
+    <Color x:Key="settings.text.description.color">#A9B5C3</Color>
 
     <SolidColorBrush x:Key="SettingsTitleSolidColorBrush" Color="{DynamicResource settings.text.title.color}"/>
     <SolidColorBrush x:Key="SettingsHeaderSolidColorBrush" Color="{DynamicResource settings.text.header.color}"/>
@@ -38,15 +38,15 @@
 
     <!--#region Весь элемент управления настройками -->
 
-    <Color x:Key="settings.background.main">#DDDDDD</Color>
+    <Color x:Key="settings.background.main">#303843</Color>
     <SolidColorBrush x:Key="SettingsMainBackgroundSolidColorBrush" Color="{DynamicResource settings.background.main}"/>
     
     <!--#endregion-->
 
     <!--#region Общая панель с настройками -->
 
-    <Color x:Key="settings.background.panel">#EBEBEB</Color>
-    <Color x:Key="settings.border.panel">#EBEBEB</Color>
+    <Color x:Key="settings.background.panel">#282E37</Color>
+    <Color x:Key="settings.border.panel">#282E37</Color>
 
     <SolidColorBrush x:Key="SettingsPanelBackgroundSolidColorBrush" Color="{DynamicResource settings.background.panel}"/>
     <SolidColorBrush x:Key="SettingsPanelBorderSolidColorBrush" Color="{DynamicResource settings.border.panel}"/>
@@ -61,8 +61,8 @@
 
     <!--#region Карточка с настройкой -->
 
-    <Color x:Key="settings.background.card">#FFFFFF</Color>
-    <Color x:Key="settings.border.card">#000000</Color>
+    <Color x:Key="settings.background.card">#303843</Color>
+    <Color x:Key="settings.border.card">#415163</Color>
 
     <SolidColorBrush x:Key="SettingsCardBackgroundSolidColorBrush" Color="{DynamicResource settings.background.card}"/>
     <SolidColorBrush x:Key="SettingsCardBorderSolidColorBrush" Color="{DynamicResource settings.border.card}"/>
@@ -76,11 +76,11 @@
     <!--#endregion-->
 
     <!--#region Чек бокс и кнопки -->
-    <Color x:Key="settings.background.interactive">#FFFFFF</Color>
-    <Color x:Key="settings.hover.interactive.background">#A4EB9E</Color>
-    <Color x:Key="settings.border.interactive">#000000</Color>
-    <Color x:Key="settings.active.interactive">#A4EB9E</Color>
-    <Color x:Key="settings.pressed.interactive">#79E171</Color>
+    <Color x:Key="settings.background.interactive">#1F242B</Color>
+    <Color x:Key="settings.hover.interactive.background">#1CA3E9</Color>
+    <Color x:Key="settings.border.interactive">#415163</Color>
+    <Color x:Key="settings.active.interactive">#1CA3E9</Color>
+    <Color x:Key="settings.pressed.interactive">#93D2F4</Color>
 
     <SolidColorBrush x:Key="SettingsInteractiveBackgroundSolidColorBrush" Color="{DynamicResource settings.background.interactive}"/>
     <SolidColorBrush x:Key="SettingsInteractiveBorderSolidColorBrush" Color="{DynamicResource settings.border.interactive}"/>
@@ -90,11 +90,11 @@
     <!--#endregion-->
 
     <!--#region Панель выбора -->
-    <Color x:Key="settings.background.slider">#FFFFFF</Color>
-    <Color x:Key="settings.background.selector">#FFFFFF</Color>
-    <Color x:Key="settings.hover.selector.background">#A4EB9E</Color>
-    <Color x:Key="settings.selected.selector">#79E171</Color>
-    <Color x:Key="settings.border.slider">#000000</Color>
+    <Color x:Key="settings.background.slider">#303843</Color>
+    <Color x:Key="settings.background.selector">#303843</Color>
+    <Color x:Key="settings.hover.selector.background">#93D2F4</Color>
+    <Color x:Key="settings.selected.selector">#1CA3E9</Color>
+    <Color x:Key="settings.border.slider">#415163</Color>
 
     <SolidColorBrush x:Key="SettingsSliderBackgroundSolidColorBrush" Color="{DynamicResource settings.background.slider}"/>
     <SolidColorBrush x:Key="SettingsSelectorBackgroundSolidColorBrush" Color="{DynamicResource settings.background.selector}"/>
@@ -105,11 +105,11 @@
     <!--#endregion-->
 
     <!--#region Конфигурация -->
-    <Color x:Key="settings.background.config.button">#80465945</Color>
-    <Color x:Key="settings.hover.config.button.background">#90465945</Color>
+    <Color x:Key="settings.background.config.button">#1CA3E9</Color>
+    <Color x:Key="settings.hover.config.button.background">#93D2F4</Color>
+    <Color x:Key="settings.background.config.infoTablo">#1CA3E9</Color>
+    <Color x:Key="settings.background.config.dataInputTablo">#6A7689</Color>
     <Color x:Key="settings.border.config.button">#000000</Color>
-    <Color x:Key="settings.background.config.infoTablo">#90465945</Color>
-    <Color x:Key="settings.background.config.dataInputTablo">#FFFFFF</Color>
 
     <SolidColorBrush x:Key="SettingsCongifButtonBackgroundSolidColorBrush" Color="{DynamicResource settings.background.config.button}"/>
     <SolidColorBrush x:Key="SettingsCongifButtonHoverBackgroundSolidColorBrush" Color="{DynamicResource settings.hover.config.button.background}"/>

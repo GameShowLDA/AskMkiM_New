@@ -231,4 +231,85 @@
   <data name="settings.border.card" xml:space="preserve">
     <value>#000000</value>
   </data>
+  <data name="main.background.empty.firstColor" xml:space="preserve">
+    <value>#00E6EDF7</value>
+  </data>
+  <data name="main.background.empty.secondColor" xml:space="preserve">
+    <value>#1AE6EDF7</value>
+  </data>
+  <data name="main.empty.vignette.firstColor" xml:space="preserve">
+    <value>#00000000</value>
+  </data>
+  <data name="main.empty.vignette.secondColor" xml:space="preserve">
+    <value>#26000000</value>
+  </data>
+  <data name="main.empty.vignette.thirdColor" xml:space="preserve">
+    <value>#66000000</value>
+  </data>
+  <data name="main.background.breath.firstColor" xml:space="preserve">
+    <value>#EFEEF0</value>
+  </data>
+  <data name="main.background.breath.secondColor" xml:space="preserve">
+    <value>#303843</value>
+  </data>
+  <data name="main.text.title.color" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="main.background.greeting" xml:space="preserve">
+    <value>#DEDDDF</value>
+  </data>
+  <data name="main.borderColor.greeting" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="main.background.menu" xml:space="preserve">
+    <value>#DEDDDF</value>
+  </data>
+  <data name="main.active.menu.backround" xml:space="preserve">
+    <value>#79E171</value>
+  </data>
+  <data name="tests.input.background.header.panel" xml:space="preserve">
+    <value>#A4EB9E</value>
+  </data>
+  <data name="tests.input.background.input.panel" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="tests.main.panel.background" xml:space="preserve">
+    <value>#DDDDDD</value>
+  </data>
+  <data name="tests.main.button.background" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="tests.input.text.header.color" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="tests.input.text.description.color" xml:space="preserve">
+    <value>#A9B5C3</value>
+  </data>
+  <data name="tests.main.button.orange.start" xml:space="preserve">
+    <value>#90F47842</value>
+  </data>
+  <data name="tests.main.button.orange.end" xml:space="preserve">
+    <value>#90FCAA3F</value>
+  </data>
+  <data name="tests.main.button.green.start" xml:space="preserve">
+    <value>#90459C3C</value>
+  </data>
+  <data name="tests.main.button.green.end" xml:space="preserve">
+    <value>#9067C66E</value>
+  </data>
+  <data name="tests.main.background.interactive" xml:space="preserve">
+    <value>#FFFFFF</value>
+  </data>
+  <data name="tests.main.border.interactive" xml:space="preserve">
+    <value>#000000</value>
+  </data>
+  <data name="tests.main.active.interactive" xml:space="preserve">
+    <value>#A4EB9E</value>
+  </data>
+  <data name="tests.main.pressed.interactive" xml:space="preserve">
+    <value>#79E171</value>
+  </data>
+  <data name="main.background.bottomPanel" xml:space="preserve">
+    <value>#DEDDDF</value>
+  </data>
 </root>

@@ -56,7 +56,7 @@ namespace MainWindowProgram
     /// <param name="clearMessage">Если true, сообщение будет автоматически очищено.</param>
     public void SetInfoMessage(string message, bool clearMessage = false)
     {
-      SetMessage(message, (SolidColorBrush)Application.Current.Resources["ForegroundSolidColorBrush"], clearMessage);
+      SetMessage(message, (SolidColorBrush)Application.Current.Resources["MainTitleSolidColorBrush"], clearMessage);
       LogInformation($"Информация: {message}");
     }
 
@@ -67,7 +67,7 @@ namespace MainWindowProgram
     /// <param name="clearMessage">Если true, сообщение будет автоматически очищено.</param>
     public void ClearMessage()
     {
-      SetMessage(string.Empty, (SolidColorBrush)Application.Current.Resources["ForegroundSolidColorBrush"], false);
+      SetMessage(string.Empty, (SolidColorBrush)Application.Current.Resources["MainTitleSolidColorBrush"], false);
     }
 
     /// <summary>

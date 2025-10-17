@@ -70,6 +70,15 @@ namespace UI.Resources.Theme {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на #801ca3e9.
+        /// </summary>
+        public static string ActiveColor80 {
+            get {
+                return ResourceManager.GetString("ActiveColor80", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на #b23a48.
         /// </summary>
         public static string FadedRed {
@@ -88,11 +97,182 @@ namespace UI.Resources.Theme {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на #60f3f0f9.
+        /// </summary>
+        public static string ForegroundColor60 {
+            get {
+                return ResourceManager.GetString("ForegroundColor60", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #80f3f0f9.
+        /// </summary>
+        public static string ForegroundColor80 {
+            get {
+                return ResourceManager.GetString("ForegroundColor80", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на #4b7765.
         /// </summary>
         public static string GreenColor {
             get {
                 return ResourceManager.GetString("GreenColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1f242b.
+        /// </summary>
+        public static string IsCheckedColor {
+            get {
+                return ResourceManager.GetString("IsCheckedColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #801f242b.
+        /// </summary>
+        public static string IsCheckedColor80 {
+            get {
+                return ResourceManager.GetString("IsCheckedColor80", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #5DADE2.
+        /// </summary>
+        public static string LightBlueColor {
+            get {
+                return ResourceManager.GetString("LightBlueColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #6a7689.
+        /// </summary>
+        public static string LightPrimaryColor {
+            get {
+                return ResourceManager.GetString("LightPrimaryColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1ca3e9.
+        /// </summary>
+        public static string main_active_menu_backround {
+            get {
+                return ResourceManager.GetString("main.active.menu.backround", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string main_background_bottomPanel {
+            get {
+                return ResourceManager.GetString("main.background.bottomPanel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string main_background_breath_firstColor {
+            get {
+                return ResourceManager.GetString("main.background.breath.firstColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #3a4655.
+        /// </summary>
+        public static string main_background_breath_secondColor {
+            get {
+                return ResourceManager.GetString("main.background.breath.secondColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #00E6EDF7.
+        /// </summary>
+        public static string main_background_empty_firstColor {
+            get {
+                return ResourceManager.GetString("main.background.empty.firstColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1AE6EDF7.
+        /// </summary>
+        public static string main_background_empty_secondColor {
+            get {
+                return ResourceManager.GetString("main.background.empty.secondColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string main_background_greeting {
+            get {
+                return ResourceManager.GetString("main.background.greeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string main_background_menu {
+            get {
+                return ResourceManager.GetString("main.background.menu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #f3f0f9.
+        /// </summary>
+        public static string main_borderColor_greeting {
+            get {
+                return ResourceManager.GetString("main.borderColor.greeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #00000000.
+        /// </summary>
+        public static string main_empty_vignette_firstColor {
+            get {
+                return ResourceManager.GetString("main.empty.vignette.firstColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #26000000.
+        /// </summary>
+        public static string main_empty_vignette_secondColor {
+            get {
+                return ResourceManager.GetString("main.empty.vignette.secondColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #66000000.
+        /// </summary>
+        public static string main_empty_vignette_thirdColor {
+            get {
+                return ResourceManager.GetString("main.empty.vignette.thirdColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #f3f0f9.
+        /// </summary>
+        public static string main_text_title_color {
+            get {
+                return ResourceManager.GetString("main.text.title.color", resourceCulture);
             }
         }
         
@@ -120,6 +300,213 @@ namespace UI.Resources.Theme {
         public static string SecondaryColor {
             get {
                 return ResourceManager.GetString("SecondaryColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1CA3E9.
+        /// </summary>
+        public static string settings_active_interactive {
+            get {
+                return ResourceManager.GetString("settings.active.interactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string settings_background_card {
+            get {
+                return ResourceManager.GetString("settings.background.card", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1CA3E9.
+        /// </summary>
+        public static string settings_background_config_button {
+            get {
+                return ResourceManager.GetString("settings.background.config.button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #6A7689.
+        /// </summary>
+        public static string settings_background_config_dataInputTablo {
+            get {
+                return ResourceManager.GetString("settings.background.config.dataInputTablo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1CA3E9.
+        /// </summary>
+        public static string settings_background_config_infoTablo {
+            get {
+                return ResourceManager.GetString("settings.background.config.infoTablo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1F242B.
+        /// </summary>
+        public static string settings_background_interactive {
+            get {
+                return ResourceManager.GetString("settings.background.interactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string settings_background_main {
+            get {
+                return ResourceManager.GetString("settings.background.main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #282E37.
+        /// </summary>
+        public static string settings_background_panel {
+            get {
+                return ResourceManager.GetString("settings.background.panel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string settings_background_selector {
+            get {
+                return ResourceManager.GetString("settings.background.selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #303843.
+        /// </summary>
+        public static string settings_background_slider {
+            get {
+                return ResourceManager.GetString("settings.background.slider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #415163.
+        /// </summary>
+        public static string settings_border_card {
+            get {
+                return ResourceManager.GetString("settings.border.card", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #000000.
+        /// </summary>
+        public static string settings_border_config_button {
+            get {
+                return ResourceManager.GetString("settings.border.config.button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #415163.
+        /// </summary>
+        public static string settings_border_interactive {
+            get {
+                return ResourceManager.GetString("settings.border.interactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #282E37.
+        /// </summary>
+        public static string settings_border_panel {
+            get {
+                return ResourceManager.GetString("settings.border.panel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #415163.
+        /// </summary>
+        public static string settings_border_slider {
+            get {
+                return ResourceManager.GetString("settings.border.slider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #93D2F4.
+        /// </summary>
+        public static string settings_hover_config_button_background {
+            get {
+                return ResourceManager.GetString("settings.hover.config.button.background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1CA3E9.
+        /// </summary>
+        public static string settings_hover_interactive_background {
+            get {
+                return ResourceManager.GetString("settings.hover.interactive.background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #93D2F4.
+        /// </summary>
+        public static string settings_hover_selector_background {
+            get {
+                return ResourceManager.GetString("settings.hover.selector.background", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #93D2F4.
+        /// </summary>
+        public static string settings_pressed_interactive {
+            get {
+                return ResourceManager.GetString("settings.pressed.interactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #1CA3E9.
+        /// </summary>
+        public static string settings_selected_selector {
+            get {
+                return ResourceManager.GetString("settings.selected.selector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #A9B5C3.
+        /// </summary>
+        public static string settings_text_description_color {
+            get {
+                return ResourceManager.GetString("settings.text.description.color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #FFFFFF.
+        /// </summary>
+        public static string settings_text_header_color {
+            get {
+                return ResourceManager.GetString("settings.text.header.color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #FFFFFF.
+        /// </summary>
+        public static string settings_text_title_color {
+            get {
+                return ResourceManager.GetString("settings.text.title.color", resourceCulture);
             }
         }
         

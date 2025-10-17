@@ -25,7 +25,9 @@
         <ResourceDictionary Source="/UI;component/Resources/StyleApp/DataGridStyle.xaml"/>
         <ResourceDictionary Source="/UI;component/Resources/StyleApp/MetrologyStyle.xaml"/>
         <ResourceDictionary Source="/UI;component/Components/Archive/ArchiveMenu/ArchiveContextMenu.xaml"/>
-        <ResourceDictionary Source="/UI;component/Resources/Settings/SettingsStyle.xaml"/>
+        <ResourceDictionary Source="/UI;component/Resources/ColorsStyle/SettingsStyle.xaml"/>
+        <ResourceDictionary Source="/UI;component/Resources/ColorsStyle/MainStyle.xaml"/>
+        <ResourceDictionary Source="/UI;component/Resources/ColorsStyle/TestsStyle.xaml"/>
 
     </ResourceDictionary.MergedDictionaries>
 

@@ -21,6 +21,20 @@ namespace UI.Components
       };
       this.MouseLeftButtonUp += (s, e) => SwitchToNextInputLanguage();
     }
+
+    public new System.Windows.Media.Brush Foreground
+    {
+      get 
+      {
+        return LayoutText.Foreground;
+      }
+      set 
+      {
+        LayoutText.Foreground = value;
+      }
+    }
+
+
     private void UpdateLayoutDisplay()
     {
       var culture = InputLanguageManager.Current.CurrentInputLanguage;

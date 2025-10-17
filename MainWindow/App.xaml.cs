@@ -45,8 +45,7 @@ namespace MainWindowProgram
     /// <param name="e"></param>
     protected override async void OnStartup(StartupEventArgs e)
     {
-
-      ThemeManager.ApplyTheme("Dark");
+      ThemeManager.ApplyTheme(DTO.Enum.ThemeEnums.Theme.Light);
       base.OnStartup(e);
 
       CommandLineArgs = e.Args;

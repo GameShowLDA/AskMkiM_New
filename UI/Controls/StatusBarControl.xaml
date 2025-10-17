@@ -13,13 +13,13 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="14" Foreground="{StaticResource ForegroundSolidColorBrush}" Text="{Binding Line, StringFormat=Строка: {0}}" Margin="10,0"/>
-        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="14" Foreground="{StaticResource ForegroundSolidColorBrush}" Text="{Binding Column, StringFormat=Столбец: {0}}" Margin="10,0"/>
-        <TextBlock Grid.Column="2" VerticalAlignment="Center" FontSize="14" Foreground="{StaticResource ForegroundSolidColorBrush}" Text="{Binding LineCount, StringFormat=Всего строк: {0}}" Margin="10,0"/>
+        <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource MainTitleSolidColorBrush}" Text="{Binding Line, StringFormat=Строка: {0}}" Margin="10,0"/>
+        <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource MainTitleSolidColorBrush}" Text="{Binding Column, StringFormat=Столбец: {0}}" Margin="10,0"/>
+        <TextBlock Grid.Column="2" VerticalAlignment="Center" FontSize="14" Foreground="{DynamicResource MainTitleSolidColorBrush}" Text="{Binding LineCount, StringFormat=Всего строк: {0}}" Margin="10,0"/>
         <TextBlock Grid.Column="3"
                    VerticalAlignment="Center"
                    FontSize="14"
-                   Foreground="{StaticResource ForegroundSolidColorBrush}"
+                   Foreground="{DynamicResource MainTitleSolidColorBrush}"
                    Text="{Binding EncodingName}"
                    TextDecorations="Underline"
                    Cursor="Hand"

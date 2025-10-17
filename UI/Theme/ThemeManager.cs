@@ -12,11 +12,11 @@ namespace UI.Theme
     /// <summary>
     /// Применяет тему: "Dark" или "Light"
     /// </summary>
-    public static void ApplyTheme(string theme)
+    public static void ApplyTheme(DTO.Enum.ThemeEnums.Theme theme)
     {
       ResourceManager manager;
 
-      if (theme.Equals("Light", StringComparison.OrdinalIgnoreCase))
+      if (theme == DTO.Enum.ThemeEnums.Theme.Light)
       {
         manager = new ResourceManager("UI.Resources.Theme.Colors.Light", typeof(Resources.Theme.Colors).Assembly);
       }

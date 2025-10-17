@@ -126,11 +126,11 @@ namespace UI.Components
       if (string.IsNullOrWhiteSpace(Text))
       {
         InputBox.Text = Placeholder;
-        InputBox.Foreground = (Brush)FindResource("ForegroundSolidColorBrush");
+        InputBox.Foreground = (Brush)FindResource("TestsInputDescriptionSolidColorBrush");
       }
       else
       {
-        InputBox.Foreground = (Brush)FindResource("ForegroundSolidColorBrush");
+        InputBox.Foreground = (Brush)FindResource("TestsInputHeaderSolidColorBrush");
       }
     }
 
@@ -141,7 +141,6 @@ namespace UI.Components
         InputBox.Text = "";
       }
 
-      BorderData.Background = (Brush)FindResource("LightPrimarySolidColorBrush");
     }
 
     private void InputBox_LostFocus(object sender, RoutedEventArgs e)
@@ -149,14 +148,13 @@ namespace UI.Components
       if (string.IsNullOrWhiteSpace(InputBox.Text) || InputBox.Text == Placeholder)
       {
         InputBox.Text = Placeholder;
-        InputBox.Foreground = (Brush)FindResource("ForegroundSolidColorBrush");
+        InputBox.Foreground = (Brush)FindResource("TestsInputDescriptionSolidColorBrush");
       }
       else
       {
         Text = InputBox.Text;
       }
 
-      BorderData.Background = Background;
     }
 
     /// <summary>
@@ -167,11 +165,6 @@ namespace UI.Components
     /// <param name="e">Аргументы события ввода текста.</param>
     private void InputBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-      if (BorderData.Background != (Brush)FindResource("LightPrimarySolidColorBrush"))
-      {
-        BorderData.Background = (Brush)FindResource("LightPrimarySolidColorBrush");
-      }
-
       if (!IsNumberInputEnabled)
       {
         e.Handled = false;

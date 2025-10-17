@@ -28,10 +28,10 @@
 
         <Style TargetType="DefaultGUI:WindowButtons">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainTitleSolidColorBrush}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource ActiveForegroundSolidColorBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource MainMenuActiveBackgroundBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -44,11 +44,11 @@
                         <Grid SnapsToDevicePixels="true">
                             <DockPanel x:Name="ItemDockPanel" Background="Transparent">
                                 <ContentPresenter x:Name="Icon" ContentSource="Icon" Margin="4,0,6,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
-                                <Path x:Name="GlyphPanel" Fill="{TemplateBinding Foreground}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="HeaderText" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                                <Path x:Name="GlyphPanel" Fill="{DynamicResource main.text.title.color}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="HeaderText" Text="{TemplateBinding Header}" Foreground="{DynamicResource MainTitleSolidColorBrush}" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
 
                                 <!-- Добавляем TextBlock для отображения горячей клавиши -->
-                                <TextBlock x:Name="HotkeyText" Text="{Binding InputGestureText, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                                <TextBlock x:Name="HotkeyText" Text="{Binding InputGestureText, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource MainTitleSolidColorBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0"/>
 
                             </DockPanel>
                             <Popup x:Name="PART_Popup" AllowsTransparency="true" Focusable="false" HorizontalOffset="1" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" Placement="Bottom" VerticalOffset="-1">
@@ -63,12 +63,12 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource ActiveForegroundSolidColorBrush}" TargetName="ItemDockPanel"/>
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" TargetName="HeaderText"/>
+                                <Setter Property="Background" Value="{DynamicResource MainMenuActiveBackgroundBrush}" TargetName="ItemDockPanel"/>
+                                <Setter Property="Foreground" Value="{DynamicResource MainTitleSolidColorBrush}" TargetName="HeaderText"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Background" Value="{StaticResource ActiveForegroundSolidColorBrush}" TargetName="ItemDockPanel"/>
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" TargetName="HeaderText"/>
+                                <Setter Property="Background" Value="{DynamicResource MainMenuActiveBackgroundBrush}" TargetName="ItemDockPanel"/>
+                                <Setter Property="Foreground" Value="{DynamicResource MainTitleSolidColorBrush}" TargetName="HeaderText"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -77,9 +77,9 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="5,10,10,10"/>
-            <Setter Property="Background" Value="{StaticResource SecondarySolidColorBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource MainMenuBackgroundBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MainTitleSolidColorBrush}"/>
             <Setter Property="FontFamily" Value="{DynamicResource WinstonLight}"/>
             <Setter Property="Cursor" Value="Hand"/>
 
@@ -92,9 +92,9 @@
                         <Grid SnapsToDevicePixels="true">
                             <DockPanel x:Name="ItemDockPanel" Background="Transparent">
                                 <ContentPresenter x:Name="Icon" ContentSource="Icon" Margin="4,0,6,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
-                                <Path x:Name="GlyphPanel" Fill="{TemplateBinding Foreground}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
-                                <TextBlock x:Name="HeaderText" Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
-                                <TextBlock x:Name="HotkeyText" Text="{Binding InputGestureText, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                                <Path x:Name="GlyphPanel" Fill="{DynamicResource main.text.title.color}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="HeaderText" Text="{TemplateBinding Header}" Foreground="{DynamicResource MainTitleSolidColorBrush}" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                                <TextBlock x:Name="HotkeyText" Text="{Binding InputGestureText, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource MainTitleSolidColorBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0,0,0"/>
                             </DockPanel>
                             <Popup x:Name="PART_Popup"
                            AllowsTransparency="true"
@@ -122,12 +122,12 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource ActiveForegroundSolidColorBrush}" TargetName="ItemDockPanel"/>
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" TargetName="HeaderText"/>
+                                <Setter Property="Background" Value="{DynamicResource MainMenuActiveBackgroundBrush}" TargetName="ItemDockPanel"/>
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}" TargetName="HeaderText"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Background" Value="{StaticResource ActiveForegroundSolidColorBrush}" TargetName="ItemDockPanel"/>
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundSolidColorBrush}" TargetName="HeaderText"/>
+                                <Setter Property="Background" Value="{DynamicResource MainMenuActiveBackgroundBrush}" TargetName="ItemDockPanel"/>
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}" TargetName="HeaderText"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -156,7 +156,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TopPanel" Background="{DynamicResource SecondarySolidColorBrush}" Cursor="SizeAll">
+        <Grid x:Name="TopPanel" Background="{DynamicResource MainMenuBackgroundBrush}" Cursor="SizeAll">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -171,34 +171,37 @@
             </Grid.ColumnDefinitions>
 
             <Menu Name="mainMenu" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" Background="Transparent" 
-                Foreground="{DynamicResource ForegroundSolidColorBrush}" Grid.Column="0" BorderThickness="0">
+                Foreground="{DynamicResource MainTitleSolidColorBrush}" Grid.Column="0" BorderThickness="0">
 
                 <MenuItem 
                    Header="{Binding Source={StaticResource LS_Menu_File}, Path=Value}"
-                    Name="File" Uid="1" BorderBrush="#FF303843" OpacityMask="#FF303843" Tag="menuHeader_1">
+                    Name="File" Uid="1" 
+                    BorderBrush="#FF303843" 
+                    OpacityMask="#FF303843" 
+                    Tag="menuHeader_1">
 
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Archive}, Path=Value}" Tag="OpenArchive" Name="ArchiveMenuItem" Command="{Binding File.OpenArchiveCommand}" utilities:HelpProvider.HelpKey="FuncArchive"/>
 
-                    <Separator Background="{StaticResource ActiveBorderSolidColorBrush}" Visibility="Collapsed" x:Name="fileActionsSeparator"/>
+                    <Separator Background="{DynamicResource MainMenuActiveBackgroundBrush}" Visibility="Collapsed" x:Name="fileActionsSeparator"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Save}, Path=Value}" Tag="SaveFile" x:Name="saveMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileCommand}" utilities:HelpProvider.HelpKey="FuncSave"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_SaveAs}, Path=Value}" Tag="SaveFileAs" x:Name="saveAsMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileAsCommand}" utilities:HelpProvider.HelpKey="FuncSaveAs"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_OpenFolder}, Path=Value}" Tag="OpenFolder" x:Name="openFolderMenuItem" Visibility="Collapsed" Command="{Binding File.OpenFolderCommand}" utilities:HelpProvider.HelpKey="FuncOpenFolderInExplorer"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Print}, Path=Value}" Tag="PrintFile" x:Name="printMenuItem" Visibility="Collapsed" Command="{Binding File.PrintFileCommand}" utilities:HelpProvider.HelpKey="FuncPrint"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Search}, Path=Value}" Tag="SearchFile" x:Name="searchMenuItem" Visibility="Collapsed" Command="{Binding File.SearchFileCommand}" utilities:HelpProvider.HelpKey="FuncSearch"/>
 
-                    <Separator Background="{StaticResource ActiveBorderSolidColorBrush}"/>
+                    <Separator Background="{StaticResource MainMenuActiveBackgroundBrush}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Open}, Path=Value}" Tag="OpenFile" Command="{Binding File.OpenFileCommand}" utilities:HelpProvider.HelpKey="FuncOpen"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Create}, Path=Value}" Tag="CreateNewFile" Command="{Binding File.CreateNewFileCommand}" utilities:HelpProvider.HelpKey="FuncCreate"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Compare}, Path=Value}" Tag="CompareFile" x:Name="compareMenuItem" Command="{Binding File.CompareFileCommand}" utilities:HelpProvider.HelpKey="FuncCompare"/>
 
-                    <Separator Background="{StaticResource ActiveBorderSolidColorBrush}"/>
+                    <Separator Background="{StaticResource MainMenuActiveBackgroundBrush}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Exit}, Path=Value}" Tag="ExitApplication" Command="{Binding File.ExitApplicationCommand}" utilities:HelpProvider.HelpKey="FuncExit"/>
 
                 </MenuItem>
 
                 <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test}, Path=Value}" Tag="menuHeader_2" >
 
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology}, Path=Value}" Name="Metrology" Style="{StaticResource SideMenuItemStyle}">
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology}, Path=Value}" Name="Metrology" Style="{DynamicResource SideMenuItemStyle}">
 
                         <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KS}, Path=Value}" Name="ModeKSMenuItem" Command="{Binding Metrology.KCCommand}" utilities:HelpProvider.HelpKey="UtilityModeKC"/>
                         <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_IE}, Path=Value}" Name="ModeIEMenuItem" Command="{Binding Metrology.IECommand}" utilities:HelpProvider.HelpKey="UtilityModeIE"/>
@@ -271,13 +274,13 @@
 
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_Error}, Path=Value}" Name="ErrorMenuItem" Command="{Binding Admin.ErrorCommand}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_USB}, Path=Value}" Name="USBMenuItem" Command="{Binding Admin.UsbCommand}"/>
-                    
-                    <Separator Background="{StaticResource ActiveBorderSolidColorBrush}"/>
+
+                    <Separator Background="{StaticResource MainMenuActiveBackgroundBrush}"/>
 
                     <MenuItem Header="Console" Name="SendCommandMenuItem" Command="{Binding Admin.SendCommandCommand}"/>
                     <MenuItem Header="Logger" Name="LoggerMenuItem" Command="{Binding Admin.LoggerCommand}"/>
 
-                    <Separator Background="{DynamicResource ActiveBorderSolidColorBrush}"/>
+                    <Separator Background="{DynamicResource MainMenuActiveBackgroundBrush}"/>
 
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_Management}, Path=Value}" Name="DeviceManagment">
                         <MenuItem Header="GPT" Name="GptManagment" Command="{Binding Admin.GptCommand}"/>
@@ -349,7 +352,7 @@
             Name="BottomPanel"
             Grid.Row="2" 
             Height="30" 
-            Background="{DynamicResource SecondarySolidColorBrush}"
+            Background="{DynamicResource MainBottomPanelBackgroundBrush}"
             >
 
             <Grid.ColumnDefinitions>
@@ -365,7 +368,7 @@
                 VerticalAlignment="Center" 
                 Padding="10,0,0,0" 
                 FontSize="14" 
-                Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                Foreground="{DynamicResource MainTitleSolidColorBrush}" 
 				/>
 
 
@@ -381,7 +384,7 @@
                 x:Name="TimeBlock" 
                 Margin="0,0,10,0" 
                 FontSize="13" 
-                Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                Foreground="{DynamicResource MainTitleSolidColorBrush}" 
                 Grid.Column="3" 
                 Cursor="Hand"
 				/>
@@ -390,7 +393,7 @@
                 x:Name="LanguageBlock" 
                 VerticalAlignment="Center" 
                 FontSize="15" 
-                Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                Foreground="{DynamicResource MainTitleSolidColorBrush}" 
                 Grid.Column="2" 
 				/>
 
