@@ -22,8 +22,9 @@ namespace ControlCommandAnalyser.Parser.Pi
       LoggerUtility.LogInformation($"Начало парсинга команды: {commandNumber} {mnemonic}, строк: {lines?.Count ?? 0}");
 
       var breakDown = AppConfiguration.ServiceLocator.GetRequired<IBreakdownTester>();
-      var maxVoltage = breakDown.MaxVoltage;
-
+      var maxDCWVoltage = breakDown.MaxVoltage;// постоянный ток
+      var minVoltage = 50;
+      var maxACWVoltage = breakDown.MaxVoltage; // переменный ток
       var model = new PiCommandModel
       {
         CommandNumber = commandNumber,
@@ -138,12 +139,31 @@ namespace ControlCommandAnalyser.Parser.Pi
       {
         model.Voltage = CommonParameterParser.ParseToDouble(model.VoltageSource);
         model.VoltageSource += unit;
-
-        if (model.Voltage.HasValue && model.Voltage > maxVoltage)
+        var maxVoltage = maxACWVoltage;
+        var voltageType = string.Empty;
+        if (model.VoltageType == VoltageEnum.Type.DCW)
         {
-          LoggerUtility.LogError($"В команде ПИ указано напряжение, превышающий максимально допустимое напряжение пробойной установки.");
-          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({model.Voltage.Value}), превышающий максимально допустимое напряжение пробойной установки({maxVoltage}).";
+          maxVoltage = maxDCWVoltage;
+        }
+        voltageType = model.VoltageType == VoltageEnum.Type.DCW ? "постоянного" : "переменного";
+        if (model.Voltage.Value > maxVoltage)
+        {
+          LoggerUtility.LogError($"В команде ПИ указано напряжение, превышающее максимально допустимое напряжение пробойной установки.");
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({model.Voltage.Value}), превышающий максимально допустимое напряжение пробойной установки({maxVoltage} " +
+            $"для {voltageType} тока).";
           model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
+        }
+        else if (model.Voltage.Value < minVoltage)
+        {
+          LoggerUtility.LogError($"В команде ПИ указано напряжение, меньше минимально допустимого напряжения пробойной установки.");
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({model.Voltage.Value}), меньше минимально допустимого напряжения пробойной установки({minVoltage}" +
+            $"для {voltageType} тока).";
+          model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
+        }
+        else
+        {
+          model.Voltage = model.Voltage.Value;
+          model.VoltageSource = model.Voltage.Value.ToString() + unit;
         }
       }
       else

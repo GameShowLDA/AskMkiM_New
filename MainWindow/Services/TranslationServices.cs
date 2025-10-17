@@ -221,6 +221,8 @@ namespace MainWindowProgram.Services
     private async Task CreateNewTranslator(TextEditorUI editor, string text)
     {
       var translateEditor = _fileService.CreateTranslationFileAsync();
+      text = PkPreprocessor.PreprocessText(text);
+      editor.TextArea.Document.Text = text;
       if (translateEditor != null)
       {
         translateEditor.TextEditorModel.FilePath = editor.TextEditorModel.FilePath;

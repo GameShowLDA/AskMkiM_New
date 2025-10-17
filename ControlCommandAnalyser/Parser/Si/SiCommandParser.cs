@@ -162,8 +162,8 @@ namespace ControlCommandAnalyser.Parser.Si
     {
       var minVoltage = 50;
       var maxVoltage = breakDown.MaxVoltage;
-      var minResistance = 100; // в МОм
-      var maxResistance = 1000; // в МОм
+      var minResistance = 1 * 1_000_000; // в МОм
+      var maxResistance = 1000 * 1_000_000; // в МОм
       string voltage = string.Empty, resistance = string.Empty, time = string.Empty, unit = string.Empty, unitTime = string.Empty, unitResistance = string.Empty;
 
       (voltage, unit, remainder) = CommonParameterParser.VoltageParser.ParseVoltage(remainder);
@@ -211,7 +211,7 @@ namespace ControlCommandAnalyser.Parser.Si
       {
         resistance = "100";
         LoggerUtility.LogDebug($"Для сопротивления установлено значение по умолчанию '100<МОм'");
-        resistanceValue = 100;
+        resistanceValue = 100 * 1_000_000;
         unitResistance = "МОм";
       }
       else
