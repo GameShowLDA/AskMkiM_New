@@ -31,26 +31,31 @@ namespace ControlCommandAnalyser.ComandBody
           commandBody.Append($"* {ok.ObjectName}");
         }
       }
-      foreach (var kdDoc in ok.ControlProgramDocument)
+      if (ok.ControlProgramDocument != null)
       {
-        if (!string.IsNullOrEmpty(kdDoc))
+
+        foreach (var kdDoc in ok.ControlProgramDocument)
         {
-          commandBody.Append($"\n\tКД={kdDoc} ");
-          var match = ok.LastNotificationNumber
-            .FindAll(x => x.Item1 == kdDoc);
-          for (int i = 0; i < match.Count; i++)
+          if (!string.IsNullOrEmpty(kdDoc))
           {
-            if (!string.IsNullOrEmpty(match[i].Item2) && i == 0)
+            commandBody.Append($"\n\tКД={kdDoc} ");
+            var match = ok.LastNotificationNumber
+              .FindAll(x => x.Item1 == kdDoc);
+            for (int i = 0; i < match.Count; i++)
             {
-              commandBody.Append($"* {match[i].Item2}");
-            }
-            else if (i > 0)
-            {
-              commandBody.Append($", {match[i].Item2}");
+              if (!string.IsNullOrEmpty(match[i].Item2) && i == 0)
+              {
+                commandBody.Append($"* {match[i].Item2}");
+              }
+              else if (i > 0)
+              {
+                commandBody.Append($", {match[i].Item2}");
+              }
             }
           }
         }
       }
+
       if (!string.IsNullOrEmpty(ok.ContolSystemType))
       {
         commandBody.Append($"\n\tИК={ok.ContolSystemType}");
