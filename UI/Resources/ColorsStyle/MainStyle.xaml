@@ -1,46 +1,31 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!--#region Главное окно -->
+    <!-- #region Главное окно -->
 
-    <Color x:Key="main.background.empty.firstColor">#00E6EDF7</Color>
-    <Color x:Key="main.background.empty.secondColor">#1AE6EDF7</Color>
-    
-    <Color x:Key="main.empty.vignette.firstColor">#00000000</Color>
-    <Color x:Key="main.empty.vignette.secondColor">#26000000</Color>
-    <Color x:Key="main.empty.vignette.thirdColor">#66000000</Color>
+    <!-- Виньетка -->
+    <SolidColorBrush x:Key="MainVignetteFirstColor" Color="{DynamicResource main.empty.vignette.firstColor}" />
+    <SolidColorBrush x:Key="MainVignetteSecondColor" Color="{DynamicResource main.empty.vignette.secondColor}" />
+    <SolidColorBrush x:Key="MainVignetteThirdColor" Color="{DynamicResource main.empty.vignette.thirdColor}" />
 
-    <SolidColorBrush x:Key="MainVignetteFirstColor" Color="{DynamicResource main.empty.vignette.firstColor}"/>
-    <SolidColorBrush x:Key="MainVignetteSecondColor" Color="{DynamicResource main.empty.vignette.secondColor}"/>
-    <SolidColorBrush x:Key="MainVignetteThirdColor" Color="{DynamicResource main.empty.vignette.thirdColor}"/>
+    <!-- Фоновое "дыхание" -->
+    <SolidColorBrush x:Key="MainBreachFirstColor" Color="{DynamicResource main.background.breath.firstColor}" />
+    <SolidColorBrush x:Key="MainBreachSecondColor" Color="{DynamicResource main.background.breath.secondColor}" />
 
+    <!-- Заголовок -->
+    <SolidColorBrush x:Key="MainTitleSolidColorBrush" Color="{DynamicResource main.text.title.color}" />
 
-    <Color x:Key="main.background.breath.firstColor">#303843</Color>
-    <Color x:Key="main.background.breath.secondColor">#3a4655</Color>
+    <!-- Приветственный блок -->
+    <SolidColorBrush x:Key="MainGreetingBackgroundBrush" Color="{DynamicResource main.background.greeting}" />
+    <SolidColorBrush x:Key="MainGreetingBorderBrush" Color="{DynamicResource main.borderColor.greeting}" />
 
-    <SolidColorBrush x:Key="MainBreachFirstColor" Color="{DynamicResource main.background.breath.firstColor}"/>
-    <SolidColorBrush x:Key="MainBreachSecondColor" Color="{DynamicResource main.background.breath.secondColor}"/>
+    <!-- Меню -->
+    <SolidColorBrush x:Key="MainMenuBackgroundBrush" Color="{DynamicResource main.background.menu}" />
+    <SolidColorBrush x:Key="MainMenuActiveBackgroundBrush" Color="{DynamicResource main.active.menu.background}" />
 
-    <Color x:Key="main.text.title.color">#f3f0f9</Color>
-    <SolidColorBrush x:Key="MainTitleSolidColorBrush" Color="{DynamicResource main.text.title.color}"/>
+    <!-- Нижняя панель -->
+    <SolidColorBrush x:Key="MainBottomPanelBackgroundBrush" Color="{DynamicResource main.background.bottomPanel}" />
 
-    <Color x:Key="main.background.greeting">#303843</Color>
-    <Color x:Key="main.borderColor.greeting">#f3f0f9</Color>
-
-    <SolidColorBrush x:Key="MainGreetingBackgroundBrush" Color="{DynamicResource main.background.greeting}"/>
-    <SolidColorBrush x:Key="MainGreetingBorderBrush" Color="{DynamicResource main.borderColor.greeting}"/>
-
-    <Color x:Key="main.background.menu">#303843</Color>
-    <SolidColorBrush x:Key="MainMenuBackgroundBrush" Color="{DynamicResource main.background.menu}"/>
-
-    <Color x:Key="main.active.menu.backround">#1ca3e9</Color>
-    <SolidColorBrush x:Key="MainMenuActiveBackgroundBrush" Color="{DynamicResource main.active.menu.backround}"/>
-
-    <Color x:Key="main.background.bottomPanel">#303843</Color>
-    <SolidColorBrush x:Key="MainBottomPanelBackgroundBrush" Color="{DynamicResource main.background.bottomPanel}"/>
-
-    <!--#endregion-->
-    
-    
+    <!-- #endregion -->
 
 </ResourceDictionary>

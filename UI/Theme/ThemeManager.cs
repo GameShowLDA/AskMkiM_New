@@ -4,6 +4,7 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Media;
 using AppConfiguration.Parameter;
+using DTO.Enum;
 using UI.Resources.Theme;
 
 namespace UI.Theme
@@ -13,55 +14,29 @@ namespace UI.Theme
     /// <summary>
     /// Применяет тему: "Dark" или "Light"
     /// </summary>
-    public static void ApplyThemeAsync(DTO.Enum.ThemeEnums.Theme theme)
+    public static void ApplyThemeAsync(ThemeEnums.Theme theme)
     {
-      if (Application.Current.Dispatcher.CheckAccess())
-      {
-        ApplyThemeInternal(theme);
-      }
-      else
-      {
-        Application.Current.Dispatcher.Invoke(() => ApplyThemeInternal(theme));
-      }
-    }
+      Application.Current.Resources.MergedDictionaries.Clear();
 
-    /// <summary>
-    /// Вся логика смены темы выполняется только в UI-потоке
-    /// </summary>
-    private static void ApplyThemeInternal(DTO.Enum.ThemeEnums.Theme theme)
-    {
-      ResourceManager manager = theme == DTO.Enum.ThemeEnums.Theme.Light
-          ? new ResourceManager("UI.Resources.Theme.Colors.Light", typeof(Resources.Theme.Colors).Assembly)
-          : new ResourceManager("UI.Resources.Theme.Colors", typeof(Resources.Theme.Colors).Assembly);
+      // 1. Сначала подключаем цвета (Dark или Light)
+      var colorsUri = theme == ThemeEnums.Theme.Dark
+          ? new Uri("/UI;component/Resources/Theme/Colors.Dark.xaml", UriKind.Relative)
+          : new Uri("/UI;component/Resources/Theme/Colors.Light.xaml", UriKind.Relative);
 
-      var colors = ThemeProvider.LoadColors(manager);
-
-      foreach (var kvp in colors)
-      {
-        var brushKey = $"{kvp.Key}Brush";
-
-        if (Application.Current.Resources[brushKey] is SolidColorBrush existingBrush)
-        {
-          if (existingBrush.IsFrozen)
-          {
-            Application.Current.Resources[brushKey] = new SolidColorBrush(kvp.Value);
-          }
-          else
-          {
-            existingBrush.Color = kvp.Value;
-          }
-        }
-        else
-        {
-          Application.Current.Resources[brushKey] = new SolidColorBrush(kvp.Value);
-        }
-      }
-
+      Application.Current.Resources.MergedDictionaries.Add(
+          new ResourceDictionary { Source = colorsUri });
     }
 
     static ThemeManager()
     {
-      ThemeSettings.ThemeChanged += (s) => ApplyThemeAsync(s);
+      ThemeSettings.ThemeChanged += theme =>
+      {
+        // Если вызов не из UI-потока — перебросим
+        if (Application.Current.Dispatcher.CheckAccess())
+          ApplyThemeAsync(theme);
+        else
+          Application.Current.Dispatcher.Invoke(() => ApplyThemeAsync(theme));
+      };
     }
   }
 }

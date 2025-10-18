@@ -16,7 +16,7 @@
     <Color x:Key="LightBlueColor">#5DADE2</Color>
     <Color x:Key="FadedRed">#b23a48</Color>-->
 
-    <Color x:Key="LightPrimaryColor">#6a7689</Color>
+    <!--<Color x:Key="LightPrimaryColor">#6a7689</Color>
     <Color x:Key="PrimaryColor">#E9E8E9</Color>
     <Color x:Key="SecondaryColor">#C7C8C9</Color>
     <Color x:Key="ForegroundColor">#000000</Color>
@@ -30,7 +30,7 @@
     <Color x:Key="GreenColor">#4b7765</Color>
     <Color x:Key="YellowColor">#e69138</Color>
     <Color x:Key="LightBlueColor">#5DADE2</Color>
-    <Color x:Key="FadedRed">#b23a48</Color>
+    <Color x:Key="FadedRed">#b23a48</Color>-->
 
     <SolidColorBrush x:Key="LightPrimarySolidColorBrush" Color="{DynamicResource LightPrimaryColor}"/>
     <SolidColorBrush x:Key="PrimarySolidColorBrush" Color="{DynamicResource PrimaryColor}"/>

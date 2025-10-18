@@ -7,6 +7,9 @@
                     >
     <ResourceDictionary.MergedDictionaries>
         
+        <ResourceDictionary Source="/UI;component/Resources/Theme/Colors.Dark.xaml" />
+        <ResourceDictionary Source="/UI;component/Resources/Theme/Colors.Light.xaml" />
+
         <!--#region Локализационные файлы -->
         <ResourceDictionary Source="/UI;component/Resources/Localization/Menu.File.xaml"/>
         <ResourceDictionary Source="/UI;component/Resources/Localization/Menu.Admin.xaml"/>
