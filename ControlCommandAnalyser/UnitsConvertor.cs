@@ -33,6 +33,28 @@
       return null;
     }
 
+    /// <summary>
+    /// Безопасно парсит строку и переводит в Омы.
+    /// Возвращает null, если строка пустая или содержит ошибку.
+    /// </summary>
+    public static (double?, string) TryConvertBack(double value, string unit)
+    {
+      if (unit.ToLowerInvariant().Contains("ом"))
+      {
+        return FormatOhms(value);
+      }
+      else if (unit.ToLowerInvariant().Contains("ф"))
+      {
+        return FormatFarads(value);
+      }
+      else if (unit.ToLowerInvariant().Contains("в"))
+      {
+        return FormatVolts(value);
+      }
+
+      return (value, unit);
+    }
+
 
     /// <summary>
     /// Преобразует значение сопротивления в Омы (СИ).
@@ -83,6 +105,43 @@
         "кв" => value * 1e3,
         _ => value
       };
+    }
+
+    // === ОБРАТНЫЙ КОНВЕРТЕР (в удобную форму) ===
+
+    /// <summary>
+    /// Переводит сопротивление из Ом в удобную запись (например: 1500000 → 1.5 МОм).
+    /// </summary>
+    public static (double value, string unit) FormatOhms(double ohms)
+    {
+      if (ohms >= 1e9) return (Math.Round(ohms / 1e9, 3), "ГОм");
+      if (ohms >= 1e6) return (Math.Round(ohms / 1e6, 3), "МОм");
+      if (ohms >= 1e3) return (Math.Round(ohms / 1e3, 3), "кОм");
+      return (Math.Round(ohms, 3), "Ом");
+    }
+
+    /// <summary>
+    /// Переводит ёмкость из фарад в удобную запись (например: 0.00000022 → 220 нФ).
+    /// </summary>
+    public static (double value, string unit) FormatFarads(double farads)
+    {
+      if (farads >= 1) return (Math.Round(farads, 3), "Ф");
+      if (farads >= 1e-3) return (Math.Round(farads * 1e3, 3), "мФ");
+      if (farads >= 1e-6) return (Math.Round(farads * 1e6, 3), "мкФ");
+      if (farads >= 1e-9) return (Math.Round(farads * 1e9, 3), "нФ");
+      if (farads >= 1e-12) return (Math.Round(farads * 1e12, 3), "пФ");
+      return (farads, "Ф"); // fallback
+    }
+
+    /// <summary>
+    /// Переводит напряжение из вольт в удобную запись (например: 5000 → 5 кВ).
+    /// </summary>
+    public static (double value, string unit) FormatVolts(double volts)
+    {
+      if (volts >= 1e6) return (Math.Round(volts / 1e6, 3), "МВ");
+      if (volts >= 1e3) return (Math.Round(volts / 1e3, 3), "кВ");
+      if (volts >= 1) return (Math.Round(volts, 3), "В");
+      return (Math.Round(volts * 1e3, 3), "мВ");
     }
   }
 }

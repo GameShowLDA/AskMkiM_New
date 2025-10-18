@@ -139,9 +139,11 @@ namespace ControlCommandAnalyser.Parser.Kc
       {
         if (lower.Value >= higher.Value)
         {
+          var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше или равна верхней.");
-          model.Errors.Add(KsErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", 
-            $"Нижняя граница сопротивления ({lower.Value} Ом) больше или равна верхней({higher.Value} Ом)."));
+          model.Errors.Add(KsErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше или равна верхней ({higherValue.Item1} {higherValue.Item2})."));
           hasErrors = true;
         }
       }
@@ -149,18 +151,22 @@ namespace ControlCommandAnalyser.Parser.Kc
       // 7️⃣ Проверка нижней границы, если она указана
       if (lower.HasValue && !hasErrors)
       {
+        var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
         if (lower.Value < minResistance)
         {
-          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально измеряемого ({minResistance}).");
+          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})..");
           model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Нижняя граница сопротивления ({lower.Value} Ом) меньше минимально измеряемого ({minResistance} Ом)."));
+            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
           hasErrors = true;
         }
         if (lower.Value > maxResistance)
         {
+          var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
+
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше максимально возможной ({maxResistance}).");
           model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Нижняя граница сопротивления ({lower.Value} Ом) больше максимально возможной({maxResistance} Ом)."));
+            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
           hasErrors = true;
         }
       }
@@ -168,18 +174,22 @@ namespace ControlCommandAnalyser.Parser.Kc
       // 8️⃣ Проверка верхней границы, если она указана
       if (higher.HasValue && !hasErrors)
       {
+        var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+
         if (higher.Value > maxResistance)
         {
+          var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально возможной ({maxResistance}).");
-          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", 
-            $"Верхняя граница сопротивления ({higher.Value} Ом) больше максимально возможной({maxResistance} Ом)."));
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
           hasErrors = true;
         }
         if (higher.Value < minResistance)
         {
+          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления меньше минимально измеряемого ({minResistance}).");
           model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Верхняя граница сопротивления ({higher.Value} Ом) меньше минимально измеряемого ({minResistance} Ом)."));
+            $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
           hasErrors = true;
         }
       }

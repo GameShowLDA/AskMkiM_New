@@ -146,17 +146,22 @@ namespace ControlCommandAnalyser.Parser.Pi
           maxVoltage = maxDCWVoltage;
         }
         voltageType = model.VoltageType == VoltageEnum.Type.DCW ? "постоянного" : "переменного";
+        var voltageValue = UnitsConvertor.TryConvertBack(model.Voltage.Value, unit);
         if (model.Voltage.Value > maxVoltage)
         {
+          var maxValue = UnitsConvertor.TryConvertBack(maxVoltage, "В");
           LoggerUtility.LogError($"В команде ПИ указано напряжение, превышающее максимально допустимое напряжение пробойной установки.");
-          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({model.Voltage.Value}), превышающий максимально допустимое напряжение пробойной установки({maxVoltage} " +
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({voltageValue.Item1} {voltageValue.Item2}), " +
+            $"превышающий максимально допустимое напряжение пробойной установки ({maxValue.Item1} {maxValue.Item2}  " +
             $"для {voltageType} тока).";
           model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
         }
         else if (model.Voltage.Value < minVoltage)
         {
+          var minValue = UnitsConvertor.TryConvertBack(minVoltage, "В");
           LoggerUtility.LogError($"В команде ПИ указано напряжение, меньше минимально допустимого напряжения пробойной установки.");
-          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({model.Voltage.Value}), меньше минимально допустимого напряжения пробойной установки({minVoltage}" +
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({voltageValue.Item1} {voltageValue.Item2}), " +
+            $"меньше минимально допустимого напряжения пробойной установки ({minValue.Item1} {minValue.Item2}" +
             $"для {voltageType} тока).";
           model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
         }
