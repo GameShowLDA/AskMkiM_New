@@ -4,6 +4,7 @@ using System.Windows.Input;
 using AppConfiguration.Parameter;
 using DTO.SettingsModels;
 using UI.Localization;
+using Utilities.Extensions;
 using static AppConfiguration.Parameter.ParameterConfig;
 
 namespace UI.Controls.Settings.UserInterface
@@ -80,6 +81,7 @@ namespace UI.Controls.Settings.UserInterface
 
       LanguageSelect.ValueChanged += ValueChanged;
       ThemeSelect.ValueChanged += ValueChanged;
+
       Success.PreviewMouseDown += Success_PreviewMouseDown;
       Error.PreviewMouseDown += Error_PreviewMouseDown;
 
@@ -118,19 +120,14 @@ namespace UI.Controls.Settings.UserInterface
       LanguageSelect.SelectedValue = current;
     }
 
-    /// <summary>
-    /// Загружает список доступных тем интерфейса и устанавливает текущую.
-    /// </summary>
     private void LoadThemeOptions(DTO.Enum.ThemeEnums.Theme currentTheme)
     {
-      var themes = new List<ThemeOption>
-      {
-        new ThemeOption("Dark", "Тёмная тема"),
-        new ThemeOption("Light", "Светлая тема")
-      };
+      var themes = Enum.GetValues(typeof(DTO.Enum.ThemeEnums.Theme))
+                       .Cast<DTO.Enum.ThemeEnums.Theme>()
+                       .Select(t => new ThemeOption(t.ToString(), t.GetDisplayName()))
+                       .ToList();
 
       ThemeSelect.ItemsSource = themes;
-
       var themeString = currentTheme.ToString();
       ThemeSelect.DefaultValue = themeString;
       ThemeSelect.SelectedValue = themeString;
@@ -188,5 +185,7 @@ namespace UI.Controls.Settings.UserInterface
       ThemeSelect.DefaultValue = e.NewTheme.ToString();
       ThemeSelect.SelectedValue = e.NewTheme.ToString();
     }
+
+
   }
 }

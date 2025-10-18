@@ -43,6 +43,7 @@ namespace AppConfiguration.Base
     static public async Task SerParametrModelAsync(SettingsParameterModel executionModel)
     {
       await ParameterConfig.SetLanguage(executionModel.Language);
+      await ParameterConfig.SetTheme(executionModel.Theme);
     }
   }
 }

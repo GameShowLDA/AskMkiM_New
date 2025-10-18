@@ -33,6 +33,7 @@ namespace MainWindowProgram.Engine
       CheckStatusProgram();
       await StartSettingsAsync();
       await LanguageSettings.InitializeAsync();
+      await ThemeSettings.InitializeAsync();
     }
 
     /// <summary>

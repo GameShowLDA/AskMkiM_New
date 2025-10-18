@@ -11,13 +11,14 @@
 
     <!-- ===== РЕСУРСЫ ===== -->
     <UserControl.Resources>
+        
         <!-- Центральное мягкое свечение -->
         <RadialGradientBrush x:Key="CenterGlowBrush"
                          ColorInterpolationMode="ScRgbLinearInterpolation"
                          RadiusX="0.55" RadiusY="0.55"
                          Center="0.52,0.60" GradientOrigin="0.52,0.60">
-            <GradientStop Color="{DynamicResource main.background.empty.secondColor}" Offset="0.00"/>
-            <GradientStop Color="{DynamicResource main.background.empty.firstColor}" Offset="1.00"/>
+            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteSecondColor}}" Offset="0.00"/>
+            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteFirstColor}}" Offset="1.00"/>
         </RadialGradientBrush>
 
         <!-- Виньетка по краям -->
@@ -25,9 +26,9 @@
                          ColorInterpolationMode="ScRgbLinearInterpolation"
                          RadiusX="0.98" RadiusY="0.98"
                          Center="0.5,0.5" GradientOrigin="0.5,0.5">
-            <GradientStop Color="{DynamicResource main.empty.vignette.firstColor}" Offset="0.68"/>
-            <GradientStop Color="{DynamicResource main.empty.vignette.secondColor}" Offset="0.85"/>
-            <GradientStop Color="{DynamicResource main.empty.vignette.thirdColor}" Offset="1.00"/>
+            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteFirstColor}}" Offset="0.68"/>
+            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteSecondColor}}" Offset="0.85"/>
+            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteThirdColor}}" Offset="1.00"/>
         </RadialGradientBrush>
 
         <!-- Едва заметная «шумина» для убирания бэндинга -->
@@ -48,8 +49,8 @@
                            Center="0.50,0.40"
                            RadiusX="1.20" RadiusY="1.20">
                 <!-- ближе к твоему #465060, но объёмнее -->
-                <GradientStop Color="{DynamicResource main.background.breath.firstColor}" Offset="0.00"/>
-                <GradientStop Color="{DynamicResource main.background.breath.secondColor}" Offset="1.00"/>
+                <GradientStop Color="{Binding Color, Source={StaticResource MainBreachFirstColor}}" Offset="0.00"/>
+                <GradientStop Color="{Binding Color, Source={StaticResource MainBreachSecondColor}}" Offset="1.00"/>
             </RadialGradientBrush>
         </Grid.Background>
 

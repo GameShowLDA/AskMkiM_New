@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTO.Enum
 {
@@ -15,12 +16,14 @@ namespace DTO.Enum
       /// <summary>
       /// Светлая тема интерфейса.
       /// </summary>
-      Light,
+      [Display(Name = "Светлая тема")]
+      Light = 1,
 
       /// <summary>
       /// Тёмная тема интерфейса.
       /// </summary>
-      Dark
+      [Display(Name = "Тёмная тема")]
+      Dark = 0,
     }
   }
 }

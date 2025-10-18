@@ -15,24 +15,53 @@ namespace UI.Theme
     /// </summary>
     public static void ApplyThemeAsync(DTO.Enum.ThemeEnums.Theme theme)
     {
-      ResourceManager manager;
-
-      if (theme == DTO.Enum.ThemeEnums.Theme.Light)
+      if (Application.Current.Dispatcher.CheckAccess())
       {
-        manager = new ResourceManager("UI.Resources.Theme.Colors.Light", typeof(Resources.Theme.Colors).Assembly);
+        ApplyThemeInternal(theme);
       }
       else
       {
-        manager = new ResourceManager("UI.Resources.Theme.Colors", typeof(Resources.Theme.Colors).Assembly);
+        Application.Current.Dispatcher.Invoke(() => ApplyThemeInternal(theme));
       }
+    }
+
+    /// <summary>
+    /// Вся логика смены темы выполняется только в UI-потоке
+    /// </summary>
+    private static void ApplyThemeInternal(DTO.Enum.ThemeEnums.Theme theme)
+    {
+      ResourceManager manager = theme == DTO.Enum.ThemeEnums.Theme.Light
+          ? new ResourceManager("UI.Resources.Theme.Colors.Light", typeof(Resources.Theme.Colors).Assembly)
+          : new ResourceManager("UI.Resources.Theme.Colors", typeof(Resources.Theme.Colors).Assembly);
 
       var colors = ThemeProvider.LoadColors(manager);
 
       foreach (var kvp in colors)
       {
-        Application.Current.Resources[kvp.Key] = kvp.Value;
-        Application.Current.Resources[$"{kvp.Key}Brush"] = new SolidColorBrush(kvp.Value);
+        var brushKey = $"{kvp.Key}Brush";
+
+        if (Application.Current.Resources[brushKey] is SolidColorBrush existingBrush)
+        {
+          if (existingBrush.IsFrozen)
+          {
+            Application.Current.Resources[brushKey] = new SolidColorBrush(kvp.Value);
+          }
+          else
+          {
+            existingBrush.Color = kvp.Value;
+          }
+        }
+        else
+        {
+          Application.Current.Resources[brushKey] = new SolidColorBrush(kvp.Value);
+        }
       }
+
+    }
+
+    static ThemeManager()
+    {
+      ThemeSettings.ThemeChanged += (s) => ApplyThemeAsync(s);
     }
   }
 }

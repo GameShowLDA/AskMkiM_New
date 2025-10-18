@@ -6,11 +6,7 @@
              mc:Ignorable="d"
              d:DesignHeight="84" d:DesignWidth="320" MaxWidth="300">
     <UserControl.Resources>
-        <!-- Палитра по твоему UI -->
-        <SolidColorBrush x:Key="CardBorder"     Color="{DynamicResource SecondaryColor}"/>
-        <SolidColorBrush x:Key="DescBrush"      Color="{DynamicResource ForegroundColor60}"/>
-        <SolidColorBrush x:Key="CheckBg"        Color="{DynamicResource PrimaryColor}"/>
-        <SolidColorBrush x:Key="CheckBorder"    Color="{DynamicResource IsCheckedColor}"/>
+
 
         <Style x:Key="SettingsCheckBox" TargetType="CheckBox">
             <Setter Property="Width" Value="18"/>

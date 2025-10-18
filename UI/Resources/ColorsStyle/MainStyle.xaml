@@ -10,8 +10,16 @@
     <Color x:Key="main.empty.vignette.secondColor">#26000000</Color>
     <Color x:Key="main.empty.vignette.thirdColor">#66000000</Color>
 
+    <SolidColorBrush x:Key="MainVignetteFirstColor" Color="{DynamicResource main.empty.vignette.firstColor}"/>
+    <SolidColorBrush x:Key="MainVignetteSecondColor" Color="{DynamicResource main.empty.vignette.secondColor}"/>
+    <SolidColorBrush x:Key="MainVignetteThirdColor" Color="{DynamicResource main.empty.vignette.thirdColor}"/>
+
+
     <Color x:Key="main.background.breath.firstColor">#303843</Color>
     <Color x:Key="main.background.breath.secondColor">#3a4655</Color>
+
+    <SolidColorBrush x:Key="MainBreachFirstColor" Color="{DynamicResource main.background.breath.firstColor}"/>
+    <SolidColorBrush x:Key="MainBreachSecondColor" Color="{DynamicResource main.background.breath.secondColor}"/>
 
     <Color x:Key="main.text.title.color">#f3f0f9</Color>
     <SolidColorBrush x:Key="MainTitleSolidColorBrush" Color="{DynamicResource main.text.title.color}"/>

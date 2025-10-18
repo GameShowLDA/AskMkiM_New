@@ -65,6 +65,7 @@ namespace AppConfiguration.Parameter
       {
         SettingsParameterModel parametrModel = new SettingsParameterModel();
         parametrModel.Language = ParameterModel.Language;
+        parametrModel.Theme = ParameterModel.Theme;
         return parametrModel;
       });
     }
@@ -79,6 +80,7 @@ namespace AppConfiguration.Parameter
 
       await RewriteExecutionConfigAsync();
       await LanguageSettings.SetLanguageAsync(ParameterModel.Language);
+      await ThemeSettings.SetThemeAsync(ParameterModel.Theme);
     }
 
     /// <summary>

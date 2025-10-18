@@ -181,8 +181,16 @@ namespace Utilities.FilesUtility
     /// <param name="result">Объект, в который будет установлено значение.</param>
     private void SetPropertyValue(PropertyInfo property, string propertyValue, object result)
     {
-      var convertedValue = Convert.ChangeType(propertyValue, property.PropertyType);
-      property.SetValue(result, convertedValue);
+      if (property.PropertyType.IsEnum)
+      {
+        var enumValue = Enum.Parse(property.PropertyType, propertyValue, ignoreCase: true);
+        property.SetValue(result, enumValue);
+      }
+      else
+      {
+        var convertedValue = Convert.ChangeType(propertyValue, property.PropertyType);
+        property.SetValue(result, convertedValue);
+      }
     }
     #endregion
 

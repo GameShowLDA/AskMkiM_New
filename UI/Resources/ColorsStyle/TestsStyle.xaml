@@ -19,9 +19,13 @@
 
     <Color x:Key="tests.main.button.orange.start">#90F47842</Color>
     <Color x:Key="tests.main.button.orange.end">#90FCAA3F</Color>
-
+    <SolidColorBrush x:Key="TestsMainButtonOrangeStartBrush" Color="{DynamicResource tests.main.button.orange.start}"/>
+    <SolidColorBrush x:Key="TestsMainButtonOrangeEndBrush" Color="{DynamicResource tests.main.button.orange.end}"/>
+    
     <Color x:Key="tests.main.button.green.start">#90459C3C</Color>
     <Color x:Key="tests.main.button.green.end">#9067C66E</Color>
+    <SolidColorBrush x:Key="TestsMainButtonGreenStartBrush" Color="{DynamicResource tests.main.button.green.start}"/>
+    <SolidColorBrush x:Key="TestsMainButtonGreenEndBrush" Color="{DynamicResource tests.main.button.green.end}"/>
 
     <Color x:Key="tests.main.background.interactive">#FFFFFF</Color>
     <Color x:Key="tests.main.border.interactive">#000000</Color>

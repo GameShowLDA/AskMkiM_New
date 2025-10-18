@@ -86,12 +86,8 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Border  Padding="0,0" Margin="5" CornerRadius="20" Name="MenuButton" Height="Auto" Width="Auto" Visibility="{Binding IsTopMenuVisible, Converter={StaticResource InverseBoolToVis}}">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="{DynamicResource tests.main.panel.background}" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
+                <Border  Padding="0,0" Margin="5" CornerRadius="20" Name="MenuButton" Height="Auto" Width="Auto" Visibility="{Binding IsTopMenuVisible, Converter={StaticResource InverseBoolToVis}}" 
+                         Background="{DynamicResource TestsMainPanelBackgroundBrush}">
 
                     <Grid Height="Auto">
                         <Grid.RowDefinitions>
@@ -169,8 +165,8 @@
                                         <Setter Property="Background">
                                             <Setter.Value>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{DynamicResource tests.main.button.orange.end}" Offset="1"/>
-                                                    <GradientStop Color="{DynamicResource tests.main.button.orange.start}" Offset="0"/>
+                                                    <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeEndBrush}}" Offset="1"/>
+                                                    <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeStartBrush}}" Offset="0"/>
                                                 </LinearGradientBrush>
                                             </Setter.Value>
                                         </Setter>
@@ -180,8 +176,8 @@
                                                 <Setter Property="Background">
                                                     <Setter.Value>
                                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                            <GradientStop Color="{DynamicResource tests.main.button.orange.end}" Offset="1"/>
-                                                            <GradientStop Color="{DynamicResource tests.main.button.orange.start}" Offset="0"/>
+                                                            <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeEndBrush}}" Offset="1"/>
+                                                            <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeStartBrush}}" Offset="0"/>
                                                         </LinearGradientBrush>
                                                     </Setter.Value>
                                                 </Setter>
@@ -216,8 +212,8 @@
                                         <Setter Property="Background">
                                             <Setter.Value>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{DynamicResource tests.main.button.green.end}" Offset="1"/>
-                                                    <GradientStop Color="{DynamicResource tests.main.button.green.end}" Offset="0"/>
+                                                    <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonGreenEndBrush}}" Offset="1"/>
+                                                    <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonGreenEndBrush}}" Offset="0"/>
                                                 </LinearGradientBrush>
                                             </Setter.Value>
                                         </Setter>
@@ -227,8 +223,8 @@
                                                 <Setter Property="Background">
                                                     <Setter.Value>
                                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                            <GradientStop Color="{DynamicResource tests.main.button.green.end}" Offset="1"/>
-                                                            <GradientStop Color="{DynamicResource tests.main.button.green.end}" Offset="0"/>
+                                                            <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonGreenEndBrush}}" Offset="1"/>
+                                                            <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonGreenEndBrush}}" Offset="0"/>
                                                         </LinearGradientBrush>
                                                     </Setter.Value>
                                                 </Setter>
@@ -247,8 +243,8 @@
                                         <Setter Property="Background">
                                             <Setter.Value>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{DynamicResource tests.main.button.orange.end}" Offset="1"/>
-                                                    <GradientStop Color="{DynamicResource tests.main.button.orange.start}" Offset="0"/>
+                                                    <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeEndBrush}}" Offset="1"/>
+                                                    <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeStartBrush}}" Offset="0"/>
                                                 </LinearGradientBrush>
                                             </Setter.Value>
                                         </Setter>
@@ -258,8 +254,8 @@
                                                 <Setter Property="Background">
                                                     <Setter.Value>
                                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                            <GradientStop Color="{DynamicResource tests.main.button.orange.end}" Offset="1"/>
-                                                            <GradientStop Color="{DynamicResource tests.main.button.orange.start}" Offset="0"/>
+                                                            <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeEndBrush}}" Offset="1"/>
+                                                            <GradientStop Color="{Binding Color, Source={StaticResource TestsMainButtonOrangeStartBrush}}" Offset="0"/>
                                                         </LinearGradientBrush>
                                                     </Setter.Value>
                                                 </Setter>
