@@ -42,6 +42,8 @@ namespace DataBaseConfiguration
       try
       {
         using var context = new AppDbContext(OptionsBuilder.Options);
+        await context.Database.MigrateAsync();
+        context.Database.EnsureCreated();
 
         FileHotkeySeeder.Seed(context);
         MeasurementErrorSeeder.Seed(context);

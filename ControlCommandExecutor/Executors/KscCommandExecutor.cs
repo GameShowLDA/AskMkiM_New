@@ -10,10 +10,20 @@ namespace ControlCommandExecutor.Executors
   {
     public string Mnemonic => "КЦ";
 
+
+
+    private void OnProtocolClose(FileInteractionEvents.ProtocolInfoClose e)
+    {
+      OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol);
+    }
+
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
-      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(OnProtocolClose);
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(OnProtocolClose);
+      //EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+      //EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
 
       var command = context.Command as KscCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
@@ -57,7 +67,9 @@ namespace ControlCommandExecutor.Executors
       // TODO: формирование протокола с ошибкой
       //ProtocolModel.GetPathProtocol(protocolModel); 
       FileInteractionEventAdapter.RaiseViewProtocol(protocolModel);
-      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(OnProtocolClose);
+
+      //EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
     }
   }
 }

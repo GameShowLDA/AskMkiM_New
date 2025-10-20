@@ -50,7 +50,7 @@ namespace UI.Services.ProtocolManager
         OpenProtocolInEditor(protocol, protocolText);
       else
         ExportProtocolAsPdf(protocol.ProgramName, protocolText);
-      if(ProtocolModel.GetPathProtocol(protocol, protocolText))
+      if (ProtocolModel.GetPathProtocol(protocol, protocolText))
       {
         LogInformation($"Файл протокола выполнения программы контроля {protocol.ProgramPath} успешно сохранен в формате .lstw");
       }
@@ -115,7 +115,11 @@ namespace UI.Services.ProtocolManager
     private TextEditorContainer GetOrCreateProtocolContainer()
     {
       var container = _fileManager.ContainerService.GetEditorContainer(EditorType.Protocol);
-      return container ?? _fileManager.ContainerService.CreateEditorContainer(EditorType.Protocol);
+      if (container != null && container.DockManager.DockItems.Count > 0)
+      {
+        _fileManager.ContainerService.RemoveEditorContainer(container, EditorType.Protocol);
+      }
+      return _fileManager.ContainerService.CreateEditorContainer(EditorType.Protocol);
     }
 
     /// <summary>
