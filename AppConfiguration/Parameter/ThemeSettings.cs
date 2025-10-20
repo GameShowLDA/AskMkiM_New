@@ -21,6 +21,7 @@ namespace AppConfiguration.Parameter
     public static async Task InitializeAsync()
     {
       var themeItem = await ParameterConfig.GetTheme();
+      _currentTheme = themeItem; 
       ThemeChanged?.Invoke(themeItem);
     }
 

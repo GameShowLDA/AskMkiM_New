@@ -2,7 +2,6 @@
 using AppConfiguration.Execution;
 using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
-using AppConfiguration.Theme;
 using DataBaseConfiguration;
 using DTO.Base.Models;
 using EventCore.Services;
@@ -32,8 +31,7 @@ namespace MainWindowProgram.Engine
     {
       CheckStatusProgram();
       await StartSettingsAsync();
-      await LanguageSettings.InitializeAsync();
-      await ThemeSettings.InitializeAsync();
+
     }
 
     /// <summary>
@@ -67,9 +65,7 @@ namespace MainWindowProgram.Engine
         var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
         var executionTask = new DataBaseConfiguration.Services.Settings.ExecutionService().GetExecutionAsync();
 
-        var parameterTask = ParameterSettingsManager.ReadParameterModeAsync();
-        await Task.WhenAll(executionTask, protocolTask, parameterTask);
-
+      
         if (protocolTask.Result != null)
         {
           await ProtocolConfig.SetProtocolModel(protocolTask.Result);
@@ -94,7 +90,6 @@ namespace MainWindowProgram.Engine
           await service.SaveExecutionAsync(model);
         };
 
-        await ThemeSettingsManager.ReadThemeModeAsync();
       }
       catch (Exception ex)
       {

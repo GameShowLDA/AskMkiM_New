@@ -11,14 +11,13 @@
 
     <!-- ===== РЕСУРСЫ ===== -->
     <UserControl.Resources>
-        
         <!-- Центральное мягкое свечение -->
         <RadialGradientBrush x:Key="CenterGlowBrush"
                          ColorInterpolationMode="ScRgbLinearInterpolation"
                          RadiusX="0.55" RadiusY="0.55"
                          Center="0.52,0.60" GradientOrigin="0.52,0.60">
-            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteSecondColor}}" Offset="0.00"/>
-            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteFirstColor}}" Offset="1.00"/>
+            <GradientStop Color="{DynamicResource main.empty.vignette.secondColor}" Offset="0.00"/>
+            <GradientStop Color="{DynamicResource main.empty.vignette.firstColor}" Offset="1.00"/>
         </RadialGradientBrush>
 
         <!-- Виньетка по краям -->
@@ -26,17 +25,16 @@
                          ColorInterpolationMode="ScRgbLinearInterpolation"
                          RadiusX="0.98" RadiusY="0.98"
                          Center="0.5,0.5" GradientOrigin="0.5,0.5">
-            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteFirstColor}}" Offset="0.68"/>
-            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteSecondColor}}" Offset="0.85"/>
-            <GradientStop Color="{Binding Color, Source={StaticResource MainVignetteThirdColor}}" Offset="1.00"/>
+            <GradientStop Color="{DynamicResource main.empty.vignette.firstColor}" Offset="0.68"/>
+            <GradientStop Color="{DynamicResource main.empty.vignette.secondColor}" Offset="0.85"/>
+            <GradientStop Color="{DynamicResource main.empty.vignette.thirdColor}" Offset="1.00"/>
         </RadialGradientBrush>
 
-        <!-- Едва заметная «шумина» для убирания бэндинга -->
-       
         <!-- Конвертеры -->
         <local:DateTimeToStringConverter x:Key="DateTimeToString"/>
         <local:TimeOfDayGreetingConverter x:Key="TimeOfDayGreeting"/>
     </UserControl.Resources>
+
 
     <!-- ===== КОРНЕВОЙ GRID ===== -->
     <Grid>
@@ -44,25 +42,24 @@
         <!-- Градиентный фон с «дыханием» -->
         <Grid.Background>
             <RadialGradientBrush x:Name="BackgroundBrush"
-                           ColorInterpolationMode="ScRgbLinearInterpolation"
-                           GradientOrigin="0.50,0.40"
-                           Center="0.50,0.40"
-                           RadiusX="1.20" RadiusY="1.20">
-                <!-- ближе к твоему #465060, но объёмнее -->
-                <GradientStop Color="{Binding Color, Source={StaticResource MainBreachFirstColor}}" Offset="0.00"/>
-                <GradientStop Color="{Binding Color, Source={StaticResource MainBreachSecondColor}}" Offset="1.00"/>
+                         ColorInterpolationMode="ScRgbLinearInterpolation"
+                         GradientOrigin="0.50,0.40"
+                         Center="0.50,0.40"
+                         RadiusX="1.20" RadiusY="1.20">
+                <GradientStop Color="{DynamicResource main.background.breath.firstColor}" Offset="0.00"/>
+                <GradientStop Color="{DynamicResource main.background.breath.secondColor}" Offset="1.00"/>
             </RadialGradientBrush>
         </Grid.Background>
 
         <!-- центральное свечение -->
-        <Rectangle IsHitTestVisible="False" Fill="{StaticResource CenterGlowBrush}">
+        <Rectangle IsHitTestVisible="False" Fill="{DynamicResource CenterGlowBrush}">
             <Rectangle.Effect>
                 <BlurEffect Radius="4"/>
             </Rectangle.Effect>
         </Rectangle>
 
         <!-- виньетка -->
-        <Rectangle IsHitTestVisible="False" Fill="{StaticResource VignetteBrush}"/>
+        <Rectangle IsHitTestVisible="False" Fill="{DynamicResource VignetteBrush}"/>
 
         <!-- ===== ЦЕНТРАЛЬНЫЙ БЛОК ===== -->
         <Border x:Name="CenterBlock"
@@ -113,7 +110,7 @@
                               ConverterParameter=dddd|TitleCase}">
             <Run.Foreground>
               <SolidColorBrush
-                  Color="{Binding Color, Source={StaticResource MainTitleSolidColorBrush}}"
+                  Color="{DynamicResource main.text.title.color}"
                   Opacity="0.85"/>
             </Run.Foreground>
           </Run>
@@ -122,7 +119,7 @@
           <Run Text="  |  ">
             <Run.Foreground>
               <SolidColorBrush
-                  Color="{Binding Color, Source={StaticResource MainTitleSolidColorBrush}}"
+                  Color="{DynamicResource main.text.title.color}"
                   Opacity="0.35"/>
             </Run.Foreground>
           </Run>
@@ -135,7 +132,7 @@
                FontSize="22">
             <Run.Foreground>
               <SolidColorBrush
-                  Color="{Binding Color, Source={StaticResource MainTitleSolidColorBrush}}"
+                  Color="{DynamicResource main.text.title.color}"
                   Opacity="0.85"/>
             </Run.Foreground>
           </Run>
@@ -146,7 +143,7 @@
                    Grid.Row="2"
                    Margin="0,15,0,0"
                    Text="Откройте файл, чтобы начать работу"
-                   Foreground="{StaticResource MainTitleSolidColorBrush}"
+                   Foreground="{DynamicResource MainTitleSolidColorBrush}"
                    FontFamily="{DynamicResource WinstonLight}"
                    FontSize="16"
                    Opacity="0.0"
@@ -175,7 +172,7 @@
             <TextBlock Text="{Binding CurrentDateTime,
                                 RelativeSource={RelativeSource AncestorType=UserControl},
                                 Converter={StaticResource TimeOfDayGreeting}}"
-                 Foreground="{StaticResource MainTitleSolidColorBrush}"
+                 Foreground="{DynamicResource MainTitleSolidColorBrush}"
                  FontFamily="{DynamicResource WinstonBold}"
                  FontSize="18"
                  TextAlignment="Center"/>
@@ -188,7 +185,7 @@
                FontFamily="{DynamicResource WinstonLight}"
                FontSize="12"
                Opacity="0.45"
-               Foreground="{StaticResource MainTitleSolidColorBrush}"
+               Foreground="{DynamicResource MainTitleSolidColorBrush}"
                Text="{Binding AppVersion, FallbackValue=Версия 1.0.0 • Сборка 20.08.2025}"/>
 
         <!-- ===== АНИМАЦИИ: дыхание + появление ===== -->

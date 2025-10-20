@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows;
 using AppConfiguration;
+using AppConfiguration.Parameter;
 using ConsoleUI.ConsoleLogic;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.Breakdown;
@@ -45,7 +46,7 @@ namespace MainWindowProgram
     /// <param name="e"></param>
     protected override async void OnStartup(StartupEventArgs e)
     {
-      ThemeManager.ApplyThemeAsync(DTO.Enum.ThemeEnums.Theme.Light);
+      await InitializeTheme();
 
       base.OnStartup(e);
 
@@ -128,6 +129,17 @@ namespace MainWindowProgram
       // await Core.Communication.CommunicationManager.ResetAllSystem();
       // await Task.Delay(1000);
       // await Core.ManagerShassy.Function.StopPowerAsync(ConfigCollector.GetManagerShassyIp());
+    }
+
+    private async Task InitializeTheme()
+    {
+
+      var parameterTask = ParameterSettingsManager.ReadParameterModeAsync();
+      await Task.WhenAll(parameterTask);
+
+      ThemeManager.Initialize();
+      await LanguageSettings.InitializeAsync();
+      await ThemeSettings.InitializeAsync();
     }
   }
 }
