@@ -26,11 +26,4 @@
 
     <SolidColorBrush x:Key="TestsProtocolTimeForeground" Color="{DynamicResource tests.protocol.message.time.foreground}"/>
 
-
-    <Color x:Key="tests.protocol.message.header.foreground">#000000</Color>
-    <Color x:Key="tests.protocol.message.message.foreground">#000000</Color>
-    
-    <Color x:Key="tests.protocol.message.succes.foreground">#2FA84F</Color>
-    <Color x:Key="tests.protocol.message.error.foreground">#F1301B</Color>
-    
 </ResourceDictionary>

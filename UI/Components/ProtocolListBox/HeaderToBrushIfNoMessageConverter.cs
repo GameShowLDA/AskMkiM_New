@@ -24,7 +24,7 @@ namespace UI.Components.ProtocolListBox
           return SuccessBrush;
         }
 
-        return (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
+        return new SolidColorBrush((Color)Application.Current.Resources["tests.protocol.message.header.foreground"]);
       }
       return headerColor ?? new SolidColorBrush(Colors.White); // Цвет по умолчанию
     }

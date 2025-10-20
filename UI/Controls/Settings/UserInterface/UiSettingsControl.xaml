@@ -95,13 +95,14 @@
                     SelectedValuePath="Key"/>
 
 
-                <!--<Components:SettingsCardSelect
+                <Components:SettingsCardSelect
                     Margin="10,10"
                     x:Name="ThemeSelect"
                     Title="Тема приложения"
                     Description="Выберите тему оформления интерфейса, которая будет использоваться в приложении"
                     DisplayMemberPath="Title"
-                    SelectedValuePath="Key"/>-->
+                    Visibility="Collapsed"
+                    SelectedValuePath="Key"/>
 
             </WrapPanel>
         </Grid>
