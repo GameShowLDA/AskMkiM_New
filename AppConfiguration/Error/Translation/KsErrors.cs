@@ -21,12 +21,12 @@ namespace AppConfiguration.Error.Translation
     /// <summary>
     /// Ошибка: нижняя граница сопротивления больше верхней границы сопротивления.
     /// </summary>
-    public static ErrorItem CapacityLimitsConflict(int startLineNumber, string command) => new()
+    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command, string description) => new()
     {
       SourceLineNumber = startLineNumber,
       Command = command,
       Code = ErrorCode.Ks_CapacityLimitsConflict,
-      Description = "Нижняя граница электрической емкости больше верхней границы электрической емкости."
+      Description = description
     };
 
     /// <summary>

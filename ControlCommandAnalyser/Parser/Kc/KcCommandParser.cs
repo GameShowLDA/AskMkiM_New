@@ -15,7 +15,6 @@ namespace ControlCommandAnalyser.Parser.Kc
   {
     public bool CanParse(string mnemonic) => mnemonic == "КС";
 
-
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {
       LoggerUtility.LogInformation($"Начало парсинга команды: {commandNumber} {mnemonic}, строк: {lines?.Count ?? 0}");
@@ -106,68 +105,109 @@ namespace ControlCommandAnalyser.Parser.Kc
       //TODO: проверить верхнюю и нижнюю границу сопротивления. Привести к системе СИ
 
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRange(remainder);
-      LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
+      LoggerUtility.LogDebug($"После парсинга сопротивления: нижняя граница='{lowerLimitResistance}', верхняя граница='{higherLimitResistance}', единица='{unit}', remainder='{remainder}'");
 
+      // 1️⃣ Если обе границы не указаны — ошибка и выход
       if (string.IsNullOrEmpty(lowerLimitResistance) && string.IsNullOrEmpty(higherLimitResistance))
       {
         model.Errors.Add(KsErrors.EmptyResistance(numberLine, $"{commandNumber} {mnemonic}"));
-        LoggerUtility.LogWarning($"Не указано напряжение (строка {numberLine}): {commandNumber} {mnemonic}");
+        LoggerUtility.LogWarning($"Не указано сопротивление (строка {numberLine}): {commandNumber} {mnemonic}");
+
         if (!string.IsNullOrEmpty(remainder))
         {
-          model.UnparsedParameters = "! Не распознанные параметры: ";
-          model.UnparsedParameters += remainder;
+          model.UnparsedParameters = "! Не распознанные параметры: " + remainder;
           model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
         }
+
         return model;
       }
-      else
+
+      // 3️⃣ Парсим числа (если они заданы)
+      double? lower = !string.IsNullOrWhiteSpace(lowerLimitResistance) ? CommonParameterParser.ParseToDouble(lowerLimitResistance) : null;
+      double? higher = !string.IsNullOrWhiteSpace(higherLimitResistance) ? CommonParameterParser.ParseToDouble(higherLimitResistance) : null;
+
+      // 4️⃣ Пороговые значения
+      var meter = new DataBaseConfiguration.Services.Device.FastMeterServices().GetAll().FirstOrDefault();
+      double minResistance = 0.001 * 1000;
+      double maxResistance = meter?.MaxContinuityResistance ?? 1_000_000;
+
+      // 5️⃣ Флаг ошибок
+      bool hasErrors = false;
+
+      // 6️⃣ Проверки диапазона, если обе границы заданы
+      if (lower.HasValue && higher.HasValue)
       {
-        model.HigherLimitResistanceSource = higherLimitResistance;
-        model.LowerLimitResistanceSource = lowerLimitResistance;
+        if (lower.Value >= higher.Value)
+        {
+          var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше или равна верхней.");
+          model.Errors.Add(KsErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше или равна верхней ({higherValue.Item1} {higherValue.Item2})."));
+          hasErrors = true;
+        }
       }
 
-      if (model.HigherLimitResistanceSource != null &&
-        !string.IsNullOrEmpty(model.HigherLimitResistanceSource) && model.LowerLimitResistanceSource != null &&
-        !string.IsNullOrEmpty(model.LowerLimitResistanceSource) &&
-        CommonParameterParser.ParseToDouble(model.LowerLimitResistanceSource) >= CommonParameterParser.ParseToDouble(model.HigherLimitResistanceSource))
+      // 7️⃣ Проверка нижней границы, если она указана
+      if (lower.HasValue && !hasErrors)
       {
-        LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше верхней границы сопротивления.");
-        model.Errors.Add(KsErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}"));
-        model.HigherLimitResistanceSource = null;
-        model.LowerLimitResistanceSource = null;
+        var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+        if (lower.Value < minResistance)
+        {
+          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})..");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
+          hasErrors = true;
+        }
+        if (lower.Value > maxResistance)
+        {
+          var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
+
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше максимально возможной ({maxResistance}).");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+          hasErrors = true;
+        }
       }
-      else
+
+      // 8️⃣ Проверка верхней границы, если она указана
+      if (higher.HasValue && !hasErrors)
       {
-        if (!string.IsNullOrWhiteSpace(model.LowerLimitResistanceSource))
-        {
-          model.LowerLimitResistance = CommonParameterParser.ParseToDouble(model.LowerLimitResistanceSource);
-          model.LowerLimitResistanceSource += " " + unit;
-        }
-        else
-        {
-          model.LowerLimitResistance = 0;
-          model.LowerLimitResistanceSource = $"0 Ом";
-        }
+        var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
 
-        if (!string.IsNullOrWhiteSpace(model.HigherLimitResistanceSource))
+        if (higher.Value > maxResistance)
         {
-          model.HigherLimitResistance = CommonParameterParser.ParseToDouble(model.HigherLimitResistanceSource);
-          model.HigherLimitResistanceSource += " " + unit;
+          var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально возможной ({maxResistance}).");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+          hasErrors = true;
         }
-        else
+        if (higher.Value < minResistance)
         {
-          model.HigherLimitResistance = 10000000;
-          model.HigherLimitResistanceSource = $"10000000 Ом";
+          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления меньше минимально измеряемого ({minResistance}).");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
+          hasErrors = true;
         }
+      }
 
-        if (!string.IsNullOrEmpty(unit))
-        {
-          model.ResistanceUnit = unit;
-        }
-        else
-        {
-          model.ResistanceUnit = string.Empty;
-        }
+      // 9️⃣ Установка значений, только если не было ошибок
+      if (hasErrors == false)
+      {
+        // нижняя граница: задана → используем; не задана → по умолчанию
+        double finalLower = lower ?? minResistance;
+        model.LowerLimitResistance = finalLower;
+        model.LowerLimitResistanceSource = $"{finalLower} {unit}";
+
+        // верхняя граница: задана → используем; не задана → по умолчанию
+        double finalHigher = higher ?? maxResistance;
+        model.HigherLimitResistance = finalHigher;
+        model.HigherLimitResistanceSource = $"{finalHigher} {unit}";
+
+        model.ResistanceUnit = unit ?? string.Empty;
       }
 
       if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitResistance ?? higherLimitResistance, time, out string err))

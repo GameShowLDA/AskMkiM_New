@@ -1,8 +1,9 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
+using DTO.Device.Breakdown;
+using System.Text.RegularExpressions;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Ie
@@ -103,70 +104,114 @@ namespace ControlCommandAnalyser.Parser.Ie
       }
 
       (lowerLimitCapacity, higherLimitCapacity, unit, remainder) = CommonParameterParser.CapacityParser.ParseCapacityRange(remainder);
-      LoggerUtility.LogDebug($"После парсинга электрической ёмкости: нижняя граница электрической емкости='{lowerLimitCapacity}',верхняя граница электрической емкости='{higherLimitCapacity}', единица измерения = '{unit}' remainder='{remainder}'");
+      LoggerUtility.LogDebug($"После парсинга электрической ёмкости: нижняя='{lowerLimitCapacity}', верхняя='{higherLimitCapacity}', единица='{unit}', remainder='{remainder}'");
 
-      if (lowerLimitCapacity != null)
+      // 1️⃣ Если нижняя граница вообще не распознана — это всегда ошибка
+      if (string.IsNullOrEmpty(lowerLimitCapacity))
       {
-        if (string.IsNullOrEmpty(lowerLimitCapacity))
-        {
-          model.Errors.Add(IeErrors.EmptyLowerCapacity(numberLine, $"{commandNumber} {mnemonic}"));
-          LoggerUtility.LogWarning($"Не указана электрическая емкость (строка {numberLine}): {commandNumber} {mnemonic}");
-          if (!string.IsNullOrEmpty(remainder))
-          {
-            model.UnparsedParameters = "! Не распознанные параметры: ";
-            model.UnparsedParameters += remainder;
-            model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
-          }
-          return model;
-        }
-        model.LowerLimitCapacitySource = lowerLimitCapacity;
-        if (!string.IsNullOrEmpty(higherLimitCapacity))
-        {
-          model.HigherLimitCapacitySource = higherLimitCapacity;
-        }
-        else
-        {
-          model.HigherLimitCapacitySource = string.Empty;
-        }
-        model.CapacityUnit = string.IsNullOrEmpty(unit) ? string.Empty : unit;
-      }
-      else
-      {
-        LoggerUtility.LogError($"В команде ИЕ не указана нижняя граница электрической ёмкости.");
         model.Errors.Add(IeErrors.EmptyLowerCapacity(numberLine, $"{commandNumber} {mnemonic}"));
+        LoggerUtility.LogWarning($"Не указана нижняя граница электрической емкости (строка {numberLine}): {commandNumber} {mnemonic}");
+
+        if (!string.IsNullOrEmpty(remainder))
+        {
+          model.UnparsedParameters = "! Не распознанные параметры: " + remainder;
+          model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
+        }
+
+        return model;
       }
 
-      if (model.HigherLimitCapacitySource != null &&
-        !string.IsNullOrEmpty(model.HigherLimitCapacitySource) && model.LowerLimitCapacitySource != null &&
-        !string.IsNullOrEmpty(model.LowerLimitCapacitySource) &&
-        CommonParameterParser.ParseToDouble(model.LowerLimitCapacitySource) >= CommonParameterParser.ParseToDouble(model.HigherLimitCapacitySource))
-      {
-        LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше верхней границы сопротивления.");
-        model.Errors.Add(KsErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}"));
+      // 3️⃣ Парсим численные значения
+      double? lower = CommonParameterParser.ParseToDouble(lowerLimitCapacity);
+      double? higher = !string.IsNullOrWhiteSpace(higherLimitCapacity) ? CommonParameterParser.ParseToDouble(higherLimitCapacity) : null;
 
+      // 4️⃣ Задаём диапазон допустимых значений
+      var meter = new DataBaseConfiguration.Services.Device.FastMeterServices().GetAll().FirstOrDefault();
+      double minCapacity = 0.2 * 1e-9;
+      double maxCapacity = 100_000 * 1e-9;
+
+      // 5️⃣ Флаг ошибок
+      bool hasErrors = false;
+
+      // 6️⃣ Проверка: если обе границы заданы
+      if (lower.HasValue && higher.HasValue)
+      {
+        if (lower.Value >= higher.Value)
+        {
+          var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница электрической емкости больше или равна верхней.");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница электрической емкости ({lowerValue.Item1} {lowerValue.Item2}) " +
+            $"больше или равна верхней ({higherValue.Item1} {higherValue.Item2})."));
+          hasErrors = true;
+        }
       }
-      else
+
+      // 7️⃣ Проверка нижней границы
+      if (lower.HasValue && !hasErrors)
       {
-        if (!string.IsNullOrWhiteSpace(model.LowerLimitCapacitySource) && model.LowerLimitCapacitySource != null)
+        var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+        if (lower.Value < minCapacity)
         {
-          model.LowerLimitCapacity = CommonParameterParser.ParseToDouble(model.LowerLimitCapacitySource);
-          model.LowerLimitCapacitySource += " " + unit;
+          var minValue = UnitsConvertor.TryConvertBack(minCapacity, "Ф");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) " +
+            $"нижняя граница электрической емкости меньше минимально измеряемой ({minValue.Item1} {minValue.Item2}).");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница электрической емкости ({lowerValue.Item1} {lowerValue.Item2}) " +
+            $"меньше минимально измеряемой ({minValue.Item1} {minValue.Item2})."));
+          hasErrors = true;
         }
+        if (lower.Value > maxCapacity)
+        {
+          var maxValue = UnitsConvertor.TryConvertBack(maxCapacity, "Ф");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница электрической емкости больше максимально возможной ({maxCapacity}).");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Нижняя граница электрической емкости ({lowerValue.Item1} {lowerValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+          hasErrors = true;
+        }
+      }
 
-        if (!string.IsNullOrWhiteSpace(model.HigherLimitCapacitySource) && model.HigherLimitCapacitySource != null)
-        {
-          model.HigherLimitCapacity = CommonParameterParser.ParseToDouble(model.HigherLimitCapacitySource);
-          model.HigherLimitCapacitySource += " " + unit;
-        }
+      // 8️⃣ Проверка верхней границы (если она есть)
+      if (higher.HasValue && !hasErrors)
+      {
+        var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
 
-        if (!string.IsNullOrEmpty(unit))
+        if (higher.Value > maxCapacity)
         {
-          model.CapacityUnit = unit;
+          var maxValue = UnitsConvertor.TryConvertBack(maxCapacity, "Ф");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) " +
+            $"верхняя граница электрической емкости больше максимально возможной ({maxCapacity}).");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Верхняя граница электрической емкости ({higherValue.Item1} {higherValue.Item2}) " +
+            $"больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+          hasErrors = true;
         }
-        else
+        if (higher.Value < minCapacity)
         {
-          model.CapacityUnit = string.Empty;
+          var minValue = UnitsConvertor.TryConvertBack(minCapacity, "Ф");
+          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) " +
+            $"нижняя граница электрической емкости меньше минимально измеряемой ({minValue.Item1} {minValue.Item2})..");
+          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+            $"Верхняя граница электрической емкости ({higherValue.Item1} {higherValue.Item2}) " +
+            $"меньше минимально измеряемой ({minValue.Item1} {minValue.Item2})."));
+          hasErrors = true;
         }
+      }
+
+      // 9️⃣ Установка значений (только если всё прошло проверки)
+      if (hasErrors == false)
+      {
+        // нижняя всегда должна быть → если есть — устанавливаем
+        model.LowerLimitCapacity = lower.Value;
+        model.LowerLimitCapacitySource = $"{lower.Value} {unit}";
+
+        // верхняя: если есть — используем, если нет — ставим дефолт
+        double finalHigher = higher ?? maxCapacity;
+        model.HigherLimitCapacity = finalHigher;
+        model.HigherLimitCapacitySource = $"{finalHigher} {unit}";
+
+        model.CapacityUnit = unit ?? string.Empty;
       }
 
       if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitCapacity ?? higherLimitCapacity, out string err))

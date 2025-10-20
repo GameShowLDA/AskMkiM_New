@@ -71,6 +71,24 @@ namespace UI.Services
         {
           textEditorContainer = _fileManager.ContainerService.CreateEditorContainer(editorType);
         }
+        else
+        {
+          if (textEditorContainer.DockManager.DockItems.Count > 0)
+          {
+            _fileManager.ContainerService.RemoveEditorContainer(textEditorContainer, editorType);
+            textEditorContainer = _fileManager.ContainerService.CreateEditorContainer(editorType);
+          }
+        }
+        TextEditorContainer protocolContainer = _fileManager.ContainerService.GetEditorContainer(EditorType.Protocol);
+        if (protocolContainer != null && protocolContainer.DockManager.DockItems.Count > 0)
+        {
+          _fileManager.ContainerService.RemoveEditorContainer(protocolContainer, EditorType.Protocol);
+        }
+        TextEditorContainer executorContainer = _fileManager.ContainerService.GetEditorContainer(EditorType.Run);
+        if (executorContainer != null && executorContainer.DockManager.DockItems.Count > 0)
+        {
+          _fileManager.ContainerService.RemoveEditorContainer(executorContainer, EditorType.Run);
+        }
         var item = await _fileManager.DockItemService.ShowTranslatorDockItemAsync($"Трансляция {editor.TextEditorModel.FileName}", textEditorContainer, editor, translateEditor);
 
         _fileManager.ControlManagerService.ShowEditorContainer(textEditorContainer, EditorType.Translator);

@@ -50,6 +50,10 @@ namespace UI.Services.ProtocolManager
         OpenProtocolInEditor(protocol, protocolText);
       else
         ExportProtocolAsPdf(protocol.ProgramName, protocolText);
+      if(ProtocolModel.GetPathProtocol(protocol, protocolText))
+      {
+        LogInformation($"Файл протокола выполнения программы контроля {protocol.ProgramPath} успешно сохранен в формате .lstw");
+      }
     }
 
     #region 📄 Формирование текста протокола

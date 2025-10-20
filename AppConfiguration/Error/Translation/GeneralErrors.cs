@@ -162,21 +162,19 @@ namespace AppConfiguration.Error.Translation
     };
 
     /// <summary>
-    /// Возвращает ошибку, если указанный в команде вольтаж выше максимально допустимого вольтажа пробойной установки.
+    /// Возвращает ошибку, если в команде возникает конфликт напряжения.
     /// </summary>
     /// <param name="lineNumber">Номер строки, где обнаружен повтор.</param>
     /// <param name="command">Текст команды, в которой повторяется точка назначения.</param>
-    /// <param name="commandVoltage">Вольтаж, указанный в команде.</param>
-    /// <param name="breakdowmMaxVoltage">Максимально дпустимый вольтаж пробойной установки.</param>
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования точки(-ек) в схеме назначения.
     /// </returns>
-    public static ErrorItem VoltageConflict(int lineNumber, string command, int commandVoltage, int breakdowmMaxVoltage) => new()
+    public static ErrorItem VoltageConflict(int lineNumber, string command, string description) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Code = ErrorCode.Gen_VoltageConflict,
-      Description = $"В команде {command} указан вольтаж({commandVoltage}), превышающий максимально допустимый вольтаж пробойной установки({breakdowmMaxVoltage})."
+      Description = description
     };
 
     /// <summary>

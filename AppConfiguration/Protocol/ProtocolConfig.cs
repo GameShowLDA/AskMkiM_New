@@ -113,6 +113,14 @@ namespace AppConfiguration.Protocol
       });
     }
 
+    public static async Task SetCleanTextErrorProtocol(string text)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.CleanTextErrorsProtocol = text;
+      });
+    }
+
     public static async Task SetErrorTextProtocol(string text)
     {
       await Task.Run(() =>
@@ -169,6 +177,7 @@ namespace AppConfiguration.Protocol
     public static bool GetSyntaxHighlighting() => ProtocolModel.UseSyntaxHighlighting;
     public static async Task<bool> GetGenerateProtocol() => await Task.Run(() => ProtocolModel.GenerateProtocol);
     public static async Task<string> GetCleanTextProtocol() => await Task.Run(() => ProtocolModel.CleanTextProtocol);
+    public static async Task<string> GetCleanTextProtocolError() => await Task.Run(() => ProtocolModel.CleanTextErrorsProtocol);
 
     public static async Task<string> GetErrorTextProtocol() => await Task.Run(() => ProtocolModel.ErrorTextProtocol);
 
@@ -186,6 +195,7 @@ namespace AppConfiguration.Protocol
         protocolModel.GenerateProtocol = ProtocolModel.GenerateProtocol;
         protocolModel.CleanTextProtocol = ProtocolModel.CleanTextProtocol;
         protocolModel.UseSyntaxHighlighting = ProtocolModel.UseSyntaxHighlighting;
+        protocolModel.CleanTextErrorsProtocol = ProtocolModel.CleanTextErrorsProtocol;
         return protocolModel;
       });
     }
@@ -204,6 +214,7 @@ namespace AppConfiguration.Protocol
         ProtocolModel.GenerateProtocol = protocolModel.GenerateProtocol;
         ProtocolModel.CleanTextProtocol = protocolModel.CleanTextProtocol;
         ProtocolModel.UseSyntaxHighlighting = protocolModel.UseSyntaxHighlighting;
+        ProtocolModel.CleanTextErrorsProtocol = protocolModel.CleanTextErrorsProtocol;
       });
 
       SaveProtocolEvent?.Invoke(protocolModel);
@@ -235,8 +246,8 @@ namespace AppConfiguration.Protocol
 
     public static async Task<string> GetBaseTextErrorsProtocol() => await Task.Run(() =>
 @"Протокол($РЕЖИМ) от $ДАТА
-
-Зав.N сборочной единицы: $НОМЕР
+проверки электрических параметров сборочной единицы $ОБОЗНАЧЕНИЕ Зав.N $НОМЕР
+Программа проверки: $ПРОГРАММА
 
 Заключение: Изделие $ОБОЗНАЧЕНИЕ $НАИМЕНОВАНИЕ
             Зав.N $НОМЕР $БРАК(не )соответствует требованиям КД

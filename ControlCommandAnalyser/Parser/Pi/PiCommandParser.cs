@@ -1,11 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using ControlCommandAnalyser.Parser.Si; // Для LoggerUtility
 using DTO.Device.Breakdown;
+using System.Text.RegularExpressions;
 using Utilities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
@@ -21,8 +22,9 @@ namespace ControlCommandAnalyser.Parser.Pi
       LoggerUtility.LogInformation($"Начало парсинга команды: {commandNumber} {mnemonic}, строк: {lines?.Count ?? 0}");
 
       var breakDown = AppConfiguration.ServiceLocator.GetRequired<IBreakdownTester>();
-      var maxVoltage = breakDown.MaxVoltage;
-
+      var maxDCWVoltage = breakDown.MaxVoltage;// постоянный ток
+      var minVoltage = 50;
+      var maxACWVoltage = breakDown.MaxVoltage; // переменный ток
       var model = new PiCommandModel
       {
         CommandNumber = commandNumber,
@@ -72,7 +74,7 @@ namespace ControlCommandAnalyser.Parser.Pi
       }
 
       var modelSi = new SiCommandModel();
-      var siRemainder = SiCommandParser.ManageSiParametersParse(modelSi, commandNumber, mnemonic, numberLine, siPart, maxVoltage);
+      var siRemainder = SiCommandParser.ManageSiParametersParse(modelSi, commandNumber, mnemonic, numberLine, siPart, breakDown);
 
       // Если СИ что-то не допарсила, логни отдельно (в модель СИ, не ПИ)
       if (!string.IsNullOrEmpty(siRemainder))
@@ -137,11 +139,36 @@ namespace ControlCommandAnalyser.Parser.Pi
       {
         model.Voltage = CommonParameterParser.ParseToDouble(model.VoltageSource);
         model.VoltageSource += unit;
-
-        if (model.Voltage.HasValue && model.Voltage > maxVoltage)
+        var maxVoltage = maxACWVoltage;
+        var voltageType = string.Empty;
+        if (model.VoltageType == VoltageEnum.Type.DCW)
         {
-          LoggerUtility.LogError($"В команде ПИ указан вольтаж, превышающий максимально допустимый вольтаж пробойной установки.");
-          model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", (int)model.Voltage.Value, maxVoltage));
+          maxVoltage = maxDCWVoltage;
+        }
+        voltageType = model.VoltageType == VoltageEnum.Type.DCW ? "постоянного" : "переменного";
+        var voltageValue = UnitsConvertor.TryConvertBack(model.Voltage.Value, unit);
+        if (model.Voltage.Value > maxVoltage)
+        {
+          var maxValue = UnitsConvertor.TryConvertBack(maxVoltage, "В");
+          LoggerUtility.LogError($"В команде ПИ указано напряжение, превышающее максимально допустимое напряжение пробойной установки.");
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({voltageValue.Item1} {voltageValue.Item2}), " +
+            $"превышающий максимально допустимое напряжение пробойной установки ({maxValue.Item1} {maxValue.Item2}  " +
+            $"для {voltageType} тока).";
+          model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
+        }
+        else if (model.Voltage.Value < minVoltage)
+        {
+          var minValue = UnitsConvertor.TryConvertBack(minVoltage, "В");
+          LoggerUtility.LogError($"В команде ПИ указано напряжение, меньше минимально допустимого напряжения пробойной установки.");
+          var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({voltageValue.Item1} {voltageValue.Item2}), " +
+            $"меньше минимально допустимого напряжения пробойной установки ({minValue.Item1} {minValue.Item2}" +
+            $"для {voltageType} тока).";
+          model.Errors.Add(GeneralErrors.VoltageConflict(numberLine, $"{commandNumber} {mnemonic}", description));
+        }
+        else
+        {
+          model.Voltage = model.Voltage.Value;
+          model.VoltageSource = model.Voltage.Value.ToString() + unit;
         }
       }
       else

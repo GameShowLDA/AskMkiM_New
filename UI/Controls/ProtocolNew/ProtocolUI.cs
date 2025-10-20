@@ -316,7 +316,9 @@ namespace UI.Controls.ProtocolNew
         }
         else
         {
-          showMessageModel.Message += " " + showMessageModel.GetQualityPrefix();
+          var prefix = showMessageModel.GetQualityPrefix();
+          if (!showMessageModel.Message.Contains(prefix))
+            showMessageModel.Message += " " + prefix;
         }
         showMessageModel.MessageColor = showMessageModel.GetColorMessage();
       }
@@ -396,7 +398,11 @@ namespace UI.Controls.ProtocolNew
     {
       string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss", CultureInfo.CurrentCulture);
       string filename = $"KC_{dateTime}.txt";
-      string fullPath = Path.Combine(FileLocations.DataSaveDirectory, filename);
+      string fullPath = Path.Combine($"..\\{FileLocations.DataSaveDirectory}", filename);
+      if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+      {
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+      }
 
       var lines = protocolTextBox.Messages.Select(m =>
           $"{m.Header}: {m.Message}");

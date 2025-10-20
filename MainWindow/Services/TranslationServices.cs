@@ -9,6 +9,7 @@ using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
 using UI.Windows.WpfDocking.Windows.Docking;
+using Utilities;
 
 namespace MainWindowProgram.Services
 {
@@ -220,18 +221,31 @@ namespace MainWindowProgram.Services
     /// <returns>Асинхронная задача создания компонента транслятора.</returns>
     private async Task CreateNewTranslator(TextEditorUI editor, string text)
     {
-      var translateEditor = _fileService.CreateTranslationFileAsync();
-      if (translateEditor != null)
+      try
       {
-        translateEditor.TextEditorModel.FilePath = editor.TextEditorModel.FilePath;
-        var manager = new CommandTranslationManager();
-        var models = manager.ParseAllAndDisplay(text, translateEditor);
-        manager.SetSourseLines(models);
+        var translateEditor = _fileService.CreateTranslationFileAsync();
+        text = PkPreprocessor.PreprocessText(text);
+        editor.TextArea.Document.Text = text;
+        if (translateEditor != null)
+        {
+          translateEditor.TextEditorModel.FilePath = editor.TextEditorModel.FilePath;
+          var manager = new CommandTranslationManager();
+          var models = manager.ParseAllAndDisplay(text, translateEditor);
+          manager.SetSourseLines(models);
 
-        EditorEventAdapter.RaiseCloseRunItem(editor);
+          EditorEventAdapter.RaiseCloseRunItem(editor);
 
-        var item = await _multiWindow.AddTranslatorItem(editor, translateEditor, EditorType.Translator);
-        item.TranslationModels = models;
+          var item = await _multiWindow.AddTranslatorItem(editor, translateEditor, EditorType.Translator);
+          item.TranslationModels = models;
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBoxCustom.Show($"Не удалось запустить трансляцию программы контроля.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
+        LoggerUtility.LogError($"Не удалось запустить трансляцию программы контроля: {ex}.");
+        
+        EditorEventAdapter.RaiseTextEditorActivated(editor);
+        await _multiWindow.OpenFileInEditor(editor.TextEditorModel.FilePath);
       }
     }
   }

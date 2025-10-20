@@ -104,6 +104,7 @@ namespace ControlCommandAnalyser.Parser.Pr
       LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
 
       var meter = new DataBaseConfiguration.Services.Device.FastMeterServices().GetAll().FirstOrDefault();
+      var minResistance = 1;
       if (meter == null)
       {
         LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивлене не задано.");
@@ -111,65 +112,77 @@ namespace ControlCommandAnalyser.Parser.Pr
       }
       else
       {
-        if (!string.IsNullOrEmpty(lowerLimitResistance) && !string.IsNullOrEmpty(higherLimitResistance))
+        // флаг ошибок при проверке
+        bool hasResistanceErrors = false;
+
+        // значения по умолчанию
+        double defaultLower = 0;
+        double defaultHigher = meter.MaxContinuityResistance;
+
+        // --- 1️⃣ Парсим входные значения, если они заданы ---
+        double? lower = !string.IsNullOrWhiteSpace(lowerLimitResistance)
+            ? CommonParameterParser.ParseToDouble(lowerLimitResistance)
+            : null;
+
+        double? higher = !string.IsNullOrWhiteSpace(higherLimitResistance)
+            ? CommonParameterParser.ParseToDouble(higherLimitResistance)
+            : null;
+
+        // --- 2️⃣ Проверка валидности, если обе границы заданы ---
+        if (lower.HasValue && higher.HasValue)
         {
-          if (CommonParameterParser.ParseToDouble(lowerLimitResistance) > CommonParameterParser.ParseToDouble(higherLimitResistance))
+          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+          var lowerValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+          var maxValue = UnitsConvertor.TryConvertBack(meter.MaxContinuityResistance, "Ом");
+          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+
+          if (lower.Value > higher.Value)
           {
-            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше верхней границы сопротивления.");
-            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}"));
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше верхней.");
+            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше верхней ({higherValue.Item1} {higherValue.Item2})."));
+            hasResistanceErrors = true;
           }
-          else if (CommonParameterParser.ParseToDouble(lowerLimitResistance) > meter.MaxContinuityResistance)
+          else if (lower.Value > meter.MaxContinuityResistance)
           {
-            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально допустимой границы сопротивления({meter.MaxContinuityResistance}).");
-            model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", meter.MaxContinuityResistance));
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально допустимой ({maxValue.Item1} {maxValue.Item2})");
+            model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", maxValue.Item1, maxValue.Item2));
+            hasResistanceErrors = true;
           }
-          else
+          else if (lower.Value < minResistance)
           {
-            if (!string.IsNullOrEmpty(lowerLimitResistance))
-            {
-              model.LowerLimitResistanceSource = lowerLimitResistance;
-              model.ResistanceUnit = unit;
-            }
-            if (!string.IsNullOrEmpty(higherLimitResistance))
-            {
-              model.HigherLimitResistanceSource = higherLimitResistance;
-              model.ResistanceUnit = unit;
-            }
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально возможной ({minResistance}).");
+            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально возможной ППУ({minValue.Item1} {minValue.Item2})."));
+            hasResistanceErrors = true;
           }
-
+          else if (higher.Value < minResistance)
+          {
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ({minValue.Item1} {minValue.Item2}).");
+            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ППУ ({minValue.Item1} {minValue.Item2})."));
+            hasResistanceErrors = true;
+          }
+          else if (higher.Value > meter.MaxContinuityResistance)
+          {
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально допустимой ({maxValue.Item1} {maxValue.Item2})");
+            model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", maxValue.Item1, maxValue.Item2));
+            hasResistanceErrors = true;
+          }
         }
 
+        // --- 3️⃣ Установка значений ---
+        if (hasResistanceErrors == false)
+        {
+          // если нижняя не задана → дефолт
+          double lowerFinal = lower ?? defaultLower;
+          // если верхняя не задана → дефолт
+          double higherFinal = higher ?? defaultHigher;
 
-        if (!string.IsNullOrWhiteSpace(higherLimitResistance) && !string.IsNullOrEmpty(higherLimitResistance))
-        {
-          model.HigherLimitResistance = CommonParameterParser.ParseToDouble(higherLimitResistance);
-          model.HigherLimitResistanceSource = model.HigherLimitResistance + " " + unit;
-        }
-        else
-        {
-          model.HigherLimitResistance = meter.MaxContinuityResistance;
-          model.HigherLimitResistanceSource = $"{meter.MaxContinuityResistance} Ом";
-        }
+          model.LowerLimitResistance = lowerFinal;
+          model.LowerLimitResistanceSource = $"{lowerFinal} {unit}";
 
-        if (!string.IsNullOrWhiteSpace(lowerLimitResistance) && !string.IsNullOrEmpty(lowerLimitResistance))
-        {
-          model.LowerLimitResistance = CommonParameterParser.ParseToDouble(lowerLimitResistance);
-          model.LowerLimitResistanceSource = model.LowerLimitResistance + " " + unit;
-        }
-        else
-        {
-          model.LowerLimitResistance = 0;
-          model.LowerLimitResistanceSource = $"0 Ом";
-        }
-
-
-        if (model.HigherLimitResistance > meter.MaxContinuityResistance && model.HigherLimitResistance != null)
-        {
-          model.HigherLimitResistance = meter.MaxContinuityResistance;
-          model.HigherLimitResistanceSource = $"{model.HigherLimitResistance} Ом";
+          model.HigherLimitResistance = higherFinal;
+          model.HigherLimitResistanceSource = $"{higherFinal} {unit}";
         }
       }
-
 
       string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
 

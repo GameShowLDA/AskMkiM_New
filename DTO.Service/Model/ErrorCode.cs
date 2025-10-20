@@ -221,6 +221,10 @@ namespace DTO.Service.Models
     [ErrorCodeTag("SI009")]
     Si_EmptyVoltage,
 
+    /// <summary> В команде СИ конфликт сопротивления. </summary>
+    [ErrorCodeTag("SI010")]
+    Si_ResistanceLimitsConflict,
+
     #endregion
 
     #region Режим ПИ
@@ -328,6 +332,10 @@ namespace DTO.Service.Models
     /// <summary> В команде ИЕ замкнутые точки. </summary>
     [ErrorCodeTag("IE008")]
     Ie_PairError,
+
+    /// <summary> В команде ИЕ конфликт между границами электрической емкости. </summary>
+    [ErrorCodeTag("IE009")]
+    Ie_CapacityLimitsConflict,
 
     #endregion
 
