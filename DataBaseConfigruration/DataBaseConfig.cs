@@ -17,12 +17,6 @@ namespace DataBaseConfiguration
       {
         string baseDir = AppContext.BaseDirectory;
         string path = Path.Combine(baseDir, "Resources", "_config.db");
-
-        if (!File.Exists(path))
-        {
-          throw new FileNotFoundException($"Файл базы данных не найден: {path}");
-        }
-
         return path;
       }
     }
@@ -49,6 +43,7 @@ namespace DataBaseConfiguration
       {
         using var context = new AppDbContext(OptionsBuilder.Options);
         await context.Database.MigrateAsync();
+        context.Database.EnsureCreated();
 
         FileHotkeySeeder.Seed(context);
         MeasurementErrorSeeder.Seed(context);

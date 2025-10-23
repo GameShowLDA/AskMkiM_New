@@ -70,6 +70,7 @@ namespace MainWindowProgram.Engine
         {
           await ProtocolConfig.SetProtocolModel(protocolTask.Result);
           ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
+          ProtocolModel.SetErrorsTemplate(protocolTask.Result.CleanTextErrorsProtocol);
         }
 
         if (executionTask.Result != null)
@@ -82,6 +83,7 @@ namespace MainWindowProgram.Engine
           var service = new DataBaseConfiguration.Services.Settings.ProtocolService();
           await service.SaveProtocolAsync(model);
           ProtocolModel.SetTemplate(model.CleanTextProtocol);
+          ProtocolModel.SetErrorsTemplate(model.CleanTextErrorsProtocol);
         };
 
         ExecutionConfig.SaveExecutionEvent += async (model) =>

@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DTO.Enum\DTO.Enum.csproj" />
+	  <ProjectReference Include="..\DTO\DTO.Settings.csproj" />
 	</ItemGroup>
 
 </Project>

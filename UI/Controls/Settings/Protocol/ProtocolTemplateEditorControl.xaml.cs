@@ -26,6 +26,12 @@ namespace UI.Controls.Settings.Protocol
     public string BaseTemplate { get; private set; }
 
     /// <summary>
+    /// Если true — загружает шаблон с ошибками, если false — обычный.
+    /// </summary>
+    public bool IsErrorsTemplate { get; set; }
+
+
+    /// <summary>
     /// Текст шаблона (привязан к ProtocolEditor.Text).
     /// Можно читать и задавать напрямую, поддерживает биндинг.
     /// </summary>
@@ -59,9 +65,17 @@ namespace UI.Controls.Settings.Protocol
 
       Loaded += async (s, e) =>
       {
-        BaseTemplate = await AppConfiguration.Protocol.ProtocolConfig.GetCleanTextProtocol();
+        if (!string.IsNullOrEmpty(ProtocolEditor.Text))
+          return; // если уже установлен снаружи — не трогаем
+
+        if (IsErrorsTemplate)
+          BaseTemplate = await AppConfiguration.Protocol.ProtocolConfig.GetBaseTextErrorsProtocol();
+        else
+          BaseTemplate = await AppConfiguration.Protocol.ProtocolConfig.GetBaseTextProtocol();
+
         LoadTemplateWithRequiredLines(BaseTemplate);
       };
+
     }
 
     public new Brush Background

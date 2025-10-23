@@ -112,24 +112,24 @@ namespace AppConfiguration.Error.Translation
     /// <summary>
     /// Ошибка: нижняя граница сопротивления больше верхней границы сопротивления.
     /// </summary>
-    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command) => new()
+    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command, string description) => new()
     {
       SourceLineNumber = startLineNumber,
       Command = command,
       Code = ErrorCode.Pr_ResistanceLimitsConflict,
-      Description = "Нижняя граница сопротивления больше верхней границы сопротивления."
+      Description = description
     };
 
 
     /// <summary>
     /// Ошибка: верхняя граница сопротивления больше максимально допустимой границы сопротивления.
     /// </summary>
-    public static ErrorItem ResistanceMaxLimitsConflict(int startLineNumber, string command, int maxResistance) => new()
+    public static ErrorItem ResistanceMaxLimitsConflict(int startLineNumber, string command, double? maxResistance, string unit) => new()
     {
       SourceLineNumber = startLineNumber,
       Command = command,
       Code = ErrorCode.Pr_ResistanceMaxLimitsConflict,
-      Description = $"Верхняя граница сопротивления больше максимально допустимой границы сопротивления({maxResistance})."
+      Description = $"Верхняя граница сопротивления больше максимально допустимой границы сопротивления({maxResistance} {unit})."
     };
 
     /// <summary>

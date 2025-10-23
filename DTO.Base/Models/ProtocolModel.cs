@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using DTO.Settings.SettingsModels;
+
 
 namespace DTO.Base.Models
 {
@@ -13,6 +16,11 @@ namespace DTO.Base.Models
     /// Обозначение сборочной единицы.
     /// </summary>
     public string Designation { get; set; }
+
+    /// <summary>
+    /// Наименование объекта контроля.
+    /// </summary>
+    public string ControlObjectName { get; set; }
 
 
     /// <summary>
@@ -81,6 +89,7 @@ namespace DTO.Base.Models
     }
 
     private static string Template { get; set; } = string.Empty;
+    private static string ErrorsTemplate { get; set; } = string.Empty;
 
     public ProtocolModel()
     {
@@ -92,23 +101,13 @@ namespace DTO.Base.Models
       Template = templatePath;
     }
 
-    static public string GetPathProtocol(ProtocolModel protocolModel)
+    static public void SetErrorsTemplate(string templatePath)
     {
+      ErrorsTemplate = templatePath;
+    }
 
-      // Формируем финальный текст протокола
-      string formattedText = Template
-          .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
-          .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
-          .Replace("$РЕЖИМ", protocolModel.Mode)
-          .Replace("$НОМЕР", protocolModel.Number.ToString())
-          .Replace("$ПРОГРАММА", protocolModel.ProgramName)
-          .Replace("$НАЧАЛО", protocolModel.StartTime.ToString("HH:mm:ss:ff"))
-          .Replace("$КОНЕЦ", protocolModel.EndTime.ToString("HH:mm:ss:ff"))
-          .Replace("$ВРЕМЯ", protocolModel.ExecutionTime.ToString(@"hh\:mm\:ss\:ff"))
-          .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
-          .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
-          .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
-
+    static public bool GetPathProtocol(ProtocolModel protocolModel, string protocolText)
+    {
       try
       {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
@@ -117,7 +116,7 @@ namespace DTO.Base.Models
 
         if (parent2 != null)
         {
-          var historyPath = Path.Combine(parent2.FullName, "History");
+          var historyPath = Path.Combine(parent2.FullName, FileLocations.DataSaveDirectory);
           if (!Directory.Exists(historyPath))
           {
             Directory.CreateDirectory(historyPath);
@@ -136,24 +135,29 @@ namespace DTO.Base.Models
 
           using (StreamWriter writer = new StreamWriter(fullFilePath))
           {
-            writer.WriteLine(formattedText);
+            writer.WriteLine(protocolText);
           }
 
-
-          return fullFilePath;
+          if (File.Exists(fullFilePath))
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
         }
         else
         {
           Console.WriteLine("Не удалось получить родительскую директорию");
-          return null;
+          return false;
         }
       }
       catch (Exception ex)
       {
         Console.WriteLine($"Произошла ошибка: {ex.Message}");
-        return null;
+        return false;
       }
-
     }
 
     static public string GetProtocolText(ProtocolModel protocolModel)
@@ -174,35 +178,51 @@ namespace DTO.Base.Models
       return formattedText;
     }
 
-    // TODO: формировать текст протокола с ошибками
     public static string GetProtocolWithErrorsText(ProtocolModel protocolModel)
     {
-      string formattedText = Template
+      // 1. Формируем список ошибок
+      int totalErrors = protocolModel.Errors.Values.Sum(list => list.Count);
+      var errorsText = $"\r\nОшибки программы (всего: {totalErrors}):";
+
+      int i = 1;
+      foreach (var item in protocolModel.Errors.Keys)
+      {
+        //errorsText += $"\r\n\tОшибки команды: {item}";
+        foreach (var error in protocolModel.Errors[item])
+        {
+          errorsText += $"\r\nERR {i}. {item}: {error}";
+          i++;
+        }
+      }
+
+      // 2. Разделяем шаблон на две части — до и после строки с "$ПРОГРАММА"
+      const string marker = "$ПРОГРАММА";
+      int markerIndex = ErrorsTemplate.IndexOf(marker);
+      if (markerIndex == -1)
+        throw new InvalidOperationException("В шаблоне не найден маркер $ПРОГРАММА.");
+
+      string before = ErrorsTemplate.Substring(0, markerIndex + marker.Length);
+      string after = ErrorsTemplate.Substring(markerIndex + marker.Length);
+
+      // 3. Выполняем подстановку в обеих частях отдельно
+      before = before
           .Replace("$ДАТА", protocolModel.Date.ToString("dd.MM.yyyy"))
           .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
           .Replace("$РЕЖИМ", protocolModel.Mode)
           .Replace("$НОМЕР", protocolModel.Number.ToString())
-          .Replace("$ПРОГРАММА", protocolModel.ProgramName)
-          .Replace("$НАЧАЛО", protocolModel.StartTime.ToString("HH:mm:ss:ff"))
-          .Replace("$КОНЕЦ", protocolModel.EndTime.ToString("HH:mm:ss:ff"))
-          .Replace("$ВРЕМЯ", protocolModel.ExecutionTime.ToString(@"hh\:mm\:ss\:ff"))
+          .Replace("$ПРОГРАММА", protocolModel.ProgramName);
+
+      after = after
+          .Replace("$ОБОЗНАЧЕНИЕ", protocolModel.Designation)
+          .Replace("$НАИМЕНОВАНИЕ", protocolModel.ControlObjectName)
+          .Replace("$НОМЕР", protocolModel.Number.ToString())
+          .Replace("$БРАК(не )", "не ")
           .Replace("$ИСПОЛНИТЕЛЬ", protocolModel.Executor)
           .Replace("$ПРЕДСТАВИТЕЛЬ", protocolModel.Agent)
           .Replace("$ЗАКАЗЧИК", protocolModel.Customer);
 
-      int totalErrors = protocolModel.Errors.Values.Sum(list => list.Count);
-      formattedText += $"\r\n\r\nОшибки программы (всего: {totalErrors}):";
-
-      foreach (var item in protocolModel.Errors.Keys)
-      {
-        formattedText += $"\r\n\tОшибки команды: {item}";
-
-        var errors = protocolModel.Errors[item];
-        foreach (var error in errors)
-        {
-          formattedText += $"\r\n\t\t{error.ToString()}";
-        }
-      }
+      // 4. Склеиваем финальный текст: до → ошибки → после
+      string formattedText = before + "\r\n" + errorsText + "\r\n" + after;
 
       return formattedText;
     }

@@ -96,7 +96,7 @@ namespace ControlCommandAnalyser.Model.Chains
           }
         }
 
-        if (disconnectPoint.Count > 0)
+        if (disconnectPoint.Count > 1)
         {
           ChainDisconnectedPointsMap.Add(group, disconnectPoint);
         }

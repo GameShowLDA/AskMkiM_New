@@ -51,6 +51,7 @@ namespace UI.Controls.Settings.Protocol
       ProtocolGeneration.CheckedChanged += CheckedChanged;
       SyntaxHighlighting.CheckedChanged += CheckedChanged;
       BaseTextProtocol.TextChanged += (s, ev) => CheckedChanged(s, true);
+      BaseTextProtocolErrors.TextChanged += (s, ev) => CheckedChanged(s, true);
 
       Success.PreviewMouseDown += Success_PreviewMouseDown;
       Error.PreviewMouseDown += Error_PreviewMouseDown;
@@ -66,6 +67,15 @@ namespace UI.Controls.Settings.Protocol
       else
       {
         RestartClearProtocol.Visibility = Visibility.Collapsed;
+      }
+
+      if (BaseTextProtocolErrors.Text != await ProtocolConfig.GetBaseTextErrorsProtocol())
+      {
+        RestartClearProtocolErrors.Visibility = Visibility.Visible;
+      }
+      else
+      {
+        RestartClearProtocolErrors.Visibility = Visibility.Collapsed;
       }
     }
 
@@ -124,6 +134,15 @@ namespace UI.Controls.Settings.Protocol
       {
         RestartClearProtocol.Visibility = Visibility.Collapsed;
       }
+
+      if (BaseTextProtocolErrors.Text != await ProtocolConfig.GetBaseTextErrorsProtocol())
+      {
+        RestartClearProtocolErrors.Visibility = Visibility.Visible;
+      }
+      else
+      {
+        RestartClearProtocolErrors.Visibility = Visibility.Collapsed;
+      }
     }
 
     /// <summary>
@@ -141,6 +160,7 @@ namespace UI.Controls.Settings.Protocol
         GenerateProtocol = ProtocolGeneration.IsChecked,
         UseSyntaxHighlighting = SyntaxHighlighting.IsChecked,
         CleanTextProtocol = BaseTextProtocol.Text,
+        CleanTextErrorsProtocol = BaseTextProtocolErrors.Text,
       };
 
       return model;
@@ -157,6 +177,7 @@ namespace UI.Controls.Settings.Protocol
       a.GenerateProtocol == b.GenerateProtocol &&
       a.CleanTextProtocol == b.CleanTextProtocol &&
       a.UseSyntaxHighlighting == b.UseSyntaxHighlighting &&
+      a.CleanTextErrorsProtocol == b.CleanTextErrorsProtocol &&
       a.DisplayOperationTime == b.DisplayOperationTime;
 
     /// <summary>
@@ -172,12 +193,19 @@ namespace UI.Controls.Settings.Protocol
       ProtocolGeneration.IsChecked = _baseProtocolModel.GenerateProtocol;
       SyntaxHighlighting.IsChecked = _baseProtocolModel.UseSyntaxHighlighting;
       BaseTextProtocol.Text = _baseProtocolModel.CleanTextProtocol;
+      BaseTextProtocolErrors.Text = _baseProtocolModel.CleanTextErrorsProtocol;
     }
 
     private async void RepeatIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
       BaseTextProtocol.Text = await ProtocolConfig.GetBaseTextProtocol();
       RestartClearProtocol.Visibility = Visibility.Collapsed;
+    }
+
+    private async void RepeatErrorIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+      BaseTextProtocolErrors.Text = await ProtocolConfig.GetBaseTextErrorsProtocol();
+      RestartClearProtocolErrors.Visibility = Visibility.Collapsed;
     }
   }
 }

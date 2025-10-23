@@ -10,10 +10,20 @@ namespace ControlCommandExecutor.Executors
   {
     public string Mnemonic => "КЦ";
 
+
+
+    private void OnProtocolClose(FileInteractionEvents.ProtocolInfoClose e)
+    {
+      OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol);
+    }
+
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
-      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(OnProtocolClose);
+      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(OnProtocolClose);
+      //EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+      //EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
 
       var command = context.Command as KscCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
@@ -29,6 +39,7 @@ namespace ControlCommandExecutor.Executors
     private async Task GetProtocol(CommandExecutionContext context, KscCommandModel command, ProtocolModel protocolModel)
     {
       protocolModel.Designation = command.OkCommandModel.ObjectCode;
+      protocolModel.ControlObjectName = command.OkCommandModel.ControlObjectName;
       protocolModel.Date = DateTime.Now.Date;
       protocolModel.EndTime = DateTime.Now;
 
@@ -53,9 +64,12 @@ namespace ControlCommandExecutor.Executors
       protocolModel.Agent = agent;
       protocolModel.Customer = customer;
       protocolModel.Mode = await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? "Холостой режим" : "Рабочий режим";
-      ProtocolModel.GetPathProtocol(protocolModel);
+      // TODO: формирование протокола с ошибкой
+      //ProtocolModel.GetPathProtocol(protocolModel); 
       FileInteractionEventAdapter.RaiseViewProtocol(protocolModel);
-      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
+      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(OnProtocolClose);
+
+      //EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.ProtocolInfoClose>(e => OnProtocolInfoClosing(e.Number, e.Executor, e.Agent, e.Customer, e.Protocol));
     }
   }
 }
