@@ -13,10 +13,10 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 
-		<RuntimeIdentifier></RuntimeIdentifier>
-		<SelfContained>false</SelfContained>
+		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<PublishSingleFile>true</PublishSingleFile>
 		<PublishTrimmed>false</PublishTrimmed>
-		<PublishDir>$(OutputPath)</PublishDir>
 
 	</PropertyGroup>
 
