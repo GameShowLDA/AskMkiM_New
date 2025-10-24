@@ -9,7 +9,6 @@
     <TextBlock
         Text="00:00:00"
         FontFamily="{DynamicResource WinstonMedium}"
-        Foreground="{DynamicResource MainTitleSolidColorBrush}"
         Name ="Clock"
         />
 

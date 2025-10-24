@@ -12,6 +12,7 @@
         <TextEditor:TextEditorUI
             x:Name="ProtocolEditor"
             FontSize="14"
-            IsReadOnly="False"/>
+            IsReadOnly="False"
+            />
     </Grid>
 </UserControl>

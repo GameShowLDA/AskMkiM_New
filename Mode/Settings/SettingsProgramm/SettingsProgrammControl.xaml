@@ -123,10 +123,10 @@
                                         Grid.Column="0"
                                         HorizontalAlignment="Right"
                                         Width="30" Height="30"
-                                        ButtonBackground="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
-                                        ButtonBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
-                                        ArrowBrush="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
-                                        ArrowHoverBrush="{StaticResource SettingsInteractivePressedSolidColorBrush}"
+                                        ButtonBackground="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                                        ButtonBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                                        ArrowBrush="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                                        ArrowHoverBrush="{DynamicResource SettingsInteractivePressedSolidColorBrush}"
                                         IsArrowUp ="True"
                                         VerticalAlignment="Center"/>
                                 </Grid>

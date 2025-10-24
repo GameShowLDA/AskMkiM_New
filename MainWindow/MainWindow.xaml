@@ -44,7 +44,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TopPanel" Background="{DynamicResource MainMenuBackgroundBrush}" Cursor="SizeAll">
+        <Grid x:Name="TopPanel" Style="{DynamicResource StyleTopMenu}" Cursor="SizeAll">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -61,28 +61,23 @@
             <Menu Name="mainMenu" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" Background="Transparent" 
                 Foreground="{DynamicResource MainTitleSolidColorBrush}" Grid.Column="0" BorderThickness="0">
 
-                <MenuItem 
-                   Header="{Binding Source={StaticResource LS_Menu_File}, Path=Value}"
-                    Name="File" Uid="1" 
-                    BorderBrush="#FF303843" 
-                    OpacityMask="#FF303843" 
-                    Tag="menuHeader_1">
+                <MenuItem Header="{Binding Source={StaticResource LS_Menu_File}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="File" Uid="1" Tag="menuHeader_1">
 
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Archive}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenArchive" Name="ArchiveMenuItem" Command="{Binding File.OpenArchiveCommand}" utilities:HelpProvider.HelpKey="FuncArchive"/>
 
-                    <Separator Background="{DynamicResource MainMenuActiveBackgroundBrush}" Visibility="Collapsed" x:Name="fileActionsSeparator"/>
+                    <Separator Style="{DynamicResource SeparatorMenuStyle}" Visibility="Collapsed" x:Name="fileActionsSeparator"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Save}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFile" x:Name="saveMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileCommand}" utilities:HelpProvider.HelpKey="FuncSave"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_SaveAs}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFileAs" x:Name="saveAsMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileAsCommand}" utilities:HelpProvider.HelpKey="FuncSaveAs"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_OpenFolder}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFolder" x:Name="openFolderMenuItem" Visibility="Collapsed" Command="{Binding File.OpenFolderCommand}" utilities:HelpProvider.HelpKey="FuncOpenFolderInExplorer"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Print}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="PrintFile" x:Name="printMenuItem" Visibility="Collapsed" Command="{Binding File.PrintFileCommand}" utilities:HelpProvider.HelpKey="FuncPrint"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Search}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SearchFile" x:Name="searchMenuItem" Visibility="Collapsed" Command="{Binding File.SearchFileCommand}" utilities:HelpProvider.HelpKey="FuncSearch"/>
 
-                    <Separator Background="{StaticResource MainMenuActiveBackgroundBrush}"/>
+                    <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Open}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFile" Command="{Binding File.OpenFileCommand}" utilities:HelpProvider.HelpKey="FuncOpen"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Create}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CreateNewFile" Command="{Binding File.CreateNewFileCommand}" utilities:HelpProvider.HelpKey="FuncCreate"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Compare}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CompareFile" x:Name="compareMenuItem" Command="{Binding File.CompareFileCommand}" utilities:HelpProvider.HelpKey="FuncCompare"/>
 
-                    <Separator Background="{StaticResource MainMenuActiveBackgroundBrush}"/>
+                    <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Exit}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="ExitApplication" Command="{Binding File.ExitApplicationCommand}" utilities:HelpProvider.HelpKey="FuncExit"/>
 
                 </MenuItem>
@@ -163,12 +158,12 @@
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_Error}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ErrorMenuItem" Command="{Binding Admin.ErrorCommand}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_USB}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="USBMenuItem" Command="{Binding Admin.UsbCommand}"/>
 
-                    <Separator Background="{StaticResource MainMenuActiveBackgroundBrush}"/>
+                    <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
 
                     <MenuItem Header="Console" Style="{DynamicResource StyleMenuItem}" Name="SendCommandMenuItem" Command="{Binding Admin.SendCommandCommand}"/>
                     <MenuItem Header="Logger" Style="{DynamicResource StyleMenuItem}" Name="LoggerMenuItem" Command="{Binding Admin.LoggerCommand}"/>
 
-                    <Separator Background="{DynamicResource MainMenuActiveBackgroundBrush}"/>
+                    <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
 
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Admin_Management}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="DeviceManagment">
                         <MenuItem Header="GPT" Style="{DynamicResource StyleMenuItem}" Name="GptManagment" Command="{Binding Admin.GptCommand}"/>
@@ -243,7 +238,7 @@
             Name="BottomPanel"
             Grid.Row="2" 
             Height="30" 
-            Background="{DynamicResource MainBottomPanelBackgroundBrush}"
+            Background="{DynamicResource BackgroundBrushes}"
             >
 
             <Grid.ColumnDefinitions>
@@ -275,16 +270,17 @@
                 x:Name="TimeBlock" 
                 Margin="0,0,10,0" 
                 FontSize="13" 
-                Foreground="{DynamicResource MainTitleSolidColorBrush}" 
+                Foreground="{DynamicResource ForegrounfBrushes}"
                 Grid.Column="3" 
                 Cursor="Hand"
 				/>
 
-            <Components:KeyboardLayoutComponent Opacity="0.7"
+            <Components:KeyboardLayoutComponent 
+                Opacity="0.7"
                 x:Name="LanguageBlock" 
                 VerticalAlignment="Center" 
                 FontSize="15" 
-                Foreground="{DynamicResource MainTitleSolidColorBrush}" 
+                Foreground="{DynamicResource ForegrounfBrushes}"
                 Grid.Column="2" 
 				/>
 

@@ -1,7 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media;
+﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace UI.Controls.Settings.Protocol
 {
@@ -48,6 +49,17 @@ namespace UI.Controls.Settings.Protocol
       }
     }
 
+    public new Brush Background
+    {
+      get
+      {
+        return ProtocolEditor.Background;
+      }
+      set
+      {
+        ProtocolEditor.Background = value;
+      }
+    }
 
     public ProtocolTemplateEditorControl()
     {
@@ -76,18 +88,6 @@ namespace UI.Controls.Settings.Protocol
         LoadTemplateWithRequiredLines(BaseTemplate);
       };
 
-    }
-
-    public new Brush Background
-    {
-      get
-      {
-        return ProtocolEditor.Background;
-      }
-      set
-      {
-        ProtocolEditor.Background = value;
-      }
     }
 
     /// <summary>

@@ -185,7 +185,5 @@ namespace UI.Controls.Settings.UserInterface
       ThemeSelect.DefaultValue = e.NewTheme.ToString();
       ThemeSelect.SelectedValue = e.NewTheme.ToString();
     }
-
-
   }
 }
