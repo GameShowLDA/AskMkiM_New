@@ -175,23 +175,7 @@ namespace UI.Controls.TextEditor
           Console.WriteLine("TextMarkerService уже инициализирован.");
         }
 
-        string xshdFile = fileType switch
-        {
-          FileType.OPK or FileType.OPKW => "MKI_OPKW.xshd",
-          FileType.PK or FileType.PKW => "MKI_PK.xshd",
-          FileType.Protocol => "MKI_PROTOCOL.xshd",
-          _ => "MKI.xshd"
-        };
-
-        if (fileType != FileType.None)
-        {
-          using (var stream = File.OpenRead(xshdFile))
-          using (var reader = new XmlTextReader(stream))
-          {
-            textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-          }
-          LogDebug($"Highlighting: {textEditor.SyntaxHighlighting?.Name}");
-        }
+        ApplySyntaxHighlighting(AppConfiguration.Protocol.ProtocolConfig.GetSyntaxHighlighting());
 
         if (_executionMargin == null)
         {
@@ -209,6 +193,38 @@ namespace UI.Controls.TextEditor
         // Если ничего не выделено – отдаём «Текстовый редактор»
         return string.IsNullOrWhiteSpace(sel) ? "DescriptionWorkTextEditor" : sel;
       });
+      EventCore.Services.EventAggregator.Subscribe<EventCore.Events.ThemeEvent.SyntaxHighlighting>(e => ApplySyntaxHighlighting(e.IsEnabled));
+    }
+
+    private void ApplySyntaxHighlighting(bool enableHighlighting)
+    {
+      if (!enableHighlighting)
+      {
+        textEditor.SyntaxHighlighting = null;
+        LogDebug("Подсветка отключена пользователем.");
+        return;
+      }
+
+      string xshdFile = FileTypeDock switch
+      {
+        FileType.OPK or FileType.OPKW => "MKI_OPKW.xshd",
+        FileType.PK or FileType.PKW => "MKI_PK.xshd",
+        FileType.Protocol => "MKI_PROTOCOL.xshd",
+        _ => "MKI.xshd"
+      };
+
+      try
+      {
+        using var stream = File.OpenRead(xshdFile);
+        using var reader = new XmlTextReader(stream);
+        textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+        LogDebug($"Подсветка включена: {textEditor.SyntaxHighlighting?.Name}");
+      }
+      catch (Exception ex)
+      {
+        LogError($"Ошибка загрузки подсветки: {ex.Message}");
+        textEditor.SyntaxHighlighting = null;
+      }
     }
 
     /// <summary>

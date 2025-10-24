@@ -218,6 +218,7 @@ namespace AppConfiguration.Protocol
       });
 
       SaveProtocolEvent?.Invoke(protocolModel);
+      EventCore.Adapters.ThemeEventAdapter.RaiseSyntaxHighlighting(protocolModel.UseSyntaxHighlighting);
     }
 
 
