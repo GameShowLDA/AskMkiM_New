@@ -49,7 +49,6 @@ namespace UI.Controls.Settings.Protocol
       OperationTime.CheckedChanged += CheckedChanged;
       ProtocolFromPO.CheckedChanged += CheckedChanged;
       ProtocolGeneration.CheckedChanged += CheckedChanged;
-      SyntaxHighlighting.CheckedChanged += CheckedChanged;
       BaseTextProtocol.TextChanged += (s, ev) => CheckedChanged(s, true);
       BaseTextProtocolErrors.TextChanged += (s, ev) => CheckedChanged(s, true);
 
@@ -158,7 +157,6 @@ namespace UI.Controls.Settings.Protocol
         DisplayOperationTime = OperationTime.IsChecked,
         ShowProtocolInSoftware = ProtocolFromPO.IsChecked,
         GenerateProtocol = ProtocolGeneration.IsChecked,
-        UseSyntaxHighlighting = SyntaxHighlighting.IsChecked,
         CleanTextProtocol = BaseTextProtocol.Text,
         CleanTextErrorsProtocol = BaseTextProtocolErrors.Text,
       };
@@ -176,7 +174,6 @@ namespace UI.Controls.Settings.Protocol
       a.ShowProtocolInSoftware == b.ShowProtocolInSoftware &&
       a.GenerateProtocol == b.GenerateProtocol &&
       a.CleanTextProtocol == b.CleanTextProtocol &&
-      a.UseSyntaxHighlighting == b.UseSyntaxHighlighting &&
       a.CleanTextErrorsProtocol == b.CleanTextErrorsProtocol &&
       a.DisplayOperationTime == b.DisplayOperationTime;
 
@@ -191,7 +188,6 @@ namespace UI.Controls.Settings.Protocol
       OperationTime.IsChecked = _baseProtocolModel.DisplayOperationTime;
       ProtocolFromPO.IsChecked = _baseProtocolModel.ShowProtocolInSoftware;
       ProtocolGeneration.IsChecked = _baseProtocolModel.GenerateProtocol;
-      SyntaxHighlighting.IsChecked = _baseProtocolModel.UseSyntaxHighlighting;
       BaseTextProtocol.Text = _baseProtocolModel.CleanTextProtocol;
       BaseTextProtocolErrors.Text = _baseProtocolModel.CleanTextErrorsProtocol;
     }

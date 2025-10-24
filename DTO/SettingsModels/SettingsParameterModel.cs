@@ -13,5 +13,10 @@ namespace DTO.SettingsModels
     /// Выбранная тема оформления интерфейса программы.
     /// </summary>
     public ThemeEnums.Theme Theme { get; set; }
+
+    /// <summary>
+    /// Флаг, указывающий, нужно ли включить подсветку синтаксиса в редакторе.
+    /// </summary>
+    public bool UseSyntaxHighlighting { get; set; }
   }
 }

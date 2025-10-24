@@ -19,7 +19,7 @@ namespace UI.Components.ProtocolListBox
 
       if (!string.IsNullOrEmpty(header) && string.IsNullOrEmpty(message))
       {
-        if (AppConfiguration.Protocol.ProtocolConfig.GetSyntaxHighlighting())
+        if (AppConfiguration.Parameter.ParameterConfig.GetSyntaxHighlighting())
         {
           return SuccessBrush;
         }

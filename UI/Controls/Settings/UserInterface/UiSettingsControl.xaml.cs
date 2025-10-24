@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using AppConfiguration.Parameter;
+using DTO.SettingsModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using AppConfiguration.Parameter;
-using DTO.SettingsModels;
 using UI.Localization;
 using Utilities.Extensions;
 using static AppConfiguration.Parameter.ParameterConfig;
+using static EventCore.Events.ThemeEvent;
 
 namespace UI.Controls.Settings.UserInterface
 {
@@ -29,6 +30,7 @@ namespace UI.Controls.Settings.UserInterface
       InitializeComponent();
       Loaded += UiSettingsControl_Loaded;
       Unloaded += UiSettingsControl_Unloaded;
+      SyntaxHighlighting.CheckedChanged += (s, ev) => ValueChanged(s, ev);
     }
 
     /// <summary>
@@ -145,6 +147,8 @@ namespace UI.Controls.Settings.UserInterface
       var currentTheme = _baseParameterModel.Theme.ToString();
       ThemeSelect.DefaultValue = currentTheme;
       ThemeSelect.SelectedValue = currentTheme;
+
+      SyntaxHighlighting.IsChecked = _baseParameterModel.UseSyntaxHighlighting;
     }
 
     /// <summary>
@@ -163,7 +167,8 @@ namespace UI.Controls.Settings.UserInterface
       return new SettingsParameterModel
       {
         Language = languageCode,
-        Theme = parsedTheme
+        Theme = parsedTheme,
+        UseSyntaxHighlighting = SyntaxHighlighting.IsChecked
       };
     }
 
@@ -172,7 +177,8 @@ namespace UI.Controls.Settings.UserInterface
     /// Сравнивает две модели параметров.
     /// </summary>
     private static bool ProtocolEquals(SettingsParameterModel a, SettingsParameterModel b) =>
-      a.Language == b.Language && 
+      a.Language == b.Language &&
+      a.UseSyntaxHighlighting == b.UseSyntaxHighlighting &&
       b.Theme == a.Theme;
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using DTO.Enum;
+﻿using DTO.Base.Models;
+using DTO.Enum;
 using DTO.Settings.SettingsModels;
 using DTO.SettingsModels;
 
@@ -48,6 +49,14 @@ namespace AppConfiguration.Parameter
       });
     }
 
+    public static async Task SetSyntaxHighlighting(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ParameterModel.UseSyntaxHighlighting = enable;
+      });
+    }
+
     #endregion
 
     #region Get.
@@ -56,8 +65,10 @@ namespace AppConfiguration.Parameter
     /// Возвращает язык интерфейса программы.
     /// </summary>
     /// <returns>true, если отображается; false, если скрывается.</returns>
-    public static async Task<string> GetLanguage() => await Task.Run(() => ParameterModel.Language);
-    public static async Task<ThemeEnums.Theme> GetTheme() => await Task.Run(() => ParameterModel.Theme);
+    public static async Task<string> GetLanguage() =>  ParameterModel.Language;
+    public static async Task<ThemeEnums.Theme> GetTheme() => ParameterModel.Theme;
+    public static bool GetSyntaxHighlighting() => ParameterModel.UseSyntaxHighlighting;
+
 
     public static async Task<SettingsParameterModel> GetParameterModel()
     {
@@ -66,21 +77,25 @@ namespace AppConfiguration.Parameter
         SettingsParameterModel parametrModel = new SettingsParameterModel();
         parametrModel.Language = ParameterModel.Language;
         parametrModel.Theme = ParameterModel.Theme;
+        parametrModel.UseSyntaxHighlighting = ParameterModel.UseSyntaxHighlighting;
         return parametrModel;
       });
     }
 
-    public static async Task SaveProtocolModel(SettingsParameterModel protocolModel)
+    public static async Task SaveProtocolModel(SettingsParameterModel parametrModel)
     {
       await Task.Run(() =>
       {
-        ParameterModel.Language = protocolModel.Language;
-        ParameterModel.Theme = protocolModel.Theme;
+        ParameterModel.Language = parametrModel.Language;
+        ParameterModel.Theme = parametrModel.Theme;
+        ParameterModel.UseSyntaxHighlighting = parametrModel.UseSyntaxHighlighting;
+
       });
 
       await RewriteExecutionConfigAsync();
       await LanguageSettings.SetLanguageAsync(ParameterModel.Language);
       await ThemeSettings.SetThemeAsync(ParameterModel.Theme);
+      EventCore.Adapters.ThemeEventAdapter.RaiseSyntaxHighlighting(parametrModel.UseSyntaxHighlighting);
     }
 
     /// <summary>

@@ -144,13 +144,7 @@
                         VerticalAlignment="Top"
                         x:Name="ProtocolGeneration"/>
 
-                    <Components:SettingsCard
-                        Title="Подсветка синтаксиса"
-                        Description="Включает или отключает подсветку синтаксиса в редакторе протокола."
-                        IsChecked="{Binding IdleMode, Mode=TwoWay}"
-                        Margin="10,10"
-                        VerticalAlignment="Top"
-                        x:Name="SyntaxHighlighting"/>
+
                 </WrapPanel>
 
                 <Border Grid.Row="1" 

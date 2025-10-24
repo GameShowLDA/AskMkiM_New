@@ -358,7 +358,7 @@ namespace UI.Controls.ProtocolNew
 
     private async Task CheckSyntaxHighlighting(ShowMessageModel showMessageModel)
     {
-      if (!GetSyntaxHighlighting())
+      if (!AppConfiguration.Parameter.ParameterConfig.GetSyntaxHighlighting())
       {
         showMessageModel.HeaderColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
         showMessageModel.MessageColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
