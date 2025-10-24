@@ -101,6 +101,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
 
@@ -110,6 +111,17 @@
                                     Style="{DynamicResource SettingsTitleStyle}"
                                     VerticalAlignment="Center"  
                                     Grid.Row="0"/>
+
+                                <Button 
+                                    Grid.Column="2"
+                                    Width="100"
+                                    Height="30"
+                                    Style="{DynamicResource SettingsButtonStyle}"
+                                    BorderThickness="1"
+                                    Content="Печать"
+                                    Foreground="{DynamicResource ForegrounfBrushes}"
+                                    PreviewMouseDown="PrintConfig"
+                                        />
 
                                 <Grid Grid.Column="1"  Margin="20,0">
 

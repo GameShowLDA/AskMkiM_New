@@ -53,8 +53,8 @@
                         Grid.Column="2"
                       Width="30"
                       Height="30" 
-                        Margin="10,0,0,0"
-                        CrossThickness="4"
+                      Margin="10,0,0,0"
+                      CrossThickness="4"
                       CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
                       CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
                       />
