@@ -85,6 +85,10 @@ namespace DTO.Service.Models
     [ErrorCodeTag("GEN018")]
     Gen_CommandAlreadyExists,
 
+    /// <summary> Команда с указанной мнемоникой и номером уже существует. </summary>
+    [ErrorCodeTag("GEN019")]
+    Gen_FastMeterNotFound,
+
     #endregion
 
     #region Режим УМ

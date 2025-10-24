@@ -42,54 +42,65 @@ namespace ControlCommandAnalyser.Parser.Si
       }
 
       var breakDown = AppConfiguration.ServiceLocator.GetRequired<IBreakdownTester>();
-      var maxVoltage = breakDown.MaxVoltage;
-
-      string body = AllLinesInOne(model, lines);
-
-      // Дальше работаем ТОЛЬКО с body:
-      var remainder = body;
-
-      remainder = ManageSiParametersParse(model, commandNumber, mnemonic, numberLine, remainder, breakDown);
-
-      string bodyNoWs = string.Concat(lines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
-
-      // Ищем первую и последнюю '*'
-      int firstStar = bodyNoWs.IndexOf('*');
-      int lastStar = bodyNoWs.LastIndexOf('*');
-
-      if (firstStar >= 0 && lastStar > firstStar)
+      if (breakDown == null)
       {
-        remainder = ParsePoints(commandNumber, mnemonic, numberLine, model, rmCommandModel, remainder, bodyNoWs, firstStar, lastStar);
-      }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
-      {
-        // находим цепи точек из предыдущей команды проверки
-        model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
-      }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
-      {
-        model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
+        LoggerUtility.LogError($"Не найден быстрый измеритель.");
+        model.Errors.Add(GeneralErrors.FastMeterNotFound(numberLine, $"{commandNumber} {mnemonic}"));
+        return model;
       }
       else
       {
-        // Во всём теле команды не нашли пары '*...*' → считаем, что точек нет
-        LoggerUtility.LogWarning($"Во всём теле команды не найден блок точек '*...*' (строка {numberLine}): {commandNumber} {mnemonic}");
-        model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+
+        var maxVoltage = breakDown.MaxVoltage;
+
+        string body = AllLinesInOne(model, lines);
+
+        // Дальше работаем ТОЛЬКО с body:
+        var remainder = body;
+
+        remainder = ManageSiParametersParse(model, commandNumber, mnemonic, numberLine, remainder, breakDown);
+
+        string bodyNoWs = string.Concat(lines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
+
+        // Ищем первую и последнюю '*'
+        int firstStar = bodyNoWs.IndexOf('*');
+        int lastStar = bodyNoWs.LastIndexOf('*');
+
+        if (firstStar >= 0 && lastStar > firstStar)
+        {
+          remainder = ParsePoints(commandNumber, mnemonic, numberLine, model, rmCommandModel, remainder, bodyNoWs, firstStar, lastStar);
+        }
+        else if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        {
+          // находим цепи точек из предыдущей команды проверки
+          model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
+        }
+        else if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        {
+          model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
+        }
+        else
+        {
+          // Во всём теле команды не нашли пары '*...*' → считаем, что точек нет
+          LoggerUtility.LogWarning($"Во всём теле команды не найден блок точек '*...*' (строка {numberLine}): {commandNumber} {mnemonic}");
+          model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        }
+
+        if (!string.IsNullOrEmpty(remainder))
+        {
+          model.UnparsedParameters = "! Не распознанные параметры: ";
+          model.UnparsedParameters += remainder;
+          model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
+        }
+
+        AllowedKeysAttribute.ValidateKeysAndAttachErrors(model);
+
+        LoggerUtility.LogInformation($"Завершён парсинг команды: {commandNumber} {mnemonic}");
+
+        return model;
       }
-
-      if (!string.IsNullOrEmpty(remainder))
-      {
-        model.UnparsedParameters = "! Не распознанные параметры: ";
-        model.UnparsedParameters += remainder;
-        model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
-      }
-
-      AllowedKeysAttribute.ValidateKeysAndAttachErrors(model);
-
-      LoggerUtility.LogInformation($"Завершён парсинг команды: {commandNumber} {mnemonic}");
-
-      return model;
     }
+       
 
     private static string ParsePoints(string commandNumber, string mnemonic, int numberLine, SiCommandModel model, RmCommandModel rmCommandModel, string remainder, string bodyNoWs, int firstStar, int lastStar)
     {

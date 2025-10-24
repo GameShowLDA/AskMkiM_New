@@ -107,8 +107,9 @@ namespace ControlCommandAnalyser.Parser.Pr
       var minResistance = 1;
       if (meter == null)
       {
-        LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивлене не задано.");
-        model.Errors.Add(PrErrors.EmptyResistance(numberLine, $"{commandNumber} {mnemonic}"));
+        LoggerUtility.LogError($"Не найден быстрый измеритель.");
+        model.Errors.Add(GeneralErrors.FastMeterNotFound(numberLine, $"{commandNumber} {mnemonic}"));
+        return model;
       }
       else
       {

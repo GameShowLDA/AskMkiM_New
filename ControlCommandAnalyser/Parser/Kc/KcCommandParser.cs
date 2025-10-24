@@ -128,166 +128,175 @@ namespace ControlCommandAnalyser.Parser.Kc
 
       // 4️⃣ Пороговые значения
       var meter = new DataBaseConfiguration.Services.Device.FastMeterServices().GetAll().FirstOrDefault();
-      double minResistance = 0.001 * 1000;
-      double maxResistance = meter?.MaxContinuityResistance ?? 1_000_000;
-
-      // 5️⃣ Флаг ошибок
-      bool hasErrors = false;
-
-      // 6️⃣ Проверки диапазона, если обе границы заданы
-      if (lower.HasValue && higher.HasValue)
+      if (meter == null)
       {
-        if (lower.Value >= higher.Value)
-        {
-          var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
-          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
-          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше или равна верхней.");
-          model.Errors.Add(KsErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше или равна верхней ({higherValue.Item1} {higherValue.Item2})."));
-          hasErrors = true;
-        }
-      }
-
-      // 7️⃣ Проверка нижней границы, если она указана
-      if (lower.HasValue && !hasErrors)
-      {
-        var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
-        if (lower.Value < minResistance)
-        {
-          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
-          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})..");
-          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
-          hasErrors = true;
-        }
-        if (lower.Value > maxResistance)
-        {
-          var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
-
-          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше максимально возможной ({maxResistance}).");
-          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
-          hasErrors = true;
-        }
-      }
-
-      // 8️⃣ Проверка верхней границы, если она указана
-      if (higher.HasValue && !hasErrors)
-      {
-        var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
-
-        if (higher.Value > maxResistance)
-        {
-          var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
-          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально возможной ({maxResistance}).");
-          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
-          hasErrors = true;
-        }
-        if (higher.Value < minResistance)
-        {
-          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
-          LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления меньше минимально измеряемого ({minResistance}).");
-          model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-            $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
-          hasErrors = true;
-        }
-      }
-
-      // 9️⃣ Установка значений, только если не было ошибок
-      if (hasErrors == false)
-      {
-        // нижняя граница: задана → используем; не задана → по умолчанию
-        double finalLower = lower ?? minResistance;
-        model.LowerLimitResistance = finalLower;
-        model.LowerLimitResistanceSource = $"{finalLower} {unit}";
-
-        // верхняя граница: задана → используем; не задана → по умолчанию
-        double finalHigher = higher ?? maxResistance;
-        model.HigherLimitResistance = finalHigher;
-        model.HigherLimitResistanceSource = $"{finalHigher} {unit}";
-
-        model.ResistanceUnit = unit ?? string.Empty;
-      }
-
-      if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitResistance ?? higherLimitResistance, time, out string err))
-      {
-        model.Errors.Add(GeneralErrors.InvalidParameterOrder(mnemonic, numberLine, $"{commandNumber} {mnemonic}", err));
-        LoggerUtility.LogWarning($"Ошибка порядка параметров (строка {numberLine}): {err}");
+        LoggerUtility.LogError($"Не найден быстрый измеритель.");
+        model.Errors.Add(GeneralErrors.FastMeterNotFound(numberLine, $"{commandNumber} {mnemonic}"));
         return model;
-      }
-
-      string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
-
-      // Ищем первую и последнюю '*'
-      int firstStar = bodyNoWs.IndexOf('*');
-      int lastStar = bodyNoWs.LastIndexOf('*');
-
-      if (firstStar >= 0 && lastStar > firstStar)
-      {
-        // Выделяем блок точек (включительно) — PointParser сам Trim('*')
-        string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
-        model.PointsSourse = pointsBlob;
-        LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
-
-        var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
-
-        // Поднимем ошибки парсера точек
-        if (pointErrors?.Count > 0)
-        {
-          foreach (var error in pointErrors)
-          {
-            error.SourceLineNumber = numberLine;
-            error.Command = $"{commandNumber} {mnemonic}";
-            model.Errors.Add(error);
-            LoggerUtility.LogError(
-              $"При парсинге точек команды {commandNumber} {mnemonic} произошла ошибка: {error.Description} (строка {error.SourceLineNumber}).");
-          }
-        }
-
-        // Проверим, что схема непуста (есть хотя бы одна точка)
-        if (scheme == null || scheme.IsEmpty())
-        {
-          LoggerUtility.LogWarning($"Не найдено ни одной точки (строка {numberLine}): {commandNumber} {mnemonic}");
-          model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
-        }
-        else
-        {
-          model.Scheme = scheme; // ← просто присваиваем схему в модель
-          LoggerUtility.LogInformation(
-            $"Схема распознана: цепей={scheme.GroupModels?.Count ?? 0}, частей={scheme.CountParts()}, точек={scheme.CountPoints()}");
-        }
-
-        // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
-        int idxStarInFirstLine = remainder.IndexOf('*');
-        remainder = idxStarInFirstLine >= 0 ? remainder[..idxStarInFirstLine].Trim() : remainder.Trim();
       }
       else
       {
-        // Во всём теле команды не нашли пары '*...*' → считаем, что точек нет
-        LoggerUtility.LogWarning($"Во всём теле команды не найден блок точек '*...*' (строка {numberLine}): {commandNumber} {mnemonic}");
-        model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        double minResistance = 0.001 * 1000;
+        double maxResistance = meter?.MaxContinuityResistance ?? 1_000_000;
+
+        // 5️⃣ Флаг ошибок
+        bool hasErrors = false;
+
+        // 6️⃣ Проверки диапазона, если обе границы заданы
+        if (lower.HasValue && higher.HasValue)
+        {
+          if (lower.Value >= higher.Value)
+          {
+            var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+            var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше или равна верхней.");
+            model.Errors.Add(KsErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+              $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше или равна верхней ({higherValue.Item1} {higherValue.Item2})."));
+            hasErrors = true;
+          }
+        }
+
+        // 7️⃣ Проверка нижней границы, если она указана
+        if (lower.HasValue && !hasErrors)
+        {
+          var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
+          if (lower.Value < minResistance)
+          {
+            var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})..");
+            model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+              $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
+            hasErrors = true;
+          }
+          if (lower.Value > maxResistance)
+          {
+            var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
+
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления больше максимально возможной ({maxResistance}).");
+            model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+              $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+            hasErrors = true;
+          }
+        }
+
+        // 8️⃣ Проверка верхней границы, если она указана
+        if (higher.HasValue && !hasErrors)
+        {
+          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+
+          if (higher.Value > maxResistance)
+          {
+            var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления больше максимально возможной ({maxResistance}).");
+            model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+              $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+            hasErrors = true;
+          }
+          if (higher.Value < minResistance)
+          {
+            var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления меньше минимально измеряемого ({minResistance}).");
+            model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
+              $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально измеряемого ({minValue.Item1} {minValue.Item2})."));
+            hasErrors = true;
+          }
+        }
+
+        // 9️⃣ Установка значений, только если не было ошибок
+        if (hasErrors == false)
+        {
+          // нижняя граница: задана → используем; не задана → по умолчанию
+          double finalLower = lower ?? minResistance;
+          model.LowerLimitResistance = finalLower;
+          model.LowerLimitResistanceSource = $"{finalLower} {unit}";
+
+          // верхняя граница: задана → используем; не задана → по умолчанию
+          double finalHigher = higher ?? maxResistance;
+          model.HigherLimitResistance = finalHigher;
+          model.HigherLimitResistanceSource = $"{finalHigher} {unit}";
+
+          model.ResistanceUnit = unit ?? string.Empty;
+        }
+
+        if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitResistance ?? higherLimitResistance, time, out string err))
+        {
+          model.Errors.Add(GeneralErrors.InvalidParameterOrder(mnemonic, numberLine, $"{commandNumber} {mnemonic}", err));
+          LoggerUtility.LogWarning($"Ошибка порядка параметров (строка {numberLine}): {err}");
+          return model;
+        }
+
+        string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
+
+        // Ищем первую и последнюю '*'
+        int firstStar = bodyNoWs.IndexOf('*');
+        int lastStar = bodyNoWs.LastIndexOf('*');
+
+        if (firstStar >= 0 && lastStar > firstStar)
+        {
+          // Выделяем блок точек (включительно) — PointParser сам Trim('*')
+          string pointsBlob = bodyNoWs.Substring(firstStar, lastStar - firstStar + 1);
+          model.PointsSourse = pointsBlob;
+          LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
+
+          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+
+          // Поднимем ошибки парсера точек
+          if (pointErrors?.Count > 0)
+          {
+            foreach (var error in pointErrors)
+            {
+              error.SourceLineNumber = numberLine;
+              error.Command = $"{commandNumber} {mnemonic}";
+              model.Errors.Add(error);
+              LoggerUtility.LogError(
+                $"При парсинге точек команды {commandNumber} {mnemonic} произошла ошибка: {error.Description} (строка {error.SourceLineNumber}).");
+            }
+          }
+
+          // Проверим, что схема непуста (есть хотя бы одна точка)
+          if (scheme == null || scheme.IsEmpty())
+          {
+            LoggerUtility.LogWarning($"Не найдено ни одной точки (строка {numberLine}): {commandNumber} {mnemonic}");
+            model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          }
+          else
+          {
+            model.Scheme = scheme; // ← просто присваиваем схему в модель
+            LoggerUtility.LogInformation(
+              $"Схема распознана: цепей={scheme.GroupModels?.Count ?? 0}, частей={scheme.CountParts()}, точек={scheme.CountPoints()}");
+          }
+
+          // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
+          int idxStarInFirstLine = remainder.IndexOf('*');
+          remainder = idxStarInFirstLine >= 0 ? remainder[..idxStarInFirstLine].Trim() : remainder.Trim();
+        }
+        else
+        {
+          // Во всём теле команды не нашли пары '*...*' → считаем, что точек нет
+          LoggerUtility.LogWarning($"Во всём теле команды не найден блок точек '*...*' (строка {numberLine}): {commandNumber} {mnemonic}");
+          model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        }
+
+        if (!string.IsNullOrEmpty(remainder))
+        {
+          model.UnparsedParameters = "! Не распознанные параметры: ";
+          model.UnparsedParameters += remainder;
+          model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
+        }
+
+        // Валидация
+        if (string.IsNullOrWhiteSpace(lowerLimitResistance) && string.IsNullOrWhiteSpace(higherLimitResistance) && string.IsNullOrWhiteSpace(time))
+        {
+          LoggerUtility.LogError($"Не удалось распознать параметры в строке: '{remainder}' (строка {numberLine})");
+          model.Errors.Add(KsErrors.CannotParseParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
+        }
+
+        AllowedKeysAttribute.ValidateKeysAndAttachErrors(model);
+
+        LoggerUtility.LogInformation($"Завершён парсинг команды: {commandNumber} {mnemonic}");
+
+        return model;
       }
-
-      if (!string.IsNullOrEmpty(remainder))
-      {
-        model.UnparsedParameters = "! Не распознанные параметры: ";
-        model.UnparsedParameters += remainder;
-        model.Errors.Add(GeneralErrors.UnrecognizedParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
-      }
-
-      // Валидация
-      if (string.IsNullOrWhiteSpace(lowerLimitResistance) && string.IsNullOrWhiteSpace(higherLimitResistance) && string.IsNullOrWhiteSpace(time))
-      {
-        LoggerUtility.LogError($"Не удалось распознать параметры в строке: '{remainder}' (строка {numberLine})");
-        model.Errors.Add(KsErrors.CannotParseParameters(remainder, numberLine, $"{commandNumber} {mnemonic}"));
-      }
-
-      AllowedKeysAttribute.ValidateKeysAndAttachErrors(model);
-
-      LoggerUtility.LogInformation($"Завершён парсинг команды: {commandNumber} {mnemonic}");
-
-      return model;
     }
 
     public static bool HasInvalidParameterOrder(string firstLine, List<string> algorithmKeys, string? resistanceStart, string? time, out string errorDescription)
