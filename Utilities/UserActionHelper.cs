@@ -72,7 +72,7 @@ namespace Utilities
         if (messageService == null)
           break;
 
-        var action = await messageService.WaitUserActionAsync();
+        var action = await messageService.WaitUserActionAsync(loop);
         ApplyButtonMode(messageService, onlyExit: true);
 
         if (action == UserAction.None)
@@ -122,7 +122,7 @@ namespace Utilities
           next = false;
         }
 
-        var action = await messageService.WaitUserActionAsync();
+        var action = await messageService.WaitUserActionAsync(loop);
         ApplyButtonMode(messageService, onlyExit: true);
 
         if (action == UserAction.None)

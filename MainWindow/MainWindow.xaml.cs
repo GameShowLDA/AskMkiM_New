@@ -88,15 +88,13 @@ namespace MainWindowProgram
     {
       var lifecycle = new ApplicationLifecycleManager();
       lifecycle.Initialize(this, _usbServices, _statusBarViewModel);
+
       new CommandLineParser(_usbServices).ProcessCommandLineArgs();
       ApplicationInitializer applicationInitializer = new ApplicationInitializer(messageHandler = new(_infoBlock));
 
       try
       {
-        await Task.Run(async () =>
-        {
-          await applicationInitializer.InitializeAsync();
-        });
+        applicationInitializer.SubscribeToMessageEvents();
 
         await this.Dispatcher.InvokeAsync(() =>
         {

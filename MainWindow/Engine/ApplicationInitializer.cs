@@ -27,77 +27,10 @@ namespace MainWindowProgram.Engine
     /// <summary>
     /// Запускает полную процедуру инициализации приложения.
     /// </summary>
-    public async Task InitializeAsync()
+    public void SubscribeToMessageEvents()
     {
-      CheckStatusProgram();
-      await StartSettingsAsync();
-
-    }
-
-    /// <summary>
-    /// Проверяет, запущен ли уже экземпляр приложения, и предотвращает запуск нескольких экземпляров.
-    /// </summary>
-    private void CheckStatusProgram()
-    {
-      bool isNewInstance;
-      var mutex = new Mutex(true, "AxionHolding", out isNewInstance);
-
-      if (!isNewInstance)
-      {
-        MessageBox.Show("Вы не можете запускать несколько экземпляров от Axion Holding. Это реализовано, чтобы избежать перегрузку оборудования АСК-МКИ-М!",
-            "ВНИМАНИЕ!", MessageBoxButton.OK, MessageBoxImage.Information);
-        LogWarning("Попытка запустить несколько экземпляров.");
-        Application.Current.Shutdown();
-      }
-    }
-
-    /// <summary>
-    /// Выполняет асинхронную настройку приложения, загружает настройки темы и регистрирует обработчики событий для сообщений.
-    /// </summary>
-    private async Task StartSettingsAsync()
-    {
-      try
-      {
-        await DataBaseConfig.InitializeDB();
-
-        var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
-        var executionTask = new DataBaseConfiguration.Services.Settings.ExecutionService().GetExecutionAsync();
-
-      
-        if (protocolTask.Result != null)
-        {
-          await ProtocolConfig.SetProtocolModel(protocolTask.Result);
-          ProtocolModel.SetTemplate(protocolTask.Result.CleanTextProtocol);
-          ProtocolModel.SetErrorsTemplate(protocolTask.Result.CleanTextErrorsProtocol);
-        }
-
-        if (executionTask.Result != null)
-        {
-          await ExecutionConfig.SetExecutionModel(executionTask.Result);
-        }
-
-        ProtocolConfig.SaveProtocolEvent += async (model) =>
-        {
-          var service = new DataBaseConfiguration.Services.Settings.ProtocolService();
-          await service.SaveProtocolAsync(model);
-          ProtocolModel.SetTemplate(model.CleanTextProtocol);
-          ProtocolModel.SetErrorsTemplate(model.CleanTextErrorsProtocol);
-        };
-
-        ExecutionConfig.SaveExecutionEvent += async (model) =>
-        {
-          var service = new DataBaseConfiguration.Services.Settings.ExecutionService();
-          await service.SaveExecutionAsync(model);
-        };
-
-      }
-      catch (Exception ex)
-      {
-        LogException(ex);
-      }
-
       EventAggregator.Subscribe<Error>(e =>
-        messageHandler.SetErrorMessage(e.Text, e.ClearPrevious));
+         messageHandler.SetErrorMessage(e.Text, e.ClearPrevious));
 
       EventAggregator.Subscribe<Warning>(e =>
         messageHandler.SetWarningMessage(e.Text, e.ClearPrevious));
@@ -107,8 +40,6 @@ namespace MainWindowProgram.Engine
 
       EventAggregator.Subscribe<Clear>(_ =>
         messageHandler.ClearMessage());
-
-      LogInformation("Настройки инициализированы.");
     }
   }
 }

@@ -1,10 +1,12 @@
-﻿
-using DTO.Device.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using DTO.Service;
-using global::NewCore.Device;
-using global::NewCore.Function.GPT.Command;
+using NewCore.Device;
+using NewCore.Function.GPT.Command;
 using static DTO.Enum.DeviceEnums;
 using static global::NewCore.Function.GPT.Command.ManualCommandManager;
+using static Utilities.LoggerUtility;
+using static AppConfiguration.Execution.ExecutionConfig;
+
 
 namespace NewCore.Function.GPT.Data
 {
@@ -55,6 +57,14 @@ namespace NewCore.Function.GPT.Data
       if (_getFrequency() == frequency)
         return (true, string.Empty);
 
+      if (await GetIsIdleModeEnabled())
+      {
+        _setFrequency(frequency);
+        LogInformation($"{nameof(SetFrequencyAsync)}: Устройство в Idle Mode. Пропускаем установку.", isDeviceLog: true);
+        return (true, string.Empty);
+      }
+
+
       try
       {
         await Task.Delay(_delay);
@@ -97,6 +107,12 @@ namespace NewCore.Function.GPT.Data
     /// </summary>
     public async Task<int> GetFrequencyAsync()
     {
+      if (await GetIsIdleModeEnabled())
+      {
+        LogInformation($"{nameof(GetFrequencyAsync)}: Устройство в Idle Mode. Пропускаем установку.", isDeviceLog: true);
+        return (_getFrequency());
+      }
+
       try
       {
         var query = $"{ManualCommandManager.GetCommandSyntax(ManualCommand.MANU_ACW_FREQUENCY)} ?";

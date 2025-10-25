@@ -180,7 +180,7 @@ namespace UI.Components.ProtocolListBox
       return;
     }
 
-    public Task<IUserMessageService.UserAction> WaitUserActionAsync()
+    public Task<IUserMessageService.UserAction> WaitUserActionAsync(bool loop = false)
     {
       return null;
     }

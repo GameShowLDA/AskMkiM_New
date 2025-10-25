@@ -1,15 +1,16 @@
-﻿using System.Runtime.InteropServices;
-using System.Windows;
-using AppConfiguration;
+﻿using AppConfiguration;
 using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
 using ConsoleUI.ConsoleLogic;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.Breakdown;
 using EventCore.Adapters;
+using MainWindowProgram.Init;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewCore.Device;
+using System.Runtime.InteropServices;
+using System.Windows;
 using UI.Theme;
 using static Utilities.LoggerUtility;
 
@@ -21,7 +22,6 @@ namespace MainWindowProgram
   /// </summary>
   public partial class App : Application
   {
-    public static IHost AppHost { get; private set; }
     [DllImport("kernel32.dll")] private static extern IntPtr GetConsoleWindow();
     [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
@@ -47,21 +47,18 @@ namespace MainWindowProgram
     /// <param name="e"></param>
     protected override async void OnStartup(StartupEventArgs e)
     {
-      await InitializeTheme();
+      SplashScreenManager.ShowSplash();
+
+      await Task.Run(async () =>
+      {
+        await PreStartupInitializer.Initialize();
+        await InitializeTheme();
+      });
 
       base.OnStartup(e);
 
       CommandLineArgs = e.Args;
       Console.SetOut(new ConsoleRedirector());
-
-      var splashWindow = new SplashWindow();
-      await Task.Run(() =>
-      {
-        Current.Dispatcher.InvokeAsync(() =>
-        {
-          splashWindow.Show();
-        });
-      });
 
       try
       {
@@ -72,33 +69,25 @@ namespace MainWindowProgram
 
         await mainWindow.InitializeAsync();
 
-        AppHost = Host.CreateDefaultBuilder()
-          .ConfigureServices(svc =>
-          {
-            svc.AddSingleton<IBreakdownTester, GPT79904>();
-            svc.AddSingleton<BreakdownTesterServices>();
-          }).Build();
+        await SplashScreenManager.CloseSplashAsync();
 
-        ServiceLocator.Initialize(AppHost);
-        var chassisNumber = new DataBaseConfiguration.Services.Device.ChassisManagerServices().GetAll().FirstOrDefault();
-        try
-        {
-          var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
-        }
-        catch
-        {
-        }
-
-        await splashWindow.WaitForCloseAsync();
 
         SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_DISPLAY_REQUIRED);
         mainWindow.Visibility = Visibility.Visible;
+
+
+        Application.Current.MainWindow = mainWindow;
+
+        // гарантируем, что окно окажется поверх всех
+        mainWindow.Topmost = true;          // временно делаем поверх всех
+        mainWindow.Activate();              // активируем фокус
+        mainWindow.Focus();                 // переносим фокус внутрь
+
+        // отслеживаем закрытие
         mainWindow.Closed += (s, _) =>
         {
           SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
         };
-
-        Application.Current.MainWindow = mainWindow;
       }
       catch (Exception ex)
       {
