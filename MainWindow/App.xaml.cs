@@ -2,6 +2,7 @@
 using System.Windows;
 using AppConfiguration;
 using AppConfiguration.Parameter;
+using AppConfiguration.Protocol;
 using ConsoleUI.ConsoleLogic;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.Breakdown;

@@ -44,6 +44,7 @@ namespace AppConfiguration.Base
     {
       await ParameterConfig.SetLanguage(executionModel.Language);
       await ParameterConfig.SetTheme(executionModel.Theme);
+      await ParameterConfig.SetSyntaxHighlighting(executionModel.UseSyntaxHighlighting);
     }
   }
 }

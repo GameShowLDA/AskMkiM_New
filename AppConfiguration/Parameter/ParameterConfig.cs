@@ -107,6 +107,7 @@ namespace AppConfiguration.Parameter
       SettingsParameterModel executionModel = new SettingsParameterModel();
       executionModel.Language = ParameterModel.Language;
       executionModel.Theme = ParameterModel.Theme;
+      executionModel.UseSyntaxHighlighting = ParameterModel.UseSyntaxHighlighting;
 
       ParameterFileManager executionFileManager = new ParameterFileManager(FileLocations.ParameterConfigPath);
       await executionFileManager.RewriteFileAsync(executionModel);

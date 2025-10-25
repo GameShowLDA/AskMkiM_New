@@ -58,8 +58,6 @@ namespace MainWindowProgram.Engine
     {
       try
       {
-        //var executionTask = ExecutionSettingsManager.ReadExecutionModeAsync();
-        //var protocolTask = ProtocolSettingsManager.ReadProtocolModeAsync();
         await DataBaseConfig.InitializeDB();
 
         var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
