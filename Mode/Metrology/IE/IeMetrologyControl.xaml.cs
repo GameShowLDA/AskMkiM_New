@@ -11,7 +11,7 @@ using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.IE
@@ -113,7 +113,7 @@ namespace Mode.Metrology.IE
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения ёмкости"));
-        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.IE, param);
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.IE, param);
 
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? await fastMeter.CapacitanceManager.MeasureCapacitanceAsync(param, protocolUI) : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? param : new Random().Next((int)LowerBound - 100, (int)UpperBound + 100);
         Measurements.Add(result);
@@ -127,7 +127,7 @@ namespace Mode.Metrology.IE
       public override async Task FinalizeMeasurement(IUserMessageService messageService)
       {
         await base.FinalizeMeasurement(messageService);
-        await PrintResult(messageService, MetrologyTypeCommand.IE);
+        await PrintResult(messageService, MeasurementTypeCommand.IE);
       }
     }
   }

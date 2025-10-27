@@ -1,14 +1,14 @@
-﻿using static DTO.Enum.Metrology;
+﻿using static DTO.Enum.Measurement;
 
 namespace UI.Components.MeasurementErrorCard
 {
   public class MeasurementErrorCardEventArgs : EventArgs
   {
-    public MetrologyTypeCommand TypeCommand { get; }
+    public MeasurementTypeCommand TypeCommand { get; }
     public double PercentageValue { get; }
     public double NumericValue { get; }
 
-    public MeasurementErrorCardEventArgs(MetrologyTypeCommand typeCommand, double percentageValue, double numericValue)
+    public MeasurementErrorCardEventArgs(MeasurementTypeCommand typeCommand, double percentageValue, double numericValue)
     {
       TypeCommand = typeCommand;
       PercentageValue = percentageValue;

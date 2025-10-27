@@ -263,7 +263,7 @@ namespace Mode.Metrology.MeasurementSystem
       throw new InvalidOperationException($"Устройство с ролью {role} (index: {index}) не найдено или не реализует интерфейс {typeof(T).Name}.");
     }
 
-    public virtual async Task PrintResult(IUserMessageService messageService, DTO.Enum.Metrology.MetrologyTypeCommand command)
+    public virtual async Task PrintResult(IUserMessageService messageService, DTO.Enum.Measurement.MeasurementTypeCommand command)
     {
       if (Measurements.Count < 1)
         return;

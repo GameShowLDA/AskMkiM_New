@@ -12,7 +12,7 @@ using Mode.Metrology.MeasurementSystem;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.PI
@@ -140,7 +140,7 @@ namespace Mode.Metrology.PI
         var meterDevice = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции", headerColor: ShowMessageModel.SuccessMessage.TitleColor));
         
-        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PI_ACW, param);
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PI_ACW, param);
         await meterDevice.AcwManger.Measure.MeasureAsync(param, userMessageService: protocolUI);
 
         var result = await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -174,7 +174,7 @@ namespace Mode.Metrology.PI
       public override async Task FinalizeMeasurement(IUserMessageService messageService)
       {
         await base.FinalizeMeasurement(messageService);
-        await PrintResult(messageService, MetrologyTypeCommand.PI_ACW);
+        await PrintResult(messageService, MeasurementTypeCommand.PI_ACW);
       }
     }
   }

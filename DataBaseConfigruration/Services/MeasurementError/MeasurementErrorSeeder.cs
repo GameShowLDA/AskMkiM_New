@@ -2,7 +2,7 @@
 using DataBaseConfiguration.Context;
 using DTO.Attributes.Attributes;
 using DTO.Base.Models.MeasurementError;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 
 namespace DataBaseConfiguration.Services.MeasurementError
 {
@@ -24,9 +24,9 @@ namespace DataBaseConfiguration.Services.MeasurementError
       var defaults = new List<MeasurementErrorEntity>();
 
       // Перебираем все значения перечисления TypeCommand
-      foreach (var type in Enum.GetValues(typeof(MetrologyTypeCommand)).Cast<MetrologyTypeCommand>())
+      foreach (var type in Enum.GetValues(typeof(MeasurementTypeCommand)).Cast<MeasurementTypeCommand>())
       {
-        var member = typeof(MetrologyTypeCommand).GetMember(type.ToString()).FirstOrDefault();
+        var member = typeof(MeasurementTypeCommand).GetMember(type.ToString()).FirstOrDefault();
         var attribute = member?.GetCustomAttribute<CommandMeasurementAttribute>();
 
         if (attribute != null)

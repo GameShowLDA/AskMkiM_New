@@ -1,4 +1,4 @@
-﻿using static DTO.Enum.Metrology;
+﻿using static DTO.Enum.Measurement;
 
 namespace DTO.Base.Models.MeasurementError
 {
@@ -11,7 +11,7 @@ namespace DTO.Base.Models.MeasurementError
     public int Id { get; set; }
 
     /// <summary>Тип команды, для которой задаются погрешности.</summary>
-    public MetrologyTypeCommand Type { get; set; }
+    public MeasurementTypeCommand Type { get; set; }
 
     /// <summary>Коллекция диапазонов погрешностей (один-ко-многим).</summary>
     public List<MeasurementErrorRangeEntity> Ranges { get; set; } = new();
@@ -20,6 +20,6 @@ namespace DTO.Base.Models.MeasurementError
     public MeasurementErrorEntity() { }
 
     /// <summary>Удобный конструктор с указанием типа команды.</summary>
-    public MeasurementErrorEntity(MetrologyTypeCommand type) => Type = type;
+    public MeasurementErrorEntity(MeasurementTypeCommand type) => Type = type;
   }
 }

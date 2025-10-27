@@ -7,57 +7,57 @@ using DTO.Attributes;
 
 namespace DTO.Enum
 {
-  public class Metrology
+  public class Measurement
   {
     /// <summary>
     /// Перечисление, представляющее различные типы команд в системе.
     /// </summary>
-    public enum MetrologyTypeCommand
+    public enum MeasurementTypeCommand
     {
-      [CommandDisplayInfo("КС", "Ом")]
+      [CommandDisplayInfo("КС", "Ом", 1, 10_000_000)]
       /// <summary>
       /// Тип команды KC.
       /// </summary>
       KC,
 
-      [CommandDisplayInfo("ПР", "Ом")]
+      [CommandDisplayInfo("ПР", "Ом", 1, 10_000_000)]
       /// <summary>
       /// Тип команды PR.
       /// </summary>
       PR,
 
-      [CommandDisplayInfo("СИ", "МОм")]
+      [CommandDisplayInfo("СИ", "МОм", 50, 1000)]
       /// <summary>
       /// Тип команды CI.
       /// </summary>
       CI,
 
-      [CommandDisplayInfo("ИЕ", "нФ")]
+      [CommandDisplayInfo("ИЕ", "нФ", 0.2, 100000)]
       /// <summary>
       /// Тип команды IE.
       /// </summary>
       IE,
 
-      [CommandDisplayInfo("КН_ACW", "В")]
+      [CommandDisplayInfo("КН_ACW", "В", 0.1, 250)]
       /// <summary>
       /// Тип команды KN переменным током.
       /// </summary>
       KN_ACW,
 
-      [CommandDisplayInfo("КН_DCW", "В")]
+      [CommandDisplayInfo("КН_DCW", "В", 0.1, 250)]
 
       /// <summary>
       /// Тип команды KN постоянным током.
       /// </summary>
       KN_DCW,
 
-      [CommandDisplayInfo("ПИ_ACW", "В")]
+      [CommandDisplayInfo("ПИ_ACW", "В", 50, 700)]
       /// <summary>
       /// Тип команды PI переменным током.
       /// </summary>
       PI_ACW,
 
-      [CommandDisplayInfo("ПИ_DCW", "В")]
+      [CommandDisplayInfo("ПИ_DCW", "В", 50, 1000)]
       /// <summary>
       /// Тип команды PI постоянным током.
       /// </summary>

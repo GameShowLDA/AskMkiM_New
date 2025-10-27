@@ -14,7 +14,7 @@ using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.CI
@@ -130,7 +130,7 @@ namespace Mode.Metrology.CI
       {
         var meterDevice = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции"));
-        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.CI, param);
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.CI, param);
 
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? await meterDevice.IrManger.Measure.MeasureAsync(param, LowerBound, UpperBound, protocolUI) : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? param : new Random().Next((int)LowerBound - 100, (int)UpperBound + 100);
         Measurements.Add(result);
@@ -145,7 +145,7 @@ namespace Mode.Metrology.CI
       public override async Task FinalizeMeasurement(IUserMessageService messageService)
       {
         await base.FinalizeMeasurement(messageService);
-        await PrintResult(messageService, MetrologyTypeCommand.CI);
+        await PrintResult(messageService, MeasurementTypeCommand.CI);
       }
     }
   }

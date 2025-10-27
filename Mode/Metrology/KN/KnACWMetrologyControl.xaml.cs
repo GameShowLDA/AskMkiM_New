@@ -13,7 +13,7 @@ using Mode.Metrology.PI;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.KN
@@ -112,7 +112,7 @@ namespace Mode.Metrology.KN
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения напряжения(ACW)"));
 
-        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.KN_ACW, param);
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.KN_ACW, param);
         await fastMeter.AcVoltageManager.MeasureACVoltageAsync(param, userMessageService: protocolUI);
 
         var result = await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -154,7 +154,7 @@ namespace Mode.Metrology.KN
       public override async Task FinalizeMeasurement(IUserMessageService messageService)
       {
         await base.FinalizeMeasurement(messageService);
-        await PrintResult(messageService, MetrologyTypeCommand.CI);
+        await PrintResult(messageService, MeasurementTypeCommand.CI);
       }
     }
 
