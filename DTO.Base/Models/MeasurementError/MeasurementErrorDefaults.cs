@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 
 namespace DTO.Base.Models.MeasurementError
 {
@@ -22,7 +22,7 @@ namespace DTO.Base.Models.MeasurementError
     /// </summary>
     public static readonly List<MeasurementErrorEntity> DefaultErrors = new()
     {
-      new MeasurementErrorEntity(MetrologyTypeCommand.KC)
+      new MeasurementErrorEntity(MeasurementTypeCommand.KC)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -31,7 +31,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.IE)
+      new MeasurementErrorEntity(MeasurementTypeCommand.IE)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -39,7 +39,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.PR)
+      new MeasurementErrorEntity(MeasurementTypeCommand.PR)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -47,7 +47,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.CI)
+      new MeasurementErrorEntity(MeasurementTypeCommand.CI)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -55,7 +55,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.KN_DCW)
+      new MeasurementErrorEntity(MeasurementTypeCommand.KN_DCW)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -63,7 +63,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.KN_ACW)
+      new MeasurementErrorEntity(MeasurementTypeCommand.KN_ACW)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -71,7 +71,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.PI_DCW)
+      new MeasurementErrorEntity(MeasurementTypeCommand.PI_DCW)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -79,7 +79,7 @@ namespace DTO.Base.Models.MeasurementError
         }
       },
 
-      new MeasurementErrorEntity(MetrologyTypeCommand.PI_ACW)
+      new MeasurementErrorEntity(MeasurementTypeCommand.PI_ACW)
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
@@ -93,7 +93,7 @@ namespace DTO.Base.Models.MeasurementError
     /// </summary>
     /// <param name="type">Тип команды метрологии.</param>
     /// <returns>Экземпляр <see cref="MeasurementErrorEntity"/> или <c>null</c>, если не найден.</returns>
-    public static MeasurementErrorEntity? GetDefaultsFor(MetrologyTypeCommand type)
+    public static MeasurementErrorEntity? GetDefaultsFor(MeasurementTypeCommand type)
     {
       return DefaultErrors.FirstOrDefault(e => e.Type == type);
     }
@@ -119,7 +119,7 @@ namespace DTO.Base.Models.MeasurementError
     ///   <item><c>Delta</c> — рассчитанная погрешность.</item>
     /// </list>
     /// </returns>
-    public static (double LowerBound, double UpperBound, double Delta) CalculateToleranceRange(MetrologyTypeCommand type, double measuredValue)
+    public static (double LowerBound, double UpperBound, double Delta) CalculateToleranceRange(MeasurementTypeCommand type, double measuredValue)
     {
       var config = GetDefaultsFor(type);
       if (config == null)

@@ -1,10 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 using DTO.Service;
 using EventCore.Adapters;
 using EventCore.Events;
 using Message;
+using System.Windows;
+using System.Windows.Input;
 using WindowsInput;
 using static AppConfiguration.Execution.ExecutionConfig;
 using static AppConfiguration.Protocol.ProtocolConfig;
@@ -29,6 +29,8 @@ namespace UI.Controls.ProtocolNew
     static public event Action<bool> StartProcessing;
 
     bool isExit = false;
+
+    string processName = string.Empty;
 
     #region Проверка токена.
 
@@ -96,6 +98,7 @@ namespace UI.Controls.ProtocolNew
     internal async Task StartAsync(StartDelegate startDelegate, StopDelegate stop, string name, bool isRepeatEnabled, PreActionDelegate preActionDelegate = null, bool checkPower = true)
     {
       isExit = false;
+      processName = name;
 
       await ProtocolSelfCheck.ClearAllMessagesAsync();
       if (!await GetIsIdleModeEnabled() && !await GetIsActivePower() && checkPower)
@@ -168,13 +171,13 @@ namespace UI.Controls.ProtocolNew
       }
 
       isExit = true;
-      LogInformation($"Завершение \"{name}\"");
+      LogInformation($"Завершение \"{processName}\"");
 
-      await CancelProcessTaskAsync(stopDelegate, name);
+      await CancelProcessTaskAsync(stopDelegate, processName);
       ResetState();
       await ResetSystemAsync();
 
-      await HandleProtocolActionsAsync();
+      await HandleProtocolActionsAsync(processName);
       ProtocolSelfCheck.ShowOnlyStartButton();
       await DisplayCompletionMessage();
 
@@ -587,17 +590,17 @@ namespace UI.Controls.ProtocolNew
     /// <summary>
     /// Обрабатывает действия, связанные с протоколом, такие как сохранение и печать.
     /// </summary>
-    private async Task HandleProtocolActionsAsync()
+    private async Task HandleProtocolActionsAsync(string name)
     {
       if (await GetSaveProtocol())
       {
-        await ProtocolSelfCheck.SaveProtocolAsync();
+        await ProtocolSelfCheck.SaveProtocolAsync(name);
       }
 
-      // if (await GetPrintProtocol())
-      // {
-      //   ProtocolSelfCheck.PrintProtocol(ProtocolSelfCheck.GetShowMessageModels());
-      // }
+      if (await GetPrintProtocol())
+      {
+        ProtocolSelfCheck.PrintProtocol(ProtocolSelfCheck.GetShowMessageModels());
+      }
 
       await SetIsLocked(false);
     }

@@ -15,7 +15,7 @@ using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.DeviceEnums;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
 
@@ -152,7 +152,7 @@ namespace Mode.Metrology.PR
         var data = SelectOptimalCurrentAndVoltage(param, mint);
         double currentGenerial = (data.DecimalCurrent / 1000.0) + data.IntegerCurrent;
 
-        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PR, param);
+        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PR, param);
 
         var voltage = await meterDevice.DcVoltageManager.MeasureDCVoltageAsync(param * (currentGenerial / 1000), protocolUI);
         double fakeCurrent = GetInterpolatedCurrent(param, mint);

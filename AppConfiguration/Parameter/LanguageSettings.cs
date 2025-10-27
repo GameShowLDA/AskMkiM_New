@@ -13,7 +13,7 @@
     /// </summary>
     public static async Task InitializeAsync()
     {
-      var langItem = await ParameterConfig.GetLanguage();
+      var langItem = await UserInterfaceConfig.GetLanguage();
       if (!string.IsNullOrWhiteSpace(langItem))
       {
         _currentLanguage = langItem.ToLower();

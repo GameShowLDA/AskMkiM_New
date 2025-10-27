@@ -40,7 +40,7 @@ namespace UI.Controls.EmptyWorkspace
       // тикаем каждую секунду
       _timer = new DispatcherTimer(DispatcherPriority.Background)
       {
-        Interval = TimeSpan.FromSeconds(1)
+        Interval = TimeSpan.FromMilliseconds(100)
       };
       _timer.Tick += (_, __) => CurrentDateTime = DateTime.Now;
       _timer.Start();

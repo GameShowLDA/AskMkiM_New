@@ -46,8 +46,8 @@
                         Margin="10,0,0,0"
                         Height="30" 
                         CheckThickness="4"
-                        CircleBackground ="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
-                        CircleBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                        CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                        CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
                         />
 
                     <Icons:ErrorIconControlV2 
@@ -57,19 +57,18 @@
                          Height="30" 
                            Margin="10,0,0,0"
                            CrossThickness="4"
-                         CircleBackground ="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
-                         CircleBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                         CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                         CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
                          />
-
 
                     <Icons:ArrowButton x:Name="ToggleSettingsButton" 
                            Grid.Column="0"
                            HorizontalAlignment="Right"
                            Width="30" Height="30"
-                           ButtonBackground="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
-                           ButtonBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
-                           ArrowBrush="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
-                           ArrowHoverBrush="{StaticResource SettingsInteractivePressedSolidColorBrush}"
+                           ButtonBackground="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                           ButtonBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                           ArrowBrush="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                           ArrowHoverBrush="{DynamicResource SettingsInteractivePressedSolidColorBrush}"
                            VerticalAlignment="Center"/>
                 </Grid>
             </Grid>

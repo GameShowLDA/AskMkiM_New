@@ -358,7 +358,7 @@ namespace UI.Controls.ProtocolNew
 
     private async Task CheckSyntaxHighlighting(ShowMessageModel showMessageModel)
     {
-      if (!GetSyntaxHighlighting())
+      if (!AppConfiguration.Parameter.UserInterfaceConfig.GetSyntaxHighlighting())
       {
         showMessageModel.HeaderColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
         showMessageModel.MessageColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
@@ -394,10 +394,10 @@ namespace UI.Controls.ProtocolNew
     /// <summary>
     /// Сохраняет протокол в файл с автоматически сгенерированным именем в фоновом режиме асинхронно.
     /// </summary>
-    public async Task SaveProtocolAsync()
+    public async Task SaveProtocolAsync(string name)
     {
       string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss", CultureInfo.CurrentCulture);
-      string filename = $"KC_{dateTime}.txt";
+      string filename = $"{name}_{dateTime}.txt";
       string fullPath = Path.Combine($"..\\{FileLocations.DataSaveDirectory}", filename);
       if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
       {
@@ -480,11 +480,27 @@ namespace UI.Controls.ProtocolNew
       MessageBoxCustom.Show("В будущем добавить сюда реализацию выбора", image: MessageBoxImage.Error);
       return Task.FromResult(true);
     }
-    public async Task<IUserMessageService.UserAction> WaitUserActionAsync()
+
+    /// <summary>
+    /// Асинхронно ожидает действие пользователя после возникновения ошибки или остановки.
+    /// </summary>
+    /// <remarks>
+    /// Метод создаёт новый <see cref="TaskCompletionSource{TResult}"/> для ожидания выбора пользователя 
+    /// (например, продолжить, пропустить или остановить выполнение).  
+    /// Если в конфигурации установлено свойство <c>IsStopOnErrorEnabled</c>,  
+    /// интерфейс переходит в режим паузы — скрываются все кнопки и отображаются кнопки управления паузой.  
+    /// После выбора действия пользователем результат возвращается как значение перечисления 
+    /// <see cref="IUserMessageService.UserAction"/>.
+    /// </remarks>
+    /// <returns>
+    /// Задача, представляющая ожидаемое действие пользователя.  
+    /// Если режим остановки на ошибке отключён, возвращается <see cref="IUserMessageService.UserAction.None"/>.
+    /// </returns>
+    public async Task<IUserMessageService.UserAction> WaitUserActionAsync(bool loop = false)
     {
       _userActionTcs = new TaskCompletionSource<IUserMessageService.UserAction>();
 
-      if (await AppConfiguration.Execution.ExecutionConfig.GetIsStopOnErrorEnabled())
+      if (await AppConfiguration.Execution.ExecutionConfig.GetIsStopOnErrorEnabled() || loop)
       {
 
         SetNonVisibleAllButton();

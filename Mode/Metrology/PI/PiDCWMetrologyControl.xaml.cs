@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using AppConfiguration.Error.Device.Breakdown;
+﻿using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
@@ -8,10 +6,12 @@ using DTO.Device.Breakdown;
 using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
+using System.Windows;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.PI
@@ -136,16 +136,10 @@ namespace Mode.Metrology.PI
         var meterDevice = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции", headerColor: ShowMessageModel.SuccessMessage.TitleColor));
 
-        // TODO : позже прописать погрешность в настрйоках
-        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PI_DCW, param);
-
-
-        // double firstNorm = param - ((param / 100.0 * GetPercentageError(TypeCommand.CI)) + GetNumericError(TypeCommand.CI));
-        // double lastNorm = param + (param / 100.0 * GetPercentageError(TypeCommand.CI)) + GetNumericError(TypeCommand.CI);
-
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PI_DCW, param);
         await meterDevice.DcwManger.Measure.MeasureAsync();
 
-        string result = await Application.Current.Dispatcher.InvokeAsync(() =>
+        var result = await Application.Current.Dispatcher.InvokeAsync(() =>
         {
           VoltageValue chassisManagerWindow = new VoltageValue();
           protocolUI.Effect = new System.Windows.Media.Effects.BlurEffect();
@@ -159,28 +153,16 @@ namespace Mode.Metrology.PI
           }
           else
           {
-            return string.Empty;
+            return -1;
           }
         });
 
-        await protocolUI.ShowMessageAsync(new ShowMessageModel($"\tДиапазон допускаемых значений", null, $"{firstNorm:F2}-{lastNorm:F2}", ShowMessageModel.SuccessMessage.TitleColor));
-        if (!string.IsNullOrEmpty(result) && double.TryParse(result, out var value))
-        {
-          double pog = value - param;
+        var answer = (result >= LowerBound && result <= UpperBound) ? false : true;
+        Measurements.Add(result);
 
-          var answer = (value >= firstNorm && value <= lastNorm) ? false : true; ;
-
-          ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения напряжения", null, $"{result:F2} [{(!answer ? ShowMessageModel.ErrorMessage.Title : ShowMessageModel.ErrorMessage.Item1)}]");
-          showMessageModel.MessageColor = (value >= firstNorm && value <= lastNorm) ? ShowMessageModel.SuccessMessage.TitleColor : ShowMessageModel.ErrorMessage.TitleColor;
-          showMessageModel.ExecutionError = (value >= firstNorm && value <= lastNorm) ? false : true;
-          showMessageModel.CanBeDeleted = showMessageModel.ExecutionError;
-          await protocolUI.ShowMessageAsync(showMessageModel);
-          await protocolUI.ShowMessageAsync(new ShowMessageModel("\tПогрешность измерения", message: $"{pog}В [{(!answer ? ShowMessageModel.ErrorMessage.Title : ShowMessageModel.ErrorMessage.Item1)}]", messageColor: showMessageModel.MessageColor));
-        }
-        else
-        {
-          await protocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", ShowMessageModel.ErrorMessage.TitleColor, "Некорректно введённое эталонное значение напряжения."));
-        }
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения напряжения", message: $"{result} В", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} В") { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} В", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
 
         return true;
       }
@@ -188,7 +170,7 @@ namespace Mode.Metrology.PI
       public override async Task FinalizeMeasurement(IUserMessageService messageService)
       {
         await base.FinalizeMeasurement(messageService);
-        var breakDown = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        await PrintResult(messageService, MeasurementTypeCommand.PI_DCW);
       }
     }
   }

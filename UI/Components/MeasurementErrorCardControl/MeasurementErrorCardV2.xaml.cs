@@ -4,7 +4,7 @@ using System.Windows.Input;
 using DataBaseConfiguration.Services.MeasurementError;
 using DTO.Base.Models.MeasurementError;
 using Utilities;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 using static Utilities.LoggerUtility;
 
 namespace UI.Components.MeasurementErrorCardControl
@@ -16,7 +16,7 @@ namespace UI.Components.MeasurementErrorCardControl
   public partial class MeasurementErrorCardV2 : UserControl
   {
     private bool _isLoaded = false;
-    private MetrologyTypeCommand _pendingType;
+    private MeasurementTypeCommand _pendingType;
 
     private readonly List<MeasurementErrorRangeEntity> _ranges = new();
 
@@ -26,22 +26,22 @@ namespace UI.Components.MeasurementErrorCardControl
     /// <summary>Флаг наличия несохранённых изменений.</summary>
     public bool HasUnsavedChanges { get; private set; }
 
-    public MetrologyTypeCommand TypeCommand
+    public MeasurementTypeCommand TypeCommand
     {
-      get => (MetrologyTypeCommand)GetValue(TypeCommandProperty);
+      get => (MeasurementTypeCommand)GetValue(TypeCommandProperty);
       set => SetValue(TypeCommandProperty, value);
     }
 
     public static readonly DependencyProperty TypeCommandProperty =
         DependencyProperty.Register(
             nameof(TypeCommand),
-            typeof(MetrologyTypeCommand),
+            typeof(MeasurementTypeCommand),
             typeof(MeasurementErrorCardV2),
-            new PropertyMetadata(MetrologyTypeCommand.KC, OnTypeCommandChanged));
+            new PropertyMetadata(MeasurementTypeCommand.KC, OnTypeCommandChanged));
 
     private static void OnTypeCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      if (d is MeasurementErrorCardV2 card && e.NewValue is MetrologyTypeCommand newType)
+      if (d is MeasurementErrorCardV2 card && e.NewValue is MeasurementTypeCommand newType)
       {
         if (card._isLoaded)
         {
@@ -76,7 +76,7 @@ namespace UI.Components.MeasurementErrorCardControl
     /// <summary>
     /// Загружает данные диапазонов из БД для указанного типа команды.
     /// </summary>
-    private async Task LoadDataForType(MetrologyTypeCommand type)
+    private async Task LoadDataForType(MeasurementTypeCommand type)
     {
       try
       {
@@ -119,7 +119,7 @@ namespace UI.Components.MeasurementErrorCardControl
     /// <summary>
     /// Отображает диапазоны на экране.
     /// </summary>
-    private void DisplayRanges(MetrologyTypeCommand type)
+    private void DisplayRanges(MeasurementTypeCommand type)
     {
       if (RangesContainer == null)
       {
@@ -131,10 +131,10 @@ namespace UI.Components.MeasurementErrorCardControl
 
       string unit = type switch
       {
-        MetrologyTypeCommand.IE => "пФ",
-        MetrologyTypeCommand.KC => "Ом",
-        MetrologyTypeCommand.CI => "Ом",
-        MetrologyTypeCommand.PR => "Ом",
+        MeasurementTypeCommand.IE => "пФ",
+        MeasurementTypeCommand.KC => "Ом",
+        MeasurementTypeCommand.CI => "Ом",
+        MeasurementTypeCommand.PR => "Ом",
         _ => ""
       };
 

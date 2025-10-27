@@ -12,7 +12,6 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontWeight="Bold"
-                   Foreground="{StaticResource MainTitleSolidColorBrush}"
                    FontFamily="{DynamicResource WinstonMedium}"
                    FontSize="14"
                    Cursor="Hand"

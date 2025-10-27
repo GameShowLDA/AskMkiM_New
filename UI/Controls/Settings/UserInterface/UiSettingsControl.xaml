@@ -46,8 +46,8 @@
                      Margin="10,0,0,0"
                      Height="30" 
                      CheckThickness="4"
-                     CircleBackground ="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
-                     CircleBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                     CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                     CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
                      />
 
                     <Icons:ErrorIconControlV2 
@@ -57,8 +57,8 @@
                       Height="30" 
                         Margin="10,0,0,0"
                         CrossThickness="4"
-                      CircleBackground ="{StaticResource SettingsInteractiveBackgroundSolidColorBrush}"
-                      CircleBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
+                      CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                      CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
                       />
 
 
@@ -67,9 +67,9 @@
                         HorizontalAlignment="Right"
                         Width="30" Height="30"
                         ButtonBackground="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
-                        ButtonBorder="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
-                        ArrowBrush="{StaticResource SettingsInteractiveBorderSolidColorBrush}"
-                        ArrowHoverBrush="{StaticResource SettingsInteractivePressedSolidColorBrush}"
+                        ButtonBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                        ArrowBrush="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                        ArrowHoverBrush="{DynamicResource SettingsInteractivePressedSolidColorBrush}"
                         VerticalAlignment="Center"/>
                 </Grid>
             </Grid>
@@ -101,9 +101,17 @@
                     Title="Тема приложения"
                     Description="Выберите тему оформления интерфейса, которая будет использоваться в приложении"
                     DisplayMemberPath="Title"
-                    Visibility="Collapsed"
+                    Visibility="Visible"
                     SelectedValuePath="Key"/>
 
+                <Components:SettingsCard
+                        Title="Подсветка синтаксиса"
+                        Description="Включает или отключает подсветку синтаксиса в редакторе протокола."
+                        IsChecked="{Binding IdleMode, Mode=TwoWay}"
+                        Margin="10,10"
+                        VerticalAlignment="Top"
+                        x:Name="SyntaxHighlighting"/>
+                
             </WrapPanel>
         </Grid>
     </Border>

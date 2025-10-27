@@ -49,11 +49,8 @@ namespace DTO.Service
     /// <summary>
     /// Асинхронно ожидает выбора пользователя (повторить, продолжить, завершить) после сообщения.
     /// </summary>
-    /// <param name="canRetry">Показывать кнопку "Повторить".</param>
-    /// <param name="canContinue">Показывать кнопку "Продолжить".</param>
-    /// <param name="canAbort">Показывать кнопку "Завершить".</param>
     /// <returns>Выбранное пользователем действие.</returns>
-    Task<UserAction> WaitUserActionAsync();
+    Task<UserAction> WaitUserActionAsync(bool loop = false);
 
     public CancellationToken GetCancellationToken();
 

@@ -5,7 +5,7 @@ using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using static DTO.Enum.DeviceEnums;
-using static DTO.Enum.Metrology;
+using static DTO.Enum.Measurement;
 
 namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {
@@ -73,7 +73,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
         await SetCurrentAsync(powerSource, integerPart, decimalPart);
         await ConnectResistorByNumberAsync(relayModule, resistorNumber, messageService);
 
-        var error = ErrorProviderLocator.Provider.GetErrorParameters(MetrologyTypeCommand.PR, resistance);
+        var error = ErrorProviderLocator.Provider.GetErrorParameters(MeasurementTypeCommand.PR, resistance);
 
         double firstNorm = resistance - ((resistance / 100.0 * error.Percent) + error.Numeric);
         double lastNorm = resistance + ((resistance / 100.0 * error.Percent) + error.Numeric);

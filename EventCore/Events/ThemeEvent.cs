@@ -52,5 +52,25 @@ namespace EventCore.Events
         ActiveTheme = activeTheme;
       }
     }
+
+    /// <summary>
+    /// Событие, обозначающее, что флаг подствеки была успешно применена.
+    /// </summary>
+    public class SyntaxHighlighting : IEvent
+    {
+      /// <summary>
+      /// Флаг, отображающий подстветку темы.
+      /// </summary>
+      public bool IsEnabled { get; }
+
+      /// <summary>
+      /// Инициализирует событие подтверждения смены подстветки синтаксиса.
+      /// </summary>
+      /// <param name="enabled">Флаг подстветки синтаксиса.</param>
+      public SyntaxHighlighting(bool enabled)
+      {
+        IsEnabled = enabled;
+      }
+    }
   }
 }

@@ -24,5 +24,8 @@ namespace EventCore.Adapters
     /// <param name="activeTheme">Тема, которая теперь активна.</param>
     public static void RaiseThemeChanged(Theme activeTheme) =>
       EventAggregator.Publish(new ThemeEvent.Changed(activeTheme));
+
+    public static void RaiseSyntaxHighlighting(bool enabled) =>
+      EventAggregator.Publish(new ThemeEvent.SyntaxHighlighting(enabled));
   }
 }

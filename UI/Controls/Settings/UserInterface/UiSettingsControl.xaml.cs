@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using AppConfiguration.Parameter;
+using DTO.SettingsModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using AppConfiguration.Parameter;
-using DTO.SettingsModels;
 using UI.Localization;
 using Utilities.Extensions;
-using static AppConfiguration.Parameter.ParameterConfig;
+using static AppConfiguration.Parameter.UserInterfaceConfig;
+using static EventCore.Events.ThemeEvent;
 
 namespace UI.Controls.Settings.UserInterface
 {
@@ -14,7 +15,7 @@ namespace UI.Controls.Settings.UserInterface
   /// </summary>
   public partial class UiSettingsControl : UserControl
   {
-    SettingsParameterModel _baseParameterModel { get; set; }
+    UserInterfaceModel _baseParameterModel { get; set; }
     private record LangOption(string Key, string Title);
     private record ThemeOption(string Key, string Title);
 
@@ -78,9 +79,11 @@ namespace UI.Controls.Settings.UserInterface
     private async void UiSettingsControl_Loaded(object sender, RoutedEventArgs e)
     {
       _baseParameterModel = await GetParameterModel();
+      DefalultData();
 
       LanguageSelect.ValueChanged += ValueChanged;
       ThemeSelect.ValueChanged += ValueChanged;
+      SyntaxHighlighting.CheckedChanged += (s, ev) => ValueChanged(s, ev);
 
       Success.PreviewMouseDown += Success_PreviewMouseDown;
       Error.PreviewMouseDown += Error_PreviewMouseDown;
@@ -145,12 +148,14 @@ namespace UI.Controls.Settings.UserInterface
       var currentTheme = _baseParameterModel.Theme.ToString();
       ThemeSelect.DefaultValue = currentTheme;
       ThemeSelect.SelectedValue = currentTheme;
+
+      SyntaxHighlighting.IsChecked = _baseParameterModel.UseSyntaxHighlighting;
     }
 
     /// <summary>
     /// Формирует модель параметров из текущих значений элементов UI.
     /// </summary>
-    private SettingsParameterModel GetModel()
+    private UserInterfaceModel GetModel()
     {
       var languageCode =
           LanguageSelect.SelectedValue as string
@@ -160,10 +165,11 @@ namespace UI.Controls.Settings.UserInterface
       var themeValue = ThemeSelect.SelectedValue as string ?? "Dark";
       var parsedTheme = Enum.TryParse<DTO.Enum.ThemeEnums.Theme>(themeValue, out var theme) ? theme : DTO.Enum.ThemeEnums.Theme.Dark;
 
-      return new SettingsParameterModel
+      return new UserInterfaceModel
       {
         Language = languageCode,
-        Theme = parsedTheme
+        Theme = parsedTheme,
+        UseSyntaxHighlighting = SyntaxHighlighting.IsChecked
       };
     }
 
@@ -171,8 +177,9 @@ namespace UI.Controls.Settings.UserInterface
     /// <summary>
     /// Сравнивает две модели параметров.
     /// </summary>
-    private static bool ProtocolEquals(SettingsParameterModel a, SettingsParameterModel b) =>
-      a.Language == b.Language && 
+    private static bool ProtocolEquals(UserInterfaceModel a, UserInterfaceModel b) =>
+      a.Language == b.Language &&
+      a.UseSyntaxHighlighting == b.UseSyntaxHighlighting &&
       b.Theme == a.Theme;
 
     /// <summary>
@@ -185,7 +192,5 @@ namespace UI.Controls.Settings.UserInterface
       ThemeSelect.DefaultValue = e.NewTheme.ToString();
       ThemeSelect.SelectedValue = e.NewTheme.ToString();
     }
-
-
   }
 }

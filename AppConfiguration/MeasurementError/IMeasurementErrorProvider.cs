@@ -1,4 +1,4 @@
-﻿using static DTO.Enum.Metrology;
+﻿using static DTO.Enum.Measurement;
 
 namespace AppConfiguration.MeasurementError
 {
@@ -25,7 +25,7 @@ namespace AppConfiguration.MeasurementError
     ///   <item><description><c>Percent</c> — относительная (в процентах) погрешность.</description></item>
     /// </list>
     /// </returns>
-    (double Numeric, double Percent) GetErrorParameters(MetrologyTypeCommand type, double measuredValue);
+    (double Numeric, double Percent) GetErrorParameters(MeasurementTypeCommand type, double measuredValue);
 
     /// <summary>
     /// Возвращает диапазон допустимых значений измеряемой величины
@@ -44,7 +44,7 @@ namespace AppConfiguration.MeasurementError
     ///   <item><description><c>Max</c> — верхняя граница допустимого диапазона.</description></item>
     /// </list>
     /// </returns>
-    (double Min, double Max) GetRange(MetrologyTypeCommand typeCommand, double expectedValue);
+    (double Min, double Max) GetRange(MeasurementTypeCommand typeCommand, double expectedValue);
 
     /// <summary>
     /// Возвращает все метрологические данные (типы команд и их диапазоны погрешностей),

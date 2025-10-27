@@ -13,7 +13,7 @@ namespace Mode.Metrology.PI
     /// <summary>
     /// Результат введённого напряжения.
     /// </summary>
-    public string VoltageResult { get; private set; }
+    public double VoltageResult { get; private set; }
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="VoltageValue"/>.
@@ -74,9 +74,16 @@ namespace Mode.Metrology.PI
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-      VoltageResult = VoltageInput.Text;
-      this.DialogResult = true;
-      this.Close();
+      if (double.TryParse(VoltageInput.Text, out double voltage))
+      {
+        VoltageResult = voltage;
+        this.DialogResult = true;
+        this.Close();
+      }
+      else
+      {
+        Message.MessageBoxCustom.Show($"Не удалось распознать параметр: {VoltageInput.Text}. Повторите попытку ввода данных!", "Ошибка данных", image: MessageBoxImage.Error);
+      }
     }
   }
 }

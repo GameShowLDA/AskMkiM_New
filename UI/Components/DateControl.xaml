@@ -13,7 +13,6 @@
             x:Name="Date"
             Text="00.00.0000"
             FontFamily="{DynamicResource WinstonMedium}"
-            Foreground="{DynamicResource MainTitleSolidColorBrush}"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
         />

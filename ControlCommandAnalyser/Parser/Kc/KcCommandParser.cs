@@ -3,6 +3,7 @@ using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr; // Для LoggerUtility
+using DTO.Enum;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Kc
@@ -136,8 +137,10 @@ namespace ControlCommandAnalyser.Parser.Kc
       }
       else
       {
-        double minResistance = 0.001 * 1000;
-        double maxResistance = meter?.MaxContinuityResistance ?? 1_000_000;
+		  var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.KC);
+
+      double minResistance = commandInfo.LowerLimit;
+      double maxResistance = commandInfo.UpperLimit;
 
         // 5️⃣ Флаг ошибок
         bool hasErrors = false;

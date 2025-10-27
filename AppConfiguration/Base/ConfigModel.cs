@@ -40,10 +40,11 @@ namespace AppConfiguration.Base
     /// Устанавливает текущую модель протокола (ProtocolModel).
     /// </summary>
     /// <param name="executionModel">Модель протокола.</param>
-    static public async Task SerParametrModelAsync(SettingsParameterModel executionModel)
+    static public async Task SerParametrModelAsync(UserInterfaceModel executionModel)
     {
-      await ParameterConfig.SetLanguage(executionModel.Language);
-      await ParameterConfig.SetTheme(executionModel.Theme);
+      await UserInterfaceConfig.SetLanguage(executionModel.Language);
+      await UserInterfaceConfig.SetTheme(executionModel.Theme);
+      await UserInterfaceConfig.SetSyntaxHighlighting(executionModel.UseSyntaxHighlighting);
     }
   }
 }

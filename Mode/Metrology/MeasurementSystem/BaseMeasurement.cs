@@ -36,6 +36,10 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     public Dictionary<MetrologicalModeRole, List<object>> Devices { get; set; } = new();
 
+    internal List<double> Measurements { get; set; } = new();
+    internal double LowerBound = -1;
+    internal double UpperBound = -1;
+
     /// <summary>
     /// Формирует список уникальных устройств, необходимых для выполнения алгоритма,
     /// на основе заданных точек и выбранного метрологического режима.
@@ -257,6 +261,23 @@ namespace Mode.Metrology.MeasurementSystem
       }
 
       throw new InvalidOperationException($"Устройство с ролью {role} (index: {index}) не найдено или не реализует интерфейс {typeof(T).Name}.");
+    }
+
+    public virtual async Task PrintResult(IUserMessageService messageService, DTO.Enum.Measurement.MeasurementTypeCommand command)
+    {
+      if (Measurements.Count < 1)
+        return;
+
+      var min = Measurements.Min();
+      var max = Measurements.Max();
+
+      var info = command.GetDisplayInfo();
+      string displayName = info?.DisplayName ?? command.ToString();
+      string unit = info?.Unit ?? "";
+
+      await messageService.ShowMessageAsync(new ShowMessageModel($"Результаты режима {displayName}"), skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Минимальное значение", message: $"{min} {unit}", type: (min >= LowerBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное занчение", message: $"{max} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
     }
 
     private static MetrologicalDeviceType GetDeviceTypeForMode(MetrologicalModeRole mode)

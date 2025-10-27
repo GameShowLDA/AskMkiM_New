@@ -97,14 +97,6 @@ namespace AppConfiguration.Protocol
       });
     }
 
-    public static async Task SetSyntaxHighlighting(bool enable)
-    {
-      await Task.Run(() =>
-      {
-        ProtocolModel.UseSyntaxHighlighting = enable;
-      });
-    }
-
     public static async Task SetCleanTextProtocol(string text)
     {
       await Task.Run(() =>
@@ -174,7 +166,6 @@ namespace AppConfiguration.Protocol
     /// <returns>true, если отображается; false, если скрывается.</returns>
     public static async Task<bool> GetTimeStart() => await Task.Run(() => ProtocolModel.DisplayOperationTime);
     public static async Task<bool> GetShowProtocolInSoftware() => await Task.Run(() => ProtocolModel.ShowProtocolInSoftware);
-    public static bool GetSyntaxHighlighting() => ProtocolModel.UseSyntaxHighlighting;
     public static async Task<bool> GetGenerateProtocol() => await Task.Run(() => ProtocolModel.GenerateProtocol);
     public static async Task<string> GetCleanTextProtocol() => await Task.Run(() => ProtocolModel.CleanTextProtocol);
     public static async Task<string> GetCleanTextProtocolError() => await Task.Run(() => ProtocolModel.CleanTextErrorsProtocol);
@@ -194,13 +185,13 @@ namespace AppConfiguration.Protocol
         protocolModel.ShowProtocolInSoftware = ProtocolModel.ShowProtocolInSoftware;
         protocolModel.GenerateProtocol = ProtocolModel.GenerateProtocol;
         protocolModel.CleanTextProtocol = ProtocolModel.CleanTextProtocol;
-        protocolModel.UseSyntaxHighlighting = ProtocolModel.UseSyntaxHighlighting;
         protocolModel.CleanTextErrorsProtocol = ProtocolModel.CleanTextErrorsProtocol;
         return protocolModel;
       });
     }
 
     #endregion
+
     public static async Task SaveProtocolModel(SettingsProtocolModel protocolModel)
     {
       await Task.Run(() =>
@@ -213,7 +204,6 @@ namespace AppConfiguration.Protocol
         ProtocolModel.ShowProtocolInSoftware = protocolModel.ShowProtocolInSoftware;
         ProtocolModel.GenerateProtocol = protocolModel.GenerateProtocol;
         ProtocolModel.CleanTextProtocol = protocolModel.CleanTextProtocol;
-        ProtocolModel.UseSyntaxHighlighting = protocolModel.UseSyntaxHighlighting;
         ProtocolModel.CleanTextErrorsProtocol = protocolModel.CleanTextErrorsProtocol;
       });
 
