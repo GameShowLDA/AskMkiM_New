@@ -137,10 +137,10 @@ namespace ControlCommandAnalyser.Parser.Kc
       }
       else
       {
-		  var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.KC);
+        var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.KC);
 
-      double minResistance = commandInfo.LowerLimit;
-      double maxResistance = commandInfo.UpperLimit;
+        double minResistance = commandInfo.LowerLimit;
+        double maxResistance = commandInfo.UpperLimit;
 
         // 5️⃣ Флаг ошибок
         bool hasErrors = false;

@@ -21,6 +21,11 @@ namespace DTO.Device.Breakdown
     public int MaxVoltage { get; set; }
 
     /// <summary>
+    /// Минимально выдаваемое напряжение при измерении сопротивления.
+    /// </summary>
+    public int IRMinVoltage { get; set; }
+
+    /// <summary>
     /// Управление режимом переменного тока (ACW) в пробойной установке.
     /// </summary>
     public IAcwModeBreakdown AcwManger { get; set; }

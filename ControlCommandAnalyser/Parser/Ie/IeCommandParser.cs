@@ -3,6 +3,7 @@ using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Device.Breakdown;
+using DTO.Enum;
 using System.Text.RegularExpressions;
 using Utilities;
 
@@ -135,8 +136,10 @@ namespace ControlCommandAnalyser.Parser.Ie
       }
       else
       {
-        double minCapacity = 0.2 * 1e-9;
-        double maxCapacity = 100_000 * 1e-9;
+        var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.IE);
+        
+        double minCapacity = commandInfo.LowerLimit;
+        double maxCapacity = commandInfo.UpperLimit;
 
         // 5️⃣ Флаг ошибок
         bool hasErrors = false;

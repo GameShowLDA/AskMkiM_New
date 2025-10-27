@@ -3,6 +3,7 @@ using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains; // Для LoggerUtility
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Device.Breakdown;
+using DTO.Enum;
 using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 using Utilities;
@@ -50,6 +51,7 @@ namespace ControlCommandAnalyser.Parser.Si
       }
       else
       {
+        var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.CI);
 
         var maxVoltage = breakDown.MaxVoltage;
 
@@ -172,10 +174,12 @@ namespace ControlCommandAnalyser.Parser.Si
     private static string ExtractSiParameters(string commandNumber, string mnemonic, int numberLine, SiCommandModel model,
       string remainder, IBreakdownTester breakDown)
     {
-      var minVoltage = 50;
+      var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.CI);
+
+      var minVoltage = breakDown.IRMinVoltage;
       var maxVoltage = breakDown.MaxVoltage;
-      var minResistance = 1 * 1_000_000; // в МОм
-      var maxResistance = 1000 * 1_000_000; // в МОм
+      double minResistance = commandInfo.LowerLimit;
+      double maxResistance = commandInfo.UpperLimit;
       string voltage = string.Empty, resistance = string.Empty, time = string.Empty, unit = string.Empty, unitTime = string.Empty, unitResistance = string.Empty;
 
       (voltage, unit, remainder) = CommonParameterParser.VoltageParser.ParseVoltage(remainder);
