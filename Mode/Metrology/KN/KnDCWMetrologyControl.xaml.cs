@@ -114,10 +114,10 @@ namespace Mode.Metrology.KN
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения напряжения(DCW)"));
 
-        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.KN_DCW, param);
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.KN_DCW, param);
         await fastMeter.DcVoltageManager.MeasureDCVoltageAsync(param, protocolUI);
 
-        string result = await Application.Current.Dispatcher.InvokeAsync(() =>
+        var result = await Application.Current.Dispatcher.InvokeAsync(() =>
         {
           VoltageValue chassisManagerWindow = new VoltageValue();
           protocolUI.Effect = new System.Windows.Media.Effects.BlurEffect();
@@ -131,30 +131,29 @@ namespace Mode.Metrology.KN
           }
           else
           {
-            return string.Empty;
+            return -1;
           }
         });
+        Measurements.Add(result);
 
-        await protocolUI.ShowMessageAsync(new ShowMessageModel($"\tДиапазон допускаемых значений", null, $"{firstNorm:F2}-{lastNorm:F2}"), skipPause: true);
-        if (!string.IsNullOrEmpty(result) && double.TryParse(result, out var value))
-        {
-          double pog = value - param;
 
-          var answer = (value >= firstNorm && value <= lastNorm) ? false : true;
 
-          ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения напряжения", null, $"{result:F2}");
-          showMessageModel.Status = (!answer ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error);
-          showMessageModel.ExecutionError = (value >= firstNorm && value <= lastNorm) ? false : true;
-          showMessageModel.CanBeDeleted = showMessageModel.ExecutionError;
-          await protocolUI.ShowMessageAsync(showMessageModel, skipPause: true);
-          await protocolUI.ShowMessageAsync(new ShowMessageModel("\tПогрешность измерения", message: $"{pog}В", type: showMessageModel.Status), skipPause: true);
-        }
-        else
-        {
-          await protocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: "Некорректно введённое эталонное значение напряжения.", type: ShowMessageModel.MessageType.Error), skipPause: true);
-        }
+        var answer = (result >= LowerBound && result <= UpperBound) ? false : true;
+
+        ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения напряжения", null, $"{result:F2}");
+        showMessageModel.Status = (!answer ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error);
+        showMessageModel.ExecutionError = (result >= LowerBound && result <= UpperBound) ? false : true;
+        showMessageModel.CanBeDeleted = showMessageModel.ExecutionError;
+        await protocolUI.ShowMessageAsync(showMessageModel, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("\tПогрешность измерения", message: $"{delta}В", type: showMessageModel.Status), skipPause: true);
 
         return true;
+      }
+
+      public override async Task FinalizeMeasurement(IUserMessageService messageService)
+      {
+        await base.FinalizeMeasurement(messageService);
+        await PrintResult(messageService, MetrologyTypeCommand.KN_DCW);
       }
     }
   }

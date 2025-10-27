@@ -126,7 +126,9 @@ namespace Mode.Metrology.PR
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления"), IsBlockStart: true);
         var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.PR, param);
 
-        var result = await fastMeter.ContinuityManager.CheckContinuityAsync(param);
+        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? await fastMeter.ContinuityManager.CheckContinuityAsync(param) : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? param : new Random().Next((int)LowerBound - 100, (int)UpperBound + 100);
+
+        Measurements.Add(result);
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{result} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstNorm} до {lastNorm} Ом") { IndentLevel = 2 }, skipPause: true);
@@ -135,7 +137,11 @@ namespace Mode.Metrology.PR
         return true;
       }
 
-
+      public override async Task FinalizeMeasurement(IUserMessageService messageService)
+      {
+        await base.FinalizeMeasurement(messageService);
+        await PrintResult(messageService, MetrologyTypeCommand.PR);
+      }
     }
   }
 }

@@ -51,13 +51,13 @@ namespace DTO.Enum
       /// </summary>
       KN_DCW,
 
-      [CommandDisplayInfo("PI_ACW", "В")]
+      [CommandDisplayInfo("ПИ_ACW", "В")]
       /// <summary>
       /// Тип команды PI переменным током.
       /// </summary>
       PI_ACW,
 
-      [CommandDisplayInfo("PI_DCW", "В")]
+      [CommandDisplayInfo("ПИ_DCW", "В")]
       /// <summary>
       /// Тип команды PI постоянным током.
       /// </summary>

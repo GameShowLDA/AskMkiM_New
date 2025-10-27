@@ -1,14 +1,16 @@
-﻿using System.Windows.Controls;
-using AppConfiguration.Error.Device;
+﻿using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
 using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
+using DTO.Device.FastMeter;
 using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
+using System.Diagnostics.Metrics;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
@@ -53,7 +55,11 @@ namespace Mode.Metrology.CI
       ProtocolUI.SetSettings(
         this,
         StartDelegate: ExecuteMeasurementProcess,
-        true);
+        true,
+        StopDelegate: async (CancellationToken token) =>
+        {
+          await testMeasurement.FinalizeMeasurement(ProtocolUI);
+        });
     }
 
     /// <summary>
@@ -86,7 +92,6 @@ namespace Mode.Metrology.CI
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, Data.DataModel);
 
       await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, param, ProtocolUI), ProtocolUI, true);
-      await testMeasurement.FinalizeMeasurement(ProtocolUI);
     }
 
     public ITextAdapter GetControl()
@@ -125,13 +130,14 @@ namespace Mode.Metrology.CI
       {
         var meterDevice = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции"));
-        var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.CI, param);
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MetrologyTypeCommand.CI, param);
 
-        var result = await meterDevice.IrManger.Measure.MeasureAsync(param, firstNorm, lastNorm, protocolUI);
+        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? await meterDevice.IrManger.Measure.MeasureAsync(param, LowerBound, UpperBound, protocolUI) : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? param : new Random().Next((int)LowerBound - 100, (int)UpperBound + 100);
+        Measurements.Add(result);
 
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{result} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstNorm} до {lastNorm} Ом") { IndentLevel = 2 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{result} Ом", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} Ом") { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} Ом", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
 
         return true;
       }
@@ -139,7 +145,7 @@ namespace Mode.Metrology.CI
       public override async Task FinalizeMeasurement(IUserMessageService messageService)
       {
         await base.FinalizeMeasurement(messageService);
-        var breakDown = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        await PrintResult(messageService, MetrologyTypeCommand.CI);
       }
     }
   }
