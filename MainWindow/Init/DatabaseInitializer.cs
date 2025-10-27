@@ -1,4 +1,5 @@
 ﻿using AppConfiguration.Execution;
+using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
 using DataBaseConfiguration;
 using DTO.Base.Models;
@@ -17,11 +18,13 @@ namespace MainWindowProgram.Init
 
         var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
         var executionTask = new DataBaseConfiguration.Services.Settings.ExecutionService().GetExecutionAsync();
+        var userInterfaceTask = new DataBaseConfiguration.Services.Settings.UserInterfaceService().GetUserInterfaceAsync();
 
-        Task.WaitAll(protocolTask, executionTask);
+        Task.WaitAll(protocolTask, executionTask, userInterfaceTask);
 
         var protocol = protocolTask.Result;
         var execution = executionTask.Result;
+        var userInreface = userInterfaceTask.Result;
 
         if (protocol != null)
         {
@@ -33,6 +36,11 @@ namespace MainWindowProgram.Init
         if (execution != null)
         {
           await ExecutionConfig.SetExecutionModel(execution);
+        }
+
+        if (userInreface != null)
+        {
+          await UserInterfaceConfig.SetUserInterfaceModel(userInreface);
         }
 
         ProtocolConfig.SaveProtocolEvent += async (model) =>
@@ -47,6 +55,12 @@ namespace MainWindowProgram.Init
         {
           var service = new DataBaseConfiguration.Services.Settings.ExecutionService();
           await service.SaveExecutionAsync(model);
+        };
+
+        UserInterfaceConfig.SaveUserInterfaceEvent += async (model) =>
+        {
+          var service = new DataBaseConfiguration.Services.Settings.UserInterfaceService();
+          await service.SaveUserInterfaceAsync(model);
         };
       }
       catch (Exception ex)

@@ -64,6 +64,9 @@ namespace MainWindowProgram.Events
       AdminCommand.PowerChanged += AdminCommand_PowerChanged;
       _usbMonitorService.UsbMonitorService.AdminRightsChanged += OnAdminRightsChangedHandler;
       _mainWindow.PreviewKeyDown += OnKeyDown;
+
+      var idleMode = ExecutionConfig.GetIsIdleModeEnabled().Result;
+      OnIdleModeChange(null, idleMode);
     }
 
     private async void AdminCommand_PowerChanged(object? sender, bool e)

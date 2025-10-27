@@ -25,5 +25,10 @@ namespace DataBaseConfiguration.Context
     /// Таблица горячих клавиш файлов.
     /// </summary>
     public DbSet<FileHotkeyEntity> FileHotKeys { get; set; }
+
+    /// <summary>
+    /// Таблица настроек интерфейса программы
+    /// </summary>
+    public DbSet<UserInterfaceModel> UserInterface { get; set; }
   }
 }

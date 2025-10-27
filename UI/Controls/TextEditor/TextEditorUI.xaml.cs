@@ -175,7 +175,7 @@ namespace UI.Controls.TextEditor
           Console.WriteLine("TextMarkerService уже инициализирован.");
         }
 
-        ApplySyntaxHighlighting(AppConfiguration.Parameter.ParameterConfig.GetSyntaxHighlighting());
+        ApplySyntaxHighlighting(AppConfiguration.Parameter.UserInterfaceConfig.GetSyntaxHighlighting());
 
         if (_executionMargin == null)
         {

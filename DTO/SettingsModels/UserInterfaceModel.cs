@@ -1,9 +1,13 @@
 ﻿using DTO.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace DTO.SettingsModels
 {
-  public class SettingsParameterModel
+  public class UserInterfaceModel
   {
+    [Key]
+    public int Id { get; set; } = 1;
+
     /// <summary>
     /// Выбранный язык интерфейса программы.
     /// </summary>

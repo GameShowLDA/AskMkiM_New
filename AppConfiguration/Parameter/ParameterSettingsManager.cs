@@ -18,7 +18,7 @@ namespace AppConfiguration.Parameter
         return;
       }
 
-      SettingsParameterModel protocolModel = await protocolFileManager.ReadFileAsync();
+      UserInterfaceModel protocolModel = await protocolFileManager.ReadFileAsync();
       if (protocolModel == null)
       {
         return;

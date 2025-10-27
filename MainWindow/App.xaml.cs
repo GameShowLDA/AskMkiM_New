@@ -78,10 +78,14 @@ namespace MainWindowProgram
 
         Application.Current.MainWindow = mainWindow;
 
-        // гарантируем, что окно окажется поверх всех
-        mainWindow.Topmost = true;          // временно делаем поверх всех
-        mainWindow.Activate();              // активируем фокус
-        mainWindow.Focus();                 // переносим фокус внутрь
+        mainWindow.Topmost = true;
+        mainWindow.Activate();
+        mainWindow.Focus();
+
+        await mainWindow.Dispatcher.BeginInvoke(new Action(() =>
+        {
+          mainWindow.Topmost = false;
+        }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
         // отслеживаем закрытие
         mainWindow.Closed += (s, _) =>
@@ -123,10 +127,6 @@ namespace MainWindowProgram
 
     private async Task InitializeTheme()
     {
-
-      var parameterTask = ParameterSettingsManager.ReadParameterModeAsync();
-      await Task.WhenAll(parameterTask);
-
       ThemeManager.Initialize();
       await LanguageSettings.InitializeAsync();
       await ThemeSettings.InitializeAsync();

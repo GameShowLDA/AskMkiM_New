@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace MainWindowProgram.Init
 {
@@ -56,19 +57,54 @@ namespace MainWindowProgram.Init
     {
       SingleInstanceManager.EnsureSingleInstance();
       await DatabaseInitializer.InitializeAsync();
+      InitializeAppHost();
+    }
 
+    /// <summary>
+    /// Выполняет инициализацию DI-контейнера и регистрацию основных служб приложения.
+    /// </summary>
+    private static void InitializeAppHost()
+    {
       AppHost = Host.CreateDefaultBuilder()
-        .ConfigureServices(svc =>
-        {
-          svc.AddSingleton<IBreakdownTester, GPT79904>();
-          svc.AddSingleton<BreakdownTesterServices>();
-        }).Build();
+          .ConfigureServices(services =>
+          {
+            services.AddSingleton<IBreakdownTester, GPT79904>();
+            services.AddSingleton<BreakdownTesterServices>();
+          })
+          .Build();
 
       ServiceLocator.Initialize(AppHost);
-      var chassisNumber = new ChassisManagerServices().GetAll().FirstOrDefault();
-      if (chassisNumber != null)
+
+      _ = Task.Run(() => InitializeChassisDevices());
+    }
+
+    /// <summary>
+    /// Выполняет первичную инициализацию устройств, связанных с первым найденным шасси.
+    /// </summary>
+    /// <summary>
+    /// Выполняет первичную инициализацию устройств, связанных с первым найденным шасси.
+    /// </summary>
+    private static void InitializeChassisDevices()
+    {
+      try
       {
-        var tester = ServiceLocator.GetRequired<BreakdownTesterServices>().GetDevicesByNumberChassis(chassisNumber.Number).FirstOrDefault();
+        LoggerUtility.LogInformation("Инициализация устройств шасси: начало");
+
+        var chassis = new ChassisManagerServices().GetAll().FirstOrDefault();
+        if (chassis == null)
+        {
+          LoggerUtility.LogInformation("Инициализация устройств шасси: шасси не найдено");
+          return;
+        }
+
+        var testerService = ServiceLocator.GetRequired<BreakdownTesterServices>();
+        var tester = testerService.GetDevicesByNumberChassis(chassis.Number).FirstOrDefault();
+
+        LoggerUtility.LogInformation($"Инициализация устройств шасси завершена для №{chassis.Number}");
+      }
+      catch (Exception ex)
+      {
+        LoggerUtility.LogException(ex);
       }
     }
   }

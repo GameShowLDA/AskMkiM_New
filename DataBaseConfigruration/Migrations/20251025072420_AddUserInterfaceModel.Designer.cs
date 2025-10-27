@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBaseConfiguration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251025045914_newhighlightsyntaxis")]
-    partial class newhighlightsyntaxis
+    [Migration("20251025072420_AddUserInterfaceModel")]
+    partial class AddUserInterfaceModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -493,6 +493,27 @@ namespace DataBaseConfiguration.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SettingsProtocol");
+                });
+
+            modelBuilder.Entity("DTO.SettingsModels.UserInterfaceModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Theme")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("UseSyntaxHighlighting")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserInterface");
                 });
 
             modelBuilder.Entity("DTO.Base.Models.MeasurementError.MeasurementErrorRangeEntity", b =>

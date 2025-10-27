@@ -358,7 +358,7 @@ namespace UI.Controls.ProtocolNew
 
     private async Task CheckSyntaxHighlighting(ShowMessageModel showMessageModel)
     {
-      if (!AppConfiguration.Parameter.ParameterConfig.GetSyntaxHighlighting())
+      if (!AppConfiguration.Parameter.UserInterfaceConfig.GetSyntaxHighlighting())
       {
         showMessageModel.HeaderColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
         showMessageModel.MessageColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
@@ -394,10 +394,10 @@ namespace UI.Controls.ProtocolNew
     /// <summary>
     /// Сохраняет протокол в файл с автоматически сгенерированным именем в фоновом режиме асинхронно.
     /// </summary>
-    public async Task SaveProtocolAsync()
+    public async Task SaveProtocolAsync(string name)
     {
       string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss", CultureInfo.CurrentCulture);
-      string filename = $"KC_{dateTime}.txt";
+      string filename = $"{name}_{dateTime}.txt";
       string fullPath = Path.Combine($"..\\{FileLocations.DataSaveDirectory}", filename);
       if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
       {
