@@ -5,6 +5,7 @@
     <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test" Key="menu.test" />
     <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test_Metrology" Key="menu.test.metrology" />
     <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test_Metrology_KS" Key="menu.test.metrology.ks" />
+    <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test_Metrology_EHT" Key="menu.test.metrology.eht" />
     <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test_Metrology_IE" Key="menu.test.metrology.ie" />
     <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test_Metrology_CI" Key="menu.test.metrology.ci" />
     <LocalizeStrings:LocalizedString x:Key="LS_Menu_Test_Metrology_PR" Key="menu.test.metrology.pr" />

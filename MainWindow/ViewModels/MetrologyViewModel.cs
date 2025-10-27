@@ -54,5 +54,9 @@ namespace MainWindowProgram.ViewModels
     /// <summary>Открыть режим КН (DCW).</summary>
     [RelayCommand]
     private async Task KNDCW() => await _service.OpenKNDCWModeAsync();
+
+    /// <summary>Открыть режим ЭТ.</summary>
+    [RelayCommand]
+    private async Task EHT() => await _service.OpenEHTModeAsync();
   }
 }

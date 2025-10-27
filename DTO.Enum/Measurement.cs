@@ -62,6 +62,12 @@ namespace DTO.Enum
       /// Тип команды PI постоянным током.
       /// </summary>
       PI_DCW,
+
+      [CommandDisplayInfo("ЭТ", "Ом", 0.01, 100)]
+      /// <summary>
+      /// Тип команды PI постоянным током.
+      /// </summary>
+      EHT,
     }
   }
 }

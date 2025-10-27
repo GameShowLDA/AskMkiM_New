@@ -86,6 +86,14 @@ namespace DTO.Base.Models.MeasurementError
           new MeasurementErrorRangeEntity { MinValue = 50,  MaxValue = 650, NumericError = 5,  PercentageError = 2 },
         }
       },
+
+      new MeasurementErrorEntity(MeasurementTypeCommand.EHT)
+      {
+        Ranges = new List<MeasurementErrorRangeEntity>
+        {
+          new MeasurementErrorRangeEntity { MinValue = 0.01,  MaxValue = 100, NumericError = 0.05,  PercentageError = 1 },
+        }
+      },
     };
 
     /// <summary>

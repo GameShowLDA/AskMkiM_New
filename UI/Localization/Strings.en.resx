@@ -330,4 +330,7 @@
   <data name="protocol.button.exit" xml:space="preserve">
     <value>EXIT (Esc)</value>
   </data>
+  <data name="menu.test.metrology.eht" xml:space="preserve">
+    <value>ЭТ Mode</value>
+  </data>
 </root>

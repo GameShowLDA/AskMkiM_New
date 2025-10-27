@@ -8,7 +8,7 @@ namespace DTO.Device.RelaySwitchModule.Model
   public class PointModel
   {
     /// <summary>
-    /// Gets or sets номер устройства.
+    /// Gets or sets номер шасси.
     /// </summary>
     public int DeviceNumber { get; set; }
 

@@ -35,6 +35,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// Каждая роль может иметь одно или несколько устройств (например, два модуля коммутации для КС).
     /// </summary>
     public Dictionary<MetrologicalModeRole, List<object>> Devices { get; set; } = new();
+    public (PointModel points1, PointModel pointModel2) Points { get; set; } = new();
 
     internal List<double> Measurements { get; set; } = new();
     internal double LowerBound = -1;
@@ -106,6 +107,8 @@ namespace Mode.Metrology.MeasurementSystem
       {
         throw new ArgumentException($"Метрологический режим {mode} не распознан.");
       }
+
+      Points = (point1, point2);
     }
 
     /// <summary>
@@ -276,8 +279,8 @@ namespace Mode.Metrology.MeasurementSystem
       string unit = info?.Unit ?? "";
 
       await messageService.ShowMessageAsync(new ShowMessageModel($"Результаты режима {displayName}"), skipPause: true);
-      await messageService.ShowMessageAsync(new ShowMessageModel("Минимальное значение", message: $"{min} {unit}", type: (min >= LowerBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное занчение", message: $"{max} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Минимальное значение", message: $"{min:F5} {unit}", type: (min >= LowerBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное занчение", message: $"{max:F5} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
     }
 
     private static MetrologicalDeviceType GetDeviceTypeForMode(MetrologicalModeRole mode)
@@ -287,6 +290,7 @@ namespace Mode.Metrology.MeasurementSystem
         case MetrologicalModeRole.IE:
         case MetrologicalModeRole.KC:
         case MetrologicalModeRole.KN:
+        case MetrologicalModeRole.EHT:
           return MetrologicalDeviceType.FastMeter;
 
         case MetrologicalModeRole.PR:
@@ -332,6 +336,17 @@ namespace Mode.Metrology.MeasurementSystem
     {
       return Devices.TryGetValue(mode, out var mints) ? mints.OfType<IPowerSourceModule>().FirstOrDefault() : null;
     }
+
+    /// <summary>
+    /// Возвращает модуль источника напряжения и тока (МИНТ), связанный с заданным режимом.
+    /// </summary>
+    /// <param name="mode">Метрологическая роль устройства.</param>
+    /// <returns>Модуль МИНТ или null, если не найдено.</returns>
+    public (PointModel Point1, PointModel Point2) GetPoints()
+    {
+      return Points;
+    }
+
 
     /// <summary>
     /// Выполняет проверку наличия всех необходимых устройств для коммутации.
@@ -404,7 +419,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="relayModules">Список модулей коммутации реле.</param>
     /// <param name="point1">Первая точка коммутации.</param>
     /// <param name="point2">Вторая точка коммутации.</param>
-    private async Task ConnectRelayPointsAsync(List<IRelaySwitchModule> relayModules, PointModel point1, PointModel point2, ProtocolUI protocolUI)
+    public virtual async Task ConnectRelayPointsAsync(List<IRelaySwitchModule> relayModules, PointModel point1, PointModel point2, ProtocolUI protocolUI)
     {
       await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение точек"), IsBlockStart: true);
 
