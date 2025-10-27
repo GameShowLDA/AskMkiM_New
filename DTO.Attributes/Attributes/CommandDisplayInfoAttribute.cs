@@ -24,13 +24,13 @@
     /// Нижняя граница диапазона измерений.
     /// Указывает минимальное значение, которое может быть корректно измерено или отображено данной командой.
     /// </summary>
-    public double? LowerLimit { get; }
+    public double LowerLimit { get; }
 
     /// <summary>
     /// Верхняя граница диапазона измерений.
     /// Указывает максимальное значение, которое может быть корректно измерено или отображено данной командой.
     /// </summary>
-    public double? UpperLimit { get; }
+    public double UpperLimit { get; }
 
     /// <summary>
     /// Инициализирует новый экземпляр атрибута <see cref="CommandDisplayInfoAttribute"/>.
