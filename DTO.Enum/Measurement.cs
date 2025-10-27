@@ -26,7 +26,7 @@ namespace DTO.Enum
       /// </summary>
       PR,
 
-      [CommandDisplayInfo("СИ", "МОм", 50, 1000)]
+      [CommandDisplayInfo("СИ", "МОм", 1, 1000)]
       /// <summary>
       /// Тип команды CI.
       /// </summary>

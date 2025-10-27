@@ -35,7 +35,8 @@ namespace NewCore.Device
       SystemManger = new SystemSettingsAdapter(this);
       ConnectableManager = new ConnectableManagerAdapter(this);
       SelfTestManager = new NewCore.Function.GPT.SelfCheck.SelfTestManager();
-      MaxVoltage = 600;
+      MaxVoltage = 700;
+      IRMinVoltage = 50;
       LogWarning($"[{GetType().Name}] ctor вызван. Hash={GetHashCode()}", isDeviceLog: true);
 
       Mode = BreakdownTypeMode.None;
@@ -64,6 +65,9 @@ namespace NewCore.Device
 
     /// <inheritdoc />
     public int MaxVoltage { get; set; }
+
+    /// <inheritdoc />
+    public int IRMinVoltage { get; set; }
 
     /// <inheritdoc />
     public ISelfTestCheckerBreakdownTester SelfTestManager { get; set; }

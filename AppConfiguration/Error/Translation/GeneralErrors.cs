@@ -240,6 +240,34 @@ namespace AppConfiguration.Error.Translation
     };
 
     /// <summary>
+    /// Возвращает ошибку, если не найден быстрый измеритель.
+    /// </summary>
+    /// <param name="lineNumber">Номер строки, где находится команда.</param>
+    /// <param name="command">Текст команды.</param>
+    /// <returns>Объект <see cref="ErrorItem"/>, описывающий ошибку положения УП.</returns>
+    public static ErrorItem FastMeterNotFound(int lineNumber, string command) => new()
+    {
+      SourceLineNumber = lineNumber,
+      Command = command,
+      Code = ErrorCode.Gen_FastMeterNotFound,
+      Description = "Не найден быстрый измеритель."
+    };
+
+    /// <summary>
+    /// Возвращает ошибку, если не найдена пробойная установка.
+    /// </summary>
+    /// <param name="lineNumber">Номер строки, где находится команда.</param>
+    /// <param name="command">Текст команды.</param>
+    /// <returns>Объект <see cref="ErrorItem"/>, описывающий ошибку положения УП.</returns>
+    public static ErrorItem BreakDownNotFound(int lineNumber, string command) => new()
+    {
+      SourceLineNumber = lineNumber,
+      Command = command,
+      Code = ErrorCode.Gen_FastMeterNotFound,
+      Description = "Не найдена пробойная установка."
+    };
+
+    /// <summary>
     /// Возвращает ошибку, если имеются отступы в начале строки перед номером команды.
     /// </summary>
     /// <param name="mnemonic">Мнемоника неизвестной команды.</param>

@@ -3,6 +3,7 @@ using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
+using DTO.Enum;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Pr
@@ -107,8 +108,9 @@ namespace ControlCommandAnalyser.Parser.Pr
       var minResistance = 1;
       if (meter == null)
       {
-        LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивлене не задано.");
-        model.Errors.Add(PrErrors.EmptyResistance(numberLine, $"{commandNumber} {mnemonic}"));
+        LoggerUtility.LogError($"Не найден быстрый измеритель.");
+        model.Errors.Add(GeneralErrors.FastMeterNotFound(numberLine, $"{commandNumber} {mnemonic}"));
+        return model;
       }
       else
       {
@@ -116,8 +118,10 @@ namespace ControlCommandAnalyser.Parser.Pr
         bool hasResistanceErrors = false;
 
         // значения по умолчанию
-        double defaultLower = 0;
-        double defaultHigher = meter.MaxContinuityResistance;
+        var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PR);
+
+        double defaultLower = commandInfo.LowerLimit;
+        double defaultHigher = commandInfo.UpperLimit;
 
         // --- 1️⃣ Парсим входные значения, если они заданы ---
         double? lower = !string.IsNullOrWhiteSpace(lowerLimitResistance)
