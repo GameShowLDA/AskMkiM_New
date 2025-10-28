@@ -27,17 +27,19 @@
                         <Grid>
                             <!-- плитка -->
                             <Border x:Name="Bd"
-                                CornerRadius="12"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"/>
+                                    CornerRadius="12"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"/>
 
                             <!-- текст выбранного -->
                             <ContentPresenter Margin="{TemplateBinding Padding}"
-                            VerticalAlignment="Center"
-                            Content="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
-                            ContentTemplate="{TemplateBinding ItemTemplate}"
-                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+                                              VerticalAlignment="Center"
+                                              Content="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                              ContentTemplate="{TemplateBinding ItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              TextElement.Foreground="{DynamicResource SettingsHeaderSolidColorBrush}"/>
+
 
                             <!-- кнопка-оверлей справа -->
                             <ToggleButton x:Name="PART_DropDownButton"

@@ -256,6 +256,7 @@
     <!--#endregion-->
 
     <!--#region Настройки приложения -->
+    <SolidColorBrush x:Key="SettingsMainBackground" Color="#3a4655"/>
 
     <Style x:Key="SettingCardStyle" TargetType="Border">
         <Setter Property="Background" Value="#303843"/>
@@ -266,6 +267,7 @@
 
     <SolidColorBrush x:Key="SettingsTitleSolidColorBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="SettingsDescriptionSolidColorBrush" Color="#A9B5C3"/>
+    <SolidColorBrush x:Key="SettingsHeaderSolidColorBrush" Color="#FFFFFF"/>
 
     <Style x:Key="SettingsTitleStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource SettingsTitleSolidColorBrush}"/>

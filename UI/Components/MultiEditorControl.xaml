@@ -14,13 +14,13 @@
         </Grid.RowDefinitions>
         <StackPanel x:Name="TopPanel" 
                     Grid.Row="0" 
-                    Background="{StaticResource SecondarySolidColorBrush}"  
+                    Background="{DynamicResource SecondarySolidColorBrush}"  
                     Orientation="Horizontal" 
                     MouseLeftButtonDown="TopPanel_MouseLeftButtonDown"/>
         <Grid 
             x:Name="ContentPanel" 
             Grid.Row="1" 
-            Background="{StaticResource PrimarySolidColorBrush}"
+            Background="{DynamicResource SettingsMainBackground}"
             >
         </Grid>
     </Grid>
