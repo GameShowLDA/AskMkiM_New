@@ -1,8 +1,5 @@
-﻿using System.Text.Json;
-using System.Windows.Controls;
-using AppConfiguration.Error.Device.Multimeter;
+﻿using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
-using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
@@ -11,12 +8,13 @@ using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using NewCore.Base.DeviceResponses;
+using System.Text.Json;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.DeviceEnums;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
 
 namespace Mode.Metrology.PR
@@ -26,7 +24,7 @@ namespace Mode.Metrology.PR
   /// </summary>
   public partial class PrTMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.PR;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.PR;
 
     PrMeasurement testMeasurement = new PrMeasurement();
 
@@ -121,7 +119,7 @@ namespace Mode.Metrology.PR
       /// <returns></returns>
       public async Task MintSettings(DataModel dataModel)
       {
-        var mint = Devices.TryGetValue(MetrologicalModeRole.PR, out var meter) ? meter.OfType<IPowerSourceModule>().FirstOrDefault() : null;
+        var mint = Devices.TryGetValue(MeasurementTypeCommand.PR, out var meter) ? meter.OfType<IPowerSourceModule>().FirstOrDefault() : null;
         var data = SelectOptimalCurrentAndVoltage(dataModel.Param, mint);
 
         int integerPart = data.IntegerCurrent;
@@ -132,7 +130,7 @@ namespace Mode.Metrology.PR
       }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 
@@ -141,10 +139,10 @@ namespace Mode.Metrology.PR
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         protocolUI.GetCancellationToken().ThrowIfCancellationRequested();
-        var mint = Devices.TryGetValue(MetrologicalModeRole.PR, out var power) ? power.OfType<IPowerSourceModule>().FirstOrDefault() : null;
+        var mint = Devices.TryGetValue(MeasurementTypeCommand.PR, out var power) ? power.OfType<IPowerSourceModule>().FirstOrDefault() : null;
         var meterDevice = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение проверки релейной"));

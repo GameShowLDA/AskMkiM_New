@@ -55,6 +55,7 @@ namespace ControlCommandExecutor.Executors
          .Where(m => m != null)
          .DistinctBy(m => (m.NumberChassis, m.Number))
          .ToList();
+
       await SettingModuleRelayControl(modules, context.Console);
 
       var dbc = EquipmentService.GetSwitchingDevice();

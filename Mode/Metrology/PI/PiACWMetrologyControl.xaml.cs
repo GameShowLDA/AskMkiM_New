@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using AppConfiguration.Error.Device;
+﻿using AppConfiguration.Error.Device;
 using AppConfiguration.Error.Device.Breakdown;
 using AppConfiguration.Interface;
 using DTO.Base.Models;
@@ -9,11 +7,12 @@ using DTO.Device.Breakdown;
 using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
+using System.Windows;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.PI
 {
@@ -22,7 +21,7 @@ namespace Mode.Metrology.PI
   /// </summary>
   public partial class PiACWMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.PI;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.PI_ACW;
 
     PiMeasurement testMeasurement = new PiMeasurement();
 
@@ -36,10 +35,8 @@ namespace Mode.Metrology.PI
       InitializeComponent();
       InitializeSettings();
 
-      // Регистрируем обработчик движения мыши
       MouseMove += (s, e) =>
       {
-        // Обновляем последний элемент под курсором
         HelpProvider.SetHelpKey(this, "UtilityModePI");
       };
     }
@@ -102,9 +99,9 @@ namespace Mode.Metrology.PI
       public PiMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
-        var breakDown = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        var breakDown = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         string name = breakDown.Name;
         int chassis = breakDown.NumberChassis;
         int numer = breakDown.Number;
@@ -135,11 +132,11 @@ namespace Mode.Metrology.PI
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
-        var meterDevice = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        var meterDevice = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции", headerColor: ShowMessageModel.SuccessMessage.TitleColor));
-        
+
         (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PI_ACW, param);
         await meterDevice.AcwManger.Measure.MeasureAsync(param, userMessageService: protocolUI);
 

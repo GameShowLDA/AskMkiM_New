@@ -15,7 +15,6 @@ using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.CI
 {
@@ -24,7 +23,7 @@ namespace Mode.Metrology.CI
   /// </summary>
   public partial class CiMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.CI;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.CI;
 
     CiMeasurement testMeasurement = new CiMeasurement();
 
@@ -104,10 +103,10 @@ namespace Mode.Metrology.CI
       public CiMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
-        var breakDown = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        var breakDown = Devices.TryGetValue(MeasurementTypeCommand.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         string name = breakDown.Name;
         int chassis = breakDown.NumberChassis;
         int numer = breakDown.Number;
@@ -126,9 +125,9 @@ namespace Mode.Metrology.CI
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
-        var meterDevice = Devices.TryGetValue(MetrologicalModeRole.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        var meterDevice = Devices.TryGetValue(MeasurementTypeCommand.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции"));
         (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.CI, param);
 

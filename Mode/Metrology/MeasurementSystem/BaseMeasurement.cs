@@ -11,7 +11,7 @@ using DTO.Service;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
-using static NewCore.Enum.MetrologyEnum;
+using static DTO.Enum.Measurement;
 using static Utilities.LoggerUtility;
 
 namespace Mode.Metrology.MeasurementSystem
@@ -34,7 +34,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// Коллекция подключённых устройств, сгруппированных по метрологическим ролям.
     /// Каждая роль может иметь одно или несколько устройств (например, два модуля коммутации для КС).
     /// </summary>
-    public Dictionary<MetrologicalModeRole, List<object>> Devices { get; set; } = new();
+    public Dictionary<MeasurementTypeCommand, List<object>> Devices { get; set; } = new();
     public (PointModel points1, PointModel pointModel2) Points { get; set; } = new();
 
     internal List<double> Measurements { get; set; } = new();
@@ -49,7 +49,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="point1">Первая точка (в формате A.B.C).</param>
     /// <param name="point2">Вторая точка (в формате A.B.C).</param>
     /// <param name="mode">Метрологический режим, для которого выполняется алгоритм.</param>
-    protected virtual void CollectDevices(PointModel point1, PointModel point2, MetrologicalModeRole mode)
+    protected virtual void CollectDevices(PointModel point1, PointModel point2, MeasurementTypeCommand mode)
     {
       Devices.Clear();
 
@@ -119,7 +119,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="point2">Вторая точка (в формате A.B.C).</param>
     /// <param name="mode">Метрологический режим, для которого выполняется алгоритм.</param>
     /// <param name="protocolUI">Пользовательский элемент для вывода в протокол.</param>
-    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, MetrologicalModeRole mode, ProtocolUI protocolUI)
+    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, MeasurementTypeCommand mode, ProtocolUI protocolUI)
     {
       try
       {
@@ -181,7 +181,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="point1">Первая точка.</param>
     /// <param name="point2">Вторая точка.</param>
     /// <param name="mode">Режим метрологии.</param>
-    public virtual async Task SetupCommutation(ProtocolUI protocolUI, PointModel point1, PointModel point2, MetrologicalModeRole mode)
+    public virtual async Task SetupCommutation(ProtocolUI protocolUI, PointModel point1, PointModel point2, MeasurementTypeCommand mode)
     {
       var relayModules = GetRelayModules(mode);
       var busSwitcher = GetBusSwitcher(mode);
@@ -199,7 +199,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     /// <param name="metrologicalModeRole">Метрологический режим.</param>
     /// <param name="dataModel">Модель данных, содержащая дополнительные значения для устройств.</param>
-    public virtual async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+    public virtual async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
     {
       await messageService.ShowMessageAsync(new ShowMessageModel("Настройка измерителя", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
     }
@@ -210,7 +210,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="metrologicalModeRole">Метрологический режим.</param>
     /// <param name="param">Электрическое значение.</param>
     /// <param name="protocolUI">Пользовательский элемент для вывода в протокол.</param>
-    public abstract Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI);
+    public abstract Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI);
 
     /// <summary>
     /// Завершает измерение, размыкает реле и отключает прибор.
@@ -228,7 +228,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     /// <param name="role">Логическая роль устройства.</param>
     /// <param name="device">Экземпляр устройства для добавления.</param>
-    protected void AddUniqueDevice(MetrologicalModeRole role, object device)
+    protected void AddUniqueDevice(MeasurementTypeCommand role, object device)
     {
       if (device == null)
       {
@@ -254,7 +254,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="index">Индекс устройства (если несколько устройств одной роли).</param>
     /// <returns>Устройство, приведённое к типу T.</returns>
     /// <exception cref="InvalidOperationException">Если устройство не найдено или не того типа.</exception>
-    protected T GetDevice<T>(MetrologicalModeRole role, int index = 0) where T : class
+    protected T GetDevice<T>(MeasurementTypeCommand role, int index = 0) where T : class
     {
       if (Devices.TryGetValue(role, out var list) &&
           list.Count > index &&
@@ -283,21 +283,23 @@ namespace Mode.Metrology.MeasurementSystem
       await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное занчение", message: $"{max:F5} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
     }
 
-    private static MetrologicalDeviceType GetDeviceTypeForMode(MetrologicalModeRole mode)
+    private static MetrologicalDeviceType GetDeviceTypeForMode(MeasurementTypeCommand mode)
     {
       switch (mode)
       {
-        case MetrologicalModeRole.IE:
-        case MetrologicalModeRole.KC:
-        case MetrologicalModeRole.KN:
-        case MetrologicalModeRole.EHT:
+        case MeasurementTypeCommand.IE:
+        case MeasurementTypeCommand.KC:
+        case MeasurementTypeCommand.KN_DCW:
+        case MeasurementTypeCommand.KN_ACW:
+        case MeasurementTypeCommand.EHT:
           return MetrologicalDeviceType.FastMeter;
 
-        case MetrologicalModeRole.PR:
+        case MeasurementTypeCommand.PR:
           return MetrologicalDeviceType.Mint;
 
-        case MetrologicalModeRole.CI:
-        case MetrologicalModeRole.PI:
+        case MeasurementTypeCommand.CI:
+        case MeasurementTypeCommand.PI_ACW:
+        case MeasurementTypeCommand.PI_DCW:
           return MetrologicalDeviceType.BreakdownTester;
 
         default:
@@ -312,7 +314,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     /// <param name="mode">Метрологическая роль устройства.</param>
     /// <returns>Список модулей коммутации реле или null, если не найдено.</returns>
-    public List<IRelaySwitchModule>? GetRelayModules(MetrologicalModeRole mode)
+    public List<IRelaySwitchModule>? GetRelayModules(MeasurementTypeCommand mode)
     {
       return Devices.TryGetValue(mode, out var modules) ? modules.OfType<IRelaySwitchModule>().ToList() : null;
     }
@@ -322,7 +324,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     /// <param name="mode">Метрологическая роль устройства.</param>
     /// <returns>Устройство коммутации шин или null, если не найдено.</returns>
-    public ISwitchingDevice? GetBusSwitcher(MetrologicalModeRole mode)
+    public ISwitchingDevice? GetBusSwitcher(MeasurementTypeCommand mode)
     {
       return Devices.TryGetValue(mode, out var ukshs) ? ukshs.OfType<ISwitchingDevice>().FirstOrDefault() : null;
     }
@@ -332,7 +334,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     /// <param name="mode">Метрологическая роль устройства.</param>
     /// <returns>Модуль МИНТ или null, если не найдено.</returns>
-    public IPowerSourceModule? GetMintModule(MetrologicalModeRole mode)
+    public IPowerSourceModule? GetMintModule(MeasurementTypeCommand mode)
     {
       return Devices.TryGetValue(mode, out var mints) ? mints.OfType<IPowerSourceModule>().FirstOrDefault() : null;
     }

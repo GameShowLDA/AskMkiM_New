@@ -12,7 +12,6 @@ using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.PI
 {
@@ -21,7 +20,7 @@ namespace Mode.Metrology.PI
   /// </summary>
   public partial class PiDCWMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.PI;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.PI_DCW;
 
     PiMeasurement testMeasurement = new PiMeasurement();
 
@@ -101,9 +100,9 @@ namespace Mode.Metrology.PI
       public PiMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
-        var breakDown = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        var breakDown = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         string name = breakDown.Name;
         int chassis = breakDown.NumberChassis;
         int numer = breakDown.Number;
@@ -131,9 +130,9 @@ namespace Mode.Metrology.PI
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
-        var meterDevice = Devices.TryGetValue(MetrologicalModeRole.PI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
+        var meterDevice = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения сопротивления изоляции", headerColor: ShowMessageModel.SuccessMessage.TitleColor));
 
         (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PI_DCW, param);

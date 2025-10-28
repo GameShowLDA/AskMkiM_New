@@ -1,7 +1,5 @@
 ﻿using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
-using AppConfiguration.MeasurementError;
-using CommonWin32;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
@@ -13,7 +11,6 @@ using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.KC
 {
@@ -22,7 +19,7 @@ namespace Mode.Metrology.KC
   /// </summary>
   public partial class KcMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.KC;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.KC;
 
     KcMeasurement testMeasurement = new KcMeasurement();
 
@@ -102,7 +99,7 @@ namespace Mode.Metrology.KC
       public KcMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -115,7 +112,7 @@ namespace Mode.Metrology.KC
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 

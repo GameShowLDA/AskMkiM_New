@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using AppConfiguration.Error.Device.Multimeter;
+﻿using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
@@ -9,11 +7,12 @@ using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using Mode.Metrology.PI;
+using System.Windows;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 namespace Mode.Metrology.KN
 {
   /// <summary>
@@ -21,7 +20,7 @@ namespace Mode.Metrology.KN
   /// </summary>
   public partial class KnDCWMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.KN;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.KN_DCW;
 
     KnMeasurement testMeasurement = new KnMeasurement();
 
@@ -97,7 +96,7 @@ namespace Mode.Metrology.KN
       public KnMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -107,7 +106,7 @@ namespace Mode.Metrology.KN
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         protocolUI.GetCancellationToken().ThrowIfCancellationRequested();
 

@@ -2,7 +2,6 @@
 using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
-using DTO.Device.Base;
 using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
@@ -10,25 +9,11 @@ using DTO.Enum;
 using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.EHT
 {
@@ -37,7 +22,7 @@ namespace Mode.Metrology.EHT
   /// </summary>
   public partial class EhtMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.EHT;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.EHT;
     EhtMeasurement testMeasurement = new EhtMeasurement();
     (bool Success, string Message, DataModel DataModel) Data;
     public EhtMetrologyControl()
@@ -110,7 +95,7 @@ namespace Mode.Metrology.EHT
       public EhtMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -123,7 +108,7 @@ namespace Mode.Metrology.EHT
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         var points = GetPoints();
 
@@ -156,7 +141,7 @@ namespace Mode.Metrology.EHT
       }
 
 
-      private async Task<double> StepFirst(IUserMessageService userMessageService, MetrologicalModeRole metrologicalModeRole, PointModel point1, double param)
+      private async Task<double> StepFirst(IUserMessageService userMessageService, MeasurementTypeCommand metrologicalModeRole, PointModel point1, double param)
       {
         await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подлючение точки {point1}"), IsBlockStart: true);
 
@@ -177,7 +162,7 @@ namespace Mode.Metrology.EHT
       }
 
 
-      private async Task<double> StepSecond(IUserMessageService userMessageService, MetrologicalModeRole metrologicalModeRole, PointModel point1, PointModel point2, double param)
+      private async Task<double> StepSecond(IUserMessageService userMessageService, MeasurementTypeCommand metrologicalModeRole, PointModel point1, PointModel point2, double param)
       {
         await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Отлючение точки {point1}"), IsBlockStart: true);
         var relayModule = GetRelayModules(metrologicalModeRole).First();
@@ -203,7 +188,7 @@ namespace Mode.Metrology.EHT
         return result;
       }
 
-      private async Task<double> StepThird(IUserMessageService userMessageService, MetrologicalModeRole metrologicalModeRole, PointModel point1, PointModel point2, double param)
+      private async Task<double> StepThird(IUserMessageService userMessageService, MeasurementTypeCommand metrologicalModeRole, PointModel point1, PointModel point2, double param)
       {
         await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Отлючение точки {point2}"), IsBlockStart: true);
         var relayModule = GetRelayModules(metrologicalModeRole).Last();
@@ -219,7 +204,7 @@ namespace Mode.Metrology.EHT
         return result;
       }
 
-      private async Task StepReset(IUserMessageService userMessageService, MetrologicalModeRole metrologicalModeRole, PointModel point1, PointModel point2, double param)
+      private async Task StepReset(IUserMessageService userMessageService, MeasurementTypeCommand metrologicalModeRole, PointModel point1, PointModel point2, double param)
       {
         await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Отлючение точек"), IsBlockStart: true);
         var relayModule = GetRelayModules(metrologicalModeRole).First();

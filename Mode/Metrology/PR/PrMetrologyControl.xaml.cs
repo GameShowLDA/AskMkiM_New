@@ -1,18 +1,16 @@
-﻿using System.Windows.Controls;
-using AppConfiguration.Error.Device.Multimeter;
+﻿using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
-using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 using static Utilities.LoggerUtility;
 
 
@@ -23,7 +21,7 @@ namespace Mode.Metrology.PR
   /// </summary>
   public partial class PrMetrologyControl : UserControl
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.KC;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.KC;
 
     PrMeasurement testMeasurement = new PrMeasurement();
 
@@ -109,7 +107,7 @@ namespace Mode.Metrology.PR
       public PrMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -119,7 +117,7 @@ namespace Mode.Metrology.PR
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 

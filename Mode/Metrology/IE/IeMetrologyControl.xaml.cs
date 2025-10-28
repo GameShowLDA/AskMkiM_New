@@ -1,18 +1,16 @@
-﻿using System.Windows.Controls;
-using AppConfiguration.Error.Device.Multimeter;
+﻿using AppConfiguration.Error.Device.Multimeter;
 using AppConfiguration.Interface;
-using AppConfiguration.MeasurementError;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
-using static NewCore.Enum.MetrologyEnum;
 
 namespace Mode.Metrology.IE
 {
@@ -21,7 +19,7 @@ namespace Mode.Metrology.IE
   /// </summary>
   public partial class IeMetrologyControl : UserControl, IExecution
   {
-    MetrologicalModeRole metrologicalModeRole => MetrologicalModeRole.IE;
+    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.IE;
 
     IeMeasurement testMeasurement = new IeMeasurement();
 
@@ -99,7 +97,7 @@ namespace Mode.Metrology.IE
       public IeMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MetrologicalModeRole metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -109,7 +107,7 @@ namespace Mode.Metrology.IE
       }
 
       /// <inheritdoc />
-      public override async Task<bool> PerformMeasurement(MetrologicalModeRole metrologicalModeRole, double param, ProtocolUI protocolUI)
+      public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения ёмкости"));
