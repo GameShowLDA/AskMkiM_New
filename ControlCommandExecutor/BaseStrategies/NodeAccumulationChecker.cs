@@ -4,6 +4,7 @@ using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Service;
+using Errors.Device.ModuleRelayControl;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -210,7 +211,7 @@ namespace ControlCommandExecutor.BaseStrategies
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
       {
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
     }
 
@@ -228,7 +229,7 @@ namespace ControlCommandExecutor.BaseStrategies
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
       {
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
     }
 
@@ -246,7 +247,7 @@ namespace ControlCommandExecutor.BaseStrategies
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
       {
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
     }
 
@@ -264,7 +265,7 @@ namespace ControlCommandExecutor.BaseStrategies
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
       {
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
     }
 

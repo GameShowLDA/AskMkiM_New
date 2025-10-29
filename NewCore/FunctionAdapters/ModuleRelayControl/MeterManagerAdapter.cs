@@ -1,7 +1,7 @@
-﻿using AppConfiguration.Error.Device.ModuleRelayControl;
-using DTO.Device.RelaySwitchModule;
+﻿using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Capabilities;
 using DTO.Service;
+using Errors.Device.ModuleRelayControl;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
 

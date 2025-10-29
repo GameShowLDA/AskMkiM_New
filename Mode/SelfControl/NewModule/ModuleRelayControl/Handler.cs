@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
+using Errors.Device.ModuleRelayControl;
 using Mode.SelfControl.Module.ModuleRelayControl;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -70,7 +71,7 @@ namespace Mode.SelfControl.NewModule.ModuleRelayControl
       await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel($"\r\nСамоконтроль МКР"));
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => moduleRelayControl.MeterManager.ConnectMeterAsync(ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.MeterExceptionFactory.ConnectFailed(moduleRelayControl.Name, moduleRelayControl.NumberChassis, moduleRelayControl.Number);
+        throw MeterExceptionFactory.ConnectFailed(moduleRelayControl.Name, moduleRelayControl.NumberChassis, moduleRelayControl.Number);
 
       await PerformClosureCycle(token);
 

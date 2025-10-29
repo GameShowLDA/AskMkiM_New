@@ -1,6 +1,11 @@
 ﻿using Errors.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Device.ModuleRelayControl
+namespace Errors.Device.ModuleRelayControl
 {
   static public class ModuleRelayControlError
   {

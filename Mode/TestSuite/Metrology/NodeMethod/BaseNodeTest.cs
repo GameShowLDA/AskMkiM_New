@@ -8,6 +8,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device.DeviceBusCommutation;
+using Errors.Device.ModuleRelayControl;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -97,10 +98,10 @@ namespace Mode.TestSuite.Metrology.NodeMethod
         await protocolUI.ShowMessageAsync(new ShowMessageModel($"{module.Name}({module.Number})", message: $"Подключение к шинам A1B1", type: ShowMessageModel.MessageType.Info));
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
+          throw BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(SwitchingBus.B1.ToString(), module.Name, module.NumberChassis, module.Number);
+          throw BusExceptionFactory.ConnectFailed(SwitchingBus.B1.ToString(), module.Name, module.NumberChassis, module.Number);
 
         int startPoint;
         int endPoint;
@@ -130,7 +131,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayGroupAsync(oppositeBus, startPoint, endPoint, protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed($"{startPoint}-{endPoint}", module.Name, module.NumberChassis, module.Number);
+          throw RelayExceptionFactory.ConnectPointFailed($"{startPoint}-{endPoint}", module.Name, module.NumberChassis, module.Number);
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel($"{module.NumberChassis}.{module.Number}.{startPoint} - {endPoint}", message: $"Подключение точек к шинам", type: ShowMessageModel.MessageType.Info));
         for (int i = startPoint; i <= endPoint; i++)

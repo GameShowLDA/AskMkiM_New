@@ -2,6 +2,7 @@
 using DTO.Device.RelaySwitchModule;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.ModuleRelayControl;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
@@ -27,7 +28,7 @@ namespace Mode.TestSuite.CrossTestMkr
       cancellationToken.ThrowIfCancellationRequested();
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(bus, userMessageService: ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(bus.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw BusExceptionFactory.ConnectFailed(bus.ToString(), module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -47,7 +48,7 @@ namespace Mode.TestSuite.CrossTestMkr
       cancellationToken.ThrowIfCancellationRequested();
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.DisconnectBusAsync(bus), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.DisconnectFailed(bus.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw BusExceptionFactory.DisconnectFailed(bus.ToString(), module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -92,7 +93,7 @@ namespace Mode.TestSuite.CrossTestMkr
     {
       cancellationToken.ThrowIfCancellationRequested();
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus, point, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw RelayExceptionFactory.ConnectPointFailed(point.ToString(), module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -108,7 +109,7 @@ namespace Mode.TestSuite.CrossTestMkr
     {
       cancellationToken.ThrowIfCancellationRequested();
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus, point, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.DisconnectPointFailed(point.ToString(), module.Name, module.NumberChassis, module.Number);
+        throw RelayExceptionFactory.DisconnectPointFailed(point.ToString(), module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -122,7 +123,7 @@ namespace Mode.TestSuite.CrossTestMkr
     {
       cancellationToken.ThrowIfCancellationRequested();
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.MeterManager.ConnectMeterAsync(ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.MeterExceptionFactory.ConnectFailed(module.Name, module.NumberChassis, module.Number);
+        throw MeterExceptionFactory.ConnectFailed(module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -135,7 +136,7 @@ namespace Mode.TestSuite.CrossTestMkr
     private async Task<bool> MeterDisableAsync(IUserMessageService messageService, IRelaySwitchModule module)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.MeterManager.DisconnectMeterAsync(ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.MeterExceptionFactory.DisconnectFailed(module.Name, module.NumberChassis, module.Number);
+        throw MeterExceptionFactory.DisconnectFailed(module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -149,7 +150,7 @@ namespace Mode.TestSuite.CrossTestMkr
     {
       cancellationToken.ThrowIfCancellationRequested();
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.MeterManager.GetMeterResponseAsync(ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.MeterExceptionFactory.MeterAnswerFailed(module.Name, module.NumberChassis, module.Number);
+        throw MeterExceptionFactory.MeterAnswerFailed(module.Name, module.NumberChassis, module.Number);
 
       return true;
     }
@@ -470,7 +471,7 @@ namespace Mode.TestSuite.CrossTestMkr
       await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("Подлючение точек"));
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => verificat_module.PointManager.ConnectRelayGroupAsync(bus2, rangePoints.First(), rangePoints.Last(), ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed($"{rangePoints.First()}-{rangePoints.Last()}", verificat_module.Name, verificat_module.NumberChassis, verificat_module.Number);
+        throw RelayExceptionFactory.ConnectPointFailed($"{rangePoints.First()}-{rangePoints.Last()}", verificat_module.Name, verificat_module.NumberChassis, verificat_module.Number);
 
       foreach (int point in rangePoints)
       {

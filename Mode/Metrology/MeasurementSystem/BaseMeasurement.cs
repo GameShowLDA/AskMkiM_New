@@ -9,6 +9,7 @@ using DTO.Device.SwitchingDevice;
 using DTO.Enum;
 using DTO.Service;
 using Errors.Device.DeviceBusCommutation;
+using Errors.Device.ModuleRelayControl;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -393,10 +394,10 @@ namespace Mode.Metrology.MeasurementSystem
       foreach (var relayModule in relayModules)
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(DeviceEnums.SwitchingBus.A1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw BusExceptionFactory.ConnectFailed(DeviceEnums.SwitchingBus.A1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.BusManager.ConnectBusAsync(DeviceEnums.SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(DeviceEnums.SwitchingBus.B1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw BusExceptionFactory.ConnectFailed(DeviceEnums.SwitchingBus.B1.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
       }
 
       if (modeDevice == MetrologicalDeviceType.BreakdownTester)
@@ -431,10 +432,10 @@ namespace Mode.Metrology.MeasurementSystem
       await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение точек"), IsBlockStart: true);
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules[0].PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.A, point1.PointNumber, protocolUI), protocolUI))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModules[0].Name, relayModules[0].NumberChassis, relayModules[0].Number);
+        throw RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModules[0].Name, relayModules[0].NumberChassis, relayModules[0].Number);
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules.Last().PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.B, point2.PointNumber, protocolUI), protocolUI))
-        throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModules.Last().Name, relayModules.Last().NumberChassis, relayModules.Last().Number);
+        throw RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModules.Last().Name, relayModules.Last().NumberChassis, relayModules.Last().Number);
     }
     #endregion
   }

@@ -2,6 +2,7 @@
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.SwitchingDevice;
 using Errors.Device.DeviceBusCommutation;
+using Errors.Device.ModuleRelayControl;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
@@ -47,10 +48,10 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
       foreach (var module in relayModules)
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
+          throw BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.BusExceptionFactory.ConnectFailed(SwitchingBus.B1.ToString(), module.Name, module.NumberChassis, module.Number);
+          throw BusExceptionFactory.ConnectFailed(SwitchingBus.B1.ToString(), module.Name, module.NumberChassis, module.Number);
       }
     }
   }

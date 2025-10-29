@@ -3,6 +3,7 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Capabilities;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
+using Errors.Device.ModuleRelayControl;
 using NewCore.Communication;
 using Utilities;
 using static AppConfiguration.Execution.ExecutionConfig;
@@ -162,7 +163,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
         if (!model.SelfControl)
         {
           var lastLine = userMessageService.GetLastLineNumberAsync();
-          userMessageService.AddError(AppConfiguration.Error.Device.ModuleRelayControl.ModuleRelayControlError.PointError(lastLine, $"{relaySwitchModule.NumberChassis}.{model.NumberDevice}.{model.NumberPoint}"));
+          userMessageService.AddError(ModuleRelayControlError.PointError(lastLine, $"{relaySwitchModule.NumberChassis}.{model.NumberDevice}.{model.NumberPoint}"));
           showMessageModel = new ShowMessageModel()
           {
             Header = $"Подключение точки",

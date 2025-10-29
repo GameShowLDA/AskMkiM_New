@@ -7,6 +7,7 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Enum;
 using DTO.Service;
+using Errors.Device.ModuleRelayControl;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows.Controls;
@@ -148,10 +149,10 @@ namespace Mode.Metrology.EHT
         var relayModule = GetRelayModules(metrologicalModeRole).First();
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.A, point1.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.B, point1.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 
@@ -168,17 +169,17 @@ namespace Mode.Metrology.EHT
         var relayModule = GetRelayModules(metrologicalModeRole).First();
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.DisconnectRelayAsync(DeviceEnums.BusPoint.B, point1.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         relayModule = GetRelayModules(metrologicalModeRole).Last();
 
         await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подлючение точки {point2}"), IsBlockStart: true);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.A, point2.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.B, point2.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 
@@ -194,7 +195,7 @@ namespace Mode.Metrology.EHT
         var relayModule = GetRelayModules(metrologicalModeRole).Last();
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.DisconnectRelayAsync(DeviceEnums.BusPoint.A, point2.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
 
@@ -210,12 +211,12 @@ namespace Mode.Metrology.EHT
         var relayModule = GetRelayModules(metrologicalModeRole).First();
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.DisconnectRelayAsync(DeviceEnums.BusPoint.A, point1.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
 
         relayModule = GetRelayModules(metrologicalModeRole).Last();
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModule.PointManager.DisconnectRelayAsync(DeviceEnums.BusPoint.B, point2.PointNumber, userMessageService), userMessageService))
-          throw AppConfiguration.Error.Device.ModuleRelayControl.RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
+          throw RelayExceptionFactory.ConnectPointFailed(point2.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
       }
 
       public override async Task ConnectRelayPointsAsync(List<IRelaySwitchModule> relayModules, PointModel point1, PointModel point2, ProtocolUI protocolUI)
