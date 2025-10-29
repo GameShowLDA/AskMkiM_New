@@ -1,6 +1,10 @@
-﻿using Errors.Device;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Device.Breakdown
+namespace Errors.Device.Breakdown
 {
   /// <summary>
   /// Фабрика исключений для ошибок, возникающих при работе в режиме ACW.

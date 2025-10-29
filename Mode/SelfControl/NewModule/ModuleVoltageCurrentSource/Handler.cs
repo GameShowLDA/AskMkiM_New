@@ -1,12 +1,12 @@
-﻿using System.Globalization;
-using System.Windows;
-using AppConfiguration.Error.Device.Breakdown;
-using DataBaseConfiguration.Services.Device;
+﻿using DataBaseConfiguration.Services.Device;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
+using Errors.Device.Breakdown;
+using System.Globalization;
+using System.Windows;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static AppConfiguration.Execution.ExecutionConfig;

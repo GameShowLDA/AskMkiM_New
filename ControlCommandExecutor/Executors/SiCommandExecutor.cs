@@ -8,6 +8,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Breakdown;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -161,22 +162,22 @@ namespace ControlCommandExecutor.Executors
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetModeFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetModeFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Time.SetTestTimeAsync(time, userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetTestTimeFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetTestTimeFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.ResistanceLimits.SetLowResistanceLimitAsync(resistance, userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetLowLimitFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetLowLimitFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Voltage.SetVoltageAsync(voltage, userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
       }
     }
 

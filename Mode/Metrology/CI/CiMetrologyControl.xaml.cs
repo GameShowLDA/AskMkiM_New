@@ -1,16 +1,12 @@
-﻿using AppConfiguration.Error.Device;
-using AppConfiguration.Error.Device.Breakdown;
-using AppConfiguration.Interface;
-using AppConfiguration.MeasurementError;
+﻿using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
-using DTO.Device.FastMeter;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Breakdown;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
-using System.Diagnostics.Metrics;
 using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -70,7 +66,7 @@ namespace Mode.Metrology.CI
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
       Data = UIValidationHelper.TryValidateAndParseInputWithEquipment(ProtocolUI, timeCheck: true, voltageCheck: true);
-      if (!Data.Success)  
+      if (!Data.Success)
       {
         await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: Data.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
         throw new Exception();

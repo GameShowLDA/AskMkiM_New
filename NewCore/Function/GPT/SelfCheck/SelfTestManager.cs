@@ -6,6 +6,7 @@ using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Breakdown;
 using Utilities;
 
 namespace NewCore.Function.GPT.SelfCheck
@@ -83,22 +84,22 @@ namespace NewCore.Function.GPT.SelfCheck
         await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка для проверки пременного напряжения"));
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.AcwManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
         {
-          throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetModeFailed(name, numberChassis, number);
+          throw IrExceptionFactory.SetModeFailed(name, numberChassis, number);
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.AcwManger.Time.SetTestTimeAsync(1, userMessageService)).Success, userMessageService))
         {
-          throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetTestTimeFailed(name, numberChassis, number);
+          throw IrExceptionFactory.SetTestTimeFailed(name, numberChassis, number);
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.AcwManger.CurrentLimits.SetHighCurrentLimitAsync(10, userMessageService)).Success, userMessageService))
         {
-          throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetHighLimitFailed(name, numberChassis, number);
+          throw IrExceptionFactory.SetHighLimitFailed(name, numberChassis, number);
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.AcwManger.Time.SetRampTimeAsync(0.1, userMessageService)).Success, userMessageService))
         {
-          throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+          throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.AcVoltageManager.SetACVoltageModeAsync(userMessageService)), userMessageService))
@@ -114,7 +115,7 @@ namespace NewCore.Function.GPT.SelfCheck
           await Task.Delay(50);
           if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.AcwManger.Voltage.SetVoltageAsync(i, userMessageService)).Success, userMessageService))
           {
-            throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+            throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
           }
 
           await breakdownTester.AcwManger.Measure.ApplyVoltageAsync(userMessageService);
@@ -148,22 +149,22 @@ namespace NewCore.Function.GPT.SelfCheck
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка для проверки пременного напряжения"));
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.DcwManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetModeFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetModeFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.DcwManger.Time.SetTestTimeAsync(1, userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetTestTimeFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetTestTimeFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.DcwManger.CurrentLimits.SetHighCurrentLimitAsync(10, userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetHighLimitFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetHighLimitFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.DcwManger.Time.SetRampTimeAsync(0.1, userMessageService)).Success, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.DcVoltageManager.SetDCVoltageModeAsync(userMessageService)), userMessageService))
@@ -179,7 +180,7 @@ namespace NewCore.Function.GPT.SelfCheck
         await Task.Delay(50);
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.DcwManger.Voltage.SetVoltageAsync(i, userMessageService)).Success, userMessageService))
         {
-          throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+          throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
         }
 
         await breakdownTester.DcwManger.Measure.ApplyVoltageAsync(userMessageService);

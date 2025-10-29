@@ -1,11 +1,10 @@
-﻿using System.Windows.Controls;
-using AppConfiguration.Error.Device;
-using AppConfiguration.Error.Device.Breakdown;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Breakdown;
 using Mode.Base;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;

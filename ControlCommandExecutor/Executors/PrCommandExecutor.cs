@@ -9,6 +9,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Breakdown;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -172,11 +173,11 @@ namespace ControlCommandExecutor.Executors
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка мультиметра"));
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ConnectableManager.ConnectAsync(userMessageService)).Connect, userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ContinuityManager.SetContinuityModeAsync(userMessageService)), userMessageService))
       {
-        throw AppConfiguration.Error.Device.Breakdown.IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+        throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
       }
     }
 

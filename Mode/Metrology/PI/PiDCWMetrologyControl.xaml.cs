@@ -1,9 +1,9 @@
-﻿using AppConfiguration.Error.Device.Breakdown;
-using AppConfiguration.Interface;
+﻿using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
+using Errors.Device.Breakdown;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows;

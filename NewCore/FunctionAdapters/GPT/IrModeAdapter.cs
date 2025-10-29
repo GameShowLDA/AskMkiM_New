@@ -1,8 +1,8 @@
-﻿using AppConfiguration.Error.Device.Breakdown;
-using DTO.Device.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.Breakdown.Mode;
 using DTO.Device.Breakdown.Model;
 using DTO.Service;
+using Errors.Device.Breakdown;
 using NewCore.Device;
 using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
