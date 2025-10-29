@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
     <ProjectReference Include="..\DataBaseConfigruration\DataBaseConfiguration.csproj" />
+    <ProjectReference Include="..\Errors\Errors.csproj" />
     <ProjectReference Include="..\EventCore\EventCore.csproj" />
     <ProjectReference Include="..\NewCore\NewCore.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />

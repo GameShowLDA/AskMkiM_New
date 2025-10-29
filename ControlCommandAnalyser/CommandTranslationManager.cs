@@ -6,7 +6,7 @@ using ControlCommandAnalyser.ComandBody;
 using ControlCommandAnalyser.Formatter;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Parser;
-using DTO.Service.Models;
+using Errors.Models;
 using EventCore.Adapters;
 using Utilities.TextEditor;
 

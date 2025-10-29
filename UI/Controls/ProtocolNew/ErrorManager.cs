@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using DTO.Service.Models;
+using Errors.Models;
 using EventCore.Adapters;
 
 namespace UI.Controls.ProtocolNew

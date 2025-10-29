@@ -3,7 +3,7 @@ using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
-using DTO.Service.Models;
+using Errors.Models;
 
 namespace ControlCommandAnalyser.Parser
 {

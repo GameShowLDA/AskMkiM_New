@@ -1,5 +1,5 @@
 ﻿using DTO.Base.Models;
-using DTO.Service.Models;
+using Errors.Models;
 
 namespace DTO.Service
 {

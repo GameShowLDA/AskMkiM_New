@@ -1,5 +1,5 @@
 ﻿using AppConfiguration.Error.Translation;
-using DTO.Service.Models;
+using Errors.Models;
 namespace ControlCommandAnalyser.Model
 {
   /// <summary>

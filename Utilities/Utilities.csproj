@@ -2101,6 +2101,7 @@
 	  <ProjectReference Include="..\DTO.Enum\DTO.Enum.csproj" />
 	  <ProjectReference Include="..\DTO.Service\DTO.Service.csproj" />
 	  <ProjectReference Include="..\DTO\DTO.Settings.csproj" />
+	  <ProjectReference Include="..\Errors\Errors.csproj" />
 	  <ProjectReference Include="..\EventCore\EventCore.csproj" />
 	  <ProjectReference Include="..\Message\Message.csproj" />
 	</ItemGroup>

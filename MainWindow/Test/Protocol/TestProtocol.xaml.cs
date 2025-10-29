@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
 using DTO.Base.Models;
-using DTO.Service.Models;
+using Errors.Models;
 
 namespace MainWindowProgram.Test.Protocol
 {

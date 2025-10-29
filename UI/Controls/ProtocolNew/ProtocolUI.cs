@@ -8,7 +8,7 @@ using System.Windows.Media;
 using AppConfiguration.Protocol;
 using DTO.Base.Models;
 using DTO.Service;
-using DTO.Service.Models;
+using Errors.Models;
 using DTO.Settings.SettingsModels;
 using Message;
 using Utilities;

@@ -3,7 +3,7 @@ using ControlCommandAnalyser.Model;
 using ControlCommandExecutor.Executors;
 using DTO.Base.Models;
 using DTO.Service;
-using DTO.Service.Models;
+using Errors.Models;
 using Utilities.TextEditor;
 
 namespace ControlCommandExecutor.Execution

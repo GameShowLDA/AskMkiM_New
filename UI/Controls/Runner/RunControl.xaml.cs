@@ -5,7 +5,7 @@ using System.Windows.Input;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
-using DTO.Service.Models;
+using Errors.Models;
 using EventCore.Adapters;
 using Message;
 using UI.Controls.ProtocolNew;

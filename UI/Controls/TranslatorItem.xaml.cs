@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 using ControlCommandAnalyser.Model;
-using DTO.Service.Models;
+using Errors.Models;
 using EventCore.Adapters;
 using UI.Controls.TextEditor;
 

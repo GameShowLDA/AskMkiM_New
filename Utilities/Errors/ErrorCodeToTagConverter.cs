@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
-using DTO.Service.Models;
+using Errors.Models;
 
 namespace Utilities.Errors
 {

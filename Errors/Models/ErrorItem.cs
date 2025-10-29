@@ -1,4 +1,10 @@
-﻿namespace DTO.Service.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Errors.Models
 {
   /// <summary>
   /// Представляет элемент ошибки, возникшей при выполнении команды или измерения.

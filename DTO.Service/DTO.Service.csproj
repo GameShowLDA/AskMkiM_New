@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DTO.Base\DTO.Base.csproj" />
+	  <ProjectReference Include="..\Errors\Errors.csproj" />
 	</ItemGroup>
 
 </Project>

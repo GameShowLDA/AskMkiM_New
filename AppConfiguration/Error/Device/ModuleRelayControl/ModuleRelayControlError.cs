@@ -1,4 +1,4 @@
-﻿using DTO.Service.Models;
+﻿using Errors.Models;
 
 namespace AppConfiguration.Error.Device.ModuleRelayControl
 {

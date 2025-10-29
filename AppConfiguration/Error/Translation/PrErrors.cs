@@ -1,5 +1,5 @@
 ﻿using DTO.Device.RelaySwitchModule.Model;
-using DTO.Service.Models;
+using Errors.Models;
 
 namespace AppConfiguration.Error.Translation
 {

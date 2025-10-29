@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using DTO.Service.Models;
+using Errors.Models;
 using Utilities.Help;
 
 namespace UI.Controls.ErrorList
