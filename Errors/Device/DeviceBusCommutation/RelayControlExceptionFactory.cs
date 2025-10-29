@@ -1,6 +1,10 @@
-﻿using Errors.Device;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Device.DeviceBusCommutation
+namespace Errors.Device.DeviceBusCommutation
 {
   /// <summary>
   /// Фабрика исключений для ошибок подключения и отключения реле устройства коммутации шин.

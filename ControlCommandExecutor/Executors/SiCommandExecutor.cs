@@ -9,6 +9,7 @@ using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
 using Errors.Device.Breakdown;
+using Errors.Device.DeviceBusCommutation;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -126,7 +127,7 @@ namespace ControlCommandExecutor.Executors
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectBreakdownTester(userMessageService), userMessageService))
       {
-        throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectBreakdownFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
+        throw ConnectorExceptionFactory.ConnectBreakdownFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
       }
     }
     private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)

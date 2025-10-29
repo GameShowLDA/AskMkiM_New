@@ -1,6 +1,6 @@
-﻿using AppConfiguration.Error.Device.DeviceBusCommutation;
-using DTO.Device.SwitchingDevice.Capabilities;
+﻿using DTO.Device.SwitchingDevice.Capabilities;
 using DTO.Service;
+using Errors.Device.DeviceBusCommutation;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 

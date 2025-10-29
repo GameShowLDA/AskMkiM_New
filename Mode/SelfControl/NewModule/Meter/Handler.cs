@@ -3,6 +3,7 @@ using DataBaseConfiguration.Services.Device;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
+using Errors.Device.DeviceBusCommutation;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static AppConfiguration.Execution.ExecutionConfig;
@@ -111,7 +112,7 @@ namespace Mode.SelfControl.NewModule.Meter
       if (!await GetIsIdleModeEnabled())
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => deviceBusCommutation.ConnectorManager.ConnectBreakdownTester(ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-          throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectBreakdownFailed(deviceBusCommutation.Name, deviceBusCommutation.NumberChassis, deviceBusCommutation.Number);
+          throw ConnectorExceptionFactory.ConnectBreakdownFailed(deviceBusCommutation.Name, deviceBusCommutation.NumberChassis, deviceBusCommutation.Number);
       }
 
       await CheckResistance(token);
@@ -120,7 +121,7 @@ namespace Mode.SelfControl.NewModule.Meter
       if (!await GetIsIdleModeEnabled())
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => deviceBusCommutation.ConnectorManager.DisconnectBreakdownTester(ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-          throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.DisconnectBreakdownFailed(deviceBusCommutation.Name, deviceBusCommutation.NumberChassis, deviceBusCommutation.Number);
+          throw ConnectorExceptionFactory.DisconnectBreakdownFailed(deviceBusCommutation.Name, deviceBusCommutation.NumberChassis, deviceBusCommutation.Number);
       }
     }
 
@@ -192,7 +193,7 @@ namespace Mode.SelfControl.NewModule.Meter
           if (!await GetIsIdleModeEnabled())
           {
             if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => deviceBusCommutation.CapacitorManager.ConnectCapacitor(i, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-              throw AppConfiguration.Error.Device.DeviceBusCommutation.CapacitorExceptionFactory.ConnectFailed(i.ToString());
+              throw CapacitorExceptionFactory.ConnectFailed(i.ToString());
           }
 
           capacitanceValue.TryGetValue(i, out double meaning);
@@ -204,7 +205,7 @@ namespace Mode.SelfControl.NewModule.Meter
           {
             result = await meter.CapacitanceManager.MeasureCapacitanceAsync(meaning, ProtocolSelfCheckControl);
             if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => deviceBusCommutation.CapacitorManager.DisconnectCapacitor(i, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-              throw AppConfiguration.Error.Device.DeviceBusCommutation.CapacitorExceptionFactory.DisconnectFailed(i.ToString());
+              throw CapacitorExceptionFactory.DisconnectFailed(i.ToString());
           }
 
           if (result >= first && result <= last)

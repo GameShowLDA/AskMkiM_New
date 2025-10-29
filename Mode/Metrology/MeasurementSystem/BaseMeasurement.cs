@@ -8,6 +8,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Enum;
 using DTO.Service;
+using Errors.Device.DeviceBusCommutation;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -401,7 +402,7 @@ namespace Mode.Metrology.MeasurementSystem
       if (modeDevice == MetrologicalDeviceType.BreakdownTester)
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectBreakdownTester(protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectBreakdownFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
+          throw ConnectorExceptionFactory.ConnectBreakdownFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
       }
       else
       {
@@ -415,7 +416,7 @@ namespace Mode.Metrology.MeasurementSystem
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectMultimeter(DeviceEnums.SwitchingBusNew.AB1, protocolUI), protocolUI))
-          throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectMultiMeterFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
+          throw ConnectorExceptionFactory.ConnectMultiMeterFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
       }
     }
 

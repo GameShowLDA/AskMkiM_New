@@ -7,6 +7,7 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
+using Errors.Device.DeviceBusCommutation;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -89,7 +90,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
       var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectBreakdownTester(protocolUI), protocolUI))
-        throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectBreakdownFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
+        throw ConnectorExceptionFactory.ConnectBreakdownFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
 
       foreach (var module in relayModules)
       {

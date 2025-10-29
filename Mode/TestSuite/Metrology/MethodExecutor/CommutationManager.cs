@@ -1,6 +1,7 @@
 ﻿using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.SwitchingDevice;
+using Errors.Device.DeviceBusCommutation;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
@@ -39,7 +40,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectBreakdownTester(protocolUI), protocolUI))
-        throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectBreakdownFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
+        throw ConnectorExceptionFactory.ConnectBreakdownFailed(busSwitcher.Name, busSwitcher.NumberChassis, busSwitcher.Number);
 
       var relayModules = _devices.OfType<IRelaySwitchModule>().ToList();
 

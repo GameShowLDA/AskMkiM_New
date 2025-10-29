@@ -5,6 +5,7 @@ using DTO.Device.PowerSourceModule;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device.Breakdown;
+using Errors.Device.DeviceBusCommutation;
 using System.Globalization;
 using System.Windows;
 using UI.Controls.ProtocolNew;
@@ -280,7 +281,7 @@ namespace Mode.SelfControl.NewModule.ModuleVoltageCurrentSource
         throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.DisconnectNegativeFailed(SwitchingBus.B1.ToString());
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => switchingDevice.ConnectorManager.ConnectMultimeter(SwitchingBusNew.AB1, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectMultiMeterFailed(switchingDevice.Name, switchingDevice.NumberChassis, switchingDevice.Number);
+        throw ConnectorExceptionFactory.ConnectMultiMeterFailed(switchingDevice.Name, switchingDevice.NumberChassis, switchingDevice.Number);
     }
   }
 }

@@ -10,6 +10,7 @@ using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
 using Errors.Device.Breakdown;
+using Errors.Device.DeviceBusCommutation;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -160,7 +161,7 @@ namespace ControlCommandExecutor.Executors
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectMultimeter(SwitchingBusNew.AB1, userMessageService), userMessageService))
       {
-        throw AppConfiguration.Error.Device.DeviceBusCommutation.ConnectorExceptionFactory.ConnectMultiMeterFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
+        throw ConnectorExceptionFactory.ConnectMultiMeterFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
       }
     }
 
