@@ -1,4 +1,6 @@
-﻿namespace AppConfiguration.Error.Device.Breakdown
+﻿using Errors.Device;
+
+namespace AppConfiguration.Error.Device.Breakdown
 {
   /// <summary>
   /// Фабрика исключений для ошибок, возникающих при работе в режиме DCW.

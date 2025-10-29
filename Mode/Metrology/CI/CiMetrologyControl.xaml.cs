@@ -7,6 +7,7 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Device.FastMeter;
 using DTO.Service;
+using Errors.Device;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Diagnostics.Metrics;

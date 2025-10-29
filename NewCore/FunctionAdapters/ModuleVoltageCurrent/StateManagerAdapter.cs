@@ -2,6 +2,7 @@
 using DTO.Device.Base;
 using DTO.Device.PowerSourceModule;
 using DTO.Service;
+using Errors.Device;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
 

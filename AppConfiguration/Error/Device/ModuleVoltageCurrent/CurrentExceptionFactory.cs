@@ -1,4 +1,6 @@
-﻿namespace AppConfiguration.Error.Device.ModuleVoltageCurrent
+﻿using Errors.Device;
+
+namespace AppConfiguration.Error.Device.ModuleVoltageCurrent
 {
   /// <summary>
   /// Фабрика исключений для операций установки и ограничения тока в модуле МИНТ.

@@ -1,4 +1,6 @@
-﻿namespace AppConfiguration.Error.Device.ModuleRelayControl
+﻿using Errors.Device;
+
+namespace AppConfiguration.Error.Device.ModuleRelayControl
 {
   /// <summary>
   /// Фабрика исключений, связанных с подключением и отключением шин.

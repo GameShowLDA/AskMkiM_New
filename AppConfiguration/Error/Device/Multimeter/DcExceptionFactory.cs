@@ -1,4 +1,6 @@
-﻿namespace AppConfiguration.Error.Device.Multimeter
+﻿using Errors.Device;
+
+namespace AppConfiguration.Error.Device.Multimeter
 {
   public static class DcExceptionFactory
   {

@@ -1,6 +1,7 @@
 ﻿using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule;
 using DTO.Service;
+using Errors.Device;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
@@ -64,7 +65,7 @@ namespace Mode.TestSuite.CrossTestMkr
 
       if (!state)
       {
-        AppConfiguration.Error.Device.ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
+        ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
       }
 
       return true;
@@ -77,7 +78,7 @@ namespace Mode.TestSuite.CrossTestMkr
     private async Task ResetModule(IUserMessageService messageService, IRelaySwitchModule module)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.ConnectableManager.ResetAsync(messageService), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.ResetFailed(module.Name, module.NumberChassis, module.Number);
+        throw ConnectionExceptionFactory.ResetFailed(module.Name, module.NumberChassis, module.Number);
     }
 
     /// <summary>

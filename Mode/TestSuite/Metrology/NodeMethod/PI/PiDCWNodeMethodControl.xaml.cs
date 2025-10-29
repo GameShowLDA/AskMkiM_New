@@ -4,6 +4,7 @@ using AppConfiguration.Error.Device.Breakdown;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Service;
+using Errors.Device;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;

@@ -1,6 +1,12 @@
-﻿namespace AppConfiguration.Error.Device.Adapters
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Errors.Device.Adapters
 {
-  internal static class VoltageExceptionAdapter
+  public static class VoltageExceptionAdapter
   {
     /// <summary>
     /// Исключение при ошибке установки источника напряжения или null, если подавление включено.

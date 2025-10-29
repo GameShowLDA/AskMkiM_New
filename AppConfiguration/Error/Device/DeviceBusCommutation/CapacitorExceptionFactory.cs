@@ -1,4 +1,6 @@
-﻿namespace AppConfiguration.Error.Device.DeviceBusCommutation
+﻿using Errors.Device;
+
+namespace AppConfiguration.Error.Device.DeviceBusCommutation
 {
   /// <summary>
   /// Фабрика исключений, связанных с подключением и отключением конденсаторов.

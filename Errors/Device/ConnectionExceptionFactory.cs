@@ -1,6 +1,11 @@
-﻿using AppConfiguration.Error.Device.Adapters;
+﻿using Errors.Device.Adapters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Device
+namespace Errors.Device
 {
   /// <summary>
   /// Фабрика исключений, связанных с подключением и инициализацией устройств.

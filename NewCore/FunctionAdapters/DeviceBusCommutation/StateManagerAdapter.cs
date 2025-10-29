@@ -1,6 +1,7 @@
 ﻿using AppConfiguration.Error.Device;
 using DTO.Device.Base;
 using DTO.Service;
+using Errors.Device;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities;

@@ -1,4 +1,6 @@
-﻿namespace AppConfiguration.Error.Device.ModuleVoltageCurrent
+﻿using Errors.Device;
+
+namespace AppConfiguration.Error.Device.ModuleVoltageCurrent
 {
   /// <summary>
   /// Фабрика исключений, связанных с подключением и отключением шин к выходам модуля МИНТ.

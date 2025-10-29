@@ -5,6 +5,7 @@ using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
+using Errors.Device;
 using Utilities;
 
 namespace NewCore.Function.GPT.SelfCheck
@@ -205,15 +206,15 @@ namespace NewCore.Function.GPT.SelfCheck
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Инициализация устройств"));
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await switchingDevice.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
       }
     }
   }

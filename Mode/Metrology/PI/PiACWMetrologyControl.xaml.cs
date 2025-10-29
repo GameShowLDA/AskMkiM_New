@@ -5,6 +5,7 @@ using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
+using Errors.Device;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows;

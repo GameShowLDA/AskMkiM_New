@@ -1,4 +1,5 @@
-﻿using AppConfiguration.Error.Device.Adapters;
+﻿using Errors.Device;
+using Errors.Device.Adapters;
 
 namespace AppConfiguration.Error.Device.ModuleVoltageCurrent
 {

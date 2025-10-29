@@ -7,6 +7,7 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
+using Errors.Device;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -120,7 +121,7 @@ namespace ControlCommandExecutor.Executors
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await dbc.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.InitializeFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
+        throw ConnectionExceptionFactory.InitializeFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectBreakdownTester(userMessageService), userMessageService))
       {
@@ -133,7 +134,7 @@ namespace ControlCommandExecutor.Executors
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await module.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
         {
-          throw AppConfiguration.Error.Device.ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
+          throw ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
         }
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: userMessageService), userMessageService))
         {
@@ -155,7 +156,7 @@ namespace ControlCommandExecutor.Executors
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка пробойной установки"));
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
       }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))

@@ -8,6 +8,7 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
+using Errors.Device;
 using Utilities;
 
 namespace ControlCommandExecutor.Execution
@@ -220,7 +221,7 @@ namespace ControlCommandExecutor.Execution
 
         if (!initialize)
         {
-          throw AppConfiguration.Error.Device.ConnectionExceptionFactory.InitializeFailed(
+          throw ConnectionExceptionFactory.InitializeFailed(
             module.Name, module.NumberChassis, module.Number);
         }
         else
@@ -237,7 +238,7 @@ namespace ControlCommandExecutor.Execution
 
       if (!initialize)
       {
-        throw AppConfiguration.Error.Device.ConnectionExceptionFactory.InitializeFailed(
+        throw ConnectionExceptionFactory.InitializeFailed(
           switchingDevice.Name, switchingDevice.NumberChassis, switchingDevice.Number);
       }
       else
