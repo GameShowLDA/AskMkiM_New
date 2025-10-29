@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="tests.main.button.background">#FFFFFF</Color>
+    <!--<Color x:Key="tests.main.button.background">#FFFFFF</Color>
     
     <SolidColorBrush x:Key="TestsInputBackgroundInputPanelBrush" Color="{DynamicResource tests.input.background.input.panel}"/>
     <SolidColorBrush x:Key="TestsInputBackgroundHeaderPanelBrush" Color="{DynamicResource tests.input.background.header.panel}"/>
@@ -24,6 +24,6 @@
 
     <SolidColorBrush x:Key="TestsProtocolBackgroundBrush" Color="{DynamicResource tests.protocol.background}"/>
 
-    <SolidColorBrush x:Key="TestsProtocolTimeForeground" Color="{DynamicResource tests.protocol.message.time.foreground}"/>
+    <SolidColorBrush x:Key="TestsProtocolTimeForeground" Color="{DynamicResource tests.protocol.message.time.foreground}"/>-->
 
 </ResourceDictionary>

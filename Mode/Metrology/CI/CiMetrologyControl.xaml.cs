@@ -69,7 +69,7 @@ namespace Mode.Metrology.CI
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
       Data = UIValidationHelper.TryValidateAndParseInputWithEquipment(ProtocolUI, timeCheck: true, voltageCheck: true);
-      if (!Data.Success)
+      if (!Data.Success)  
       {
         await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: Data.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
         throw new Exception();

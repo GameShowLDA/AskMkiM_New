@@ -79,7 +79,7 @@
 
         </Grid>
 
-        <Border  Name="ButtonPanels" CornerRadius="0,0,0,0" Grid.Row="1" Background="{DynamicResource PrimarySolidColorBrush}">
+        <Border  Name="ButtonPanels" CornerRadius="0,0,0,0" Grid.Row="1" Background="{DynamicResource TestsProtocolBackgroundBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>

@@ -12,13 +12,6 @@
     <SolidColorBrush x:Key="MainBreachFirstColor" Color="{DynamicResource main.background.breath.firstColor}" />
     <SolidColorBrush x:Key="MainBreachSecondColor" Color="{DynamicResource main.background.breath.secondColor}" />
 
-    <!-- Заголовок -->
-    <SolidColorBrush x:Key="MainTitleSolidColorBrush" Color="{DynamicResource main.text.title.color}" />
-
-    <!-- Приветственный блок -->
-    <SolidColorBrush x:Key="MainGreetingBackgroundBrush" Color="{DynamicResource main.background.greeting}" />
-    <SolidColorBrush x:Key="MainGreetingBorderBrush" Color="{DynamicResource main.borderColor.greeting}" />
-
     <!-- Меню -->
     <SolidColorBrush x:Key="MainMenuBackgroundBrush" Color="{DynamicResource main.background.menu}" />
     <SolidColorBrush x:Key="MainMenuActiveBackgroundBrush" Color="{DynamicResource main.active.menu.background}" />

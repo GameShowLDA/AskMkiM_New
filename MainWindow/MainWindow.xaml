@@ -44,7 +44,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TopPanel" Style="{DynamicResource StyleTopMenu}" Cursor="SizeAll">
+        <Grid 
+            x:Name="TopPanel" Background="{DynamicResource BackgroundBrushes}" Cursor="SizeAll">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -232,7 +233,7 @@
 
         <Components:MultiWindowControl 
             x:Name="MultiWindow" 
-            Grid.Row="1" Background="{DynamicResource PrimarySolidColorBrush}"
+            Grid.Row="1" Background="{DynamicResource TestsProtocolBackgroundBrush}"
             />
 
         <Grid 

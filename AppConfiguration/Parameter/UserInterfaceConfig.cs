@@ -2,6 +2,7 @@
 using DTO.Enum;
 using DTO.Settings.SettingsModels;
 using DTO.SettingsModels;
+using static DTO.Enum.ThemeEnums;
 
 namespace AppConfiguration.Parameter
 {
@@ -31,7 +32,6 @@ namespace AppConfiguration.Parameter
     public static async Task SetTheme(DTO.Enum.ThemeEnums.Theme theme)
     {
       UserInterfaceModel.Theme = theme;
-      EventCore.Adapters.ThemeEventAdapter.RaiseChangeTheme(theme);
     }
 
     public static async Task SetSyntaxHighlighting(bool enable)
@@ -73,15 +73,17 @@ namespace AppConfiguration.Parameter
 
     public static async Task SaveProtocolModel(UserInterfaceModel parametrModel)
     {
-      UserInterfaceModel.Language = parametrModel.Language;
-      UserInterfaceModel.Theme = parametrModel.Theme;
-      UserInterfaceModel.UseSyntaxHighlighting = parametrModel.UseSyntaxHighlighting;
+      await SetLanguage(parametrModel.Language);
+      await SetTheme(parametrModel.Theme);
+      await SetSyntaxHighlighting(parametrModel.UseSyntaxHighlighting);
       SaveUserInterfaceEvent?.Invoke(parametrModel);
 
 
       await LanguageSettings.SetLanguageAsync(UserInterfaceModel.Language);
       await ThemeSettings.SetThemeAsync(UserInterfaceModel.Theme);
+
       EventCore.Adapters.ThemeEventAdapter.RaiseSyntaxHighlighting(parametrModel.UseSyntaxHighlighting);
+      EventCore.Adapters.ThemeEventAdapter.RaiseChangeTheme(parametrModel.Theme);
     }
 
 

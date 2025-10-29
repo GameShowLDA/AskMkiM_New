@@ -66,6 +66,5 @@ namespace UI.Controls.EmptyWorkspace
       SessionEventAdapter.RaiseOpenSession();
       GreetingBar.Visibility = Visibility.Collapsed;
     }
-
   }
 }

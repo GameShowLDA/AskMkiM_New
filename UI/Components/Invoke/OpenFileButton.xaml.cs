@@ -136,15 +136,15 @@ namespace UI.Components.Invoke
         this.IsEnabled = !newValue; // Кнопка отключается, если состояние "locked" активно
 
         // Если фон не равен активному цвету, меняем фон в зависимости от состояния кнопки
-        if (this.Background != (SolidColorBrush)Application.Current.Resources["ActiveBorderSolidColorBrush"])
+        if (this.Background != (SolidColorBrush)Application.Current.Resources["ActiveColorBrushes"])
         {
           if (!this.IsEnabled)
           {
-            this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#b23a48")); // Красный фон для отключенной кнопки
+            this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#b23a48"));
           }
           else if (this.IsEnabled)
           {
-            this.Background = (SolidColorBrush)Application.Current.Resources["IsCheckedColorSolidColorBrush"]; // Стандартный фон для включенной кнопки
+            this.Background = (SolidColorBrush)Application.Current.Resources["ActiveColorBrushes"];
           }
         }
       });

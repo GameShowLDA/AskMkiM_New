@@ -41,6 +41,7 @@ namespace Mode.Metrology.MeasurementSystem
     internal double LowerBound = -1;
     internal double UpperBound = -1;
 
+
     /// <summary>
     /// Формирует список уникальных устройств, необходимых для выполнения алгоритма,
     /// на основе заданных точек и выбранного метрологического режима.
@@ -217,6 +218,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     public virtual async Task FinalizeMeasurement(IUserMessageService messageService)
     {
+
       if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
       {
         await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
@@ -268,7 +270,7 @@ namespace Mode.Metrology.MeasurementSystem
 
     public virtual async Task PrintResult(IUserMessageService messageService, DTO.Enum.Measurement.MeasurementTypeCommand command)
     {
-      if (Measurements.Count < 1)
+      if (Measurements.Count < 2)
         return;
 
       var min = Measurements.Min();
@@ -280,7 +282,9 @@ namespace Mode.Metrology.MeasurementSystem
 
       await messageService.ShowMessageAsync(new ShowMessageModel($"Результаты режима {displayName}"), skipPause: true);
       await messageService.ShowMessageAsync(new ShowMessageModel("Минимальное значение", message: $"{min:F5} {unit}", type: (min >= LowerBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное занчение", message: $"{max:F5} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное значение", message: $"{max:F5} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+
+      Measurements = new();
     }
 
     private static MetrologicalDeviceType GetDeviceTypeForMode(MeasurementTypeCommand mode)

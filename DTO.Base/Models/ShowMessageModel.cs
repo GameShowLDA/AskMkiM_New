@@ -46,12 +46,12 @@ namespace DTO.Base.Models
     /// <summary>
     /// Сообщение и цвет для успешного выполнения.
     /// </summary>
-    static public (string Title, Color TitleColor) SuccessMessage => ("НОРМА", (Color)Application.Current.Resources["tests.protocol.message.succes.foreground"]);
+    static public (string Title, Color TitleColor) SuccessMessage => ("НОРМА", ((SolidColorBrush)Application.Current.Resources["TestsProtocolMessageSuccesForeground"]).Color);
 
     /// <summary>
     /// Сообщение и цвет для ошибки.
     /// </summary>
-    static public (string Title, Color TitleColor) ErrorMessage => ("БРАК", (Color)Application.Current.Resources["tests.protocol.message.error.foreground"]);
+    static public (string Title, Color TitleColor) ErrorMessage => ("БРАК", ((SolidColorBrush)Application.Current.Resources["TestsProtocolMessageErrorForeground"]).Color);
 
     /// <summary>
     /// Получает или задает заголовок сообщения.
@@ -68,7 +68,7 @@ namespace DTO.Base.Models
     /// <summary>
     /// Получает или задает цвет заголовка сообщения.
     /// </summary>
-    public Color? HeaderColor { get; set; } 
+    public Color? HeaderColor { get; set; }
 
     /// <summary>
     /// Получает или задает цвет текста сообщения.
@@ -161,12 +161,9 @@ namespace DTO.Base.Models
         {
           System.Windows.Application.Current.Dispatcher.Invoke(() =>
           {
-            if (System.Windows.Application.Current?.Resources["ForegroundSolidColorBrush"] is SolidColorBrush brush)
-            {
-              HeaderColor = (Color)Application.Current.Resources["tests.protocol.message.header.foreground"];
-              MessageColor = (Color)Application.Current.Resources["tests.protocol.message.message.foreground"];
-              TimeColor = (Color)Application.Current.Resources["tests.protocol.message.time.foreground"];
-            }
+            HeaderColor = ((SolidColorBrush)Application.Current.Resources["TestsProtocolHeaderForeground"]).Color;
+            MessageColor = ((SolidColorBrush)Application.Current.Resources["TestsProtocolMessageForeground"]).Color;
+            TimeColor = ((SolidColorBrush)Application.Current.Resources["TestsProtocolTimeForeground"]).Color;
           });
         }
       }

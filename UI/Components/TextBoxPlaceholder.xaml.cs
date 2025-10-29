@@ -1,11 +1,13 @@
-﻿using System.Globalization;
+﻿using DTO.Base.Models;
+using EventCore.Events;
+using EventCore.Services;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using DTO.Base.Models;
 
 namespace UI.Components
 {
@@ -119,9 +121,26 @@ namespace UI.Components
     {
       InitializeComponent();
       Loaded += (_, _) => InitPlaceholder();
+      EventAggregator.Subscribe<ThemeEvent.Change>(OnThemeChanged);
     }
 
     private void InitPlaceholder()
+    {
+      if (string.IsNullOrWhiteSpace(Text))
+      {
+        InputBox.Text = Placeholder;
+        InputBox.Foreground = (Brush)FindResource("TestsInputDescriptionSolidColorBrush");
+      }
+      else
+      {
+        InputBox.Foreground = (Brush)FindResource("TestsInputHeaderSolidColorBrush");
+      }
+    }
+
+    /// <summary>
+    /// Обработчик события смены темы. Вызывается, когда тема меняется глобально.
+    /// </summary>
+    private async void OnThemeChanged(EventCore.Events.ThemeEvent.Change e)
     {
       if (string.IsNullOrWhiteSpace(Text))
       {

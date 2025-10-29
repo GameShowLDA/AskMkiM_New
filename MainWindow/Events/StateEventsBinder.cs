@@ -66,6 +66,8 @@ namespace MainWindowProgram.Events
       _mainWindow.PreviewKeyDown += OnKeyDown;
 
       var idleMode = ExecutionConfig.GetIsIdleModeEnabled().Result;
+      EventAggregator.Subscribe<ThemeEvent.Change>(OnThemeChanged);
+
       OnIdleModeChange(null, idleMode);
     }
 
@@ -77,6 +79,22 @@ namespace MainWindowProgram.Events
     private async void AdminCommand_PauseInStopChanged(object? sender, bool e)
     {
       await ExecutionConfig.SetStopOnError(e);
+    }
+
+    /// <summary>
+    /// Обработчик события смены темы. Вызывается, когда тема меняется глобально.
+    /// </summary>
+    private async void OnThemeChanged(EventCore.Events.ThemeEvent.Change e)
+    {
+      if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
+      {
+        return;
+      }
+      else
+      {
+        _mainWindow.BottomPanel.Background = (Brush)Application.Current.FindResource("BackgroundBrushes");
+        _mainWindow.TopPanel.Background = (Brush)Application.Current.FindResource("BackgroundBrushes");
+      }
     }
 
     /// <summary>
@@ -116,8 +134,8 @@ namespace MainWindowProgram.Events
         }
         else
         {
-          _mainWindow.BottomPanel.Background = (Brush)Application.Current.FindResource("SecondarySolidColorBrush");
-          _mainWindow.TopPanel.Background = (Brush)Application.Current.FindResource("SecondarySolidColorBrush");
+          _mainWindow.BottomPanel.Background = (Brush)Application.Current.FindResource("BackgroundBrushes");
+          _mainWindow.TopPanel.Background = (Brush)Application.Current.FindResource("BackgroundBrushes");
           _mainWindow.PowerButton.Visibility = Visibility.Visible;
         }
       });

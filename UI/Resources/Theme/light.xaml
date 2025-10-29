@@ -8,8 +8,10 @@
     <SolidColorBrush x:Key="ForegrounfBrushes35" Color="#000000" Opacity="0.35"/>
     <SolidColorBrush x:Key="ForegrounfBrushes45" Color="#000000" Opacity="0.45"/>
     <SolidColorBrush x:Key="ForegrounfBrushes85" Color="#000000" Opacity="0.85"/>
+    
     <SolidColorBrush x:Key="BackgroundBrushes" Color="#dedddf"/>
     <SolidColorBrush x:Key="ActiveColorBrushes" Color="#90465945"/>
+    <SolidColorBrush x:Key="SettingsMainBackground" Color="#E9E8E9"/>
     <!--#endregion-->
 
     <!--#region Главное окно -->
@@ -252,14 +254,17 @@
         </Setter>
     </Style>
 
+    <!-- Приветственный блок -->
+    <SolidColorBrush x:Key="MainGreetingBackgroundBrush" Color="#DEDDDF" />
+    <SolidColorBrush x:Key="MainGreetingBorderBrush" Color="#000000" />
+    <SolidColorBrush x:Key="MainTitleSolidColorBrush" Color="#000000" />
+
     <!--#endregion-->
 
     
     <!--#endregion-->
 
-
     <!--#region Настрйоки приложения -->
-    <SolidColorBrush x:Key="SettingsMainBackground" Color="#E9E8E9"/>
 
     <Style x:Key="SettingCardStyle" TargetType="Border">
         <Setter Property="Background" Value="#FFFFFF"/>
@@ -350,4 +355,35 @@
 
     <!--#endregion-->
 
+    <!--#region Протокол оборудования -->
+
+    <SolidColorBrush x:Key="TestsInputBackgroundInputPanelBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TestsInputBackgroundHeaderPanelBrush" Color="#A4EB9E"/>
+    <SolidColorBrush x:Key="TestsMainPanelBackgroundBrush" Color="#DDDDDD"/>
+    
+    <SolidColorBrush x:Key="TestsMainButtonBackgroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TestsMainButtonForegroundBrush" Color="#000000"/>
+
+    <SolidColorBrush x:Key="TestsInputHeaderSolidColorBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="TestsInputDescriptionSolidColorBrush" Color="#000000"/>
+
+    <SolidColorBrush x:Key="TestsMainButtonOrangeStartBrush" Color="#90F47842"/>
+    <SolidColorBrush x:Key="TestsMainButtonOrangeEndBrush" Color="#90FCAA3F"/>
+
+    <SolidColorBrush x:Key="TestsMainButtonGreenStartBrush" Color="#90459C3C"/>
+    <SolidColorBrush x:Key="TestsMainButtonGreenEndBrush" Color="#9067C66E"/>
+
+    <SolidColorBrush x:Key="TestsInteractiveBackgroundSolidColorBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TestsInteractiveBorderSolidColorBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="TestsInteractivePressedSolidColorBrush" Color="#79E171"/>
+
+    <SolidColorBrush x:Key="TestsProtocolBackgroundBrush" Color="#FFFFFF"/>
+    
+    <SolidColorBrush x:Key="TestsProtocolMessageSucces" Color="#2FA84F"/>
+    <SolidColorBrush x:Key="TestsProtocolMessageError" Color="#F1301B"/>
+    <SolidColorBrush x:Key="TestsProtocolHeaderForeground" Color="#000000"/>
+    <SolidColorBrush x:Key="TestsProtocolMessageForeground" Color="#000000"/>
+    <SolidColorBrush x:Key="TestsProtocolTimeForeground" Color="YellowGreen"/>
+    
+    <!--#endregion-->
 </ResourceDictionary>

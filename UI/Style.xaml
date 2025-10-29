@@ -125,8 +125,8 @@
     <Style x:Key="ConfigButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="50"/>
         <Setter Property="FontSize" Value="20"/>
-        <Setter Property="Background" Value="{DynamicResource PrimarySolidColorBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource TestsMainButtonBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TestsMainButtonForegroundBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
 
         <Setter Property="Template">
@@ -144,7 +144,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource ActiveBorderSolidColorBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource ActiveColorBrushes}"/>
                 <Setter Property="Foreground" Value="{DynamicResource PrimarySolidColorBrush}"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>

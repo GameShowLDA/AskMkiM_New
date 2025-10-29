@@ -11,7 +11,7 @@
         <local:MarginConverter x:Key="MarginConverter"/>
     </UserControl.Resources>
 
-    <Border Background="{StaticResource TestsInputBackgroundInputPanelBrush}" CornerRadius="0,0,10,10" Name="BorderData">
+    <Border Background="{DynamicResource TestsInputBackgroundInputPanelBrush}" CornerRadius="0,0,10,10" Name="BorderData">
         <Grid>
             <!-- Определяем колонки -->
             <Grid.ColumnDefinitions>

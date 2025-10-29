@@ -135,10 +135,17 @@ namespace DTO.Base.Models.MeasurementError
 
       var range = config.Ranges.FirstOrDefault(r =>
           measuredValue >= r.MinValue &&
-          (r.MaxValue == null || measuredValue < r.MaxValue));
+          (r.MaxValue == null || measuredValue <= r.MaxValue));
 
       if (range == null)
-        throw new InvalidOperationException($"❌ Не найден подходящий диапазон погрешности для значения {measuredValue} (тип: {type})");
+      {
+        range = config.Ranges
+            .OrderByDescending(r => r.MaxValue ?? double.MaxValue)
+            .FirstOrDefault();
+
+        if (range == null)
+          throw new InvalidOperationException($"❌ Не удалось определить диапазон погрешности для команды {type}");
+      }
 
       double numericError = range.NumericError;
       double percentageError = range.PercentageError;
