@@ -1,4 +1,5 @@
-﻿using AppConfiguration.Error.DataBase;
+﻿using Errors.DataBase;
+
 using DTO.Device.Entity;
 using DTO.Device.FastMeter;
 

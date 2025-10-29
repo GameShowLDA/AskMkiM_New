@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using AppConfiguration.Error.DataBase;
-using DataBaseConfiguration.Services.Device;
+﻿using DataBaseConfiguration.Services.Device;
 using DTO.Device.Base;
 using DTO.Device.Entity;
 using DTO.Device.FastMeter;
+using Errors.DataBase;
+using System.Windows;
 using UI.Controls.Settings.DeviceConfig.Base;
 using UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig;
 

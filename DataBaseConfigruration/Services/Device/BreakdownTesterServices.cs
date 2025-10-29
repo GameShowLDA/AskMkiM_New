@@ -1,4 +1,4 @@
-﻿using AppConfiguration.Error.DataBase;
+﻿using Errors.DataBase;
 using DTO.Device.Breakdown;
 using DTO.Device.Entity;
 

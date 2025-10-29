@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using AppConfiguration.Error.DataBase;
+using Errors.DataBase;
 using DataBaseConfiguration.Services.Device;
 using DTO.Device.Base;
 using DTO.Device.Chassis;

@@ -1,4 +1,10 @@
-﻿namespace AppConfiguration.Error.DataBase
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Errors.DataBase
 {
   /// <summary>
   /// Базовый тип исключений, связанных с операциями базы данных.
