@@ -118,6 +118,20 @@ namespace ControlCommandAnalyser.Model.Chains
       return ChainDisconnectedPointsMap.Values.ToList();
     }
 
+    /// <summary>
+    /// Возвращает список списков точек в строковом формате ("x.x.x").
+    /// </summary>
+    /// <returns>Список списков строковых представлений точек.</returns>
+    public List<List<string>> GetPointsDisconnectedAsStrings()
+    {
+      return ChainDisconnectedPointsMap
+        .Values
+        .Select(pointList => pointList
+          .Select(point => point.ToString())
+          .ToList())
+        .ToList();
+    }
+
     public List<List<List<PointModel>>> GetPointsConnected()
     {
       var list = ChainConnectedPointsMap.Values.ToList();

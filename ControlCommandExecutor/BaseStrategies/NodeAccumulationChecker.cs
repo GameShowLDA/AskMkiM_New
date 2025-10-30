@@ -69,7 +69,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
             if (baseCommandModel.PointErrors != null)
             {
-              manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", points, localized));
+              manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(points), PointModel.ConvertToPointStrings(localized)));
             }
 
             var strError = PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });

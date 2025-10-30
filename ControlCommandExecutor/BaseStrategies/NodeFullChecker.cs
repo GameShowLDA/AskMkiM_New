@@ -57,7 +57,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
         if (!answer.Result)
         {
-          manager.AddErrorMethod(baseCommandModel.PointErrors.NodeExecutePointError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", chainModels.PointModels, ($"{answer.Value} МОм (>{resistance} МОм)")));
+          manager.AddErrorMethod(baseCommandModel.PointErrors.NodeExecutePointError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(chainModels.PointModels), ($"{answer.Value} МОм (>{resistance} МОм)")));
           ErrorsPoints.Add(chainModels);
         }
 

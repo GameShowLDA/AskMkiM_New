@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
+using Errors.Translation;
+using System.Text.RegularExpressions;
 
 namespace ControlCommandAnalyser.Parser.Ok
 {

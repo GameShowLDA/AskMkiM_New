@@ -1,13 +1,13 @@
-﻿using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.ComandBody;
+﻿using ControlCommandAnalyser.ComandBody;
 using ControlCommandAnalyser.Formatter;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Parser;
 using Errors.Models;
+using Errors.Translation;
 using EventCore.Adapters;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using Utilities.TextEditor;
 
 namespace ControlCommandAnalyser

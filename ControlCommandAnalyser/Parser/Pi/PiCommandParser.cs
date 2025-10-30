@@ -1,4 +1,4 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using Errors.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
@@ -6,7 +6,6 @@ using ControlCommandAnalyser.Parser.Si; // Для LoggerUtility
 using DTO.Device.Breakdown;
 using System.Text.RegularExpressions;
 using Utilities;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
@@ -34,7 +33,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         model.Errors.Add(GeneralErrors.BreakDownNotFound(numberLine, $"{commandNumber} {mnemonic}"));
         return model;
       }
-      else 
+      else
       {
         var maxDCWVoltage = breakDown.MaxVoltage;// постоянный ток
         var minVoltage = 50;

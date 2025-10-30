@@ -1,5 +1,11 @@
 ﻿using Errors.Models;
-namespace AppConfiguration.Error.Translation
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Errors.Translation
 {
   /// <summary>
   /// Содержит шаблоны ошибок, возникающих при парсинге выражений RM-команд.

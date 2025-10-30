@@ -1,7 +1,11 @@
-﻿using DTO.Device.RelaySwitchModule.Model;
-using Errors.Models;
+﻿using Errors.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Translation
+namespace Errors.Translation
 {
   public interface IPointError
   {
@@ -21,7 +25,7 @@ namespace AppConfiguration.Error.Translation
     /// <param name="pointFirst">Первая точка.</param>
     /// <param name="pointLast">Вторая точка.</param>
     /// <returns></returns>
-    public ErrorItem ChainPairError(string command, List<PointModel> pointFirst, List<PointModel> pointLast);
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast);
 
     /// <summary>
     /// Ошибка: Ошибка замкнутой цепи.
@@ -51,7 +55,6 @@ namespace AppConfiguration.Error.Translation
     /// <param name="countStep">Кол-во разрядов.</param>
     /// <param name="resultMeasure">Результат измерения.</param>
     /// <returns></returns>
-    public ErrorItem NodeExecutePointError(string command, List<PointModel> point, string resultMeasure);
-
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure);
   }
 }

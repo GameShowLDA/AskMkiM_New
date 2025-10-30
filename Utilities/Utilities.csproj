@@ -2098,6 +2098,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DTO.Base\DTO.Base.csproj" />
 	  <ProjectReference Include="..\DTO.Enum\DTO.Enum.csproj" />
 	  <ProjectReference Include="..\DTO.Service\DTO.Service.csproj" />
 	  <ProjectReference Include="..\DTO\DTO.Settings.csproj" />

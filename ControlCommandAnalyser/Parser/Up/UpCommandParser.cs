@@ -35,6 +35,7 @@ namespace ControlCommandAnalyser.Parser.Up
         SourceLines = new List<string>(lines),
         TargetLabel = targetLabel
       };
+
       List<string> processedLines = CommentsParser.ParseComments(lines, model);
       // Убираем полностью пустые/пробельные строки (чтобы не таскать мусор)
       model.SourceLines = model.SourceLines
@@ -44,7 +45,7 @@ namespace ControlCommandAnalyser.Parser.Up
       // Валидация
       if (string.IsNullOrWhiteSpace(targetLabel))
       {
-        model.Errors.Add(AppConfiguration.Error.Translation.UpErrors.MissingOrInvalidLabel(numberLine, $"{commandNumber} {mnemonic}"));
+        model.Errors.Add(Errors.Translation.UpErrors.MissingOrInvalidLabel(numberLine, $"{commandNumber} {mnemonic}"));
       }
 
       return model;

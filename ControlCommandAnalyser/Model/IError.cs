@@ -1,4 +1,4 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model
 {

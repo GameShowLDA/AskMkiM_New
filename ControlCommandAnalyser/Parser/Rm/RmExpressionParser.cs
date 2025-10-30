@@ -1,6 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
+using System.Text.RegularExpressions;
+using Errors.Translation;
 using static Utilities.LoggerUtility;
 
 namespace ControlCommandAnalyser.Parser.Rm

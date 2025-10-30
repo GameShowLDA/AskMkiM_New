@@ -1,9 +1,9 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
+using System.Text.RegularExpressions;
+using Errors.Translation;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Pr

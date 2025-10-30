@@ -1,10 +1,9 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using Errors.Translation;
 using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Chains; // Для LoggerUtility
+using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Device.Breakdown;
 using DTO.Enum;
-using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 using Utilities;
 
@@ -102,7 +101,7 @@ namespace ControlCommandAnalyser.Parser.Si
         return model;
       }
     }
-       
+
 
     private static string ParsePoints(string commandNumber, string mnemonic, int numberLine, SiCommandModel model, RmCommandModel rmCommandModel, string remainder, string bodyNoWs, int firstStar, int lastStar)
     {

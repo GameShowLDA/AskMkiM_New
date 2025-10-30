@@ -1,8 +1,7 @@
-﻿using AppConfiguration.Error.Translation;
+﻿using Errors.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
-using DTO.Device.Breakdown;
 using DTO.Enum;
 using System.Text.RegularExpressions;
 using Utilities;
@@ -137,7 +136,7 @@ namespace ControlCommandAnalyser.Parser.Ie
       else
       {
         var commandInfo = EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.IE);
-        
+
         double minCapacity = commandInfo.LowerLimit;
         double maxCapacity = commandInfo.UpperLimit;
 

@@ -1,6 +1,11 @@
 ﻿using Errors.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Translation
+namespace Errors.Translation
 {
   /// <summary>
   /// Предоставляет набор методов для генерации общих ошибок,

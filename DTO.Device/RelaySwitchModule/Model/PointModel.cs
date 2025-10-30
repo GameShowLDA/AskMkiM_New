@@ -98,6 +98,19 @@ namespace DTO.Device.RelaySwitchModule.Model
           .ToList();
     }
 
+    /// <summary>
+    /// Преобразует список моделей <see cref="PointModel"/> в список строк формата "x.x.x".
+    /// </summary>
+    /// <param name="points">Список моделей точек.</param>
+    /// <returns>Список строковых представлений точек.</returns>
+    public static List<string> ConvertToPointStrings(List<PointModel> points)
+    {
+      return points?
+        .Select(p => p.ToString())
+        .ToList()
+        ?? new List<string>();
+    }
+
     public override bool Equals(object? obj)
     {
       if (obj is not PointModel other)

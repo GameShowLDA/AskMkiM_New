@@ -1,7 +1,11 @@
-﻿using DTO.Device.RelaySwitchModule.Model;
-using Errors.Models;
+﻿using Errors.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Translation
+namespace Errors.Translation
 {
   /// <summary>
   /// Содержит шаблоны ошибок, возникающих при парсинге выражений КС-команд.
@@ -70,7 +74,7 @@ namespace AppConfiguration.Error.Translation
       Description = $"Замкнутая пара точек: {pointFirst}, {pointLast}"
     };
 
-    public ErrorItem ChainPairError(string command, List<PointModel> pointFirst, List<PointModel> pointLast)
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast)
     {
       var eroror = new ErrorItem()
       {
@@ -108,7 +112,7 @@ namespace AppConfiguration.Error.Translation
       Description = $"Разрыв в цепи {chain}"
     };
 
-    public ErrorItem NodeExecutePointError(string command, List<PointModel> point, string resultMeasure)
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure)
     {
       var error = new ErrorItem()
       {
