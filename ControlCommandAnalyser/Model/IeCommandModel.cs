@@ -10,7 +10,7 @@ namespace ControlCommandAnalyser.Model
   public class IeCommandModel : BaseCommandModel, IHasScheme
   {
 
-    public override string Mnemonic => "ИЕ";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.IE).DisplayName;
 
     /// <summary>
     /// Единицы измерения электрической ёмкости (например, "МОм", "кОм" и т.п.)

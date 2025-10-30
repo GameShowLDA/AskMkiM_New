@@ -16,15 +16,18 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
     /// </returns>
     public (string? Value, string? Unit, string Remainder) ParseTime(string input)
     {
+      // Теперь часть с числом необязательная: (?:...)?
       var match = Regex.Match(
-                  input,
-                  @"(?<val>\d+(?:[.,]\d+)?)\s*(?<unit>мс|ms|с|c)",
-                  RegexOptions.IgnoreCase);
+          input,
+          @"(?:(?<val>\d+(?:[.,]\d+)?)\s*)?(?<unit>(?:м[сc]|ms|с|c))\b",
+          RegexOptions.IgnoreCase
+          );
 
       if (match.Success)
       {
-        string value = match.Groups["val"].Value;
+        string? value = match.Groups["val"].Success ? match.Groups["val"].Value : null;
         string unit = match.Groups["unit"].Value;
+
         // удаляем найденный фрагмент вместе с запятой и пробелами после него
         var remainder = Regex.Replace(
             input,
@@ -33,11 +36,11 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
             RegexOptions.IgnoreCase
         ).Trim();
 
-
         return (value, unit, remainder);
       }
 
       return (null, null, input);
     }
+
   }
 }

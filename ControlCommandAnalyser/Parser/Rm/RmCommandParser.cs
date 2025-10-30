@@ -1,10 +1,13 @@
 ﻿using ControlCommandAnalyser.Model;
+using DTO.Enum;
+using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Rm
 {
   public class RmCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "РМ";
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.OrganizationalComands.RM);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {

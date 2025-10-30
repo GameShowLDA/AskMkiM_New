@@ -12,7 +12,7 @@ namespace ControlCommandAnalyser.Model
    ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
   public class PrCommandModel : BaseCommandModel, IError, IHasScheme
   {
-    public override string Mnemonic => "ПР";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
 
     /// <summary>
     /// Единицы измерения сопротивления (например, "МОм", "кОм" и т.п.)
@@ -48,6 +48,12 @@ namespace ControlCommandAnalyser.Model
     /// Остаток строки с нераспознанными параметрами.
     /// </summary>
     public string? UnparsedParameters { get; set; }
+
+    /// <summary>
+    /// Значение времени (например, "1c").
+    /// </summary>
+    public string? TimeSource { get; set; }
+    public double? Time { get; set; }
 
     /// <summary>
     /// Ошибки связанные с замыканием точек.

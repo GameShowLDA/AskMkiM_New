@@ -1,4 +1,5 @@
 ﻿using ControlCommandAnalyser.Model;
+using DTO.Enum;
 
 namespace ControlCommandAnalyser.Parser
 {
@@ -10,7 +11,7 @@ namespace ControlCommandAnalyser.Parser
     /// <summary>
     /// Проверяет, подходит ли парсер для данной строки (обычно по мнемонике).
     /// </summary>
-    bool CanParse(string mnemonic);
+    bool CanParse(MnemonicIdentifier mnemonic);
 
     /// <summary>
     /// Парсит входные строки и возвращает модель команды.

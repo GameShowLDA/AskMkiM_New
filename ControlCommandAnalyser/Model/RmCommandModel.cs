@@ -5,7 +5,7 @@
   /// </summary>
   public class RmCommandModel : BaseCommandModel
   {
-    public override string Mnemonic => "РМ";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.RM).DisplayName;
 
     /// <summary>
     /// Словарь: "точка источника" → "точка назначения".

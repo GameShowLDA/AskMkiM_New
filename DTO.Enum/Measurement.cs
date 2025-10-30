@@ -1,9 +1,10 @@
-﻿using System;
+﻿using DTO.Attributes;
+using DTO.Attributes.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DTO.Attributes;
 
 namespace DTO.Enum
 {
@@ -20,7 +21,7 @@ namespace DTO.Enum
       /// </summary>
       KC,
 
-      [CommandDisplayInfo("ПР", "Ом", 1, 10_000_000)]
+      [CommandDisplayInfo("ПР", "Ом", 1, 100_000)]
       /// <summary>
       /// Тип команды PR.
       /// </summary>
@@ -63,11 +64,56 @@ namespace DTO.Enum
       /// </summary>
       PI_DCW,
 
-      [CommandDisplayInfo("ЭТ", "Ом", 0.01, 100)]
+      [CommandDisplayInfo("ПИ", "В", 0, 0)]
       /// <summary>
       /// Тип команды PI постоянным током.
       /// </summary>
+      PI,
+
+      [CommandDisplayInfo("ЭТ", "Ом", 0.01, 100)]
+      /// <summary>
+      /// Тип команды EHT постоянным током.
+      /// </summary>
       EHT,
+    }
+
+    public enum OrganizationalComands
+    {
+      [CommandOrganizationalAttribute("СП")]
+      /// <summary>
+      /// Тип команды CP.
+      /// </summary>
+      CP,
+
+      [CommandOrganizationalAttribute("ЦУ")]
+      /// <summary>
+      /// Тип команды CU.
+      /// </summary>
+      CU,
+      
+      [CommandOrganizationalAttribute("КЦ")]
+      /// <summary>
+      /// Тип команды KSC.
+      /// </summary>
+      KSC,
+      
+      [CommandOrganizationalAttribute("ОК")]
+      /// <summary>
+      /// Тип команды OK постоянным током.
+      /// </summary>
+      OK,
+      
+      [CommandOrganizationalAttribute("РМ")]
+      /// <summary>
+      /// Тип команды RM.
+      /// </summary>
+      RM,
+      
+      [CommandOrganizationalAttribute("УП")]
+      /// <summary>
+      /// Тип команды UP.
+      /// </summary>
+      UP,
     }
   }
 }

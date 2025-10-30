@@ -21,7 +21,7 @@
   [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Д)]
   public class CuCommandModel : BaseCommandModel
   {
-    public override string Mnemonic => "ЦУ";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.CU).DisplayName;
 
     /// <summary>
     /// Тип команды ЦУ (информация, вопрос, переход).

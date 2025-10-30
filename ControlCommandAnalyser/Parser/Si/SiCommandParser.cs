@@ -14,7 +14,8 @@ namespace ControlCommandAnalyser.Parser.Si
   /// </summary>
   public class SiCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "СИ";
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.MeasurementTypeCommand.CI);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {
@@ -179,6 +180,7 @@ namespace ControlCommandAnalyser.Parser.Si
       var maxVoltage = breakDown.MaxVoltage;
       double minResistance = commandInfo.LowerLimit;
       double maxResistance = commandInfo.UpperLimit;
+      string defaultResistainceunit = commandInfo.Unit;
       string voltage = string.Empty, resistance = string.Empty, time = string.Empty, unit = string.Empty, unitTime = string.Empty, unitResistance = string.Empty;
 
       (voltage, unit, remainder) = CommonParameterParser.VoltageParser.ParseVoltage(remainder);
@@ -245,21 +247,21 @@ namespace ControlCommandAnalyser.Parser.Si
 
       if (resistanceValue.HasValue)
       {
-        var maxValue = UnitsConvertor.TryConvertBack(maxResistance, "Ом");
-        var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
-        var resistanceFormatted = UnitsConvertor.TryConvertBack(minResistance, unit);
-        if (resistanceValue.Value > maxResistance)
+        var maxValue = UnitsConvertor.TryParseValue($"{maxResistance}", defaultResistainceunit);
+        var minValue = UnitsConvertor.TryParseValue($"{minResistance}", defaultResistainceunit);
+        var resistanceFormatted = UnitsConvertor.TryConvertBack(resistanceValue.Value, unitResistance);
+        if (resistanceValue.Value > maxValue)
         {
           LoggerUtility.LogError($"В команде СИ указано сопротивление, превышающее максимально допустимое сопротивление пробойной установки.");
           var description = $"В команде {commandNumber} {mnemonic} указано сопротивление ({resistanceFormatted.Item1} {resistanceFormatted.Item2}), " +
-            $"превышающий максимально допустимое сопротивление пробойной установки ({maxValue.Item1} {maxValue.Item2}).";
+            $"превышающий максимально допустимое сопротивление пробойной установки ({maxResistance} {defaultResistainceunit}).";
           model.Errors.Add(SiErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", description));
         }
-        else if (resistanceValue.Value < minResistance)
+        else if (resistanceValue.Value < minValue)
         {
           LoggerUtility.LogError($"В команде СИ указано сопротивление, меньше минимально допустимого сопротивления пробойной установки.");
           var description = $"В команде {commandNumber} {mnemonic} указано напряжение ({resistanceFormatted.Item1} {resistanceFormatted.Item2}), " +
-            $"меньше минимально допустимого напряжения пробойной установки ({minValue.Item1} {minValue.Item2}).";
+            $"меньше минимально допустимого напряжения пробойной установки ({minResistance} {defaultResistainceunit}).";
           model.Errors.Add(SiErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", description));
         }
         else
