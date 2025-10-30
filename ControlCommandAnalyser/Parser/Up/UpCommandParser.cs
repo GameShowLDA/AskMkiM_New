@@ -33,7 +33,7 @@ namespace ControlCommandAnalyser.Parser.Up
         CommandNumber = commandNumber,
         StartLineNumber = numberLine,
         SourceLines = new List<string>(lines),
-        TargetLabel = targetLabel
+        TargetLabel = targetLabel хуй
       };
 
       List<string> processedLines = CommentsParser.ParseComments(lines, model);
