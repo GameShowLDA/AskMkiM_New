@@ -5,6 +5,7 @@ using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Device.Breakdown;
 using DTO.Enum;
 using System.Text.RegularExpressions;
+using System.Windows;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Ie
@@ -15,7 +16,8 @@ namespace ControlCommandAnalyser.Parser.Ie
   [AllowedKeys(AlgorithmKey.Д)]
   internal class IeCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "ИЕ";
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.MeasurementTypeCommand.IE);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {
@@ -140,6 +142,10 @@ namespace ControlCommandAnalyser.Parser.Ie
         
         double minCapacity = commandInfo.LowerLimit;
         double maxCapacity = commandInfo.UpperLimit;
+        string defaultCapacityUnit = commandInfo.Unit;
+
+        var lowerLimit = UnitsConvertor.TryParseValue($"{minCapacity}", commandInfo.Unit);
+        var higherLimit = UnitsConvertor.TryParseValue($"{maxCapacity}", commandInfo.Unit);
 
         // 5️⃣ Флаг ошибок
         bool hasErrors = false;
@@ -162,23 +168,21 @@ namespace ControlCommandAnalyser.Parser.Ie
         // 7️⃣ Проверка нижней границы
         if (lower.HasValue && !hasErrors)
         {
-          var lowerValue = UnitsConvertor.TryConvertBack(lower.Value, unit);
-          if (lower.Value < minCapacity)
+          var lowerValue = UnitsConvertor.TryParseValue($"{lower.Value}", unit);
+          if (lowerValue < lowerLimit)
           {
-            var minValue = UnitsConvertor.TryConvertBack(minCapacity, "Ф");
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) " +
-              $"нижняя граница электрической емкости меньше минимально измеряемой ({minValue.Item1} {minValue.Item2}).");
+              $"нижняя граница электрической емкости меньше минимально измеряемой ({lowerLimit} {defaultCapacityUnit}).");
             model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-              $"Нижняя граница электрической емкости ({lowerValue.Item1} {lowerValue.Item2}) " +
-              $"меньше минимально измеряемой ({minValue.Item1} {minValue.Item2})."));
+              $"Нижняя граница электрической емкости ({lowerValue} {unit}) " +
+              $"меньше минимально измеряемой ({lowerLimit} {defaultCapacityUnit})."));
             hasErrors = true;
           }
-          if (lower.Value > maxCapacity)
+          if (lowerValue > higherLimit)
           {
-            var maxValue = UnitsConvertor.TryConvertBack(maxCapacity, "Ф");
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница электрической емкости больше максимально возможной ({maxCapacity}).");
             model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-              $"Нижняя граница электрической емкости ({lowerValue.Item1} {lowerValue.Item2}) больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+              $"Нижняя граница электрической емкости ({lowerValue} {unit}) больше максимально возможной ({higherLimit} {defaultCapacityUnit})."));
             hasErrors = true;
           }
         }
@@ -186,26 +190,24 @@ namespace ControlCommandAnalyser.Parser.Ie
         // 8️⃣ Проверка верхней границы (если она есть)
         if (higher.HasValue && !hasErrors)
         {
-          var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
+          var higherValue = UnitsConvertor.TryParseValue($"{higher.Value}", unit);
 
-          if (higher.Value > maxCapacity)
+          if (higherValue > higherLimit)
           {
-            var maxValue = UnitsConvertor.TryConvertBack(maxCapacity, "Ф");
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) " +
               $"верхняя граница электрической емкости больше максимально возможной ({maxCapacity}).");
             model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-              $"Верхняя граница электрической емкости ({higherValue.Item1} {higherValue.Item2}) " +
-              $"больше максимально возможной ({maxValue.Item1} {maxValue.Item2})."));
+              $"Верхняя граница электрической емкости ({higherValue} {unit}) " +
+              $"больше максимально возможной ({higherLimit} {defaultCapacityUnit})."));
             hasErrors = true;
           }
-          if (higher.Value < minCapacity)
+          if (higherValue < lowerLimit)
           {
-            var minValue = UnitsConvertor.TryConvertBack(minCapacity, "Ф");
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) " +
-              $"нижняя граница электрической емкости меньше минимально измеряемой ({minValue.Item1} {minValue.Item2})..");
+              $"нижняя граница электрической емкости меньше минимально измеряемой ({lowerLimit} {defaultCapacityUnit}).");
             model.Errors.Add(IeErrors.CapacityLimitsConflict(numberLine, $"{commandNumber} {mnemonic}",
-              $"Верхняя граница электрической емкости ({higherValue.Item1} {higherValue.Item2}) " +
-              $"меньше минимально измеряемой ({minValue.Item1} {minValue.Item2})."));
+              $"Верхняя граница электрической емкости ({higherValue} {unit}) " +
+              $"меньше минимально измеряемой ({lowerLimit} {defaultCapacityUnit})."));
             hasErrors = true;
           }
         }

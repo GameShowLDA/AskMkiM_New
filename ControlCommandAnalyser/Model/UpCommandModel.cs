@@ -5,7 +5,7 @@
   /// </summary>
   public class UpCommandModel : BaseCommandModel
   {
-    public override string Mnemonic => "УП";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.UP).DisplayName;
 
     /// <summary>
     /// Номер перехода (метка, на которую надо перейти).

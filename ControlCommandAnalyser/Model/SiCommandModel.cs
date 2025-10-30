@@ -14,7 +14,7 @@ namespace ControlCommandAnalyser.Model
     ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
   public class SiCommandModel : BaseCommandModel, IHasScheme
   {
-    public override string Mnemonic => "СИ";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.CI).DisplayName;
 
     /// <summary>
     /// Значение напряжения (например, "100В", "1кВ").

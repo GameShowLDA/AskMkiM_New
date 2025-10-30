@@ -4,6 +4,7 @@ using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using ControlCommandAnalyser.Parser.Si; // Для LoggerUtility
 using DTO.Device.Breakdown;
+using DTO.Enum;
 using System.Text.RegularExpressions;
 using Utilities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -15,7 +16,7 @@ namespace ControlCommandAnalyser.Parser.Pi
   /// </summary>
   public class PiCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "ПИ";
+    public bool CanParse(MnemonicIdentifier mnemonic) => mnemonic.Mnemonic.MatchesEnum(Measurement.MeasurementTypeCommand.PI);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {
@@ -36,9 +37,9 @@ namespace ControlCommandAnalyser.Parser.Pi
       }
       else 
       {
-        var maxDCWVoltage = breakDown.MaxVoltage;// постоянный ток
-        var minVoltage = 50;
-        var maxACWVoltage = breakDown.MaxVoltage; // переменный ток
+        var maxDCWVoltage = Measurement.MeasurementTypeCommand.PI_DCW.GetDisplayInfo().UpperLimit; ;// постоянный ток
+        var minVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().LowerLimit; ;
+        var maxACWVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().UpperLimit; ; // переменный ток
 
         var rmCommandModel = CommandsModel.GetRMModel();
 
@@ -135,11 +136,23 @@ namespace ControlCommandAnalyser.Parser.Pi
         (time, unitTime, remainderPi) = CommonParameterParser.TimeParser.ParseTime(remainderPi);
         LoggerUtility.LogDebug($"После парсинга времени: time='{time}{unitTime}', remainder='{remainderPi}'");
 
-        if (remainderPi.Contains('+'))
+        //if (remainderPi.Contains('+'))
+        //{
+        //  model.VoltageType = VoltageEnum.Type.DCW;
+        //  remainderPi = remainderPi.Replace("+", string.Empty);
+        //}
+
+        bool isDcw = remainderPi.Contains('+');
+        if (isDcw)
         {
           model.VoltageType = VoltageEnum.Type.DCW;
           remainderPi = remainderPi.Replace("+", string.Empty);
         }
+        else
+        {
+          model.VoltageType = VoltageEnum.Type.ACW;
+        }
+
 
         model.VoltageSource = voltage;
 

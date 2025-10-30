@@ -1,19 +1,22 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
+using MigraDoc.DocumentObjectModel;
+using System.Text.RegularExpressions;
 using Utilities;
+using YamlDotNet.Core.Tokens;
 
 namespace ControlCommandAnalyser.Parser.Pr
 {
   internal class PrCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "ПР";
+    public bool CanParse(MnemonicIdentifier mnemonic) => mnemonic.Mnemonic.MatchesEnum(Measurement.MeasurementTypeCommand.PR);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {
+
       LoggerUtility.LogInformation($"Начало парсинга команды: {commandNumber} {mnemonic}, строк: {lines?.Count ?? 0}");
 
       var model = new PrCommandModel
@@ -74,7 +77,7 @@ namespace ControlCommandAnalyser.Parser.Pr
       if (match.Success)
         remainder = match.Groups[1].Value.Trim();
 
-      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null;
+      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = string.Empty, unitTime = string.Empty;
 
       var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder);
 
@@ -100,12 +103,14 @@ namespace ControlCommandAnalyser.Parser.Pr
         "",
         RegexOptions.IgnoreCase);
       }
-
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRangeWithR(remainder);
       LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
 
+      (time, unitTime, remainder) = CommonParameterParser.TimeParser.ParseTime(remainder);
+      LoggerUtility.LogDebug($"После парсинга времени: time='{time}{unitTime}', remainder='{remainder}'");
+
       var meter = new DataBaseConfiguration.Services.Device.FastMeterServices().GetAll().FirstOrDefault();
-      var minResistance = 1;
+      //var minResistance = Measurement.MeasurementTypeCommand.PR.GetDisplayInfo().LowerLimit;
       if (meter == null)
       {
         LoggerUtility.LogError($"Не найден быстрый измеритель.");
@@ -137,8 +142,19 @@ namespace ControlCommandAnalyser.Parser.Pr
         {
           var higherValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
           var lowerValue = UnitsConvertor.TryConvertBack(higher.Value, unit);
-          var maxValue = UnitsConvertor.TryConvertBack(meter.MaxContinuityResistance, "Ом");
-          var minValue = UnitsConvertor.TryConvertBack(minResistance, "Ом");
+          (double?, string) maxValue = (-1.0, string.Empty);
+          var maxDefaultResistance = -1.0;
+          if (higher.Value <= 1000)
+          {
+            maxDefaultResistance = meter.MaxContinuityResistance;
+          }
+          else
+          {
+            maxDefaultResistance = defaultHigher;
+          }
+          maxValue = UnitsConvertor.TryConvertBack(meter.MaxContinuityResistance, commandInfo.Unit);
+
+          var minValue = UnitsConvertor.TryConvertBack(defaultLower, commandInfo.Unit);
 
           if (lower.Value > higher.Value)
           {
@@ -146,29 +162,71 @@ namespace ControlCommandAnalyser.Parser.Pr
             model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше верхней ({higherValue.Item1} {higherValue.Item2})."));
             hasResistanceErrors = true;
           }
-          else if (lower.Value > meter.MaxContinuityResistance)
+          else if (lower.Value > maxDefaultResistance)
           {
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально допустимой ({maxValue.Item1} {maxValue.Item2})");
             model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", maxValue.Item1, maxValue.Item2));
             hasResistanceErrors = true;
           }
-          else if (lower.Value < minResistance)
+          else if (lower.Value < defaultLower)
           {
-            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально возможной ({minResistance}).");
+            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально возможной ({defaultLower}).");
             model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально возможной ППУ({minValue.Item1} {minValue.Item2})."));
             hasResistanceErrors = true;
           }
-          else if (higher.Value < minResistance)
+          else if (higher.Value < defaultLower)
           {
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ({minValue.Item1} {minValue.Item2}).");
             model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ППУ ({minValue.Item1} {minValue.Item2})."));
             hasResistanceErrors = true;
           }
-          else if (higher.Value > meter.MaxContinuityResistance)
+          else if (higher.Value > maxDefaultResistance)
           {
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально допустимой ({maxValue.Item1} {maxValue.Item2})");
             model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", maxValue.Item1, maxValue.Item2));
             hasResistanceErrors = true;
+          }
+        }
+        else
+        {
+          (double?, string) value = (-1.0, string.Empty);
+          if (lower.HasValue || higher.HasValue)
+          {
+            if (lower.HasValue == true)
+            {
+              value = UnitsConvertor.TryConvertBack(lower.Value, unit);
+            }
+            if (higher.HasValue == true)
+            {
+              value = UnitsConvertor.TryConvertBack(higher.Value, unit);
+            }
+
+            (double?, string) maxValue = (-1.0, string.Empty);
+            var maxDefaultResistance = -1.0;
+            if (value.Item1 <= 1000)
+            {
+              maxDefaultResistance = meter.MaxContinuityResistance;
+            }
+            else
+            {
+              maxDefaultResistance = defaultHigher;
+            }
+            maxValue = UnitsConvertor.TryConvertBack(meter.MaxContinuityResistance, commandInfo.Unit);
+
+            var minValue = UnitsConvertor.TryConvertBack(defaultLower, commandInfo.Unit);
+
+            if (value.Item1 > maxDefaultResistance)
+            {
+              LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления ({value.Item1} {value.Item2}) больше максимально допустимой ({maxValue.Item1} {maxValue.Item2})");
+              model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", maxValue.Item1, maxValue.Item2));
+              hasResistanceErrors = true;
+            }
+            else if (value.Item1 < defaultLower)
+            {
+              LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально возможной ({defaultLower}).");
+              model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({value.Item1} {value.Item2}) меньше минимально возможной ППУ({minValue.Item1} {minValue.Item2})."));
+              hasResistanceErrors = true;
+            }
           }
         }
 
@@ -187,6 +245,23 @@ namespace ControlCommandAnalyser.Parser.Pr
           model.HigherLimitResistanceSource = $"{higherFinal} {unit}";
         }
       }
+
+
+      double? timeValue = -1;
+      if (!string.IsNullOrEmpty(time) && time != null)
+      {
+        timeValue = CommonParameterParser.ParseToDouble(time);
+      }
+      else if (!string.IsNullOrEmpty(unitTime))
+      {
+        timeValue = 1;
+      }
+
+      if (timeValue.HasValue && timeValue > -1)
+      {
+        model.Time = timeValue.Value;
+      }
+      model.TimeSource = time + unitTime;
 
       string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
 

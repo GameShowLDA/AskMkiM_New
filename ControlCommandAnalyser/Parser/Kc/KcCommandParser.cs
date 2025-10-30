@@ -14,7 +14,7 @@ namespace ControlCommandAnalyser.Parser.Kc
   [AllowedKeys(AlgorithmKey.Б, AlgorithmKey.Д)]
   internal class KcCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "КС";
+    public bool CanParse(MnemonicIdentifier mnemonic) => mnemonic.Mnemonic.MatchesEnum(Measurement.MeasurementTypeCommand.KC);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {

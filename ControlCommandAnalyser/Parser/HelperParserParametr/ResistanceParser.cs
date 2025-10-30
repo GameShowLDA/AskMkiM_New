@@ -135,6 +135,46 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
     /// - Unit — единица измерения сопротивления,  
     /// - Remainder — остаток строки.
     /// </returns>
+    public (string? Resistance, string? Unit, string Remainder) ParseCabelResistance(string input)
+    {
+      if (string.IsNullOrWhiteSpace(input))
+        return (null, null, input);
+
+      // число (с точкой или запятой), затем опциональный пробел и единица
+      var m = Regex.Match(input,
+          @"(?<val>\d+(?:[.,]\d+)?)\s*(?<unit>Ом|кОм|МОм|ГОм)\b",
+          RegexOptions.IgnoreCase);
+
+      if (m.Success)
+      {
+        string valueText = m.Groups["val"].Value.Replace(',', '.'); // нормализуем запятую
+        string unit = m.Groups["unit"].Value;
+
+        double? value = UnitsConvertor.TryParseValue(valueText, unit);
+        string remainder = RemoveMatchedWithNeighborComma(input, m.Index, m.Length);
+
+        return (
+          value?.ToString("G", System.Globalization.CultureInfo.InvariantCulture),
+          "Ом",
+          remainder.Trim()
+        );
+      }
+
+      return (null, null, input);
+    }
+
+    /// <summary>
+    /// Парсит выражения сопротивлений с использованием символа R:
+    /// "10 Ом &lt; R &lt; 20 Ом", "R &lt; 10 МОм", "10 МОм &lt; R".
+    /// </summary>
+    /// <param name="input">Входная строка.</param>
+    /// <returns>
+    /// Кортеж:
+    /// - Min — минимальное значение (если есть),  
+    /// - Max — максимальное значение (если есть),  
+    /// - Unit — единица измерения сопротивления,  
+    /// - Remainder — остаток строки.
+    /// </returns>
     public (string? Min, string? Max, string? Unit, string Remainder) ParseResistanceRangeWithR(string input)
     {
       if (string.IsNullOrWhiteSpace(input))

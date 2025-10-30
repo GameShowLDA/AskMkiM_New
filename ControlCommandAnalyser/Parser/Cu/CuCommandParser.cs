@@ -1,5 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
+using DTO.Enum;
+using System.Text.RegularExpressions;
+using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Cu
 {
@@ -8,7 +10,8 @@ namespace ControlCommandAnalyser.Parser.Cu
   /// </summary>
   public class CuCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "ЦУ";
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.OrganizationalComands.CU);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {

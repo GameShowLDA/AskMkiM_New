@@ -5,6 +5,6 @@ namespace ControlCommandAnalyser.Model
   public class KscCommandModel : BaseCommandModel
   {
     public OkCommandModel OkCommandModel { get; set; }
-    public override string Mnemonic => "КЦ";
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.KSC).DisplayName;
   }
 }

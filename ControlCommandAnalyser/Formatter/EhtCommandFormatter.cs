@@ -3,26 +3,25 @@ using ControlCommandAnalyser.Model.Chains;
 
 namespace ControlCommandAnalyser.Formatter
 {
-  internal class PrCommandFormatter : ICommandFormatter
+  internal class EhtCommandFormatter : ICommandFormatter
   {
-    public bool CanFormat(BaseCommandModel model) => model is PrCommandModel;
+    public bool CanFormat(BaseCommandModel model) => model is EhtCommandModel;
 
     public IEnumerable<string> Format(BaseCommandModel model)
     {
-      if (model is not PrCommandModel pr)
+      if (model is not EhtCommandModel eht)
         yield break;
 
-      // Первая строка: номер, мнемоника, нераспознанные параметры (если есть)
-      var firstLine = $"{pr.CommandNumber} {pr.Mnemonic}";
+      var firstLine = $"{eht.CommandNumber} {eht.Mnemonic}";
       yield return firstLine;
 
-      if (!string.IsNullOrWhiteSpace(pr.UnparsedParameters))
-        yield return $"\t{pr.UnparsedParameters}";
+      if (!string.IsNullOrWhiteSpace(eht.UnparsedParameters))
+        yield return $"\t{eht.UnparsedParameters}";
 
       // Ключи команды
-      if (pr.AlgorithmKey.Count > 0)
+      if (eht.AlgorithmKey.Count > 0)
       {
-        yield return $"\tКлючи команды: {string.Join(", ", pr.AlgorithmKey)}";
+        yield return $"\tКлючи команды: {string.Join(", ", eht.AlgorithmKey)}";
       }
       else
       {
@@ -30,26 +29,37 @@ namespace ControlCommandAnalyser.Formatter
       }
 
       // Нижний порог сопротивления
-      if (!string.IsNullOrWhiteSpace(pr.LowerLimitResistanceSource))
+      if (!string.IsNullOrWhiteSpace(eht.LowerLimitResistanceSource))
       {
-        yield return $"\tНижний порог сопротивления: {pr.LowerLimitResistanceSource}";
+        yield return $"\tНижний порог сопротивления: {eht.LowerLimitResistanceSource}";
       }
 
 
       // Верхний порог сопротивления
-      if (!string.IsNullOrWhiteSpace(pr.HigherLimitResistanceSource))
+      if (!string.IsNullOrWhiteSpace(eht.HigherLimitResistanceSource))
       {
-        yield return $"\tВерхний порог сопротивления: {pr.HigherLimitResistanceSource}";
+        yield return $"\tВерхний порог сопротивления: {eht.HigherLimitResistanceSource}";
       }
       else
       {
         yield return $"\tВерхний порог сопротивления не задан.";
       }
 
-      if (pr.Comment.Count > 0)
+
+      // Верхний порог сопротивления
+      if (!string.IsNullOrWhiteSpace(eht.CabelResistanceSource))
+      {
+        yield return $"\tСопротивление проводов: {eht.CabelResistanceSource}";
+      }
+      else
+      {
+        yield return $"\tСопротивление проводов не задано.";
+      }
+
+      if (eht.Comment.Count > 0)
       {
         yield return $"\tКомметрии:";
-        foreach (var line in pr.Comment)
+        foreach (var line in eht.Comment)
         {
           var trimmed = line.Trim();
           if (!string.IsNullOrEmpty(trimmed))
@@ -58,9 +68,9 @@ namespace ControlCommandAnalyser.Formatter
       }
 
       // Время
-      if (!string.IsNullOrWhiteSpace(pr.TimeSource))
+      if (!string.IsNullOrWhiteSpace(eht.TimeSource))
       {
-        yield return $"\tВремя выполнения: {pr.TimeSource}";
+        yield return $"\tВремя выполнения: {eht.TimeSource}";
       }
       else
       {
@@ -73,18 +83,18 @@ namespace ControlCommandAnalyser.Formatter
         yield return "\tМодель РМ не задана!";
         yield break;
       }
-      if (pr.Scheme == null || pr.Scheme.IsEmpty())
+      if (eht.Scheme == null || eht.Scheme.IsEmpty())
       {
         yield return "\t\tТочки не заданы!";
         yield break;
       }
 
-      if (pr.Scheme.GroupModels.Count > 0)
+      if (eht.Scheme.GroupModels.Count > 0)
       {
         yield return "\t\tРазобщенные точки:";
-        for (int i = 0; i < pr.Scheme.GroupModels.Count; i++)
+        for (int i = 0; i < eht.Scheme.GroupModels.Count; i++)
         {
-          var points = pr.Scheme.GetPointsDisconnected(pr.Scheme.GroupModels[i]);
+          var points = eht.Scheme.GetPointsDisconnected(eht.Scheme.GroupModels[i]);
           if (points != null)
           {
             string str = string.Empty;
@@ -99,12 +109,12 @@ namespace ControlCommandAnalyser.Formatter
         }
       }
 
-      if (pr.Scheme.GroupModels.Count > 0)
+      if (eht.Scheme.GroupModels.Count > 0)
       {
         yield return "\tСообщенные точки:";
-        for (int i = 0; i < pr.Scheme.GroupModels.Count; i++)
+        for (int i = 0; i < eht.Scheme.GroupModels.Count; i++)
         {
-          var pointsAll = pr.Scheme.GetPointsConnected(pr.Scheme.GroupModels[i]);
+          var pointsAll = eht.Scheme.GetPointsConnected(eht.Scheme.GroupModels[i]);
           if (pointsAll != null)
           {
             foreach (var points in pointsAll)

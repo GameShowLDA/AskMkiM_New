@@ -1,7 +1,9 @@
-﻿using System.Text.RegularExpressions;
-using AppConfiguration.Error.Translation;
+﻿using AppConfiguration.Error.Translation;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
+using DTO.Enum;
+using System.Text.RegularExpressions;
+using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Ok
 {
@@ -10,7 +12,8 @@ namespace ControlCommandAnalyser.Parser.Ok
   /// </summary>
   public class OkCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "ОК";
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.OrganizationalComands.OK);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {

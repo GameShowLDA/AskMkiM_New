@@ -1,12 +1,15 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
+using DTO.Enum;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.KSC
 {
   public class KscCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "КЦ";
+    //public bool CanParse(MnemonicIdentifier mnemonic) => mnemonic.Mnemonic.Equals(new MnemonicIdentifier(Measurement.OrganizationalComands.KSC));
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.OrganizationalComands.KSC);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {

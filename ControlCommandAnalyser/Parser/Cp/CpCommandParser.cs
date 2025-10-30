@@ -1,10 +1,15 @@
 ﻿using ControlCommandAnalyser.Model;
+using DTO.Enum;
+using Utilities;
+using Utilities.Extensions;
+using EnumExtensions = Utilities.EnumExtensions;
 
-namespace ControlCommandAnalyser.Parser.KSC
+namespace ControlCommandAnalyser.Parser.Cp
 {
   public class CpCommandParser : ICommandParser
   {
-    public bool CanParse(string mnemonic) => mnemonic == "СП";
+    public bool CanParse(MnemonicIdentifier mnemonic)
+    => mnemonic.Mnemonic.MatchesEnum(Measurement.OrganizationalComands.CP);
 
     public BaseCommandModel Parse(string commandNumber, string mnemonic, int numberLine, List<string> lines)
     {
