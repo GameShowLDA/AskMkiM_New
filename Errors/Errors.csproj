@@ -10,4 +10,8 @@
     <Folder Include="Metrology\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventCore\EventCore.csproj" />
+  </ItemGroup>
+
 </Project>

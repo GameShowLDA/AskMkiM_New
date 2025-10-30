@@ -36,11 +36,9 @@ namespace DTO.Device.Entity
     public string DeviceClass { get; set; }
 
     /// <inheritdoc />
-    [NotMapped]
     public int MaxVoltage { get; set; }
 
     /// <inheritdoc />
-    [NotMapped]
     public int IRMinVoltage { get ; set ; }
 
     /// <inheritdoc />
