@@ -1,5 +1,4 @@
-﻿using AppConfiguration.Error.Device.Multimeter;
-using AppConfiguration.Interface;
+﻿using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
@@ -8,6 +7,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Enum;
 using DTO.Service;
 using Errors.Device.ModuleRelayControl;
+using Errors.Device.Multimeter;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows.Controls;

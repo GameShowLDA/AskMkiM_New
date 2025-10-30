@@ -161,7 +161,7 @@ namespace ControlCommandExecutor.Executors
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.CapacitanceManager.SetCapacitanceModeAsync(userMessageService)), userMessageService))
       {
-        throw AppConfiguration.Error.Device.Multimeter.CapacitanceExceptionFactory.SetModeFailed(name, numberChassis, number);
+        throw Errors.Device.Multimeter.CapacitanceExceptionFactory.SetModeFailed(name, numberChassis, number);
       }
     }
   }

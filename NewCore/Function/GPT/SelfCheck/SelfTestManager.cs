@@ -104,7 +104,7 @@ namespace NewCore.Function.GPT.SelfCheck
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.AcVoltageManager.SetACVoltageModeAsync(userMessageService)), userMessageService))
         {
-          throw AppConfiguration.Error.Device.Multimeter.AcExceptionFactory.SetModeFailed(name, numberChassis, number);
+          throw Errors.Device.Multimeter.AcExceptionFactory.SetModeFailed(name, numberChassis, number);
         }
 
         await device.ConnectorManager.ConnectBreakdownTesterAndMultimeter(userMessageService);
@@ -169,7 +169,7 @@ namespace NewCore.Function.GPT.SelfCheck
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.DcVoltageManager.SetDCVoltageModeAsync(userMessageService)), userMessageService))
       {
-        throw AppConfiguration.Error.Device.Multimeter.AcExceptionFactory.SetModeFailed(name, numberChassis, number);
+        throw Errors.Device.Multimeter.AcExceptionFactory.SetModeFailed(name, numberChassis, number);
       }
 
       await device.ConnectorManager.ConnectBreakdownTesterAndMultimeter(userMessageService);

@@ -195,14 +195,14 @@ namespace ControlCommandExecutor.Executors
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ResistanceManager.SetResistanceModeAsync(userMessageService)), userMessageService))
         {
-          throw AppConfiguration.Error.Device.Multimeter.ResistanceExceptionFactory.SetModeFailed(name, numberChassis, number);
+          throw Errors.Device.Multimeter.ResistanceExceptionFactory.SetModeFailed(name, numberChassis, number);
         }
       }
       else
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ContinuityManager.SetContinuityModeAsync(userMessageService)), userMessageService))
         {
-          throw AppConfiguration.Error.Device.Multimeter.ContinuityExceptionFactory.SetModeFailed(name, numberChassis, number);
+          throw Errors.Device.Multimeter.ContinuityExceptionFactory.SetModeFailed(name, numberChassis, number);
         }
       }
     }

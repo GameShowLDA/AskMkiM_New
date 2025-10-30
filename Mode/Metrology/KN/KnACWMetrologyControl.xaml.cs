@@ -1,9 +1,9 @@
-﻿using AppConfiguration.Error.Device.Multimeter;
-using AppConfiguration.Interface;
+﻿using AppConfiguration.Interface;
 using DTO.Base.Models;
 using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
+using Errors.Device.Multimeter;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using Mode.Metrology.PI;
