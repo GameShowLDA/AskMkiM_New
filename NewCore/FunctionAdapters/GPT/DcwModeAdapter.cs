@@ -7,7 +7,6 @@ using NewCore.Device;
 using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
 using Utilities;
-using static NewCore.FunctionAdapters.GPT.AcwModeAdapter;
 
 namespace NewCore.FunctionAdapters.GPT
 {

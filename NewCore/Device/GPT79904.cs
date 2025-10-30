@@ -28,6 +28,8 @@ namespace NewCore.Device
       DeviceClass = GetType().FullName;
 
       DeviceType = DeviceEnums.DeviceType.BreakdownTester;
+      MaxVoltage = 700;
+      IRMinVoltage = 50;
 
       AcwManger = new AcwModeAdapter(this);
       DcwManger = new DcwModeAdapter(this);
@@ -35,8 +37,6 @@ namespace NewCore.Device
       SystemManger = new SystemSettingsAdapter(this);
       ConnectableManager = new ConnectableManagerAdapter(this);
       SelfTestManager = new NewCore.Function.GPT.SelfCheck.SelfTestManager();
-      MaxVoltage = 700;
-      IRMinVoltage = 50;
       LogWarning($"[{GetType().Name}] ctor вызван. Hash={GetHashCode()}", isDeviceLog: true);
 
       Mode = BreakdownTypeMode.None;

@@ -67,7 +67,7 @@ namespace NewCore.FunctionAdapters.GPT
     /// <summary>
     /// Адаптер, обеспечивающий операции чтения и сброса конфигурации режима ACW.
     /// </summary>
-    public IConfigurationProvider<AcwConfiguration> Config { get; set; } 
+    public IConfigurationProvider<AcwConfiguration> Config { get; set; }
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="AcwModeAdapter"/>,
@@ -925,7 +925,7 @@ namespace NewCore.FunctionAdapters.GPT
       {
         _acwMode.Config.ResetConfiguration();
       }
-    } 
+    }
     #endregion
   }
 }
