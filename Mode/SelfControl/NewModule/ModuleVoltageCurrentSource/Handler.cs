@@ -275,10 +275,10 @@ namespace Mode.SelfControl.NewModule.ModuleVoltageCurrentSource
       await moduleVoltageCurrentSource.CurrentManager.SetCurrentLevelAsync(0, 0, ProtocolSelfCheckControl);
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => moduleVoltageCurrentSource.BusManager.DisconnectBusToPositiveAsync(SwitchingBus.A1, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.DisconnectPositiveFailed(SwitchingBus.A1.ToString());
+        throw Errors.Device.ModuleVoltageCurrent.BusExceptionFactory.DisconnectPositiveFailed(SwitchingBus.A1.ToString());
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => moduleVoltageCurrentSource.BusManager.DisconnectBusToNegativeAsync(SwitchingBus.B1, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
-        throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.DisconnectNegativeFailed(SwitchingBus.B1.ToString());
+        throw Errors.Device.ModuleVoltageCurrent.BusExceptionFactory.DisconnectNegativeFailed(SwitchingBus.B1.ToString());
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => switchingDevice.ConnectorManager.ConnectMultimeter(SwitchingBusNew.AB1, ProtocolSelfCheckControl), ProtocolSelfCheckControl))
         throw ConnectorExceptionFactory.ConnectMultiMeterFailed(switchingDevice.Name, switchingDevice.NumberChassis, switchingDevice.Number);

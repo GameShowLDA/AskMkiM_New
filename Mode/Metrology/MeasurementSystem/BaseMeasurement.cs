@@ -410,10 +410,10 @@ namespace Mode.Metrology.MeasurementSystem
         if (modeDevice == MetrologicalDeviceType.Mint)
         {
           if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => mint.BusManager.ConnectBusToPositiveAsync(DeviceEnums.SwitchingBus.A1, userMessageService: protocolUI), protocolUI))
-            throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectPositiveFailed(DeviceEnums.SwitchingBus.A1.ToString());
+            throw Errors.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectPositiveFailed(DeviceEnums.SwitchingBus.A1.ToString());
 
           if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => mint.BusManager.ConnectBusToNegativeAsync(DeviceEnums.SwitchingBus.B1, userMessageService: protocolUI), protocolUI))
-            throw AppConfiguration.Error.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectNegativeFailed(DeviceEnums.SwitchingBus.A1.ToString());
+            throw Errors.Device.ModuleVoltageCurrent.BusExceptionFactory.ConnectNegativeFailed(DeviceEnums.SwitchingBus.A1.ToString());
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => busSwitcher.ConnectorManager.ConnectMultimeter(DeviceEnums.SwitchingBusNew.AB1, protocolUI), protocolUI))

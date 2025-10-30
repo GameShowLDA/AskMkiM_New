@@ -1,7 +1,11 @@
-﻿using Errors.Device;
-using Errors.Device.Adapters;
+﻿using Errors.Device.Adapters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AppConfiguration.Error.Device.ModuleVoltageCurrent
+namespace Errors.Device.ModuleVoltageCurrent
 {
   /// <summary>
   /// Фабрика исключений для операций управления напряжением в модуле МИНТ.
