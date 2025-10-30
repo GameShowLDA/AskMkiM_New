@@ -1,15 +1,9 @@
-﻿using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
+using Errors.Translation;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Eht
@@ -183,7 +177,7 @@ namespace ControlCommandAnalyser.Parser.Eht
             model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов не может быть отрицательным ({cabelValue.Item1} {cabelValue.Item2})."));
             hasResistanceErrors = true;
           }
-          if(cabelLimit.Value > lower.Value)
+          if (cabelLimit.Value > lower.Value)
           {
             var cabelValue = UnitsConvertor.TryConvertBack(cabelLimit.Value, cabelUnit);
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивление проводов ({cabelValue.Item1} {cabelValue.Item2}) больше нижней границы сопротивления ({lowerValue.Item1} {lowerValue.Item2}).");
@@ -203,7 +197,7 @@ namespace ControlCommandAnalyser.Parser.Eht
         string unitFinal = !string.IsNullOrWhiteSpace(unit) ? unit : defaultUnit;
         string cabelUnitFinal = !string.IsNullOrWhiteSpace(cabelUnit) ? cabelUnit : defaultUnit;
 
-        if(!string.IsNullOrWhiteSpace(cabelLimitResistance))
+        if (!string.IsNullOrWhiteSpace(cabelLimitResistance))
         {
           double cabelFinal = cabelLimit ?? 0;
           model.CabelResistance = cabelFinal;

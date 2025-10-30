@@ -1,10 +1,10 @@
-﻿using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model.Chains;
+﻿using ControlCommandAnalyser.Model.Chains;
+using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model
 {
   [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Д)]
-  public class EhtCommandModel:BaseCommandModel
+  public class EhtCommandModel : BaseCommandModel
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.EHT).DisplayName;
 

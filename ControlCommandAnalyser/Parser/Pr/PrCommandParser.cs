@@ -2,17 +2,9 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
-using System.Text.RegularExpressions;
 using Errors.Translation;
-﻿using AppConfiguration.Error.Translation;
-using ControlCommandAnalyser.Model;
-using ControlCommandAnalyser.Model.Chains;
-using ControlCommandAnalyser.Parser.HelperParserParametr;
-using DTO.Enum;
-using MigraDoc.DocumentObjectModel;
 using System.Text.RegularExpressions;
 using Utilities;
-using YamlDotNet.Core.Tokens;
 
 namespace ControlCommandAnalyser.Parser.Pr
 {
