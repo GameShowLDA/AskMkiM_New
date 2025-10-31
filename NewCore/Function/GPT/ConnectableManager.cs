@@ -40,6 +40,8 @@ public class ConnectableManager : IConnectable
   /// <returns>Кортеж: <c>true</c>, если подключение выполнено успешно; строка с текстом ошибки или пустая строка.</returns>
   public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
   {
+    return await InitializeAsync(messageService);
+
     _gptModel.Mode = BreakdownTypeMode.None;
     if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
     {
@@ -64,7 +66,6 @@ public class ConnectableManager : IConnectable
           LogInformation($"[{_gptModel.Name}] COM-порт {_gptModel.COMPort.PortName} уже был открыт.", isDeviceLog: true);
         }
 
-        return await InitializeAsync(messageService);
       }
       catch (Exception ex)
       {

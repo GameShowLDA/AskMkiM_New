@@ -24,8 +24,6 @@ namespace Mode.Metrology.PI
 
     PiMeasurement testMeasurement = new PiMeasurement();
 
-    DataModel Data;
-
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="PiDCWMetrologyControl"/>.
     /// </summary>
@@ -76,7 +74,7 @@ namespace Mode.Metrology.PI
       }
 
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
-      await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, Data);
+      await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, data);
       await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
     }
 
