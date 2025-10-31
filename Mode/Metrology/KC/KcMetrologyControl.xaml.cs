@@ -4,8 +4,6 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Errors.Device.Multimeter;
-using Errors.Models;
-using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows.Controls;
 using UI.Controls.ProtocolNew;

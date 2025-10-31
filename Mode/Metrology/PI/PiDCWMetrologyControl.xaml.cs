@@ -4,8 +4,6 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Errors.Device.Breakdown;
-using Errors.Models;
-using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows;
 using System.Windows.Controls;
@@ -67,7 +65,7 @@ namespace Mode.Metrology.PI
     /// <returns></returns>
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
-      var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, яtimeRampCheck: true);
+      var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, timeRampCheck: true);
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
 
       var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
