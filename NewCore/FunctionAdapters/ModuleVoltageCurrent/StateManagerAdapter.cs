@@ -2,6 +2,7 @@
 using DTO.Device.PowerSourceModule;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleVoltageCurrentSource;
 
@@ -32,7 +33,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Подключение", message, success, 1, messageService);
 
       if (!success)
-        throw ConnectionExceptionFactory.ConnectFailed(_device.Name, _device.NumberChassis, _device.Number, message);
+        throw ConnectionExceptionAdapter.ConnectFailed(_device.Name, _device.NumberChassis, _device.Number, message);
 
       return (success, message);
     }
@@ -45,7 +46,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение", success, 1);
 
       if (!success)
-        throw ConnectionExceptionFactory.DisconnectFailed(_device.Name, _device.NumberChassis, _device.Number);
+        throw ConnectionExceptionAdapter.DisconnectFailed(_device.Name, _device.NumberChassis, _device.Number);
 
       return success;
     }
@@ -58,7 +59,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация", message, success, 1, messageService);
 
       if (!success)
-        throw ConnectionExceptionFactory.InitializeFailed(_device.Name, _device.NumberChassis, _device.Number, message);
+        throw ConnectionExceptionAdapter.InitializeFailed(_device.Name, _device.NumberChassis, _device.Number, message);
 
       return (success, message);
     }
@@ -71,7 +72,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Сброс", success, 1);
 
       if (!success)
-        throw ConnectionExceptionFactory.ResetFailed(_device.Name, _device.NumberChassis, _device.Number);
+        throw ConnectionExceptionAdapter.ResetFailed(_device.Name, _device.NumberChassis, _device.Number);
 
       IsReset?.Invoke();
       return success;

@@ -1,6 +1,7 @@
 ﻿using DTO.Device.Base;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using NewCore.Function.DeviceBusCommutation;
 using NewCore.Function.Helpers;
 using Utilities;
@@ -54,7 +55,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
       if (!connect)
       {
-        var error = ConnectionExceptionFactory.InitializeFailed(_deviceBusCommutation.Name, _deviceBusCommutation.NumberChassis, _deviceBusCommutation.Number, answer);
+        var error = ConnectionExceptionAdapter.InitializeFailed(_deviceBusCommutation.Name, _deviceBusCommutation.NumberChassis, _deviceBusCommutation.Number, answer);
         if (error != null)
         {
           throw error;

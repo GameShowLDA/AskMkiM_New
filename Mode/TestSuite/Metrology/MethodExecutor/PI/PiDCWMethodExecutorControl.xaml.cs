@@ -2,6 +2,7 @@
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.Breakdown;
 using Errors.Models;
 using Mode.Base;
@@ -85,7 +86,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
         var number = breakDown.Number;
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(messageService)).Connect, messageService))
-          throw ConnectionExceptionFactory.ConnectFailed(name, chassis, number);
+          throw ConnectionExceptionAdapter.ConnectFailed(name, chassis, number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.Mode.SetModeAsync(messageService)).Success, messageService))
           throw DcwExceptionFactory.SetModeFailed(name, chassis, number);

@@ -3,6 +3,7 @@ using DTO.Device.Breakdown;
 using DTO.Enum;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.Breakdown;
 using Errors.Models;
 using Mode.Base;
@@ -81,7 +82,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
         int numer = breakDown.Number;
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(messageService)).Connect, messageService))
-          throw ConnectionExceptionFactory.ConnectFailed(name, chassis, numer);
+          throw ConnectionExceptionAdapter.ConnectFailed(name, chassis, numer);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Mode.SetModeAsync(messageService)).Success, messageService))
           throw IrExceptionFactory.SetModeFailed(name, chassis, numer);

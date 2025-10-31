@@ -1,6 +1,7 @@
 ﻿using DTO.Device.Base;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using NewCore.Device;
 using NewCore.Function.Helpers;
 
@@ -31,7 +32,7 @@ namespace NewCore.FunctionAdapters.GPT
 
       if (!result)
       {
-        throw ConnectionExceptionFactory.ConnectFailed(_device.Name, _device.NumberChassis, _device.Number, answer);
+        throw ConnectionExceptionAdapter.ConnectFailed(_device.Name, _device.NumberChassis, _device.Number, answer);
       }
 
       return (result, answer);
@@ -46,7 +47,7 @@ namespace NewCore.FunctionAdapters.GPT
       Task.Delay(1000).GetAwaiter().GetResult();
       if (!result)
       {
-        throw ConnectionExceptionFactory.DisconnectFailed(_device.Name, _device.NumberChassis, _device.Number);
+        throw ConnectionExceptionAdapter.DisconnectFailed(_device.Name, _device.NumberChassis, _device.Number);
       }
 
       DeviceDisponce?.Invoke();
@@ -60,7 +61,7 @@ namespace NewCore.FunctionAdapters.GPT
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация пробойной установки", string.IsNullOrWhiteSpace(answer) ? "ОК" : answer, result, 1, messageService);
 
       if (!result)
-        throw ConnectionExceptionFactory.InitializeFailed(_device.Name, _device.NumberChassis, _device.Number, answer);
+        throw ConnectionExceptionAdapter.InitializeFailed(_device.Name, _device.NumberChassis, _device.Number, answer);
 
       return (result, answer);
     }
@@ -70,7 +71,7 @@ namespace NewCore.FunctionAdapters.GPT
       var result = await _manager.ResetAsync();
 
       if (!result)
-        throw ConnectionExceptionFactory.ResetFailed(_device.Name, _device.NumberChassis, _device.Number);
+        throw ConnectionExceptionAdapter.ResetFailed(_device.Name, _device.NumberChassis, _device.Number);
 
       IsReset?.Invoke();
       return result;
