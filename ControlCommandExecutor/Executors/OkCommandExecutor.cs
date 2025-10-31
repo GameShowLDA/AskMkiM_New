@@ -9,7 +9,7 @@ namespace ControlCommandExecutor.Executors
   /// </summary>
   public class OkCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "ОК";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.OK).DisplayName;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {

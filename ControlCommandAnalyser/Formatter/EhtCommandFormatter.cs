@@ -70,11 +70,11 @@ namespace ControlCommandAnalyser.Formatter
       // Время
       if (!string.IsNullOrWhiteSpace(eht.TimeSource))
       {
-        yield return $"\tВремя выполнения: {eht.TimeSource}";
+        yield return $"\tВремя выдержки: {eht.TimeSource}";
       }
       else
       {
-        yield return $"\tВремя выполнения не задано!";
+        yield return $"\tВремя выдержки не задано";
       }
 
       yield return "\tЗаданные точки:";

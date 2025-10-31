@@ -19,7 +19,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class PrCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "ПР";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
     static private PointModel _basePoint;
     private double firstValue = 0;
     private double secondValue = 100000;

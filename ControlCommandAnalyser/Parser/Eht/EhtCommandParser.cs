@@ -179,23 +179,6 @@ namespace ControlCommandAnalyser.Parser.Eht
           model.Errors.Add(EhtErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", defaultHigher, defaultUnit));
           hasResistanceErrors = true;
         }
-        if (cabelLimit.HasValue)
-        {
-          if (cabelLimit.Value < 0)
-          {
-            var cabelValue = UnitsConvertor.TryConvertBack(cabelLimit.Value, cabelUnit);
-            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивление проводов не может быть отрицательным ({cabelValue.Item1} {cabelValue.Item2}).");
-            model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов не может быть отрицательным ({cabelValue.Item1} {cabelValue.Item2})."));
-            hasResistanceErrors = true;
-          }
-          if (cabelLimit.Value > lower.Value)
-          {
-            var cabelValue = UnitsConvertor.TryConvertBack(cabelLimit.Value, cabelUnit);
-            LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивление проводов ({cabelValue.Item1} {cabelValue.Item2}) больше нижней границы сопротивления ({lowerValue.Item1} {lowerValue.Item2}).");
-            model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов ({cabelValue.Item1} {cabelValue.Item2}) больше нижней границы сопротивления ({lowerValue.Item1} {lowerValue.Item2})."));
-            hasResistanceErrors = true;
-          }
-        }
       }
 
       if (hasResistanceErrors == false)

@@ -8,7 +8,7 @@ namespace ControlCommandExecutor.Executors
 {
   public class UpCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "УП";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.UP).DisplayName;
 
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)

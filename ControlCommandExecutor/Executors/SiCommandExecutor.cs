@@ -18,7 +18,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class SiCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "СИ";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.CI).DisplayName;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {

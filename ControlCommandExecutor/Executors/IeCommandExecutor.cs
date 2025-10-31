@@ -17,7 +17,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class IeCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "ИЕ";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.IE).DisplayName;
     private double firstValue = 0;
     private double secondValue = 1000;
 

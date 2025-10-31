@@ -70,7 +70,7 @@ namespace DTO.Enum
       /// </summary>
       PI,
 
-      [CommandDisplayInfo("ЭТ", "Ом", 0.01, 100)]
+      [CommandDisplayInfo("ЭТ", "Ом", 0, 100)]
       /// <summary>
       /// Тип команды EHT постоянным током.
       /// </summary>

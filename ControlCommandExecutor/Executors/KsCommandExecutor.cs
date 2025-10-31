@@ -18,7 +18,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class KsCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "КС";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.KC).DisplayName;
     private double firstValue = 0;
     private double secondValue = 10000000;
 

@@ -6,7 +6,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class CpCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "СП";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.CP).DisplayName;
 
     public Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {

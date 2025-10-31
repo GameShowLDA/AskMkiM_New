@@ -7,7 +7,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class RmCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "РМ";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.RM).DisplayName;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
