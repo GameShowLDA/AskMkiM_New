@@ -28,6 +28,10 @@
         {
           return ConvertToVolts(value, unit);
         }
+        else if (unit.ToLowerInvariant().Contains("а"))
+        {
+          return ConvertToAmpers(value, unit);
+        }
       }
 
       return null;
@@ -103,6 +107,24 @@
         "в" => value,
         "мв" => value * 1e-3,
         "кв" => value * 1e3,
+        _ => value
+      };
+    }
+
+    /// <summary>
+    /// Преобразует значение силы тока в амперы (СИ).
+    /// </summary>
+    private static double ConvertToAmpers(double value, string unit)
+    {
+      // Вольты
+      if (unit == "МА") return value * 1e6;
+
+      unit = unit.ToLowerInvariant();
+      return unit switch
+      {
+        "а" => value,
+        "ма" => value * 1e-3,
+        "ка" => value * 1e3,
         _ => value
       };
     }

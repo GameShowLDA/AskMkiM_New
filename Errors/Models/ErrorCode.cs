@@ -395,6 +395,30 @@ namespace Errors.Models
     Pr_ResistanceMaxLimitsConflict,
     #endregion
 
+    #region Режим ЭТ
+
+    /// <summary> В команде ПР не удалось распознать параметры. </summary>
+    [ErrorCodeTag("EHT001")]
+    Eht_CannotParseParameters,
+
+    /// <summary> Тело команды ПР отсутствует или пустое. </summary>
+    [ErrorCodeTag("EHT002")]
+    Eht_EmptyCommandBody,
+
+    /// <summary> В команде ПР отсутствует список точек. </summary>
+    [ErrorCodeTag("EHT003")]
+    Eht_EmptyPoints,
+
+    /// <summary> В команде ПР нижняя граница сопротивления больше верхней границы сопротивления. </summary>
+    [ErrorCodeTag("EHT004")]
+    Eht_ResistanceLimitsConflict,
+
+    /// <summary> В команде ПР верхняя граница сопротивления больше максимально допустимой границы сопротивления.  </summary>
+    [ErrorCodeTag("EHT005")]
+    Eht_ResistanceMaxLimitsConflict,
+
+    #endregion
+
     #region Ключи команд
 
     /// <summary> Использованный ключ не разрешён для данной команды. </summary>

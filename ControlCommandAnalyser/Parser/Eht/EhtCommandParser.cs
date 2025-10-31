@@ -1,6 +1,7 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
+using DataBaseConfiguration.Migrations;
 using DTO.Enum;
 using Errors.Translation;
 using System.Text.RegularExpressions;
@@ -28,13 +29,13 @@ namespace ControlCommandAnalyser.Parser.Eht
       if (rmCommandModel == null)
       {
         LoggerUtility.LogError($"Команда РМ не найдена");
-        model.Errors.Add(PrErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        model.Errors.Add(EhtErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
       }
 
       if (lines == null || lines.Count == 0)
       {
         LoggerUtility.LogWarning($"Пустое тело команды: {commandNumber} {mnemonic} (строка {numberLine})");
-        model.Errors.Add(PrErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+        model.Errors.Add(EhtErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
         return model;
       }
 
@@ -74,7 +75,11 @@ namespace ControlCommandAnalyser.Parser.Eht
       if (match.Success)
         remainder = match.Groups[1].Value.Trim();
 
-      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = string.Empty, unitTime = string.Empty, cabelLimitResistance = null, cabelUnit = null;
+      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, 
+        voltage = string.Empty, voltageUnit = string.Empty,
+        amperage = string.Empty, amperageUnit = string.Empty,
+        time = string.Empty, unitTime = string.Empty, 
+        cabelLimitResistance = null, cabelUnit = null;
 
       var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder);
 
@@ -83,7 +88,7 @@ namespace ControlCommandAnalyser.Parser.Eht
         if (hasError)
         {
           LoggerUtility.LogWarning($"Пустое тело команды: {commandNumber} {mnemonic} (строка {numberLine})");
-          model.Errors.Add(KsErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(EhtErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
         }
         else
         {
@@ -108,6 +113,12 @@ namespace ControlCommandAnalyser.Parser.Eht
 
       (time, unitTime, remainder) = CommonParameterParser.TimeParser.ParseTime(remainder);
       LoggerUtility.LogDebug($"После парсинга времени: time='{time}{unitTime}', remainder='{remainder}'");
+
+      (voltage, voltageUnit, remainder) = CommonParameterParser.VoltageParser.ParseVoltage(remainder);
+      LoggerUtility.LogDebug($"После парсинга напряжения: voltage='{voltage}{unit}', remainder='{remainder}'");
+
+      (amperage, amperageUnit, remainder) = CommonParameterParser.AmperageParser.ParseAmperage(remainder);
+      LoggerUtility.LogDebug($"После парсинга напряжения: voltage='{voltage}{unit}', remainder='{remainder}'");
 
       // флаг ошибок при проверке
       bool hasResistanceErrors = false;
@@ -141,31 +152,31 @@ namespace ControlCommandAnalyser.Parser.Eht
         if (lower.Value > higher.Value)
         {
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше верхней.");
-          model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше верхней ({higherValue.Item1} {higherValue.Item2})."));
+          model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше верхней ({higherValue.Item1} {higherValue.Item2})."));
           hasResistanceErrors = true;
         }
         else if (lower.Value > defaultHigher)
         {
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) больше максимально допустимой ({defaultHigher} {defaultUnit})");
-          model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", defaultHigher, defaultUnit));
+          model.Errors.Add(EhtErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", defaultHigher, defaultUnit));
           hasResistanceErrors = true;
         }
         else if (lower.Value < defaultLower)
         {
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) нижняя граница сопротивления меньше минимально возможной ({defaultLower}).");
-          model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально возможной ППУ({minValue.Item1} {minValue.Item2})."));
+          model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Нижняя граница сопротивления ({lowerValue.Item1} {lowerValue.Item2}) меньше минимально возможной ППУ({minValue.Item1} {minValue.Item2})."));
           hasResistanceErrors = true;
         }
         else if (higher.Value < defaultLower)
         {
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ({minValue.Item1} {minValue.Item2}).");
-          model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ППУ ({minValue.Item1} {minValue.Item2})."));
+          model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) меньше минимально возможной ППУ ({minValue.Item1} {minValue.Item2})."));
           hasResistanceErrors = true;
         }
         else if (higher.Value > defaultHigher)
         {
           LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) верхняя граница сопротивления ({higherValue.Item1} {higherValue.Item2}) больше максимально допустимой ({defaultHigher} {defaultUnit})");
-          model.Errors.Add(PrErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", defaultHigher, defaultUnit));
+          model.Errors.Add(EhtErrors.ResistanceMaxLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", defaultHigher, defaultUnit));
           hasResistanceErrors = true;
         }
         if (cabelLimit.HasValue)
@@ -174,14 +185,14 @@ namespace ControlCommandAnalyser.Parser.Eht
           {
             var cabelValue = UnitsConvertor.TryConvertBack(cabelLimit.Value, cabelUnit);
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивление проводов не может быть отрицательным ({cabelValue.Item1} {cabelValue.Item2}).");
-            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов не может быть отрицательным ({cabelValue.Item1} {cabelValue.Item2})."));
+            model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов не может быть отрицательным ({cabelValue.Item1} {cabelValue.Item2})."));
             hasResistanceErrors = true;
           }
           if (cabelLimit.Value > lower.Value)
           {
             var cabelValue = UnitsConvertor.TryConvertBack(cabelLimit.Value, cabelUnit);
             LoggerUtility.LogWarning($"В команде {commandNumber} {mnemonic} (строка {numberLine}) сопротивление проводов ({cabelValue.Item1} {cabelValue.Item2}) больше нижней границы сопротивления ({lowerValue.Item1} {lowerValue.Item2}).");
-            model.Errors.Add(PrErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов ({cabelValue.Item1} {cabelValue.Item2}) больше нижней границы сопротивления ({lowerValue.Item1} {lowerValue.Item2})."));
+            model.Errors.Add(EhtErrors.ResistanceLimitsConflict(numberLine, $"{commandNumber} {mnemonic}", $"Сопротивление проводов ({cabelValue.Item1} {cabelValue.Item2}) больше нижней границы сопротивления ({lowerValue.Item1} {lowerValue.Item2})."));
             hasResistanceErrors = true;
           }
         }
@@ -259,7 +270,7 @@ namespace ControlCommandAnalyser.Parser.Eht
         if (scheme == null || scheme.IsEmpty())
         {
           LoggerUtility.LogWarning($"Не найдено ни одной точки (строка {numberLine}): {commandNumber} {mnemonic}");
-          model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(EhtErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
         }
         else
         {
@@ -276,7 +287,7 @@ namespace ControlCommandAnalyser.Parser.Eht
       {
         // Во всём теле команды не нашли пары '*...*' → считаем, что точек нет
         LoggerUtility.LogWarning($"Во всём теле команды не найден блок точек '*...*' (строка {numberLine}): {commandNumber} {mnemonic}");
-        model.Errors.Add(PrErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        model.Errors.Add(EhtErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
       }
 
       if (!string.IsNullOrEmpty(remainder))
@@ -290,7 +301,7 @@ namespace ControlCommandAnalyser.Parser.Eht
       if (string.IsNullOrWhiteSpace(model.LowerLimitResistanceSource) && string.IsNullOrWhiteSpace(model.HigherLimitResistanceSource))
       {
         LoggerUtility.LogError($"Не удалось распознать параметры в строке: '{remainder}' (строка {numberLine})");
-        model.Errors.Add(PrErrors.CannotParseParameters($"сопротивление было неправильно задано, или неверно указаны границы сопроитвления", numberLine, $"{commandNumber} {mnemonic}"));
+        model.Errors.Add(EhtErrors.CannotParseParameters($"сопротивление было неправильно задано, или неверно указаны границы сопроитвления", numberLine, $"{commandNumber} {mnemonic}"));
       }
 
       AllowedKeysAttribute.ValidateKeysAndAttachErrors(model);

@@ -26,6 +26,10 @@ namespace ControlCommandAnalyser.ComandBody
       {
         commandBody.Append($"<{pr.HigherLimitResistance}");
       }
+      if (!string.IsNullOrEmpty(pr.TimeSource))
+      {
+        commandBody.Append($", {pr.TimeSource}");
+      }
 
       return newSourseLines.Append(commandBody.ToString());
     }
