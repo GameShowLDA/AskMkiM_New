@@ -67,7 +67,7 @@ namespace Mode.Metrology.PI
     /// <returns></returns>
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
-      var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, яtimeRampCheck: true);
+      var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, timeRampCheck: true);
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
 
       var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);

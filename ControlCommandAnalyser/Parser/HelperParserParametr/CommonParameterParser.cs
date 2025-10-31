@@ -28,6 +28,11 @@ namespace ControlCommandAnalyser.Parser.HelperParserParametr
     public static TimeParser TimeParser => new TimeParser();
 
     /// <summary>
+    /// Св-во управления парсингом времени.
+    /// </summary>
+    public static AmperageParser AmperageParser => new AmperageParser();
+
+    /// <summary>
     /// Преобразует строку в число double.
     /// Поддерживает как точку, так и запятую в качестве десятичного разделителя.
     /// </summary>

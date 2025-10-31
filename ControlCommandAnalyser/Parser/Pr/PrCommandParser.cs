@@ -84,7 +84,7 @@ namespace ControlCommandAnalyser.Parser.Pr
         if (hasError)
         {
           LoggerUtility.LogWarning($"Пустое тело команды: {commandNumber} {mnemonic} (строка {numberLine})");
-          model.Errors.Add(KsErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(PrErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
         }
         else
         {
@@ -293,7 +293,7 @@ namespace ControlCommandAnalyser.Parser.Pr
         if (scheme == null || scheme.IsEmpty())
         {
           LoggerUtility.LogWarning($"Не найдено ни одной точки (строка {numberLine}): {commandNumber} {mnemonic}");
-          model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(PrErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
         }
         else
         {
