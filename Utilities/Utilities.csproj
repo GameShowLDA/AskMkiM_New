@@ -532,6 +532,9 @@
 	  <Content Include="Help\AppHelp\Content\GeneralInformationPart.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
+	  <Content Include="Help\AppHelp\Content\LanguageControlProgramsChapter\StructureYAPKCommandsChapter\ArgumentsCommandChapter\AllParameterPart.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="Help\AppHelp\Content\ProgramCompositionPart.html">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
