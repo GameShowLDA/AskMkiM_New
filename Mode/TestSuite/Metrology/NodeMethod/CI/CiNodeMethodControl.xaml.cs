@@ -4,11 +4,13 @@ using DTO.Enum;
 using DTO.Service;
 using Errors.Device;
 using Errors.Device.Breakdown;
+using Errors.Models;
 using Mode.Base;
 using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
+using static Mode.Base.UIValidationHelper;
 
 namespace Mode.TestSuite.Metrology.NodeMethod.CI
 {
@@ -49,29 +51,20 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
     /// <returns></returns>
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
-      var (ok, msg, dataModel) = UIValidationHelper.TryValidateAndParseInputWithEquipment(ProtocolUI, timeCheck: true, voltageCheck: true);
-      if (!ok)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: msg, type: ShowMessageModel.MessageType.Error));
-        return;
-      }
-
-      var first = dataModel.FirstPoint;
-      var second = dataModel.SecondPoint;
-      var param = dataModel.Param;
+      var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, voltageCheck: true);
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
 
       CiNodeMethod testMeasurement = new CiNodeMethod();
-      var connect = await testMeasurement.ConnectToEquipment(first, second, ProtocolUI);
+      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, ProtocolUI);
       if (!connect.Connect)
       {
         await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error));
         return;
       }
 
-      await testMeasurement.SetupCommutation(ProtocolUI, first, second, DeviceEnums.BusPoint.A);
-      await testMeasurement.ConfigureMeter(ProtocolUI, dataModel);
-      await testMeasurement.PerformMeasurement(ProtocolUI, dataModel);
+      await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, DeviceEnums.BusPoint.A);
+      await testMeasurement.ConfigureMeter(ProtocolUI, data);
+      await testMeasurement.PerformMeasurement(ProtocolUI, data);
       await testMeasurement.FinalizeAsync(ProtocolUI);
     }
 

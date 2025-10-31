@@ -1,10 +1,12 @@
-﻿using System.Windows.Controls;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Service;
+using Errors.Models;
 using Mode.Base;
 using Mode.TestSuite.Metrology.MethodExecutor;
+using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
+using static Mode.Base.UIValidationHelper;
 
 namespace TestWPF
 {
@@ -35,35 +37,18 @@ namespace TestWPF
     /// <returns></returns>
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
-      var (ok, msg, dataModel) = UIValidationHelper.TryValidateAndParseInputWithEquipment(ProtocolUI, timeCheck: true, voltageCheck: true, busCheck: true);
-      if (!ok)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: msg, type: ShowMessageModel.MessageType.Error));
-        return;
-      }
-
-      var first = dataModel.FirstPoint;
-      var second = dataModel.SecondPoint;
-      var param = dataModel.Param;
-
-      // ManagerChassis managerChassis = new ManagerChassis();
-      // managerChassis.ConnectionDetails = "192.168.1.0";
-      // await managerChassis.PowerManager.StartPowerAsync();
-      // await Task.Delay(5000);
-      // await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
+      var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, voltageCheck: true, busCheck: true);
 
       TestMeasurement testMeasurement = new TestMeasurement();
-      var connect = await testMeasurement.ConnectToEquipment(first, second, ProtocolUI);
+      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, ProtocolUI);
       if (!connect.Connect)
       {
         await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error));
         return;
       }
 
-      await testMeasurement.SetupCommutation(ProtocolUI, first, second, dataModel.ActiveBus);
-      // await testMeasurement.ConfigureMeter(dataModel);
-      // await testMeasurement.RunAllStepsAsync(ProtocolUI, dataModel);
-      await testMeasurement.RunParallelModuleTasksAsync(ProtocolUI, dataModel);
+      await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, data.ActiveBus);
+      await testMeasurement.RunParallelModuleTasksAsync(ProtocolUI, data);
       await testMeasurement.FinalizeAsync(ProtocolUI);
     }
   }

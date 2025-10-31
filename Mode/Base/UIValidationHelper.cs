@@ -1,6 +1,12 @@
-﻿using System.Globalization;
-using DataBaseConfiguration.Services.Device;
+﻿using DataBaseConfiguration.Services.Device;
+using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
+using Errors.Device.Chassis;
+using Errors.Device.ModuleRelayControl;
+using Errors.Metrology;
+using Errors.Models;
+using System.Globalization;
+using System.Xml;
 using UI.Components;
 using UI.Controls.ProtocolNew;
 using Utilities.Events;
@@ -16,17 +22,121 @@ namespace Mode.Base
     static InputField? inputField;
 
     /// <summary>
-    /// Выполняет валидацию данных из InputField, включая проверку оборудования, и возвращает готовые объекты.
+    /// Выполняет безопасную валидацию пользовательского ввода для метрологических команд.
+    /// При обнаружении ошибки отображает сообщение пользователю и выбрасывает исключение для остановки алгоритма.
     /// </summary>
-    /// <typeparam name="T">Тип измерения, наследуемый от BaseMeasurement.</typeparam>
-    /// <param name="protocolUI">Экземпляр ProtocolUI.</param>
-    /// <param name="messageOnSuccess">Показывать ли сообщение при успешной валидации.</param>
-    /// <param name="timeCheck">Проверять ли заданное время для выполнения режимов (ППУ).</param>
-    /// <param name="voltageCheck">Проверять ли заданное напряжение для выполнения режимов (ППУ).</param>
-    /// <param name="timeRampCheck">Проверять ли заданное время нарасстания для выполнения режимов (ППУ).</param>
-    /// <param name="busCheck">Проверять ли заданную шину.</param>
-    /// <returns>Кортеж: успешность, сообщение, первая точка, вторая точка, параметр.</returns>
-    public static (bool Success, string Message, DataModel DataModel) TryValidateAndParseInputWithEquipment(
+    /// <param name="protocolUI">Экземпляр интерфейса <see cref="ProtocolUI"/>, содержащий ввод пользователя.</param>
+    /// <param name="timeCheck">Флаг проверки времени измерения.</param>
+    /// <param name="voltageCheck">Флаг проверки напряжения измерения.</param>
+    /// <param name="timeRampCheck">Флаг проверки времени нарастания.</param>
+    /// <param name="busCheck">Флаг проверки заданной шины.</param>
+    /// <returns>Объект <see cref="DataModel"/> с проверенными параметрами и точками подключения.</returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Выбрасывается, если данные пользователя некорректны, отсутствует оборудование,
+    /// либо нарушены метрологические ограничения (например, неверное время, напряжение, точка и т.д.).
+    /// </exception>
+    public static async Task<DataModel> EnsureValidMetrologyInputAsync(
+        ProtocolUI protocolUI,
+        bool timeCheck = false,
+        bool voltageCheck = false,
+        bool timeRampCheck = false,
+        bool busCheck = false)
+    {
+      try
+      {
+        var result = UIValidationHelper.TryValidateAndParseInputWithEquipment(
+            protocolUI,
+            timeCheck: timeCheck,
+            voltageCheck: voltageCheck,
+            timeRampCheck: timeRampCheck,
+            busCheck: busCheck);
+
+        return result;
+      }
+      catch (SystemExceptionBase ex)
+      {
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка данных", message: ex.Description, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
+        throw;
+      }
+    }
+
+
+    /// <summary>
+    /// Выполняет полную валидацию пользовательского ввода из элемента <see cref="InputField"/>,
+    /// включая проверку корректности точек подключения, оборудования, уникальности точек,
+    /// а также дополнительных метрологических параметров (время, напряжение, шину, время нарастания).
+    /// </summary>
+    /// <typeparam name="T">Тип измерения, наследуемый от <c>BaseMeasurement</c>.</typeparam>
+    /// <param name="protocolUI">Экземпляр пользовательского интерфейса <see cref="ProtocolUI"/>, содержащий поле ввода данных.</param>
+    /// <param name="messageOnSuccess">Определяет, требуется ли отображать сообщение при успешной валидации.</param>
+    /// <param name="timeCheck">Указывает, следует ли выполнять проверку параметра времени (для режимов ППУ).</param>
+    /// <param name="voltageCheck">Указывает, следует ли выполнять проверку параметра напряжения (для режимов ППУ).</param>
+    /// <param name="timeRampCheck">Указывает, следует ли выполнять проверку времени нарастания (для режимов ППУ).</param>
+    /// <param name="busCheck">Указывает, следует ли проверять корректность заданной шины подключения.</param>
+    /// <returns>
+    /// Кортеж, содержащий:
+    /// <list type="bullet">
+    ///   <item><term>Success</term> — результат выполнения проверки (true, если все данные корректны);</item>
+    ///   <item><term>Message</term> — текстовое сообщение об ошибке или <c>"OK"</c> при успешной валидации;</item>
+    ///   <item><term>DataModel</term> — объект, содержащий результаты разбора точек, параметров и настроек режима.</item>
+    /// </list>
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Может быть выброшено при нарушении условий валидации данных. В частности:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Элемент ввода данных не найден —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InputFieldNotFound()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Некорректный формат первой точки подключения —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidFirstPoint()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Некорректный формат второй точки подключения —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidSecondPoint()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Электрический параметр не удалось преобразовать в число —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidElectricalValue()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Обнаружено отсутствие оборудования (шасси, модуля или точки) —
+    ///     выбрасывается одно из исключений:
+    ///     <see cref="ChassisValidationErrors.NotFound(int)"/>,
+    ///     <see cref="ModuleRelayControlValidationErrors.ModuleNotFound(int, int)"/>,
+    ///     <see cref="ModuleRelayControlValidationErrors.PointOutOfRange(int, int, int, int)"/>.
+    ///   </item>
+    ///   <item>
+    ///     Точки подключения не являются уникальными —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.PointsNotUnique(string, string)"/>.
+    ///   </item>
+    ///   <item>
+    ///     Некорректное значение времени выполнения —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidTime()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Некорректное значение напряжения —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidVoltage()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Некорректная шина подключения —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidBusSelection()"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// Метод используется в метрологических режимах для предварительной проверки корректности входных данных перед выполнением измерений или тестов.
+    /// При возникновении ошибок активируются события из <see cref="InputValidationEvents"/>:
+    /// <list type="bullet">
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidFirstPoint"/> — при ошибке первой точки;</item>
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidSecondPoint"/> — при ошибке второй точки;</item>
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidParameter"/> — при ошибке параметра;</item>
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidFirstPoint"/> — при отсутствии элемента ввода.</item>
+    /// </list>
+    /// При успешной проверке возвращает объект <see cref="DataModel"/>, готовый для передачи в алгоритмы измерений.
+    /// </remarks>
+    private static DataModel TryValidateAndParseInputWithEquipment(
       ProtocolUI protocolUI,
       bool messageOnSuccess = true,
       bool timeCheck = false,
@@ -34,99 +144,88 @@ namespace Mode.Base
       bool timeRampCheck = false,
       bool busCheck = false)
     {
-      var (success, message, first, second, parameter) = TryValidateAndParseInput(protocolUI, messageOnSuccess);
-      if (!success)
-      {
-        return (false, message, new DataModel());
-      }
+      var (first, second, parameter) = TryValidateAndParseInput(protocolUI, messageOnSuccess);
 
+      // Проверяем оборудование
       var equipmentValidation = CheckEquipmentExists(first, second);
       if (!equipmentValidation.Success)
       {
-        return (false, equipmentValidation.Message, new DataModel());
-      }
-
-      var unique = CheckPointsAreUnique(first, second);
-      if (!unique.Success)
-      {
-        return (false, unique.Error, new DataModel());
-      }
-
-      double time = -1;
-      if (timeCheck)
-      {
-        var timeData = CheckTime();
-        if (!timeData.Success)
+        throw new SystemExceptionBase(new ErrorItem
         {
-          time = 1;
-        }
-
-        time = timeData.Value;
+          Code = ErrorCode.Metrology_Validation_EquipmentNotFound,
+          Description = equipmentValidation.Message
+        });
       }
 
-      double voltage = -1;
-      if (voltageCheck)
-      {
-        var voltageData = CheckVoltage();
-        if (!voltageData.Success)
-        {
-          voltage = 500;
-        }
+      TryCheckPointsAreUnique(first, second);
 
-        voltage = voltageData.Value;
-      }
+      double time = timeCheck ? TryCheckTime() : -1;
+      double voltage = voltageCheck ? CheckVoltage() : -1;
+      double ramp = timeRampCheck ? TryCheckTimeRamp() : -1;
+      BusPoint bus = busCheck ? TryCheckBus() : BusPoint.A;
 
-      double timeRampResult = -1;
-      if (timeRampCheck)
-      {
-        var timeRampData = CheckTimeRamp();
-        if (!timeRampData.Success)
-        {
-          timeRampResult = 1;
-        }
-
-        timeRampResult = timeRampData.Value;
-      }
-
-      DataModel dataModel = new DataModel(first, second, parameter)
+      return new DataModel(first, second, parameter)
       {
         Time = time,
         Voltage = voltage,
-        RampTime = timeRampResult,
+        RampTime = ramp,
+        ActiveBus = bus
       };
-
-      if (busCheck)
-      {
-        var dataBus = CheckBus();
-        if (dataBus.Success)
-        {
-          dataModel.ActiveBus = dataBus.Value;
-        }
-        else
-        {
-          dataModel.ActiveBus = BusPoint.A;
-        }
-      }
-
-      return (true, "OK", dataModel);
     }
 
     /// <summary>
-    /// Выполняет валидацию данных из InputField, а при успехе — возвращает разобранные значения.
+    /// Выполняет комплексную валидацию пользовательского ввода из элемента <see cref="InputField"/>
+    /// в составе интерфейса <see cref="ProtocolUI"/>, а при успешной проверке — разбирает данные
+    /// и возвращает модели точек и электрического параметра.
     /// </summary>
-    /// <typeparam name="T">Тип измерения, наследуемый от BaseMeasurement.</typeparam>
-    /// <param name="protocolUI">Экземпляр ProtocolUI.</param>
-    /// <param name="messageOnSuccess">Показывать ли сообщение при успешной валидации.</param>
+    /// <typeparam name="T">Тип измерения, наследуемый от <c>BaseMeasurement</c>.</typeparam>
+    /// <param name="protocolUI">Экземпляр пользовательского интерфейса <see cref="ProtocolUI"/>, содержащий поле ввода.</param>
+    /// <param name="messageOnSuccess">Определяет, требуется ли отображать сообщение при успешной валидации.</param>
     /// <returns>
-    /// Кортеж с результатом: успешность, сообщение, первая точка, вторая точка, электрический параметр.
+    /// Кортеж, содержащий:
+    /// <list type="bullet">
+    ///   <item><term>First</term> — модель первой точки подключения (<see cref="PointModel"/>);</item>
+    ///   <item><term>Second</term> — модель второй точки подключения (<see cref="PointModel"/>);</item>
+    ///   <item><term>Parameter</term> — числовое значение электрического параметра.</item>
+    /// </list>
     /// </returns>
-    private static (bool Success, string Message, PointModel First, PointModel Second, double Parameter) TryValidateAndParseInput(ProtocolUI protocolUI, bool messageOnSuccess = true)
+    /// <exception cref="SystemExceptionBase">
+    /// Может быть выброшено в следующих случаях:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Элемент ввода данных не найден —  
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InputFieldNotFound()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Указана некорректная первая точка подключения —  
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidFirstPoint()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Указана некорректная вторая точка подключения —  
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidSecondPoint()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Электрический параметр не удалось преобразовать в число —  
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidElectricalValue()"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// При обнаружении ошибок метод активирует соответствующие события из <see cref="InputValidationEvents"/>,
+    /// чтобы пользовательский интерфейс мог отреагировать на неверные данные:
+    /// <list type="bullet">
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidFirstPoint"/> — при ошибке в первой точке;</item>
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidSecondPoint"/> — при ошибке во второй точке;</item>
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidParameter"/> — при ошибке в электрическом параметре.</item>
+    /// </list>
+    /// </remarks>
+    private static (PointModel First, PointModel Second, double Parameter) TryValidateAndParseInput(ProtocolUI protocolUI, bool messageOnSuccess = true)
     {
       inputField = protocolUI.GetInputFieldSafe();
       if (inputField == null)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, "Элемент ввода не найден.", null, null, 0);
+        throw MetrologyValidationErrors.InputFieldNotFound();
       }
 
       var (point1, point2, parameterStr) = inputField.GetInputFieldValuesSafe();
@@ -137,273 +236,396 @@ namespace Mode.Base
       if (first == null)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, "Неверный формат первой точки.", null, null, 0);
+        throw MetrologyValidationErrors.InvalidFirstPoint();
       }
 
       if (second == null)
       {
         InputValidationEvents.TriggerInvalidSecondPoint = true;
-        return (false, "Неверный формат второй точки.", null, null, 0);
+        throw MetrologyValidationErrors.InvalidSecondPoint();
       }
 
       if (!double.TryParse(parameterStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double parameter))
       {
         InputValidationEvents.TriggerInvalidParameter = true;
-        return (false, "Электрический параметр должен быть числом.", null, null, 0);
+        throw MetrologyValidationErrors.InvalidElectricalValue();
       }
 
-      return (true, "OK", first, second, parameter);
+      return (first, second, parameter);
     }
 
     /// <summary>
-    /// Проверяет наличие оборудования для двух точек.
+    /// Проверяет наличие необходимого оборудования для двух заданных точек измерения.
     /// </summary>
-    /// <param name="first">Первая точка.</param>
-    /// <param name="second">Вторая точка.</param>
-    /// <returns>Успешность проверки и сообщение об ошибке (если есть).</returns>
+    /// <param name="first">Первая точка подключения.</param>
+    /// <param name="second">Вторая точка подключения.</param>
+    /// <returns>
+    /// Кортеж, содержащий:
+    /// <list type="bullet">
+    ///   <item><term>Success</term> — результат проверки (true, если обе точки корректны);</item>
+    ///   <item><term>Message</term> — текстовое описание ошибки, если одна из точек не прошла проверку.</item>
+    /// </list>
+    /// </returns>
+    /// <remarks>
+    /// Метод выполняет внутренние вызовы <see cref="TryIsValidPointExists(PointModel)"/> для каждой точки.
+    /// При возникновении исключения <see cref="SystemExceptionBase"/> активируются соответствующие события:
+    /// <list type="bullet">
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidFirstPoint"/> — если ошибка связана с первой точкой.</item>
+    ///   <item><see cref="InputValidationEvents.TriggerInvalidSecondPoint"/> — если ошибка связана со второй точкой.</item>
+    /// </list>
+    /// </remarks>
+    /// <exception cref="SystemExceptionBase">
+    /// Может быть выброшено при проверке внутренних точек методом
+    /// <see cref="TryIsValidPointExists(PointModel)"/>, если:
+    /// <list type="bullet">
+    ///   <item>Шасси с указанным номером не найдено (<see cref="MetrologyValidationErrors.ChassisNotFound(int)"/>);</item>
+    ///   <item>Модуль коммутации не найден в указанном шасси (<see cref="MetrologyValidationErrors.ModuleNotFound(int, int)"/>);</item>
+    ///   <item>Точка подключения выходит за пределы диапазона (<see cref="MetrologyValidationErrors.PointOutOfRange(int, int)"/>).</item>
+    /// </list>
+    /// </exception>
     private static (bool Success, string Message) CheckEquipmentExists(PointModel first, PointModel second)
     {
-      var resultFirst = IsValidPointExists(first);
-      if (!resultFirst.Success)
+      try
+      {
+        TryIsValidPointExists(first);
+      }
+      catch (SystemExceptionBase ex)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, $"Ошибка для первой точки: {resultFirst.Error}");
+        return (false, $"Ошибка для первой точки: {ex.Description}");
       }
 
-      var resultSecond = IsValidPointExists(second);
-      if (!resultSecond.Success)
+      try
+      {
+        TryIsValidPointExists(second);
+      }
+      catch (SystemExceptionBase ex)
       {
         InputValidationEvents.TriggerInvalidSecondPoint = true;
-        return (false, $"Ошибка для второй точки: {resultSecond.Error}");
+        return (false, $"Ошибка для второй точки: {ex.Description}");
       }
 
       return (true, null);
     }
 
-    private static PointValidationResult IsValidPointExists(PointModel point)
+    /// <summary>
+    /// Проверяет корректность существования заданной точки измерения в системе оборудования.
+    /// </summary>
+    /// <param name="point">Модель точки подключения, содержащая номер шасси, модуля и точки.</param>
+    /// <returns>
+    /// <c>true</c>, если шасси, модуль и точка существуют и находятся в допустимых пределах;
+    /// в противном случае генерируется соответствующее исключение.
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Выбрасывается в следующих случаях:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Если шасси с указанным номером не найдено —  
+    ///     выбрасывается исключение <see cref="ChassisValidationErrors.NotFound(int)"/>.
+    ///   </item>
+    ///   <item>
+    ///     Если модуль коммутации с заданным номером не найден в указанном шасси —  
+    ///     выбрасывается исключение <see cref="ModuleRelayControlValidationErrors.ModuleNotFound(int, int)"/>.
+    ///   </item>
+    ///   <item>
+    ///     Если точка подключения выходит за допустимый диапазон модуля —  
+    ///     выбрасывается исключение <see cref="ModuleRelayControlValidationErrors.PointOutOfRange(int, int, int, int)"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// Метод выполняет последовательную проверку существования шасси, наличия модуля
+    /// и корректности диапазона точки в модуле коммутации.
+    /// Используется в процессе метрологической валидации пользовательских данных.
+    /// </remarks>
+    private static bool TryIsValidPointExists(PointModel point)
     {
-      // Проверяем шасси
       var chassisExists = new ChassisManagerServices().GetEntityById(point.DeviceNumber) != null;
       if (!chassisExists)
       {
-        return new PointValidationResult
-        {
-          Success = false,
-          Error = $"Шасси с номером {point.DeviceNumber} не найдено.",
-        };
+        throw ChassisValidationErrors.NotFound(point.DeviceNumber);
       }
 
-      // Проверяем модуль коммутации
       var modules = new RelaySwitchModuleServices().GetEntitiesByNumberChassis(point.DeviceNumber);
       var module = modules.FirstOrDefault(m => m.Number == point.ModuleNumber);
 
       if (module == null)
       {
-        return new PointValidationResult
-        {
-          Success = false,
-          Error = $"Модуль {point.ModuleNumber} в шасси {point.DeviceNumber} не найден.",
-        };
+        throw ModuleRelayControlValidationErrors.ModuleNotFound(point.DeviceNumber, point.ModuleNumber);
       }
 
-      // Проверяем диапазон точки
       if (point.PointNumber < 1 || point.PointNumber > module.PointCount)
       {
-        return new PointValidationResult
-        {
-          Success = false,
-          Error = $"Точка {point.PointNumber} в модуле {point.ModuleNumber} выходит за пределы диапазона (0-{module.PointCount - 1}).",
-        };
+        throw ModuleRelayControlValidationErrors.PointOutOfRange(point.DeviceNumber, point.ModuleNumber, point.PointNumber, module.PointCount);
       }
 
-      return new PointValidationResult
-      {
-        Success = true,
-      };
+      return true;
     }
 
     /// <summary>
-    /// Проверяет, уникальны ли две точки (не совпадают).
+    /// Выполняет проверку уникальности двух точек подключения.
     /// </summary>
-    /// <param name="first">Первая точка.</param>
-    /// <param name="second">Вторая точка.</param>
-    /// <returns>True, если точки уникальны; иначе — false.</returns>
-    private static PointValidationResult CheckPointsAreUnique(PointModel first, PointModel second)
+    /// <param name="first">Модель первой точки подключения.</param>
+    /// <param name="second">Модель второй точки подключения.</param>
+    /// <returns>
+    /// <see langword="true"/>, если точки уникальны (не совпадают по адресу, модулю и шасси);
+    /// в противном случае возбуждается исключение.
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Выбрасывается, если точки подключения не являются уникальными.  
+    /// Исключение создаётся методом <see cref="MetrologyValidationErrors.PointsNotUnique(string, string)"/>  
+    /// и содержит описание формата ошибки и обе конфликтующие точки.
+    /// </exception>
+    /// <remarks>
+    /// Метод активирует событие <see cref="InputValidationEvents.TriggerInvalidSecondPoint"/> при обнаружении
+    /// неуникальной второй точки, что может использоваться для визуального уведомления пользователя в UI.
+    /// </remarks>
+    private static bool TryCheckPointsAreUnique(PointModel first, PointModel second)
     {
       var result = first.ValidateUnique(second);
       if (!result)
       {
         InputValidationEvents.TriggerInvalidSecondPoint = true;
-
-        return new PointValidationResult
-        {
-          Success = result,
-          Error = $"Точка {second.ToString()} не уникальна",
-        };
+        throw MetrologyValidationErrors.PointsNotUnique(first.ToString(), second.ToString());
       }
 
-      return new PointValidationResult
-      {
-        Success = result,
-      };
+      return true;
     }
 
-    private static (bool Success, string Message, double Value) CheckTime()
+    /// <summary>
+    /// Выполняет проверку корректности значения времени выполнения, указанного пользователем в элементе <see cref="InputField"/>.
+    /// </summary>
+    /// <returns>
+    /// Числовое значение времени выполнения (в секундах), если оно указано корректно.
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Возникает в двух случаях:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Если элемент ввода данных (<see cref="InputField"/>) отсутствует —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InputFieldNotFound()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Если введённое значение времени имеет некорректный формат —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidTime()"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// Метод активирует событие <see cref="InputValidationEvents.TriggerInvalidFirstPoint"/>,  
+    /// если элемент <see cref="InputField"/> отсутствует в текущем контексте.
+    /// </remarks>
+    private static double TryCheckTime()
     {
       if (inputField == null)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, "Элемент ввода не найден.", -1);
+        throw MetrologyValidationErrors.InputFieldNotFound();
       }
 
       var timeString = inputField.GetInputFieldTimeValuesSafe();
 
       if (double.TryParse(timeString, out double result))
       {
-        return (true, string.Empty, result);
+        return result;
       }
       else
       {
-        return (false, "Время выполнения должно быть дробным числом вида : x.y", -1);
+        throw MetrologyValidationErrors.InvalidTime();
       }
     }
 
-    private static (bool Success, string Message, double Value) CheckTimeRamp()
+    /// <summary>
+    /// Проверяет корректность введённого пользователем значения времени нарастания (ramp time)
+    /// для режима измерения или испытания.
+    /// </summary>
+    /// <returns>
+    /// Числовое значение времени нарастания в секундах, если ввод корректен.
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Возникает в двух случаях:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Если элемент ввода данных (<see cref="InputField"/>) отсутствует —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InputFieldNotFound()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Если введённое значение времени нарастания имеет некорректный формат —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidTime()"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// Метод активирует событие <see cref="InputValidationEvents.TriggerInvalidFirstPoint"/>,  
+    /// если элемент <see cref="InputField"/> не найден в текущем контексте интерфейса.
+    /// </remarks>
+    private static double TryCheckTimeRamp()
     {
       if (inputField == null)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, "Элемент ввода не найден.", -1);
+        throw MetrologyValidationErrors.InputFieldNotFound();
       }
 
       var timeString = inputField.GetInputFieldTimeRampValuesSafe();
 
       if (double.TryParse(timeString, out double result))
       {
-        return (true, string.Empty, result);
+        return result;
       }
       else
       {
-        return (false, "Время выполнения должно быть дробным числом вида : x.y", -1);
+        throw MetrologyValidationErrors.InvalidTime();
       }
     }
 
-    private static (bool Success, string Message, BusPoint Value) CheckBus()
+    /// <summary>
+    /// Проверяет корректность выбора шины подключения (Bus) в элементе <see cref="InputField"/>.
+    /// </summary>
+    /// <returns>
+    /// Значение выбранной шины <see cref="BusPoint"/>, если выбор выполнен корректно.
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Возникает в двух случаях:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Если элемент ввода данных (<see cref="InputField"/>) отсутствует —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InputFieldNotFound()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Если шина подключения не выбрана или указана некорректно —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidBusSelection()"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// Метод активирует событие <see cref="InputValidationEvents.TriggerInvalidFirstPoint"/>,  
+    /// если элемент <see cref="InputField"/> отсутствует в текущем контексте пользовательского интерфейса.
+    /// </remarks>
+    private static BusPoint TryCheckBus()
     {
       if (inputField == null)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, "Элемент ввода не найден.", default);
+        throw MetrologyValidationErrors.InputFieldNotFound();
       }
 
-      var timeString = inputField.GetInputFieldBusValuesSafe();
+      var bus = inputField.GetInputFieldBusValuesSafe();
 
-      if (timeString != default)
+      if (bus != default)
       {
-        return (true, string.Empty, timeString);
+        return bus;
       }
       else
       {
-        return (false, "Шина для подключения некорректна", default);
+        throw MetrologyValidationErrors.InvalidBusSelection();
       }
     }
 
-    private static (bool Success, string Message, double Value) CheckVoltage()
+    /// <summary>
+    /// Проверяет корректность введённого пользователем значения напряжения
+    /// в элементе управления <see cref="InputField"/>.
+    /// </summary>
+    /// <returns>
+    /// Числовое значение напряжения в вольтах, если ввод выполнен корректно.
+    /// </returns>
+    /// <exception cref="SystemExceptionBase">
+    /// Возникает в двух случаях:
+    /// <list type="bullet">
+    ///   <item>
+    ///     Если элемент ввода данных (<see cref="InputField"/>) отсутствует —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InputFieldNotFound()"/>.
+    ///   </item>
+    ///   <item>
+    ///     Если значение напряжения имеет некорректный формат —
+    ///     выбрасывается исключение <see cref="MetrologyValidationErrors.InvalidVoltage()"/>.
+    ///   </item>
+    /// </list>
+    /// </exception>
+    /// <remarks>
+    /// Метод активирует событие <see cref="InputValidationEvents.TriggerInvalidFirstPoint"/>,  
+    /// если элемент <see cref="InputField"/> не найден в текущем контексте пользовательского интерфейса.
+    /// </remarks>
+    private static double CheckVoltage()
     {
       if (inputField == null)
       {
         InputValidationEvents.TriggerInvalidFirstPoint = true;
-        return (false, "Элемент ввода не найден.", -1);
+        throw MetrologyValidationErrors.InputFieldNotFound();
       }
 
       var voltageString = inputField.GetInputFieldVoltageValuesSafe();
 
       if (double.TryParse(voltageString, out double result))
       {
-        return (true, string.Empty, result);
+        return result;
       }
       else
       {
-        return (false, "Время выполнения должно быть дробным числом вида : x.y", -1);
+        throw MetrologyValidationErrors.InvalidVoltage();
       }
     }
-  }
-
-  /// <summary>
-  /// Результат проверки точки на наличие оборудования.
-  /// </summary>
-  public class PointValidationResult
-  {
-    /// <summary>
-    /// Успешна ли проверка.
-    /// </summary>
-    public bool Success { get; set; }
 
     /// <summary>
-    /// Сообщение об ошибке (если есть).
+    /// Модель данных элемента.
     /// </summary>
-    public string Error { get; set; }
-  }
-
-  /// <summary>
-  /// Модель данных элемента.
-  /// </summary>
-  public class DataModel
-  {
-    /// <summary>
-    /// Модель первой точки.
-    /// </summary>
-    public PointModel FirstPoint { get; set; }
-
-    /// <summary>
-    /// Модель второй точки.
-    /// </summary>
-    public PointModel SecondPoint { get; set; }
-
-    /// <summary>
-    /// Значение электрического параметра.
-    /// </summary>
-    public double Param { get; set; }
-
-    /// <summary>
-    /// Значение времени при выполнения теста (ППУ).
-    /// </summary>
-    public double Time { get; set; }
-
-    /// <summary>
-    /// Значение нарастания времени при выполнения теста (ППУ).
-    /// </summary>
-    public double RampTime { get; set; }
-
-    /// <summary>
-    /// Значение напряжения при выполнения теста (ППУ).
-    /// </summary>
-    public double Voltage { get; set; }
-
-    /// <summary>
-    /// Заданная шина.
-    /// </summary>
-    public BusPoint ActiveBus { get; set; }
-
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="DataModel"/>.
-    /// </summary>
-    /// <param name="first">Первая точка.</param>
-    /// <param name="second">Вторая точка.</param>
-    /// <param name="param">Значение электрического параметра.</param>
-    public DataModel(PointModel first, PointModel second, double param)
+    public class DataModel
     {
-      FirstPoint = first;
-      SecondPoint = second;
-      Param = param;
-    }
+      /// <summary>
+      /// Модель первой точки.
+      /// </summary>
+      public PointModel FirstPoint { get; set; }
 
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="DataModel"/>.
-    /// </summary>
-    /// <param name="first">Первая точка.</param>
-    /// <param name="second">Вторая точка.</param>
-    /// <param name="param">Значение электрического параметра.</param>
-    public DataModel() { }
+      /// <summary>
+      /// Модель второй точки.
+      /// </summary>
+      public PointModel SecondPoint { get; set; }
+
+      /// <summary>
+      /// Значение электрического параметра.
+      /// </summary>
+      public double Param { get; set; }
+
+      /// <summary>
+      /// Значение времени при выполнения теста (ППУ).
+      /// </summary>
+      public double Time { get; set; }
+
+      /// <summary>
+      /// Значение нарастания времени при выполнения теста (ППУ).
+      /// </summary>
+      public double RampTime { get; set; }
+
+      /// <summary>
+      /// Значение напряжения при выполнения теста (ППУ).
+      /// </summary>
+      public double Voltage { get; set; }
+
+      /// <summary>
+      /// Заданная шина.
+      /// </summary>
+      public BusPoint ActiveBus { get; set; }
+
+      /// <summary>
+      /// Инициализирует новый экземпляр класса <see cref="DataModel"/>.
+      /// </summary>
+      /// <param name="first">Первая точка.</param>
+      /// <param name="second">Вторая точка.</param>
+      /// <param name="param">Значение электрического параметра.</param>
+      public DataModel(PointModel first, PointModel second, double param)
+      {
+        FirstPoint = first;
+        SecondPoint = second;
+        Param = param;
+      }
+
+      /// <summary>
+      /// Инициализирует новый экземпляр класса <see cref="DataModel"/>.
+      /// </summary>
+      /// <param name="first">Первая точка.</param>
+      /// <param name="second">Вторая точка.</param>
+      /// <param name="param">Значение электрического параметра.</param>
+      public DataModel() { }
+    }
   }
 }

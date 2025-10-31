@@ -14,6 +14,13 @@ namespace Errors.Models
   /// </summary>
   public enum ErrorCode
   {
+    /// <summary>
+    /// Неизвестная или не классифицированная ошибка.
+    /// Используется по умолчанию, если код не определён явно.
+    /// </summary>
+    [ErrorCodeTag("UNKNOWN_ERROR")]
+    Unknown,
+
     #region Транслятор
 
     #region Общие ошибки
@@ -411,10 +418,36 @@ namespace Errors.Models
 
     #region Оборудование
 
-    #region МКР
-    /// <summary> Первая команда в управляющей программе должна быть ОК. </summary>
+    #region МКР (модуль коммутации реле)
 
+    /// <summary>
+    /// Ошибка: не найдено шасси с указанным номером.
+    /// </summary>
     [ErrorCodeTag("MKR001")]
+    Equipment_ChassisNotFound,
+
+    /// <summary>
+    /// Ошибка: не найден модуль коммутации в указанном шасси.
+    /// </summary>
+    [ErrorCodeTag("MKR002")]
+    Equipment_ModuleNotFound,
+
+    /// <summary>
+    /// Ошибка: номер точки выходит за допустимые пределы диапазона модуля.
+    /// </summary>
+    [ErrorCodeTag("MKR003")]
+    Equipment_PointOutOfRange,
+
+    /// <summary>
+    /// Ошибка: конфликт точек — выбранные точки не уникальны.
+    /// </summary>
+    [ErrorCodeTag("MKR004")]
+    Equipment_PointsNotUnique,
+
+    /// <summary>
+    /// Ошибка: обнаружена некорректная точка в МКР.
+    /// </summary>
+    [ErrorCodeTag("MKR005")]
     MKR_PointError,
 
     #endregion
@@ -428,6 +461,76 @@ namespace Errors.Models
     #endregion
 
     #region Мультиметр
+
+    #endregion
+
+    #endregion
+
+    #region Метрология
+
+    #region Валидация данных.
+
+    /// <summary>
+    /// Ошибка: элемент ввода данных (InputField) не найден в пользовательском интерфейсе.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY001")]
+    Metrology_Validation_InputFieldNotFound,
+
+    /// <summary>
+    /// Ошибка: указана некорректная первая точка подключения в метрологической валидации.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY002")]
+    Metrology_Validation_InvalidFirstPointFormat,
+
+    /// <summary>
+    /// Ошибка: указана некорректная вторая точка подключения в метрологической валидации.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY003")]
+    Metrology_Validation_InvalidSecondPointFormat,
+
+    /// <summary>
+    /// Ошибка: введено некорректное значение напряжения при проверке метрологических параметров.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY004")]
+    Metrology_Validation_InvalidVoltage,
+
+    /// <summary>
+    /// Ошибка: задано некорректное значение времени выполнения или измерения.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY005")]
+    Metrology_Validation_InvalidTime,
+
+    /// <summary>
+    /// Ошибка: указанная точка подключения выходит за допустимые пределы диапазона.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY006")]
+    Metrology_Validation_PointOutOfRange,
+
+    /// <summary>
+    /// Ошибка: введён некорректный электрический параметр.
+    /// Используется для общих ошибок ввода метрологических данных.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY007")]
+    Metrology_Validation_InvalidParameter,
+
+    /// <summary>
+    /// Ошибка: точки подключения не уникальны (повторяются).
+    /// </summary>
+    [ErrorCodeTag("METROLOGY008")]
+    Metrology_Validation_PointsNotUnique,
+
+    /// <summary>
+    /// Ошибка: указана некорректная шина подключения.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY009")]
+    Metrology_Validation_InvalidBus,
+
+    /// <summary>
+    /// Ошибка: отсутствует оборудование, необходимое для выполнения проверки метрологических данных —
+    /// не найдено шасси, модуль коммутации или требуемая точка подключения.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY010")]
+    Metrology_Validation_EquipmentNotFound,
 
     #endregion
 

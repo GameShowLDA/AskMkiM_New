@@ -14,6 +14,7 @@ using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.Measurement;
+using static Mode.Base.UIValidationHelper;
 using static Utilities.LoggerUtility;
 
 namespace Mode.Metrology.MeasurementSystem

@@ -13,6 +13,7 @@ using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
+using static Mode.Base.UIValidationHelper;
 
 namespace Mode.TestSuite.Metrology.NodeMethod
 {

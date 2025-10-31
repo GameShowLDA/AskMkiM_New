@@ -8,6 +8,7 @@ using DTO.Enum;
 using DTO.Service;
 using Errors.Device.ModuleRelayControl;
 using Errors.Device.Multimeter;
+using Errors.Models;
 using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows.Controls;
@@ -15,6 +16,7 @@ using UI.Controls.ProtocolNew;
 using Utilities;
 using Utilities.Help;
 using static DTO.Enum.Measurement;
+using static Mode.Base.UIValidationHelper;
 
 namespace Mode.Metrology.EHT
 {
@@ -25,7 +27,6 @@ namespace Mode.Metrology.EHT
   {
     MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.EHT;
     EhtMeasurement testMeasurement = new EhtMeasurement();
-    (bool Success, string Message, DataModel DataModel) Data;
     public EhtMetrologyControl()
     {
       InitializeComponent();
@@ -61,28 +62,19 @@ namespace Mode.Metrology.EHT
     /// <returns></returns>
     private async Task ExecuteMeasurementProcess(CancellationToken cancellationToken)
     {
-      Data = UIValidationHelper.TryValidateAndParseInputWithEquipment(ProtocolUI, timeCheck: true, voltageCheck: true);
-      if (!Data.Success)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: Data.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
-        throw new Exception();
-      }
+      var data = await EnsureValidMetrologyInputAsync(ProtocolUI);
 
-      var first = Data.DataModel.FirstPoint;
-      var second = Data.DataModel.SecondPoint;
-      var param = Data.DataModel.Param;
-
-      var connect = await testMeasurement.ConnectToEquipment(first, second, metrologicalModeRole, ProtocolUI);
+      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       if (!connect.Connect)
       {
         await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
         throw new Exception();
       }
 
-      await testMeasurement.SetupCommutation(ProtocolUI, first, second, metrologicalModeRole);
+      await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole);
 
-      await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, param, ProtocolUI), ProtocolUI, true);
+      await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
     }
 
     public ITextAdapter GetControl()
