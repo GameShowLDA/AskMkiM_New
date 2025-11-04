@@ -417,6 +417,9 @@ namespace Errors.Models
     [ErrorCodeTag("EHT005")]
     Eht_ResistanceMaxLimitsConflict,
 
+    [ErrorCodeTag("EHT006")]
+    Eht_ResistanceOutOfRange,
+
     #endregion
 
     #region Ключи команд

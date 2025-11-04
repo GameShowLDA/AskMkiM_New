@@ -129,7 +129,7 @@ namespace Mode.Metrology.EHT
 
       private async Task<double> StepFirst(IUserMessageService userMessageService, MeasurementTypeCommand metrologicalModeRole, PointModel point1, double param)
       {
-        await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подлючение точки {point1}"), IsBlockStart: true);
+        await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подключение точки {point1}"), IsBlockStart: true);
 
         var relayModule = GetRelayModules(metrologicalModeRole).First();
 

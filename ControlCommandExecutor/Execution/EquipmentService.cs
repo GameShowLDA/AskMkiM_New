@@ -278,6 +278,29 @@ namespace ControlCommandExecutor.Execution
     }
 
     /// <summary>
+    /// Возвращает уникальные модули коммутации реле (МКР),
+    /// соответствующие переданным точкам подключения.
+    /// </summary>
+    /// <param name="points">Список точек подключения.</param>
+    /// <returns>
+    /// Список уникальных объектов <see cref="IRelaySwitchModule"/>,
+    /// соответствующих переданным точкам.  
+    /// Возвращает пустой список, если <see cref="ValidRelayModules"/> не проинициализирован
+    /// или ни один модуль не найден.
+    /// </returns>
+    public static List<IRelaySwitchModule> GetUniqueModulesByPoints(IEnumerable<PointModel> points)
+    {
+      if (points == null || ValidRelayModules == null)
+        return new List<IRelaySwitchModule>();
+
+      return points
+        .Select(GetModuleByPoint)
+        .Where(m => m != null)
+        .DistinctBy(m => (m.NumberChassis, m.Number))
+        .ToList()!;
+    }
+
+    /// <summary>
     /// Возвращает сохранённое устройство коммутации, найденное при анализе точек.
     /// </summary>
     /// <returns>Объект <see cref="ISwitchingDevice"/>.</returns>
