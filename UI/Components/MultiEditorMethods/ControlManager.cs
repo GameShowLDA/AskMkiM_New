@@ -6,6 +6,7 @@ using DTO.Base.Models;
 using EventCore.Adapters;
 using UI.Components.FileComparerControls;
 using UI.Components.Invoke;
+using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
 using UI.Windows.WpfDocking.Windows.Docking;
@@ -35,30 +36,36 @@ namespace UI.Components.MultiEditorMethods
       var contains = fileManager.EditorWorkspaceModel.OpenPages.Contains(tabButton);
       if (contains
         && fileManager.EditorWorkspaceModel.UserControls.Contains(control)
-        || control is TextEditorUI && isTranslation == false
-        || control is RunControl)
+        || control is TextEditorUI 
+        && isTranslation == false
+        || control is RunControl
+        || control is TranslatorItem)
       {
         int index = -1;
         EditorType editorType = null;
-        if (control is TextEditorUI)
+        if (control is TextEditorUI || control is TranslatorItem)
         {
           if (tabButton.Text == EditorType.TextEditor.ToString())
           {
             editorType = EditorType.TextEditor;
-            var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
+          }
+          else
+          {
+            editorType = EditorType.Translator;
+          }
+          
+          var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
               => textEditorContainer.Text == editorType.ToString());
-            var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
-            if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
+          var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
+          if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
+          {
+            var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
+            if (foundDockItem != null)
             {
-              var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
-              if (foundDockItem != null)
-              {
-                ShowSaveDialogForControl(foundDockItem);
-                return;
-              }
+              ShowSaveDialogForControl(foundDockItem);
+              return;
             }
           }
-
         }
         else if (control is RunControl runControl)
         {
@@ -110,7 +117,7 @@ namespace UI.Components.MultiEditorMethods
     {
       var result = MessageBoxResult.No;
       var saveFileResult = false;
-      if (control.Content is TextEditorUI)
+      if (control.Content is TextEditorUI || control.Content is TranslatorItem)
       {
         var saveFileManager = new SaveFileManager(fileManager);
         saveFileManager.SaveFileDialog(ref result, ref saveFileResult, control);
