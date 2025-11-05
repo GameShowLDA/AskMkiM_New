@@ -224,7 +224,7 @@ namespace MainWindowProgram.Services
       try
       {
         var translateEditor = _fileService.CreateTranslationFileAsync();
-        text = PkPreprocessor.PreprocessText(text);
+        //text = PkPreprocessor.PreprocessText(text);
         editor.TextArea.Document.Text = text;
         if (translateEditor != null)
         {

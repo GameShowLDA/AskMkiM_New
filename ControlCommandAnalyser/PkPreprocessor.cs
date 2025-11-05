@@ -18,25 +18,45 @@ namespace ControlCommandAnalyser
     {
       if (string.IsNullOrEmpty(text)) return text;
 
-      // нормализуем переводы строк, чтобы подсчёт был корректным
+      // нормализуем переводы строк
       text = text.Replace("\r\n", "\n");
 
-      // 1) /* ... */ — удаляем только если > 2 строк
+      // удаляем блочные комментарии /* ... */ — полностью,
+      // но сохраняем количество строк, чтобы нумерация не сбилась
       text = Regex.Replace(
           text,
           @"/\*[\s\S]*?\*/",
-          m => CountLines(m.Value) > MaxShortCommentLines ? "" : m.Value,
+          m =>
+          {
+            int lineCount = CountLines(m.Value);
+            // Заменяем содержимое комментария на lineCount-1 символов '\n'
+            // чтобы сохранить количество строк
+            return new string('\n', lineCount - 1);
+          },
           RegexOptions.Singleline);
 
-      // 2) { ... } — удаляем только если > 2 строк
-      // (простой вариант: без поддержки вложенности)
+      // удаляем однострочные комментарии // ...
+      text = Regex.Replace(
+          text,
+          @"//.*",
+          string.Empty);
+
+      // Убираем из фигурных скобок только большие блоки (> MaxShortCommentLines строк),
+      // но также сохраняем количество строк
       text = Regex.Replace(
           text,
           @"\{[\s\S]*?\}",
-          m => CountLines(m.Value) > MaxShortCommentLines ? "" : m.Value,
+          m =>
+          {
+            int lineCount = CountLines(m.Value);
+            if (lineCount > MaxShortCommentLines)
+              return new string('\n', lineCount - 1);
+            return m.Value;
+          },
           RegexOptions.Singleline);
 
       return text;
     }
+
   }
 }
