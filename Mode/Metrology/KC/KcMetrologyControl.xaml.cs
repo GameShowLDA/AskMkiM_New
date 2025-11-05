@@ -4,8 +4,6 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Errors.Device.Multimeter;
-using Errors.Models;
-using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
@@ -68,13 +66,7 @@ namespace Mode.Metrology.KC
     {
       var data = await EnsureValidMetrologyInputAsync(ProtocolUI);
 
-      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
-      if (!connect.Connect)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
-        throw new Exception();
-      }
-
+      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole);
 
@@ -100,7 +92,6 @@ namespace Mode.Metrology.KC
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => fastMeter.ResistanceManager.SetResistanceModeAsync(messageService), messageService))
         {
           throw ResistanceExceptionFactory.SetModeFailed(fastMeter.Name, fastMeter.NumberChassis, fastMeter.Number);
-          throw new Exception($"Ошибка установка режима измерения сопротивления {fastMeter.Name}({fastMeter.NumberChassis}.{fastMeter.Number})");
         }
       }
 

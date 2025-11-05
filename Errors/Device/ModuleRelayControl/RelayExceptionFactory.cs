@@ -29,6 +29,7 @@ namespace Errors.Device.ModuleRelayControl
     public static DeviceException DisconnectPointFailed(string description) =>
         new($"Ошибка отключения точки {description}");
 
+
     /// <summary>
     /// Ошибка подключения отдельной точки.
     /// </summary>
@@ -52,5 +53,12 @@ namespace Errors.Device.ModuleRelayControl
     /// </summary>
     public static DeviceException ConnectingPointToNewBusFailed(string description) =>
         new($"Ошибка переподключения точки {description}");
+
+
+    /// <summary>
+    /// Ошибка отключения отдельной точки.
+    /// </summary>
+    public static DeviceException DisconnectAllPointFailed() =>
+        new($"Ошибка отключения всех точек ");
   }
 }

@@ -1,4 +1,5 @@
 ﻿using Errors.Models;
+using static DTO.Enum.Measurement;
 
 namespace Errors.Metrology
 {
@@ -118,6 +119,53 @@ namespace Errors.Metrology
       {
         Code = ErrorCode.Metrology_Validation_InvalidBus,
         Description = "Шина подключения указана некорректно. Проверьте выбранное значение."
+      });
+
+    /// <summary>
+    /// Исключение: при сборе устройств возникла ошибка.
+    /// Используется для ситуаций, когда не удалось корректно определить или инициализировать устройства метрологической системы.
+    /// </summary>
+    /// <param name="ex">Исключение, вызвавшее ошибку (оригинальная причина).</param>
+    /// <returns>Экземпляр <see cref="SystemExceptionBase"/> с описанием ошибки сбора устройств.</returns>
+    public static SystemExceptionBase DeviceCollectFailed(Exception ex) =>
+      new(new ErrorItem
+      {
+        Code = ErrorCode.Metrology_Validation_DeviceCollectFailed,
+        Description = $"Ошибка при сборе устройств: {ex.Message}"
+      });
+
+    /// <summary>
+    /// Исключение: не удалось разобрать одну или обе точки подключения.
+    /// </summary>
+    public static SystemExceptionBase PointParsingFailed() =>
+      new(new ErrorItem
+      {
+        Code = ErrorCode.Metrology_Validation_PointParsingFailed,
+        Description = "Не удалось определить одну или обе точки подключения. Проверьте правильность формата (например, 1.2.3)."
+      });
+
+    /// <summary>
+    /// Исключение: указанный метрологический режим не распознан или не поддерживается.
+    /// </summary>
+    /// <param name="mode">Имя режима (например, "DCW", "IR", "ACW").</param>
+    public static SystemExceptionBase UnknownMetrologicalMode(string mode) =>
+      new(new ErrorItem
+      {
+        Code = ErrorCode.Metrology_Validation_UnknownMetrologicalMode,
+        Description = $"Метрологический режим \"{mode}\" не распознан или не поддерживается системой."
+      });
+
+    /// <summary>
+    /// Исключение: устройство с указанной метрологической ролью не найдено или имеет неверный тип.
+    /// </summary>
+    /// <param name="role">Роль устройства (например, KC, IE, PR, CI).</param>
+    /// <param name="index">Индекс устройства, если их несколько одной роли.</param>
+    /// <param name="expectedType">Ожидаемый тип интерфейса устройства.</param>
+    public static SystemExceptionBase DeviceByRoleNotFound(MeasurementTypeCommand role, int index, Type expectedType) =>
+      new(new ErrorItem
+      {
+        Code = ErrorCode.Metrology_Validation_DeviceByRoleNotFound,
+        Description = $"Устройство с ролью {role} (index: {index}) не найдено или не реализует интерфейс {expectedType.Name}."
       });
   }
 }

@@ -4,6 +4,7 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.Breakdown;
 using Errors.Models;
 using Mode.Base;
@@ -69,13 +70,7 @@ namespace Mode.Metrology.CI
 
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
 
-      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
-      if (!connect.Connect)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error));
-        throw new Exception();
-      }
-
+      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, data);
 
@@ -101,7 +96,7 @@ namespace Mode.Metrology.CI
         int numer = breakDown.Number;
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(messageService)).Connect, messageService))
-          throw ConnectionExceptionFactory.ConnectFailed(name, chassis, numer);
+          throw ConnectionExceptionAdapter.ConnectFailed(name, chassis, numer);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Mode.SetModeAsync(messageService)).Success, messageService))
           throw IrExceptionFactory.SetModeFailed(name, chassis, numer);

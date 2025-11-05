@@ -1,12 +1,13 @@
-﻿using System.ComponentModel;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.Breakdown.Capabilities;
 using DTO.Device.FastMeter;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.Breakdown;
+using System.ComponentModel;
 using Utilities;
 
 namespace NewCore.Function.GPT.SelfCheck
@@ -207,15 +208,15 @@ namespace NewCore.Function.GPT.SelfCheck
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Инициализация устройств"));
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakdownTester.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await switchingDevice.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+        throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
       }
     }
   }

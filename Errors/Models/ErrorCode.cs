@@ -417,6 +417,9 @@ namespace Errors.Models
     [ErrorCodeTag("EHT005")]
     Eht_ResistanceMaxLimitsConflict,
 
+    [ErrorCodeTag("EHT006")]
+    Eht_ResistanceOutOfRange,
+
     #endregion
 
     #region Ключи команд
@@ -556,6 +559,29 @@ namespace Errors.Models
     [ErrorCodeTag("METROLOGY010")]
     Metrology_Validation_EquipmentNotFound,
 
+    /// <summary>
+    /// Ошибка: не удалось собрать устройства (CollectDevices) в метрологической подсистеме.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY011")]
+    Metrology_Validation_DeviceCollectFailed,
+
+    /// <summary>
+    /// Ошибка: не удалось разобрать одну или обе точки подключения.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY012")]
+    Metrology_Validation_PointParsingFailed,
+
+    /// <summary>
+    /// Ошибка: указанный метрологический режим не распознан или не поддерживается.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY013")]
+    Metrology_Validation_UnknownMetrologicalMode,
+
+    /// <summary>
+    /// Ошибка: устройство с указанной метрологической ролью не найдено или не соответствует ожидаемому типу.
+    /// </summary>
+    [ErrorCodeTag("METROLOGY014")]
+    Metrology_Validation_DeviceByRoleNotFound,
     #endregion
 
     #endregion

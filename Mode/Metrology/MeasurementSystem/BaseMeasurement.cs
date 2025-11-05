@@ -8,8 +8,12 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Enum;
 using DTO.Service;
+using Errors;
+using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.DeviceBusCommutation;
 using Errors.Device.ModuleRelayControl;
+using Errors.Metrology;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -59,7 +63,7 @@ namespace Mode.Metrology.MeasurementSystem
 
       if (point1 == null || point2 == null)
       {
-        throw new ArgumentException("Одна или обе точки не удалось разобрать.");
+        throw MetrologyValidationErrors.PointParsingFailed();
       }
 
       var relayRepo = new RelaySwitchModuleServices();
@@ -84,7 +88,7 @@ namespace Mode.Metrology.MeasurementSystem
         var fast = fastRepo.GetDevicesByNumberChassis(point1.DeviceNumber).FirstOrDefault();
         if (fast == null)
         {
-          throw new ArgumentException("Мультиметр не найден в конфигурации!");
+          throw ConnectionExceptionAdapter.NotFoundInConfiguration("Мультиметр");
         }
 
         AddUniqueDevice(mode, fast);
@@ -93,11 +97,6 @@ namespace Mode.Metrology.MeasurementSystem
         {
           var power = new PowerSourceModuleServices();
           var mint = power.GetDevicesByNumberChassis(point1.DeviceNumber).FirstOrDefault();
-          if (fast == null)
-          {
-            throw new ArgumentException("Мультиметр не найден в конфигурации!");
-          }
-
           AddUniqueDevice(mode, mint);
         }
       }
@@ -109,7 +108,7 @@ namespace Mode.Metrology.MeasurementSystem
       }
       else
       {
-        throw new ArgumentException($"Метрологический режим {mode} не распознан.");
+        throw MetrologyValidationErrors.UnknownMetrologicalMode(mode.ToString());
       }
 
       Points = (point1, point2);
@@ -122,8 +121,8 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="point1">Первая точка (в формате A.B.C).</param>
     /// <param name="point2">Вторая точка (в формате A.B.C).</param>
     /// <param name="mode">Метрологический режим, для которого выполняется алгоритм.</param>
-    /// <param name="protocolUI">Пользовательский элемент для вывода в протокол.</param>
-    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, MeasurementTypeCommand mode, ProtocolUI protocolUI)
+    /// <param name="messageService">Пользовательский элемент для вывода в протокол.</param>
+    public virtual async Task ConnectToEquipment(PointModel point1, PointModel point2, MeasurementTypeCommand mode, IUserMessageService messageService)
     {
       try
       {
@@ -131,10 +130,11 @@ namespace Mode.Metrology.MeasurementSystem
       }
       catch (Exception ex)
       {
-        return (false, ex.Message);
+        await messageService.ShowMessageAsync(new ShowMessageModel("Ошибка", message: ex.Message, type: ShowMessageModel.MessageType.Error));
+        throw MetrologyValidationErrors.DeviceCollectFailed(ex);
       }
 
-      await protocolUI.ShowMessageAsync(new ShowMessageModel("Инициализация устройств", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Инициализация устройств", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
 
       try
       {
@@ -153,12 +153,11 @@ namespace Mode.Metrology.MeasurementSystem
 
             if (device is IDevice connectableDevice)
             {
-              var (connected, message) = await connectableDevice.ConnectableManager.ConnectAsync(protocolUI);
+              var (connected, message) = await connectableDevice.ConnectableManager.ConnectAsync(messageService);
               if (!connected)
               {
-                return (false, $"Не удалось подключить устройство {connectableDevice.Name}({connectableDevice.Number}) - {message} ");
-
-                throw new InvalidOperationException($"Не удалось подключить устройство с ролью {role}: {message}");
+                await messageService.ShowMessageAsync(new ShowMessageModel("Ошибка", message: $"Не удалось подключить устройство {connectableDevice.Name}({connectableDevice.Number}) - {message} ", type: ShowMessageModel.MessageType.Error));
+                throw ConnectionExceptionAdapter.ConnectByRoleFailed(role.ToString());
               }
 
               LogInformation($"Устройство с ролью {role} успешно подключено.");
@@ -169,12 +168,11 @@ namespace Mode.Metrology.MeasurementSystem
             }
           }
         }
-
-        return (true, string.Empty);
       }
       catch (Exception ex)
       {
-        return (false, ex.Message);
+        await messageService.ShowMessageAsync(new ShowMessageModel("Ошибка", message: ex.Message, type: ShowMessageModel.MessageType.Error));
+        throw SystemUnexpectedErrors.Unexpected(ex);
       }
     }
 
@@ -221,7 +219,6 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     public virtual async Task FinalizeMeasurement(IUserMessageService messageService)
     {
-
       if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
       {
         await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
@@ -268,7 +265,7 @@ namespace Mode.Metrology.MeasurementSystem
         return typed;
       }
 
-      throw new InvalidOperationException($"Устройство с ролью {role} (index: {index}) не найдено или не реализует интерфейс {typeof(T).Name}.");
+      throw MetrologyValidationErrors.DeviceByRoleNotFound(role, index, typeof(T));
     }
 
     public virtual async Task PrintResult(IUserMessageService messageService, DTO.Enum.Measurement.MeasurementTypeCommand command)
@@ -368,19 +365,13 @@ namespace Mode.Metrology.MeasurementSystem
     private void ValidateDevices(List<IRelaySwitchModule> relayModules, ISwitchingDevice busSwitcher, IPowerSourceModule mint, MetrologicalDeviceType modeDevice)
     {
       if (relayModules == null || relayModules.Count == 0)
-      {
-        throw new InvalidOperationException("Не найдено ни одного модуля коммутации реле (МКР).");
-      }
+        throw ConnectionExceptionAdapter.NotFoundInConfiguration("Модуль коммутации реле (МКР)");
 
       if (busSwitcher == null)
-      {
-        throw new InvalidOperationException("Не найдено устройство коммутации шин (УКШ).");
-      }
+        throw ConnectionExceptionAdapter.NotFoundInConfiguration("Устройство коммутации шин (УКШ)");
 
       if (modeDevice == MetrologicalDeviceType.Mint && mint == null)
-      {
-        throw new InvalidOperationException("Не найден модуль источника напряжения и тока (МИНТ).");
-      }
+        throw ConnectionExceptionAdapter.NotFoundInConfiguration("Модуль источника напряжения и тока (МИНТ)");
     }
 
     /// <summary>

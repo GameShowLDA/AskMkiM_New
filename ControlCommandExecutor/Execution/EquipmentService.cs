@@ -9,6 +9,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Utilities;
 
 namespace ControlCommandExecutor.Execution
@@ -221,7 +222,7 @@ namespace ControlCommandExecutor.Execution
 
         if (!initialize)
         {
-          throw ConnectionExceptionFactory.InitializeFailed(
+          throw ConnectionExceptionAdapter.InitializeFailed(
             module.Name, module.NumberChassis, module.Number);
         }
         else
@@ -238,7 +239,7 @@ namespace ControlCommandExecutor.Execution
 
       if (!initialize)
       {
-        throw ConnectionExceptionFactory.InitializeFailed(
+        throw ConnectionExceptionAdapter.InitializeFailed(
           switchingDevice.Name, switchingDevice.NumberChassis, switchingDevice.Number);
       }
       else
@@ -274,6 +275,29 @@ namespace ControlCommandExecutor.Execution
       return ValidRelayModules.FirstOrDefault(m =>
         m.NumberChassis == point.DeviceNumber &&
         m.Number == point.ModuleNumber);
+    }
+
+    /// <summary>
+    /// Возвращает уникальные модули коммутации реле (МКР),
+    /// соответствующие переданным точкам подключения.
+    /// </summary>
+    /// <param name="points">Список точек подключения.</param>
+    /// <returns>
+    /// Список уникальных объектов <see cref="IRelaySwitchModule"/>,
+    /// соответствующих переданным точкам.  
+    /// Возвращает пустой список, если <see cref="ValidRelayModules"/> не проинициализирован
+    /// или ни один модуль не найден.
+    /// </returns>
+    public static List<IRelaySwitchModule> GetUniqueModulesByPoints(IEnumerable<PointModel> points)
+    {
+      if (points == null || ValidRelayModules == null)
+        return new List<IRelaySwitchModule>();
+
+      return points
+        .Select(GetModuleByPoint)
+        .Where(m => m != null)
+        .DistinctBy(m => (m.NumberChassis, m.Number))
+        .ToList()!;
     }
 
     /// <summary>

@@ -64,13 +64,7 @@ namespace Mode.Metrology.EHT
     {
       var data = await EnsureValidMetrologyInputAsync(ProtocolUI);
 
-      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
-      if (!connect.Connect)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
-        throw new Exception();
-      }
-
+      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole);
 
@@ -96,7 +90,6 @@ namespace Mode.Metrology.EHT
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => fastMeter.ResistanceManager.SetResistanceModeAsync(messageService), messageService))
         {
           throw ResistanceExceptionFactory.SetModeFailed(fastMeter.Name, fastMeter.NumberChassis, fastMeter.Number);
-          throw new Exception($"Ошибка установка режима измерения сопротивления {fastMeter.Name}({fastMeter.NumberChassis}.{fastMeter.Number})");
         }
       }
 
@@ -136,7 +129,7 @@ namespace Mode.Metrology.EHT
 
       private async Task<double> StepFirst(IUserMessageService userMessageService, MeasurementTypeCommand metrologicalModeRole, PointModel point1, double param)
       {
-        await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подлючение точки {point1}"), IsBlockStart: true);
+        await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подключение точки {point1}"), IsBlockStart: true);
 
         var relayModule = GetRelayModules(metrologicalModeRole).First();
 

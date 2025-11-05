@@ -8,6 +8,7 @@ using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.Breakdown;
 using Errors.Device.DeviceBusCommutation;
 using Errors.Device.ModuleRelayControl;
@@ -136,7 +137,7 @@ namespace ControlCommandExecutor.Executors
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await module.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
         {
-          throw ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
+          throw ConnectionExceptionAdapter.InitializeFailed(module.Name, module.NumberChassis, module.Number);
         }
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: userMessageService), userMessageService))
         {
@@ -153,7 +154,7 @@ namespace ControlCommandExecutor.Executors
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await dbc.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
       {
-        throw ConnectionExceptionFactory.InitializeFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
+        throw ConnectionExceptionAdapter.InitializeFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
       }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectBreakdownTester(userMessageService), userMessageService))
       {
@@ -173,7 +174,7 @@ namespace ControlCommandExecutor.Executors
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
         {
-          throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+          throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.AcwManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
@@ -215,7 +216,7 @@ namespace ControlCommandExecutor.Executors
       {
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
         {
-          throw ConnectionExceptionFactory.ConnectFailed(name, numberChassis, number);
+          throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
         }
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))

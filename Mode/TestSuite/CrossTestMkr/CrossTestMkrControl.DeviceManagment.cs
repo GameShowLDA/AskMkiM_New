@@ -2,6 +2,7 @@
 using DTO.Device.RelaySwitchModule;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.ModuleRelayControl;
 using UI.Controls.ProtocolNew;
 using Utilities;
@@ -66,7 +67,7 @@ namespace Mode.TestSuite.CrossTestMkr
 
       if (!state)
       {
-        ConnectionExceptionFactory.InitializeFailed(module.Name, module.NumberChassis, module.Number);
+        ConnectionExceptionAdapter.InitializeFailed(module.Name, module.NumberChassis, module.Number);
       }
 
       return true;
@@ -79,7 +80,7 @@ namespace Mode.TestSuite.CrossTestMkr
     private async Task ResetModule(IUserMessageService messageService, IRelaySwitchModule module)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.ConnectableManager.ResetAsync(messageService), ProtocolSelfCheckControl))
-        throw ConnectionExceptionFactory.ResetFailed(module.Name, module.NumberChassis, module.Number);
+        throw ConnectionExceptionAdapter.ResetFailed(module.Name, module.NumberChassis, module.Number);
     }
 
     /// <summary>
