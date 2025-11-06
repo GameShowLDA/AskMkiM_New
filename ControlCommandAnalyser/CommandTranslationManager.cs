@@ -202,7 +202,7 @@ namespace ControlCommandAnalyser
     {
       MessageEventAdapter.RaiseInfoMessage($"Сбор данных...");
 
-      text = PkPreprocessor.PreprocessText(text);
+      //text = PkPreprocessor.PreprocessText(text);
       var lines = text.Replace("\r\n", "\n").Split('\n');
       var commands = new List<BaseCommandModel>();
 

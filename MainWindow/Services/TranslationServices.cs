@@ -1,15 +1,18 @@
-﻿using System.IO;
-using System.Windows;
-using ControlCommandAnalyser;
+﻿using ControlCommandAnalyser;
 using ControlCommandAnalyser.Model.Ok;
 using DTO.Base.Models;
 using EventCore.Adapters;
+using ICSharpCode.AvalonEdit;
 using Message;
+using System.IO;
+using System.Windows;
+using UI.Components.SearchControls;
 using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
 using UI.Windows.WpfDocking.Windows.Docking;
 using Utilities;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace MainWindowProgram.Services
 {
@@ -226,6 +229,34 @@ namespace MainWindowProgram.Services
         var translateEditor = _fileService.CreateTranslationFileAsync();
         //text = PkPreprocessor.PreprocessText(text);
         editor.TextArea.Document.Text = text;
+        editor.TextArea.TextView.LineTransformers.Add(new BracesCommentColorizer());
+        CancellationTokenSource redrawToken = null;
+
+        editor.TextChanged += async (_, __) =>
+         {
+          redrawToken?.Cancel();
+          redrawToken = new CancellationTokenSource();
+          var token = redrawToken.Token;
+
+          try
+          {
+            await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
+            if (!token.IsCancellationRequested)
+            {
+              // безопасный вызов из UI-потока
+              Application.Current.Dispatcher.Invoke(() =>
+              {
+                editor.TextArea.TextView.Redraw();
+              });
+            }
+          }
+          catch (TaskCanceledException)
+          {
+            // просто игнорируем отменённую задержку
+          }
+        };
+
+
         if (translateEditor != null)
         {
           translateEditor.TextEditorModel.FilePath = editor.TextEditorModel.FilePath;
@@ -243,7 +274,7 @@ namespace MainWindowProgram.Services
       {
         MessageBoxCustom.Show($"Не удалось запустить трансляцию программы контроля.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
         LoggerUtility.LogError($"Не удалось запустить трансляцию программы контроля: {ex}.");
-        
+
         EditorEventAdapter.RaiseTextEditorActivated(editor);
         await _multiWindow.OpenFileInEditor(editor.TextEditorModel.FilePath);
       }

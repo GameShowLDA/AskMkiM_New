@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using UI.Components.ArchiveManager.ArchiveFiles;
+using UI.Components.SearchControls;
 using UI.Controls.TextEditor;
 using Utilities.Services;
 using static DTO.Enum.FileEnums;
@@ -113,6 +115,33 @@ namespace UI.Services.FileManager
       var uniqueName = _fileManager.FileService.Name.EnsureUniqueFileName(path, fileName);
       var textEditorModel = new TextEditorModel(path, uniqueName, encoding);
       var textEditor = _fileManager.TextEditorService.CreateTextEditor(textEditorModel, fileContent, fileType);
+      textEditor.TextArea.TextView.LineTransformers.Add(new BracesCommentColorizer());
+      CancellationTokenSource redrawToken = null;
+
+      textEditor.TextChanged += async (_, __) =>
+      {
+        redrawToken?.Cancel();
+        redrawToken = new CancellationTokenSource();
+        var token = redrawToken.Token;
+
+        try
+        {
+          await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
+          if (!token.IsCancellationRequested)
+          {
+            // безопасный вызов из UI-потока
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+              textEditor.TextArea.TextView.Redraw();
+            });
+          }
+        }
+        catch (TaskCanceledException)
+        {
+          // просто игнорируем отменённую задержку
+        }
+      };
+
 
       if (fileType == FileType.Protocol)
         textEditor.IsReadOnly = true;
