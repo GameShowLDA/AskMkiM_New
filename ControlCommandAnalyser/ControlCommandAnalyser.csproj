@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="PreprocessText.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
     <ProjectReference Include="..\DataBaseConfigruration\DataBaseConfiguration.csproj" />
     <ProjectReference Include="..\Errors\Errors.csproj" />

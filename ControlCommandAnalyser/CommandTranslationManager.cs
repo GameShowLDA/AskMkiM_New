@@ -202,8 +202,10 @@ namespace ControlCommandAnalyser
     {
       MessageEventAdapter.RaiseInfoMessage($"Сбор данных...");
 
-      //text = PkPreprocessor.PreprocessText(text);
-      var lines = text.Replace("\r\n", "\n").Split('\n');
+      ////text = PkPreprocessor.PreprocessText(text);
+      //var lines = text.Replace("\r\n", "\n").Split('\n');
+      //var commands = new List<BaseCommandModel>();
+      var (lines, comments) = PreprocessText.PreprocessTextAndExtractComments(text);
       var commands = new List<BaseCommandModel>();
 
       if (CommandsModel.CommandModels.Count > 0)
@@ -219,7 +221,7 @@ namespace ControlCommandAnalyser
 
       var cmdRegex = new Regex(@"^\s*(\d+)\s+([А-ЯA-Z]{2,})\b", RegexOptions.Compiled);
 
-      for (int i = 0; i < lines.Length; i++)
+      for (int i = 0; i < lines.Count; i++)
       {
         var line = lines[i];
         var match = cmdRegex.Match(line);
@@ -229,6 +231,10 @@ namespace ControlCommandAnalyser
           {
             var model = ParseSingle(commandNumber, mnemonic, currentStartLine + 1, commandLines);
             model.StartLineNumber = currentStartLine + 1;
+            foreach (var c in comments.Where(c => c.LineIndex >= currentStartLine && c.LineIndex < i))
+            {
+              model.Comment.Add(c.Text);
+            }
             if (commands.Contains(commands.FirstOrDefault(c => c.Mnemonic == mnemonic && c.CommandNumber == commandNumber)))
             {
               model.Errors.Add(GeneralErrors.CommandAlreadyExists(mnemonic, currentStartLine + 1, $"{commandNumber} {mnemonic}"));
@@ -253,6 +259,10 @@ namespace ControlCommandAnalyser
       {
         var model = ParseSingle(commandNumber, mnemonic, lineNumer, commandLines);
         model.StartLineNumber = currentStartLine + 1;
+        foreach (var c in comments.Where(c => c.LineIndex >= currentStartLine))
+        {
+          model.Comment.Add(c.Text);
+        }
         commands.Add(model);
       }
 
