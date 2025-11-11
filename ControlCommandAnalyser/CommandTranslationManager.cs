@@ -200,54 +200,60 @@ namespace ControlCommandAnalyser
     /// </summary>
     public List<BaseCommandModel> ParseAll(string text)
     {
-      MessageEventAdapter.RaiseInfoMessage($"Сбор данных...");
+      MessageEventAdapter.RaiseInfoMessage("Сбор данных...");
 
-      ////text = PkPreprocessor.PreprocessText(text);
-      //var lines = text.Replace("\r\n", "\n").Split('\n');
-      //var commands = new List<BaseCommandModel>();
       var (lines, comments) = PreprocessText.PreprocessTextAndExtractComments(text);
       var commands = new List<BaseCommandModel>();
 
       if (CommandsModel.CommandModels.Count > 0)
-      {
         CommandsModel.CommandModels.Clear();
-      }
 
       string commandNumber = null;
       string mnemonic = null;
       var commandLines = new List<string>();
       int currentStartLine = -1;
-      int lineNumer = -1;
+      int lastCommandLine = -1;
 
       var cmdRegex = new Regex(@"^\s*(\d+)\s+([А-ЯA-Z]{2,})\b", RegexOptions.Compiled);
 
-      for (int i = 0; i < lines.Count; i++)
+      foreach (var kvp in lines.OrderBy(x => x.Key))
       {
-        var line = lines[i];
+        int lineNumber = kvp.Key;
+        string line = kvp.Value;
+
         var match = cmdRegex.Match(line);
         if (match.Success)
         {
+          // --- закрываем предыдущую команду ---
           if (commandLines.Count > 0 && commandNumber != null && mnemonic != null)
           {
             var model = ParseSingle(commandNumber, mnemonic, currentStartLine + 1, commandLines);
             model.StartLineNumber = currentStartLine + 1;
-            foreach (var c in comments.Where(c => c.LineIndex >= currentStartLine && c.LineIndex < i))
+
+            // Комментарии между предыдущей и текущей командой
+            var toAssign = comments
+              .Where(c => c.LineIndex >= lastCommandLine && c.LineIndex < lineNumber)
+              .ToList();
+
+            foreach (var c in toAssign)
             {
               model.Comment.Add(c.Text);
+              comments.Remove(c); // удаляем из общего списка
             }
-            if (commands.Contains(commands.FirstOrDefault(c => c.Mnemonic == mnemonic && c.CommandNumber == commandNumber)))
-            {
+
+            if (commands.Any(c => c.Mnemonic == mnemonic && c.CommandNumber == commandNumber))
               model.Errors.Add(GeneralErrors.CommandAlreadyExists(mnemonic, currentStartLine + 1, $"{commandNumber} {mnemonic}"));
-            }
+
             commands.Add(model);
             CommandsModel.CommandModels.Add(model);
           }
 
-          lineNumer = currentStartLine + 1;
+          // --- начинаем новую команду ---
           commandNumber = match.Groups[1].Value;
           mnemonic = match.Groups[2].Value;
           commandLines = new List<string> { line };
-          currentStartLine = i;
+          currentStartLine = lineNumber;
+          lastCommandLine = lineNumber;
         }
         else if (commandLines.Count > 0)
         {
@@ -255,15 +261,21 @@ namespace ControlCommandAnalyser
         }
       }
 
+      // --- закрываем последнюю команду ---
       if (commandLines.Count > 0 && commandNumber != null && mnemonic != null)
       {
-        var model = ParseSingle(commandNumber, mnemonic, lineNumer, commandLines);
+        var model = ParseSingle(commandNumber, mnemonic, currentStartLine + 1, commandLines);
         model.StartLineNumber = currentStartLine + 1;
-        foreach (var c in comments.Where(c => c.LineIndex >= currentStartLine))
+
+        // Все оставшиеся комментарии → последней команде
+        foreach (var c in comments.ToList())
         {
           model.Comment.Add(c.Text);
+          comments.Remove(c);
         }
+
         commands.Add(model);
+        CommandsModel.CommandModels.Add(model);
       }
 
       return commands;
