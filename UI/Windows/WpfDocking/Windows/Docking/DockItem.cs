@@ -802,7 +802,8 @@ namespace UI.Windows.WpfDocking.Windows.Docking
     public void Hide()
     {
       if (DockPosition == DockPosition.Unknown)
-        throw new InvalidOperationException();
+        //throw new InvalidOperationException();
+        return;
 
       if (!IsHidden)
         HideCommand.Execute(this);
