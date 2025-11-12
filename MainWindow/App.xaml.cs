@@ -47,6 +47,7 @@ namespace MainWindowProgram
     /// <param name="e"></param>
     protected override async void OnStartup(StartupEventArgs e)
     {
+      // Новая реализация загрузки окна
       SplashScreenManager.ShowSplash();
 
       await Task.Run(async () =>
