@@ -42,7 +42,7 @@
 
                 <Border 
                         x:Name="addChassisButton"
-                        Background="{DynamicResource SettingsCongifButtonHoverBackgroundSolidColorBrush}" 
+                        Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" 
                         BorderBrush="{DynamicResource SettingsCongifButtonBorderSolidColorBrush}"
                         BorderThickness="1"
                         PreviewMouseDown="addChassisButton_PreviewMouseDown"
@@ -103,7 +103,7 @@
                 </Grid.RowDefinitions>
 
                 <Border
-                    Background="{DynamicResource SettingsCongifButtonHoverBackgroundSolidColorBrush}" 
+                    Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" 
                     BorderBrush="{DynamicResource SettingsCongifButtonBorderSolidColorBrush}"
                     BorderThickness="1" 
                     x:Name="addRackButton"
