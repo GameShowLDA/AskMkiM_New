@@ -63,5 +63,17 @@ namespace Errors.Translation
       Code = ErrorCode.Eht_ResistanceMaxLimitsConflict,
       Description = $"Верхняя граница сопротивления больше максимально допустимой границы сопротивления({maxResistance} {unit})."
     };
+
+    /// <summary>
+    /// Ошибка: сопротивление между точками вне допустимого диапазона.
+    /// </summary>
+    public static ErrorItem ResistanceOutOfRange(string command, double measured, string firstPoint, string secondPoint, double lowerBound, double upperBound) => new()
+    {
+      Command = command,
+      MeasureResult = measured.ToString() + " Ом",
+      Code = ErrorCode.Eht_ResistanceOutOfRange,
+      Description = $"{firstPoint} и {secondPoint}({lowerBound:F5}–{upperBound:F5} Ом)"
+    };
+
   }
 }

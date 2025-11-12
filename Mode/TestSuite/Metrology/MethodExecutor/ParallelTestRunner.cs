@@ -2,6 +2,7 @@
 using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
 using Errors.Device;
+using Errors.Device.Adapters;
 using Errors.Device.ModuleRelayControl;
 using Mode.Base;
 using UI.Controls.ProtocolNew;
@@ -153,7 +154,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
       {
         cancellationToken.ThrowIfCancellationRequested();
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.ConnectableManager.ResetAsync(_protocolUI), _protocolUI))
-          throw ConnectionExceptionFactory.ResetFailed(module.Name, module.NumberChassis, module.Number);
+          throw ConnectionExceptionAdapter.ResetFailed(module.Name, module.NumberChassis, module.Number);
 
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: _protocolUI), _protocolUI))
           throw BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);

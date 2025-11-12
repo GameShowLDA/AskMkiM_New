@@ -4,8 +4,6 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.Breakdown;
 using DTO.Service;
 using Errors.Device.Breakdown;
-using Errors.Models;
-using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,8 +23,6 @@ namespace Mode.Metrology.PI
     MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.PI_DCW;
 
     PiMeasurement testMeasurement = new PiMeasurement();
-
-    DataModel Data;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="PiDCWMetrologyControl"/>.
@@ -70,15 +66,9 @@ namespace Mode.Metrology.PI
       var data = await EnsureValidMetrologyInputAsync(ProtocolUI, timeCheck: true, timeRampCheck: true);
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
 
-      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
-      if (!connect.Connect)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", ShowMessageModel.ErrorMessage.TitleColor, connect.Message), SkipStepModeCheck: true);
-        return;
-      }
-
+      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
-      await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, Data);
+      await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, data);
       await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
     }
 

@@ -5,8 +5,6 @@ using DTO.Device.FastMeter;
 using DTO.Device.PowerSourceModule;
 using DTO.Service;
 using Errors.Device.Multimeter;
-using Errors.Models;
-using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using NewCore.Base.DeviceResponses;
 using System.Text.Json;
@@ -82,13 +80,7 @@ namespace Mode.Metrology.PR
       var data = await EnsureValidMetrologyInputAsync(ProtocolUI);
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
 
-      var connect = await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
-      if (!connect.Connect)
-      {
-        await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Ошибка", message: connect.Message, type: ShowMessageModel.MessageType.Error), SkipStepModeCheck: true);
-        return;
-      }
-
+      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, Data);
       await testMeasurement.MintSettings(Data);

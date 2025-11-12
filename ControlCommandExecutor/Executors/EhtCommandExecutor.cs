@@ -8,21 +8,24 @@ using DTO.Device.RelaySwitchModule;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Device.SwitchingDevice;
 using DTO.Service;
-using Errors.Device;
 using Errors.Device.Adapters;
 using Errors.Device.DeviceBusCommutation;
 using Errors.Device.ModuleRelayControl;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
 namespace ControlCommandExecutor.Executors
 {
-  internal class KsCommandExecutor : ICommandExecutor
+  internal class EhtCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.KC).DisplayName;
+    public string Mnemonic => "ЭТ";
     private double firstValue = 0;
-    private double secondValue = 10000000;
-
+    private double secondValue = 1000;
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
       if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
@@ -30,9 +33,7 @@ namespace ControlCommandExecutor.Executors
         await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
       }
 
-      firstValue = 0;
-      secondValue = 10000000;
-      var command = context.Command as KsCommandModel;
+      var command = context.Command as EhtCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 
       string nameCommand = $"{command.CommandNumber} {command.Mnemonic}";
@@ -78,17 +79,7 @@ namespace ControlCommandExecutor.Executors
         secondValue = command.HigherLimitResistance.Value;
       }
 
-      BaseStrategies.ConnectedPointChecker.PerformMeasurementAsync measure;
-      if (command.AlgorithmKey.Contains("Б"))
-      {
-        measure = FastResistanceMeasure;
-      }
-      else
-      {
-        measure = ResistanceMeasure;
-      }
-
-      var errMes = await ConnectedPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2);
+      var errMes = await PairwiseFirstPointCheckerAlt.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2);
       errorMessage.AddRange(errMes);
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
@@ -103,53 +94,6 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    /// <summary>
-    /// Выполняет измерение между уже подключёнными точками.
-    /// Предполагается, что коммутация завершена заранее.
-    /// </summary>
-    /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> ResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
-    {
-      var meter = EquipmentService.GetFastMeterOrThrow(messageService);
-      double answer = 0;
-
-      var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
-      {
-        answer = await meter.ResistanceManager.MeasureResistanceAsync(value, firstValue, secondValue);
-        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= firstValue && answer <= secondValue : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
-
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
-
-        return result;
-      }, messageService);
-
-      return (result, answer + "Ом");
-    }
-
-    /// <summary>
-    /// Выполняет измерение между уже подключёнными точками.
-    /// Предполагается, что коммутация завершена заранее.
-    /// </summary>
-    /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> FastResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
-    {
-      var meter = EquipmentService.GetFastMeterOrThrow(messageService);
-      double answer = 0;
-
-      var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
-      {
-        answer = await meter.ContinuityManager.CheckContinuityAsync(value);
-        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= firstValue && answer <= secondValue : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
-
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
-
-        return result;
-      }, messageService);
-
-      return (result, answer + "Ом");
-    }
     private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
     {
       foreach (var module in relaySwitchModules)

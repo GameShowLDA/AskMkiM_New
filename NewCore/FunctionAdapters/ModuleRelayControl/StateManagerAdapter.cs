@@ -1,6 +1,7 @@
 ﻿using DTO.Device.Base;
 using DTO.Service;
 using Errors.Device;
+using Errors.Device.Adapters;
 using NewCore.Function.Helpers;
 using NewCore.Function.ModuleRelayControl;
 using Utilities;
@@ -54,7 +55,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
 
       if (!result)
       {
-        var error = ConnectionExceptionFactory.InitializeFailed(_moduleRelayControl.Name, _moduleRelayControl.NumberChassis, _moduleRelayControl.Number, answer);
+        var error = ConnectionExceptionAdapter.InitializeFailed(_moduleRelayControl.Name, _moduleRelayControl.NumberChassis, _moduleRelayControl.Number, answer);
         if (error != null)
         {
           throw error;
@@ -77,7 +78,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
 
       if (!result)
       {
-        var error = ConnectionExceptionFactory.ResetFailed(_moduleRelayControl.Name, _moduleRelayControl.NumberChassis, _moduleRelayControl.Number, "Ошибка выполнения команды");
+        var error = ConnectionExceptionAdapter.ResetFailed(_moduleRelayControl.Name, _moduleRelayControl.NumberChassis, _moduleRelayControl.Number, "Ошибка выполнения команды");
         if (error != null)
         {
           throw error;
