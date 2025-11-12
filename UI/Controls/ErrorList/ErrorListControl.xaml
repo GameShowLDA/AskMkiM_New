@@ -9,27 +9,23 @@
              xmlns:help="clr-namespace:Utilities.Help;assembly=Utilities"
              x:Name="root">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="ErrorListBackground" Color="#1E1E1E"/>
-        <SolidColorBrush x:Key="ErrorListForeground" Color="#D4D4D4"/>
-        <SolidColorBrush x:Key="ErrorListHeaderBackground" Color="#2D2D2D"/>
-        <SolidColorBrush x:Key="ErrorListSelection" Color="#264F78"/>
         <local:ErrorCountToHeaderConverter x:Key="ErrorCountConverter"/>
         <ErrorConv:ErrorCodeToTagConverter x:Key="ErrorCodeToTagConverter"/>
         <local:ErrorLinePairConverter x:Key="ErrorLinePairConverter"/>
     </UserControl.Resources>
 
 
-    <Grid Background="{StaticResource ErrorListBackground}">
+    <Grid Background="{DynamicResource ErrorListBackground}">
         <DataGrid ItemsSource="{Binding Errors, ElementName=root}"
                 AutoGenerateColumns="False"
                 HeadersVisibility="Column"
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
                 IsReadOnly="True"
-                Background="{StaticResource ErrorListBackground}"
-                Foreground="{StaticResource ErrorListForeground}"
-                RowBackground="{StaticResource ErrorListBackground}"
-                AlternatingRowBackground="{StaticResource ErrorListBackground}"
+                Background="{DynamicResource ErrorListBackground}"
+                Foreground="{DynamicResource ForegrounfBrushes}"
+                RowBackground="{DynamicResource ErrorListBackground}"
+                AlternatingRowBackground="{DynamicResource ErrorListBackground}"
                 GridLinesVisibility="None"
                 BorderThickness="0"
                 ColumnHeaderHeight="28"
@@ -42,29 +38,29 @@
                     <Setter Property="TextWrapping" Value="NoWrap"/>
                 </Style>
                 <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="{StaticResource ErrorListHeaderBackground}"/>
-                    <Setter Property="Foreground" Value="{StaticResource ErrorListForeground}"/>
+                    <Setter Property="Background" Value="{DynamicResource ErrorListHeaderBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                 </Style>
                 <Style TargetType="DataGridCell">
                     <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Foreground" Value="{StaticResource ErrorListForeground}"/>
-                    <Setter Property="Background" Value="{StaticResource ErrorListBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
+                    <Setter Property="Background" Value="{DynamicResource ErrorListBackground}"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5,0"/>
                 </Style>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="{StaticResource ErrorListBackground}"/>
-                    <Setter Property="Foreground" Value="{StaticResource ErrorListForeground}"/>
+                    <Setter Property="Background" Value="{DynamicResource ErrorListBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="FontWeight" Value="Normal"/>
                     <Setter Property="help:HelpProvider.HelpKey" 
                             Value="{Binding Code, Converter={StaticResource ErrorCodeToTagConverter}}"/>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#264F78"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="{DynamicResource ErrorListSelection}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundSolidColorBrush}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

@@ -384,6 +384,11 @@
     <SolidColorBrush x:Key="TestsProtocolHeaderForeground" Color="#000000"/>
     <SolidColorBrush x:Key="TestsProtocolMessageForeground" Color="#000000"/>
     <SolidColorBrush x:Key="TestsProtocolTimeForeground" Color="YellowGreen"/>
-    
+
+    <SolidColorBrush x:Key="ErrorListBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ErrorListHeaderBackground" Color="#DDDDDD"/>
+    <SolidColorBrush x:Key="ErrorListSelection" Color="#264F78"/>
+
     <!--#endregion-->
+    
 </ResourceDictionary>
