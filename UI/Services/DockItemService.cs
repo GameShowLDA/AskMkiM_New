@@ -131,7 +131,7 @@ namespace UI.Services
           {
             var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
             var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.Translator.ToString());
-            controlManager.RemoveControl(foundPage, textEditor).ConfigureAwait(true);
+            controlManager.RemoveControl(foundPage, translatorItem).ConfigureAwait(true);
             _fileManager.EditorWorkspaceModel.FilePaths.Remove(dockItem.TabText);
             if (textEditorContainer != null && textEditorContainer.DockManager.DockItems.Count(item => item.DockPosition != DockPosition.Hidden) == 0)
             {

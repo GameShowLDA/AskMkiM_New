@@ -268,7 +268,6 @@ namespace MainWindowProgram.Services
     internal async Task OpenFolder()
     {
       await _multiWindow.OpenFolder();
-
     }
   }
 }
