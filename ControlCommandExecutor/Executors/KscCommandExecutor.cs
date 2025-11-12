@@ -8,7 +8,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class KscCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "КЦ";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.KSC).DisplayName;
 
 
 

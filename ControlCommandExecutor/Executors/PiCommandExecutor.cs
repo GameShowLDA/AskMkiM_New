@@ -19,7 +19,7 @@ namespace ControlCommandExecutor.Executors
 {
   internal class PiCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "ПИ";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PI).DisplayName;
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
 

@@ -9,7 +9,7 @@ namespace ControlCommandExecutor.Executors
 {
   public class CuCommandExecutor : ICommandExecutor
   {
-    public string Mnemonic => "ЦУ";
+    public string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.CU).DisplayName;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
