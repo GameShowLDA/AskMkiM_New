@@ -15,7 +15,7 @@
                   Color="Black"/>
     </UserControl.Resources>
 
-    <Border Margin="10" Background="{StaticResource SecondarySolidColorBrush}" CornerRadius="15" Effect="{DynamicResource ShadowEffect}" Padding="5,10">
+    <Border Margin="10" Background="{DynamicResource BackgroundBrushes}" CornerRadius="15" Effect="{DynamicResource ShadowEffect}" Padding="5,10">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -26,7 +26,7 @@
 
             <TextBlock
                 Text="Список устройств"
-                Foreground="{StaticResource ForegroundSolidColorBrush}"
+                Foreground="{DynamicResource ForegrounfBrushes}"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 FontSize="20"
@@ -42,26 +42,34 @@
 
                 <Border 
                         x:Name="addChassisButton"
-                        Background="{DynamicResource SettingsCongifButtonBackgroundSolidColorBrush}" 
+                        Background="{DynamicResource SettingsCongifButtonHoverBackgroundSolidColorBrush}" 
                         BorderBrush="{DynamicResource SettingsCongifButtonBorderSolidColorBrush}"
                         BorderThickness="1"
-                        MouseEnter="addChassisButton_MouseEnter"
-                        MouseLeave="addChassisButton_MouseLeave"
                         PreviewMouseDown="addChassisButton_PreviewMouseDown"
                         CornerRadius="5"
                         Height="40"
                 >
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource SettingsCongifButtonHoverBackgroundSolidColorBrush}"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    
                     <TextBlock 
                                Text="Добавить тестер АСКМ"
-                               Foreground="{StaticResource ForegroundSolidColorBrush}"
+                               Foreground="{DynamicResource ForegrounfBrushes}"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
                                FontSize="18"
                                />
-
                 </Border>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Background="{StaticResource SecondarySolidColorBrush}">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Background="{DynamicResource BackgroundBrushes}">
                     <ItemsControl ItemsSource="{Binding SystemsChassis}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -80,8 +88,8 @@
             <Separator Grid.Row="2" Margin="20,10">
                 <Separator.Style>
                     <Style TargetType="Separator">
-                        <Setter Property="Background" Value="{StaticResource ForegroundSolidColorBrush}"/>
-                        <Setter Property="BorderBrush" Value="{StaticResource ForegroundSolidColorBrush}"/>
+                        <Setter Property="Background" Value="{StaticResource ForegrounfBrushes}"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource ForegrounfBrushes}"/>
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Opacity" Value="0.5"/>
                     </Style>
@@ -95,24 +103,32 @@
                 </Grid.RowDefinitions>
 
                 <Border
-                    Background="{DynamicResource SettingsCongifButtonBackgroundSolidColorBrush}" 
+                    Background="{DynamicResource SettingsCongifButtonHoverBackgroundSolidColorBrush}" 
                     BorderBrush="{DynamicResource SettingsCongifButtonBorderSolidColorBrush}"
                     BorderThickness="1" 
                     x:Name="addRackButton"
-                    MouseEnter="addChassisButton_MouseEnter"
-                    MouseLeave="addChassisButton_MouseLeave"
                     PreviewMouseDown="addRackButton_PreviewMouseDown"
                     CornerRadius="5"
-                    Height="40"
-                >
+                    Height="40">
+                    
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource SettingsCongifButtonHoverBackgroundSolidColorBrush}"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
 
                     <TextBlock 
-                   Text="Добавить стойку СКМ"
-                   Foreground="{StaticResource ForegroundSolidColorBrush}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   FontSize="18"
-                   />
+                        Text="Добавить стойку СКМ"
+                        Foreground="{DynamicResource ForegrounfBrushes}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        FontSize="18"
+                        />
                 </Border>
 
 

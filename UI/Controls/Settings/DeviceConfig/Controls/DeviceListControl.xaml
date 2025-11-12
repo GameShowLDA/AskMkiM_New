@@ -76,15 +76,15 @@
 
     </UserControl.Resources>
 
-    <Border CornerRadius="10" Background="{StaticResource SecondarySolidColorBrush}"  
-            Margin="5" BorderThickness="0" BorderBrush="{StaticResource ActiveBorderSolidColorBrush}">
+    <Border CornerRadius="10" Background="{DynamicResource BackgroundBrushes}"  
+            Margin="5" BorderThickness="0" BorderBrush="{DynamicResource ActiveColorBrushes}">
         <Border.Effect>
             <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="0"/>
         </Border.Effect>
 
         <StackPanel>
             <!-- Заголовок -->
-            <Border Background="{StaticResource PrimarySolidColorBrush}" Padding="10" CornerRadius="10" Margin="0,0,0,5">
+            <Border Background="{DynamicResource SettingsMainBackground}" Padding="10" CornerRadius="10" Margin="0,0,0,5">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -92,10 +92,10 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="{Binding DeviceTitle, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                               FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}" VerticalAlignment="Center"/>
+                               FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}" VerticalAlignment="Center"/>
 
                     <!-- Кнопка добавления нового устройства -->
-                    <Border Grid.Column="1" Background="{StaticResource ActiveBorderSolidColorBrush}" 
+                    <Border Grid.Column="1" Background="{DynamicResource SettingsSelectorSelectedSolidColorBrush}" 
                             CornerRadius="3" Margin="5,0"
                             Style="{StaticResource HoverOpacityBorderStyle}"
                             Focusable="False"
@@ -122,7 +122,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="{Binding DisplayName}" Foreground="{DynamicResource ForegroundSolidColorBrush}" FontSize="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DisplayName}" Foreground="{DynamicResource ForegrounfBrushes}" FontSize="18" VerticalAlignment="Center"/>
 
                                 <!-- Кнопка удаления с крестиком -->
                                 <Border Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource HoverOpacityBorderStyle}">

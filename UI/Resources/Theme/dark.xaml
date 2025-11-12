@@ -334,7 +334,7 @@
     <!--#endregion-->
 
     <!--#region Конфигурация -->
-    <SolidColorBrush x:Key="SettingsCongifButtonBackgroundSolidColorBrush" Color="#1CA3E9"/>
+    <SolidColorBrush x:Key="SettingsCongifButtonBackgroundSolidColorBrush" Color="#801CA3E9"/>
     <SolidColorBrush x:Key="SettingsCongifButtonHoverBackgroundSolidColorBrush" Color="#93D2F4"/>
     <SolidColorBrush x:Key="SettingsCongifButtonBorderSolidColorBrush" Color="#000000"/>
     <SolidColorBrush x:Key="SettingsInfoTabloBackgroundSolidColorBrush" Color="#1CA3E9"/>
