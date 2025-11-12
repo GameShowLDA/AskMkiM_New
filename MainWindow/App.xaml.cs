@@ -80,8 +80,7 @@ namespace MainWindowProgram
         Application.Current.MainWindow = mainWindow;
 
         mainWindow.Topmost = true;
-        mainWindow.Activate();
-        mainWindow.Focus();
+
 
         await mainWindow.Dispatcher.BeginInvoke(new Action(() =>
         {
@@ -93,6 +92,9 @@ namespace MainWindowProgram
         {
           SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
         };
+
+        mainWindow.Activate();
+        mainWindow.Focus();
       }
       catch (Exception ex)
       {
