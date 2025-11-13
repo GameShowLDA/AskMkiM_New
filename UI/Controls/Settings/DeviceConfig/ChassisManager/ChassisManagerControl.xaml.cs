@@ -152,34 +152,6 @@ namespace UI.Controls.Settings.DeviceConfig.ChassisManager
     }
 
     /// <summary>
-    /// Обрабатывает наведение курсора на кнопку добавления системы.
-    /// </summary>
-    /// <param name="sender">Источник события.</param>
-    /// <param name="e">Аргументы события.</param>
-    private void addChassisButton_MouseEnter(object sender, MouseEventArgs e)
-    {
-      if (sender is Border border)
-      {
-        border.Background = (Brush)Application.Current.Resources["SettingsCongifButtonHoverBackgroundSolidColorBrush"];
-        border.Cursor = Cursors.Hand;
-      }
-    }
-
-    /// <summary>
-    /// Обрабатывает уход курсора с кнопки добавления системы.
-    /// </summary>
-    /// <param name="sender">Источник события.</param>
-    /// <param name="e">Аргументы события.</param>
-    private void addChassisButton_MouseLeave(object sender, MouseEventArgs e)
-    {
-      if (sender is Border border)
-      {
-        border.Background = (Brush)Application.Current.Resources["SettingsCongifButtonBackgroundSolidColorBrush"];
-        border.Cursor = Cursors.Wait;
-      }
-    }
-
-    /// <summary>
     /// Обрабатывает нажатие на кнопку добавления системы.
     /// </summary>
     /// <param name="sender">Источник события.</param>

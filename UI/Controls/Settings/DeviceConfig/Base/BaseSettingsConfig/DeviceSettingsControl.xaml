@@ -57,7 +57,7 @@
                          Color="Black"/>
     </UserControl.Resources>
 
-    <Border Background="{DynamicResource SecondarySolidColorBrush}" 
+    <Border Background="{DynamicResource BackgroundBrushes}" 
             CornerRadius="15"
             Padding="20,10"
             Margin="10,10,10,15"
@@ -70,9 +70,9 @@
             </Grid.RowDefinitions>
 
             <TextBlock Name="Header" Text="Настройка устройства:  Имя устройства" VerticalAlignment="Center" HorizontalAlignment="Center"
-      Foreground="{DynamicResource ForegroundSolidColorBrush}" FontSize="25" FontWeight="Bold"/>
+      Foreground="{DynamicResource ForegrounfBrushes}" FontSize="25" FontWeight="Bold"/>
 
-            <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" Padding="10,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -84,7 +84,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Модель устройства-->
-                    <Border Grid.Row="0" Background="{DynamicResource PrimarySolidColorBrush}"
+                    <Border Grid.Row="0" Background="{DynamicResource SettingsMainBackground}"
                         CornerRadius="10" Margin="0,10"
                         Name="DeviceModelContainer"
                         >
@@ -95,7 +95,7 @@
                             </Grid.RowDefinitions>
 
                             <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="Модель устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                                <TextBlock Text="Модель устройства" Foreground="{DynamicResource ForegrounfBrushes}" 
                                    FontSize="20" FontWeight="Bold" Margin="7,0"
                                    />
                             </Border>
@@ -113,7 +113,7 @@
                     </Border>
 
                     <!--Номер устройства-->
-                    <Border Grid.Row="1" Background="{DynamicResource PrimarySolidColorBrush}" 
+                    <Border Grid.Row="1" Background="{DynamicResource SettingsMainBackground}" 
                         CornerRadius="10" Margin="0,10"
                         Name="DeviceNumberContainer"
                         >
@@ -124,7 +124,7 @@
                             </Grid.RowDefinitions>
 
                             <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="Номер устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                                <TextBlock Text="Номер устройства" Foreground="{DynamicResource ForegrounfBrushes}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
                             </Border>
@@ -134,7 +134,7 @@
                                     Background="Transparent" 
                                      BorderThickness="0" 
                                     VerticalAlignment="Center" 
-                                     FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                     FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                      PreviewTextInput="NumberDevice_PreviewTextInput"
                                      TextChanged="NumberDevice_TextChanged"
                                      Name="DeviceNumberTextBox"
@@ -145,7 +145,7 @@
 
                     <!--Тип подлючения устройства-->
                     <Border Grid.Row="2" 
-                        Background="{DynamicResource PrimarySolidColorBrush}" 
+                        Background="{DynamicResource SettingsMainBackground}" 
                         CornerRadius="10" Margin="0,10"
                         Name="ConnectionTypeContainer"
                         >
@@ -156,7 +156,7 @@
                             </Grid.RowDefinitions>
 
                             <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="Тип подключения устройства" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                                <TextBlock Text="Тип подключения устройства" Foreground="{DynamicResource ForegrounfBrushes}" 
                              FontSize="20" FontWeight="Bold" Margin="7,0"
                              />
                             </Border>
@@ -179,7 +179,7 @@
                     </Border>
 
                     <!--IP address устройства-->
-                    <Border Grid.Row="3" Background="{DynamicResource PrimarySolidColorBrush}" 
+                    <Border Grid.Row="3" Background="{DynamicResource SettingsMainBackground}" 
                         CornerRadius="10" Margin="0,10"
                         Name="IPAddressContainer"
                         >
@@ -190,7 +190,7 @@
                             </Grid.RowDefinitions>
 
                             <Border CornerRadius="10" Background="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}" Height="40" Padding="5">
-                                <TextBlock Text="IP Address" Foreground="{DynamicResource ForegroundSolidColorBrush}" 
+                                <TextBlock Text="IP Address" Foreground="{DynamicResource ForegrounfBrushes}" 
                                        FontSize="20" FontWeight="Bold" Margin="7,0"
                                        />
                             </Border>
@@ -209,41 +209,41 @@
                                 <Border Grid.Column="0" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent" 
                                          BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                          Name="IpPart1"
                                          />
                                 </Border>
 
-                                <TextBlock Grid.Column="1" Text="." FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                <TextBlock Grid.Column="1" Text="." FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                        />
 
 
                                 <Border Grid.Column="2" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                          Name="IpPart2"
                                          />
                                 </Border>
-                                <TextBlock Grid.Column="3" Text="." FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                <TextBlock Grid.Column="3" Text="." FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                        />
 
 
                                 <Border Grid.Column="4" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent" BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                          Name="IpPart3"
                                          />
                                 </Border>
-                                <TextBlock Grid.Column="5" Text="." FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                <TextBlock Grid.Column="5" Text="." FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                        />
 
 
                                 <Border Grid.Column="6" Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}" CornerRadius="5" >
                                     <TextBox Background="Transparent"  BorderThickness="0" VerticalAlignment="Center" 
-                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegroundSolidColorBrush}"
+                                         HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource ForegrounfBrushes}"
                                          Name="IpPart4"
                                          />
                                 </Border>
@@ -510,14 +510,14 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Name="CancelButton" Grid.Column="0" Content="Отменить" 
-                    Style="{StaticResource ConfigButtonStyle}" 
+                    Style="{DynamicResource ConfigButtonStyle}" 
                     Margin="0,10" Width="250" 
                     HorizontalAlignment="Left"
                     PreviewMouseDown="CancelButton_PreviewMouseDown"
                     />
 
                 <Button Name="SaveButton" Grid.Column="1" Content="Сохранить" 
-             Style="{StaticResource ConfigButtonStyle}" 
+             Style="{DynamicResource ConfigButtonStyle}" 
              Width="250" HorizontalAlignment="Left" 
              Margin="20,0"
              PreviewMouseDown="SaveButton_PreviewMouseDown"       

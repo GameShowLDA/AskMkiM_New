@@ -298,14 +298,14 @@
 
     <Style x:Key="CustomComboBoxStyle" TargetType="ComboBox">
         <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundColor}"/>
-        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="BorderThickness" Value="0,0,0,2"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderColor}"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ComboBoxItem">
-                    <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
                     <Setter Property="FontSize" Value="18"/>
                     <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                     <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
@@ -316,14 +316,18 @@
                                     <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
+                                    
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="Border" Property="Background" Value="{DynamicResource ComboBoxBackgroundColor}"/>
-                                        <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
                                     </Trigger>
+                                    
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource ComboBoxAcriveBackgroundColor}"/>
-                                        <Setter Property="Foreground"  Value="{DynamicResource ComboBoxForegroundColor}"/>
+                                        <Setter TargetName="Border" Property="Background" Value="{DynamicResource SettingsInfoTabloBackgroundSolidColorBrush}"/>
+                                        <Setter Property="Foreground"  Value="{DynamicResource ForegrounfBrushes}"/>
+                                        <Setter Property="Cursor" Value="Hand"/>
                                     </Trigger>
+                                    
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
@@ -353,7 +357,7 @@
                                               VerticalAlignment="Center">
                                     <ContentPresenter.Resources>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
                                         </Style>
                                     </ContentPresenter.Resources>
                                 </ContentPresenter>
@@ -364,13 +368,13 @@
                                      Margin="3,3,23,3"
                                      Focusable="True"
                                      Background="{DynamicResource ComboBoxBackgroundColor}"
-                                     Foreground="{DynamicResource ComboBoxForegroundColor}"
+                                     Foreground="{DynamicResource ForegrounfBrushes}"
                                      FontSize="18"
                                      Visibility="Hidden"
                                      IsReadOnly="{TemplateBinding IsReadOnly}" />
                                 <Path x:Name="Arrow" 
                                   Data="M 0 0 L 4 4 L 8 0 Z" 
-                                  Fill="{DynamicResource ComboBoxForegroundColor}"
+                                  Fill="{DynamicResource ForegrounfBrushes}"
                                   HorizontalAlignment="Right" 
                                   VerticalAlignment="Center"
                                   Margin="0,0,10,0"/>
@@ -400,7 +404,7 @@
                               MinWidth="{TemplateBinding ActualWidth}"
                               MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border x:Name="DropDownBorder"
-                                    Background="{DynamicResource SettingsCongifButtonBackgroundSolidColorBrush}"
+                                    Background="{DynamicResource SettingsConfigDataInputTabloBackgroundSolidColorBrush}"
                                     BorderThickness="1">
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
@@ -414,7 +418,7 @@
                             <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundColor}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
                         </Trigger>
                         <Trigger Property="IsGrouping" Value="true">
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
@@ -595,7 +599,6 @@
         <Setter Property="Foreground" Value="{DynamicResource RichBoxForegroundColor}"/>
         <Setter Property="Background" Value="Transparent"/>
     </Style>
-
 
     <!-- Стиль для Slider -->
     <Style x:Key="CustomSliderStyle" TargetType="Slider">
@@ -855,8 +858,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
 
     <Style x:Key="SettingsCheckBox" TargetType="CheckBox">
         <Setter Property="Width" Value="18"/>

@@ -336,10 +336,10 @@
     <!--#endregion-->
 
     <!--#region Конфигурация -->
-    <SolidColorBrush x:Key="SettingsCongifButtonBackgroundSolidColorBrush" Color="#80465945"/>
-    <SolidColorBrush x:Key="SettingsCongifButtonHoverBackgroundSolidColorBrush" Color="#90465945"/>
+    <SolidColorBrush x:Key="SettingsCongifButtonBackgroundSolidColorBrush" Color="#80A4EB9E"/>
+    <SolidColorBrush x:Key="SettingsCongifButtonHoverBackgroundSolidColorBrush" Color="#A4EB9E"/>
     <SolidColorBrush x:Key="SettingsCongifButtonBorderSolidColorBrush" Color="#000000"/>
-    <SolidColorBrush x:Key="SettingsInfoTabloBackgroundSolidColorBrush" Color="#90465945"/>
+    <SolidColorBrush x:Key="SettingsInfoTabloBackgroundSolidColorBrush" Color="#A4EB9E"/>
     <SolidColorBrush x:Key="SettingsConfigDataInputTabloBackgroundSolidColorBrush" Color="#FFFFFF"/>
 
     <!--#endregion-->
@@ -384,6 +384,11 @@
     <SolidColorBrush x:Key="TestsProtocolHeaderForeground" Color="#000000"/>
     <SolidColorBrush x:Key="TestsProtocolMessageForeground" Color="#000000"/>
     <SolidColorBrush x:Key="TestsProtocolTimeForeground" Color="YellowGreen"/>
-    
+
+    <SolidColorBrush x:Key="ErrorListBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ErrorListHeaderBackground" Color="#DDDDDD"/>
+    <SolidColorBrush x:Key="ErrorListSelection" Color="#264F78"/>
+
     <!--#endregion-->
+    
 </ResourceDictionary>
