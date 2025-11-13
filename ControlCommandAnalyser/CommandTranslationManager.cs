@@ -83,7 +83,6 @@ namespace ControlCommandAnalyser
     private void FormatAndDisplay(List<BaseCommandModel> models, ITextEditorAdapter adapter)
     {
       var formattedLines = new List<string>();
-      var highlights = new List<HighlightRange>();
 
       // 1. Формируем текст справа и строим mapping
       var lineMapping = BuildFormattedTextAndMapping(models, formattedLines);
@@ -93,7 +92,7 @@ namespace ControlCommandAnalyser
 
       // 3. Отправляем текст в адаптер
       string outText = string.Join("\n", formattedLines);
-      adapter.SetTextAndHighlighting(outText, highlights);
+      adapter.Text = outText;
     }
 
     /// <summary>
