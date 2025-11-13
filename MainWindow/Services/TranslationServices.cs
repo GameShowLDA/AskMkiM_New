@@ -144,8 +144,7 @@ namespace MainWindowProgram.Services
 
       await _multiWindow.AddRunItem(runControl, EditorType.Run);
 
-      runControl.Start(models);
-
+      await runControl.Start(models);
     }
 
     /// <summary>

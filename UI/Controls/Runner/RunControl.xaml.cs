@@ -1,15 +1,17 @@
-﻿using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
 using Errors.Models;
 using EventCore.Adapters;
 using Message;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using UI.Controls.ProtocolNew;
 using UI.Controls.TextEditor;
+using WindowsInput;
 using static Utilities.LoggerUtility;
 
 namespace UI.Controls.Runner
@@ -100,7 +102,7 @@ namespace UI.Controls.Runner
       LeftBox.Children.Add(textEditorUI);
     }
 
-    public void Start(List<BaseCommandModel> models)
+    public async Task Start(List<BaseCommandModel> models)
     {
       ProtocolUI.MenuButtonVisibility(false);
       ControlProgram = models;
@@ -115,6 +117,7 @@ namespace UI.Controls.Runner
       ProtocolUI.SetSettings(this, StartDelegate: StartTest, false);
       this.FileName = ProtocolUI.Header;
 
+      await ProtocolUI.StartAsync();
     }
 
     private async Task StartTest(CancellationToken cancellationToken)

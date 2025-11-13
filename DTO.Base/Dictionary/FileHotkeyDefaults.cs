@@ -29,6 +29,7 @@ namespace DTO.Base.Dictionary
         { "CompareFile", "Ctrl+K" },
         { "Build", "F9" },
         { "Run", "Ctrl+F5" },
+        { "RunStepByStepMode", "Ctrl+F10" },
 
         // Включение питания
         { "Power", "Ctrl+Shift+P" },

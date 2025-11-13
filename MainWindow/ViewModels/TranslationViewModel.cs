@@ -29,6 +29,20 @@ namespace MainWindowProgram.ViewModels
     /// Команда запуска исполнителя программы контроля.
     /// </summary>
     [RelayCommand]
-    private async Task RunAsync() => await _service.RunAsync();
+    private async Task RunAsync()
+    {
+      await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(false);
+      await _service.RunAsync();
+    }
+
+    /// <summary>
+    /// Команда запуска исполнителя программы контроля.
+    /// </summary>
+    [RelayCommand]
+    private async Task RunStepByStepModeAsync()
+    {
+      await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(true);
+      await _service.RunAsync();
+    }
   }
 }

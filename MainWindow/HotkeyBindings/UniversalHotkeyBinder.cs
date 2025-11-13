@@ -102,7 +102,6 @@ namespace MainWindowProgram.HotkeyBindings
     {
       invoker = null!;
 
-      // 1) Любые элементы, имеющие ICommand (MenuItem, Button, и т.п.)
       if (element is ICommandSource cmdSrc)
       {
         invoker = () =>
@@ -118,9 +117,6 @@ namespace MainWindowProgram.HotkeyBindings
         return true;
       }
 
-      // 2) Поддержка твоего конкретного UserControl: UI.Components.PowerButton
-      //    NB: прямую ссылку на тип лучше держать через 'as dynamic' или рефлексию,
-      //    чтобы не тянуть лишних зависимостей в проект, но тут используем прямую проверку имени типа.
       var typeName = element.GetType().FullName ?? string.Empty;
       if (typeName == "UI.Components.PowerButton")
       {

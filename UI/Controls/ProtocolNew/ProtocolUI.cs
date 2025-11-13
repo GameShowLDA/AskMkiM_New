@@ -157,7 +157,7 @@ namespace UI.Controls.ProtocolNew
     /// Начинает запуск измерения.
     /// </summary>
     /// <returns>Задача, представляющая асинхронную операцию измерения.</returns>
-    private async Task StartAsync() => await ActionExecutor.StartAsync(_startDelegate, _stopDelegate, header.Text, _isRepeatEnabled, _preActionDelegate, _checkPower);
+    public async Task StartAsync() => await ActionExecutor.StartAsync(_startDelegate, _stopDelegate, header.Text, _isRepeatEnabled, _preActionDelegate, _checkPower);
 
     /// <summary>
     /// Завершение текущей выполняемой задачи.

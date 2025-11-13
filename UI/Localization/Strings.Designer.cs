@@ -187,6 +187,15 @@ namespace UI.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Запуск (Пошаговый режим).
+        /// </summary>
+        internal static string menu_execution_run_stepByStepMode {
+            get {
+                return ResourceManager.GetString("menu.execution.run.stepByStepMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Файл.
         /// </summary>
         internal static string menu_file {

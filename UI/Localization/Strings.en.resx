@@ -333,4 +333,7 @@
   <data name="menu.test.metrology.eht" xml:space="preserve">
     <value>ЭТ Mode</value>
   </data>
+  <data name="menu.execution.run.stepByStepMode" xml:space="preserve">
+    <value>Run (Step by step mode)</value>
+  </data>
 </root>
