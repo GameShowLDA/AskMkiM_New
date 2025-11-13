@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using UI.Components;
 using UI.Components.ArchiveControls;
+using UI.Components.ArchiveManager.ArchiveFiles;
 using UI.Components.FileComparerControls;
 using UI.Components.MultiEditorMethods;
 using UI.Controls;
@@ -121,19 +122,26 @@ namespace UI.Services
           Content = translatorItem
         };
 
-        dockItem.ItemClosed += (sender) =>
+
+        dockItem.CloseItem += (sender) =>
         {
-          var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
-          var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.Translator.ToString());
-          TextEditorContainer translatorContainer = _fileManager.ContainerService.GetEditorContainer(EditorType.Translator);
-          if (translatorContainer != null && translatorContainer.DockManager.DockItems.Count(item => item.DockPosition != DockPosition.Hidden) == 0)
+          LogDebug($"Закрытие файла {nameFile}.");
+
+          if (textEditorContainer != null)
           {
-            _fileManager.ContainerService.RemoveEditorContainer(translatorContainer, EditorType.Translator);
+            var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
+            var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.Translator.ToString());
+            controlManager.RemoveControl(foundPage, translatorItem).ConfigureAwait(true);
+            _fileManager.EditorWorkspaceModel.FilePaths.Remove(dockItem.TabText);
+            if (textEditorContainer != null && textEditorContainer.DockManager.DockItems.Count(item => item.DockPosition != DockPosition.Hidden) == 0)
+            {
+              LogDebug($"Закрытие контейнера типа \"{EditorType.Translator.ToString()}\".");
+              _fileManager.ContainerService.RemoveEditorContainer(textEditorContainer, EditorType.Translator);
+            }
+
+            EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
           }
-
-          EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
         };
-
 
         await Task.Delay(1).ConfigureAwait(true);
 
@@ -223,7 +231,7 @@ namespace UI.Services
     /// <summary>
     /// Настраивает DockItem, который требует сохранения состояния (например, файл, открытый в редакторе).
     /// </summary>
-    private void InitializeWithSave(string nameFile, TextEditorContainer textEditorContainer, UserControl textEditor, EditorType editorType, DockItem dockItem)
+    internal void InitializeWithSave(string nameFile, TextEditorContainer textEditorContainer, UserControl textEditor, EditorType editorType, DockItem dockItem)
     {
       LogDebug($"Тип редактора для файла {nameFile}: {editorType.ToString()}");
 

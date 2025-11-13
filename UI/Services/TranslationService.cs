@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DTO.Base.Models;
+using ICSharpCode.AvalonEdit;
+using Message;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using DTO.Base.Models;
-using Message;
 using UI.Components.MultiEditorMethods;
 using UI.Controls;
 using UI.Controls.TextEditor;
@@ -64,6 +65,7 @@ namespace UI.Services
     /// <returns>Экземпляр <see cref="TranslatorItem"/>, отображающий оба редактора.</returns>
     public async Task<TranslatorItem> AddTranslatorItem(TextEditorUI editor, TextEditorUI translateEditor, EditorType editorType)
     {
+      // TODO: добавить событие на закрытие вкладок
       try
       {
         TextEditorContainer textEditorContainer = _fileManager.ContainerService.GetEditorContainer(editorType);
@@ -116,8 +118,12 @@ namespace UI.Services
         {
           return;
         }
+        var controlManager = new ControlManager(_fileManager.EditorWorkspaceModel);
 
-        textEditorContainer.RemoveTranslatorItem(translatorItem);
+        var foundPage = _fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Text == EditorType.Translator.ToString());
+        controlManager.RemoveControl(foundPage, translatorItem);
+
+        //textEditorContainer.RemoveTranslatorItem(translatorItem);
         if (textEditorContainer.DockManager.DockItems.Count == 0)
         {
           _fileManager.ContainerService.RemoveEditorContainer(textEditorContainer, EditorType.Translator);

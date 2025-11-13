@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -6,8 +7,10 @@ using DTO.Base.Models;
 using EventCore.Adapters;
 using UI.Components.FileComparerControls;
 using UI.Components.Invoke;
+using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
+using UI.Services.FileManager;
 using UI.Windows.WpfDocking.Windows.Docking;
 using static UI.Components.Invoke.OpenFileButton;
 using UserControl = System.Windows.Controls.UserControl;
@@ -32,59 +35,30 @@ namespace UI.Components.MultiEditorMethods
     /// <param name="control">Элемент управления для удаления.</param>
     public async Task RemoveControl(OpenFileButton tabButton, UserControl control, bool isTranslation = false)
     {
-      var contains = fileManager.EditorWorkspaceModel.OpenPages.Contains(tabButton);
-      if (contains
-        && fileManager.EditorWorkspaceModel.UserControls.Contains(control)
+      var containsOpenPage = fileManager.EditorWorkspaceModel.OpenPages.Contains(tabButton);
+      var containsUserControl = fileManager.EditorWorkspaceModel.UserControls.Contains(control);
+      if (containsOpenPage && containsUserControl
         || control is TextEditorUI && isTranslation == false
-        || control is RunControl)
+        || control is RunControl
+        || control is TranslatorItem)
       {
         int index = -1;
         EditorType editorType = null;
-        if (control is TextEditorUI)
+        if (control is TextEditorUI || control is TranslatorItem)
         {
-          if (tabButton.Text == EditorType.TextEditor.ToString())
-          {
-            editorType = EditorType.TextEditor;
-            var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
-              => textEditorContainer.Text == editorType.ToString());
-            var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
-            if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
-            {
-              var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
-              if (foundDockItem != null)
-              {
-                ShowSaveDialogForControl(foundDockItem);
-                return;
-              }
-            }
-          }
-
+          editorType = SetEditorType(tabButton);
+          CloseControl(tabButton, control, editorType);
+          return;
         }
-        else if (control is RunControl runControl)
+        else if (control is TextEditorContainer foundContainer) // если контрол сам является контейнером
         {
-          editorType = EditorType.Run;
-          var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
-            => textEditorContainer.Text == editorType.ToString());
-          var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
-          if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
-          {
-            var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
-            if (foundDockItem != null)
-            {
-              foundDockItem.Close();
-              if (foundContainer.DockManager.DockItems.Count == 0)
-              {
-                RemoveControl(tabButton, foundContainer);
-                return;
-              }
-              return;
-            }
-          }
+          CloseContainer(tabButton, control, ref index, ref editorType, foundContainer);
         }
         else
         {
           index = multiEditorControl.ContentPanel.Children.IndexOf(control);
         }
+
         if (control is TextEditorContainer)
         {
           HandleClosingEvents(control, tabButton);
@@ -101,6 +75,129 @@ namespace UI.Components.MultiEditorMethods
       }
     }
 
+    private void CloseControl(OpenFileButton tabButton, UserControl control, EditorType editorType)
+    {
+      var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
+                    => textEditorContainer.Text == editorType.ToString()); // находим вкладку контейнера, содержащую нужный контрол
+      var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
+      if (fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
+      {
+        var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(dockItem => dockItem.Content == control);
+        if (foundDockItem != null)
+        {
+          CloseDockItem(tabButton, foundContainer, foundDockItem);
+        }
+      }
+    }
+
+    private bool CloseContainer(OpenFileButton tabButton, UserControl control, ref int index, ref EditorType editorType, TextEditorContainer foundContainer)
+    {
+      CloseContainerItems(foundContainer);
+      var foundDockItem = foundContainer.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
+      if (foundDockItem != null && foundDockItem.Content is RunControl runControl)
+      {
+        editorType = EditorType.Run;
+        foundDockItem.Close();
+        if (foundContainer.DockManager.DockItems.Count == 0)
+        {
+          HandleClosingEvents(control, tabButton);
+          RemoveControl(tabButton, foundContainer);
+          RemoveTabAndControl(tabButton, control);
+
+          return false;
+        }
+      }
+      else
+      {
+        index = multiEditorControl.ContentPanel.Children.IndexOf(control);
+      }
+
+      return true;
+    }
+
+    private void CloseContainerItems(TextEditorContainer foundContainer)
+    {
+      if (foundContainer.DockManager.DockItems.Count > 0)
+      {
+        foreach (var item in foundContainer.DockManager.DockItems)
+        {
+          var foundDockItemType = EditorType.TextEditor;
+          var path = string.Empty;
+          var content = string.Empty;
+          SetPathAndContent(item, ref foundDockItemType, ref path, ref content);
+          if (Path.Exists(path))
+          {
+            CheckNeedSave(item, path, content);
+          }
+        }
+      }
+    }
+
+    private void CheckNeedSave(DockItem item, string path, string content)
+    {
+      var fileService = new FileOpenService(fileManager);
+      var text = fileService.ReadFileContent(path);
+      if (content != text.Item1)
+      {
+        ShowSaveDialogForControl(item);
+      }
+    }
+
+    private void CloseDockItem(OpenFileButton tabButton, TextEditorContainer foundContainer, DockItem foundDockItem)
+    {
+      var foundDockItemType = EditorType.TextEditor;
+      var path = string.Empty;
+      var content = string.Empty;
+      SetPathAndContent(foundDockItem, ref foundDockItemType, ref path, ref content);
+      if (Path.Exists(path))
+      {
+        CheckNeedSave(foundDockItem, path, content);
+        if (foundDockItemType == EditorType.Translator)
+        {
+          var translator = foundDockItem.Content as TranslatorItem;
+          foundDockItem.Close();
+          if (foundContainer.DockManager.DockItems.Count == 0)
+          {
+            RemoveControl(tabButton, foundContainer);
+            return;
+          }
+        }
+        return;
+      }
+      return;
+    }
+
+    private static EditorType SetEditorType(OpenFileButton tabButton)
+    {
+      EditorType editorType;
+      if (tabButton.Text == EditorType.TextEditor.ToString())
+      {
+        editorType = EditorType.TextEditor;
+      }
+      else
+      {
+        editorType = EditorType.Translator;
+      }
+
+      return editorType;
+    }
+
+    private static void SetPathAndContent(DockItem foundDockItem, ref EditorType foundDockItemType, ref string path, ref string content)
+    {
+      if (foundDockItem.Content is TextEditorUI textEditor)
+      {
+        path = textEditor.TextEditorModel.FilePath;
+        content = textEditor.Text;
+      }
+      else if (foundDockItem.Content is TranslatorItem translator)
+      {
+        var leftEditor = translator.GetLeftEditor();
+        path = leftEditor.TextEditorModel.FilePath;
+        content = leftEditor.Text;
+        foundDockItemType = EditorType.Translator;
+      }
+    }
+
     /// <summary>
     /// Отображает диалоговое окно для сохранения файла, если это требуется.
     /// </summary>
@@ -110,7 +207,7 @@ namespace UI.Components.MultiEditorMethods
     {
       var result = MessageBoxResult.No;
       var saveFileResult = false;
-      if (control.Content is TextEditorUI)
+      if (control.Content is TextEditorUI || control.Content is TranslatorItem)
       {
         var saveFileManager = new SaveFileManager(fileManager);
         saveFileManager.SaveFileDialog(ref result, ref saveFileResult, control);
@@ -324,12 +421,12 @@ namespace UI.Components.MultiEditorMethods
     private void ConfigureTabEvents(OpenFileButton tabButton, UserControl control)
     {
       tabButton.PreviewMouseDown += (s, e) => ShowControl(control, tabButton);
-      tabButton.GetCloseButton().PreviewMouseDown += (s, e) => RemoveControl(tabButton, control);
+      tabButton.GetCloseButton().PreviewMouseDown += (s, e) => RemoveControl(tabButton, control).ConfigureAwait(true);
       tabButton.MouseDown += (s, e) =>
       {
         if (e.ChangedButton == MouseButton.Middle)
         {
-          RemoveControl(tabButton, control);
+          RemoveControl(tabButton, control).ConfigureAwait(true);
         }
       };
     }
