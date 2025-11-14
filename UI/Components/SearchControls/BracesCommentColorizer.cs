@@ -6,8 +6,10 @@ using System.Windows.Media;
 namespace UI.Components.SearchControls
 {
   /// <summary>
-  /// Подсвечивает комментарии, заключённые в фигурные скобки { ... },
-  /// с поддержкой вложенности и многострочных блоков.
+  /// Подсвечивает комментарии:
+  /// - { ... } (вложенные)
+  /// - /* ... */ (вложенные)
+  /// - // до конца строки
   /// </summary>
   public class BracesCommentColorizer : DocumentColorizingTransformer
   {
@@ -41,7 +43,7 @@ namespace UI.Components.SearchControls
     }
 
     /// <summary>
-    /// Основной парсер — строит диапазоны комментариев, учитывая вложения и пересечения типов.
+    /// Парсер фигурных, slash-комментариев и однострочных //.
     /// </summary>
     private static List<(int start, int end)> ParseCommentsWithPriority(string text)
     {
@@ -51,6 +53,21 @@ namespace UI.Components.SearchControls
       int i = 0;
       while (i < text.Length)
       {
+        // --- однострочные // ---
+        if (i + 1 < text.Length && text[i] == '/' && text[i + 1] == '/')
+        {
+          if (!IsInsideSlash(stack) && !IsInsideBrace(stack))
+          {
+            int lineEnd = text.IndexOf('\n', i);
+            if (lineEnd == -1) lineEnd = text.Length;
+
+            result.Add((i, lineEnd));
+
+            i = lineEnd;   // ← переходим к началу следующей строки
+            continue;      // ← и продолжаем парсить
+          }
+        }
+
         // --- открытие /* ---
         if (i + 1 < text.Length && text[i] == '/' && text[i + 1] == '*')
         {
@@ -62,15 +79,10 @@ namespace UI.Components.SearchControls
         // --- закрытие */ ---
         if (i + 1 < text.Length && text[i] == '*' && text[i + 1] == '/')
         {
-          if (stack.Count > 0)
+          if (stack.Count > 0 && stack.Peek().type == "slash")
           {
-            var last = stack.Peek();
-            // закрываем только если верхний тип — slash
-            if (last.type == "slash")
-            {
-              stack.Pop();
-              result.Add((last.start, i + 2));
-            }
+            var last = stack.Pop();
+            result.Add((last.start, i + 2));
           }
           i += 2;
           continue;
@@ -79,7 +91,6 @@ namespace UI.Components.SearchControls
         // --- открытие { ---
         if (text[i] == '{')
         {
-          // открываем новый только если не внутри slash-блока
           if (!IsInsideSlash(stack))
             stack.Push(("brace", i));
           i++;
@@ -89,7 +100,6 @@ namespace UI.Components.SearchControls
         // --- закрытие } ---
         if (text[i] == '}')
         {
-          // закрываем только если верхний тип — brace
           if (stack.Count > 0 && stack.Peek().type == "brace")
           {
             var last = stack.Pop();
@@ -102,7 +112,7 @@ namespace UI.Components.SearchControls
         i++;
       }
 
-      // незакрытые комментарии → до конца файла
+      // незакрытые блоки
       foreach (var open in stack)
         result.Add((open.start, text.Length));
 
@@ -113,6 +123,13 @@ namespace UI.Components.SearchControls
     {
       foreach (var s in stack)
         if (s.type == "slash") return true;
+      return false;
+    }
+
+    private static bool IsInsideBrace(Stack<(string type, int start)> stack)
+    {
+      foreach (var s in stack)
+        if (s.type == "brace") return true;
       return false;
     }
   }
