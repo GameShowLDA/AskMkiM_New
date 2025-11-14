@@ -398,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# WebView2 Runtime (do not store in git)
+Utilities/Help/WebView2Runtime/
