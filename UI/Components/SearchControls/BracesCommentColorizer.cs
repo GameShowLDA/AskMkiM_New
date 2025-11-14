@@ -36,8 +36,11 @@ namespace UI.Components.SearchControls
         {
           int from = Math.Max(lineStart, start);
           int to = Math.Min(lineEnd, end);
-          ChangeLinePart(from, to, e =>
-              e.TextRunProperties.SetForegroundBrush(_commentBrush));
+          if (AppConfiguration.Parameter.UserInterfaceConfig.GetSyntaxHighlighting() == true)
+          {
+            ChangeLinePart(from, to, e =>
+                e.TextRunProperties.SetForegroundBrush(_commentBrush));
+          }
         }
       }
     }
