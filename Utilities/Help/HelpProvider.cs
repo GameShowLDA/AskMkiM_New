@@ -131,16 +131,16 @@ namespace Utilities.Help
         return;
       }
 
-      try
-      {
-        HelpServer.EnsureStarted();
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show("Не удалось открыть справку!\nОбратитесь к разработчику!", "Справка");
-        LogError($"Не удалось запустить Help-сервер: {ex.Message}");
-        return;
-      }
+      //try
+      //{
+      //  HelpServer.EnsureStarted();
+      //}
+      //catch (Exception ex)
+      //{
+      //  MessageBox.Show("Не удалось открыть справку!\nОбратитесь к разработчику!", "Справка");
+      //  LogError($"Не удалось запустить Help-сервер: {ex.Message}");
+      //  return;
+      //}
 
       string url = string.IsNullOrWhiteSpace(command)
           ? "/index.html"
@@ -154,16 +154,16 @@ namespace Utilities.Help
 
     private static void OpenHelpViewer(string relativeFileAddress)
     {
-      try
-      {
-        HelpServer.EnsureStarted();
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show("Не удалось открыть справку!\nОбратитесь к разработчику!", "Справка");
-        LogError($"Не удалось запустить Help-сервер: {ex.Message}");
-        return;
-      }
+      //try
+      //{
+      //  HelpServer.EnsureStarted();
+      //}
+      //catch (Exception ex)
+      //{
+      //  MessageBox.Show("Не удалось открыть справку!\nОбратитесь к разработчику!", "Справка");
+      //  LogError($"Не удалось запустить Help-сервер: {ex.Message}");
+      //  return;
+      //}
 
       try
       {

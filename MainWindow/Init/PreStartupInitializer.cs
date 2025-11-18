@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
+using Utilities.Help;
 
 namespace MainWindowProgram.Init
 {
@@ -58,6 +59,7 @@ namespace MainWindowProgram.Init
       // SingleInstanceManager.EnsureSingleInstance();
       await DatabaseInitializer.InitializeAsync();
       InitializeAppHost();
+      InitializeHelpServer();
     }
 
     /// <summary>
@@ -78,9 +80,6 @@ namespace MainWindowProgram.Init
       _ = Task.Run(() => InitializeChassisDevices());
     }
 
-    /// <summary>
-    /// Выполняет первичную инициализацию устройств, связанных с первым найденным шасси.
-    /// </summary>
     /// <summary>
     /// Выполняет первичную инициализацию устройств, связанных с первым найденным шасси.
     /// </summary>
@@ -105,6 +104,18 @@ namespace MainWindowProgram.Init
       catch (Exception ex)
       {
         LoggerUtility.LogException(ex);
+      }
+    }
+
+    private static void InitializeHelpServer()
+    {
+      try
+      {
+        HelpServer.EnsureStarted();
+      }
+      catch (Exception ex)
+      {
+        LoggerUtility.LogException(ex: ex, customMessage: $"Не удалось запустить Help-сервер.", file: "Utilities\\Help\\HelpServer.cs");
       }
     }
   }
