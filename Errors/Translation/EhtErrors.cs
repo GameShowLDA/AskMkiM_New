@@ -72,7 +72,7 @@ namespace Errors.Translation
       Command = command,
       MeasureResult = measured.ToString() + " Ом",
       Code = ErrorCode.Eht_ResistanceOutOfRange,
-      Description = $"{firstPoint} и {secondPoint}({lowerBound:F5}–{upperBound:F5} Ом)"
+      Description = $"{firstPoint}, {secondPoint} ({lowerBound:F3}–{upperBound:F3} Ом)"
     };
 
   }
