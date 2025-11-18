@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,33 +14,70 @@ namespace MainWindowProgram.Init
   /// </summary>
   internal static class SingleInstanceManager
   {
-    private const string MutexName = "Global\\AxionHolding.ASK-MKI-M";
+    private const string MutexName = "Global\\ASK-MKIM-M-SingleInstance";
+    private const string PipeName = "ASK-MKIM-M-Pipe";
 
-    /// <summary>
-    /// Проверяет, запущен ли уже экземпляр приложения, и предотвращает запуск нескольких копий.
-    /// </summary>
-    public static void EnsureSingleInstance()
+    private static Mutex? _mutex;
+
+    public static bool CheckOrSignal()
     {
-      bool isNewInstance;
-      using var mutex = new Mutex(true, MutexName, out isNewInstance);
+      bool createdNew;
+      _mutex = new Mutex(true, MutexName, out createdNew);
 
-      if (!isNewInstance)
+      if (createdNew)
       {
-        MessageBox.Show(
-          "Вы не можете запускать несколько экземпляров для АСК-МКИ-М.",
-          "ВНИМАНИЕ!",
-          MessageBoxButton.OK,
-          MessageBoxImage.Information);
+        // Первый экземпляр: запускаем слушатель
+        StartPipeServer();
+        return true; // продолжаем запуск
+      }
+      else
+      {
+        // Второй экземпляр: посылаем команду "ACTIVATE" первому
+        try
+        {
+          using var client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out);
+          client.Connect(100); // 100 ms
+          using var writer = new StreamWriter(client);
+          writer.WriteLine("ACTIVATE");
+          writer.Flush();
+        }
+        catch { /* ignore */ }
 
-        LogWarning("Попытка запустить несколько экземпляров.");
-        Application.Current.Shutdown();
+        return false; // НЕ продолжаем запуск
       }
     }
 
-    private static void LogWarning(string message)
+    private static void StartPipeServer()
     {
-      // Здесь можно вызвать твой LoggerUtility.LogWarning(message);
-      System.Diagnostics.Debug.WriteLine(message);
+      ThreadPool.QueueUserWorkItem(_ =>
+      {
+        while (true)
+        {
+          try
+          {
+            using var server = new NamedPipeServerStream(
+                PipeName,
+                PipeDirection.In,
+                1,
+                PipeTransmissionMode.Message,
+                PipeOptions.Asynchronous
+            );
+
+            server.WaitForConnection();
+
+            using var reader = new StreamReader(server);
+            string? line = reader.ReadLine();
+            if (line == "ACTIVATE")
+            {
+              ApplicationActivator.ActivateMainWindow();
+            }
+          }
+          catch
+          {
+            // swallow
+          }
+        }
+      });
     }
   }
 }

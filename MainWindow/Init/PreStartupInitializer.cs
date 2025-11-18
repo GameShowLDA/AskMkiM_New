@@ -55,7 +55,7 @@ namespace MainWindowProgram.Init
     /// </remarks>
     static internal async Task Initialize()
     {
-      SingleInstanceManager.EnsureSingleInstance();
+      // SingleInstanceManager.EnsureSingleInstance();
       await DatabaseInitializer.InitializeAsync();
       InitializeAppHost();
     }

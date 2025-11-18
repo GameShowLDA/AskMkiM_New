@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NewCore.Device;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using UI.Theme;
 using static Utilities.LoggerUtility;
@@ -40,6 +41,18 @@ namespace MainWindowProgram
     /// Содержит аргументы командной строки, переданные при запуске приложения.
     /// </summary>
     public static string[] CommandLineArgs { get; private set; }
+    static App()
+    {
+      if (!SingleInstanceManager.CheckOrSignal())
+      {
+        Environment.Exit(0);
+      }
+    }
+
+    public App()
+    {
+      // программа уже заблокирована — можно продолжать
+    }
 
     /// <summary>
     /// Запускает приложение.

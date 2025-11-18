@@ -20,7 +20,9 @@
 
 	</PropertyGroup>
 
-
+	<PropertyGroup>
+		<GenerateApplicationDefinition>false</GenerateApplicationDefinition>
+	</PropertyGroup>
 
 	<Target Name="CreateEmptyFolder" AfterTargets="Build">
 		<MakeDir Directories="D:\AskMkiM\Тесты ПК" />
