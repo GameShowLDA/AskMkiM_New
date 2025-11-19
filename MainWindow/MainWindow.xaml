@@ -148,10 +148,10 @@
                 <MenuItem Command="{Binding Settings.SettingsCommand}" Header="{Binding Source={StaticResource LS_Menu_Settings}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="Settings" Tag="menuHeader_4"/>
 
                 <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpText">
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_GeneralInformation}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextGeneralInformation" Command="{Binding Settings.HelpOpenGeneralInformation}"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_LanguageControlPrograms}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextLanguageControlPrograms" Command="{Binding Settings.HelpOpenLanguageControlPrograms}"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_ProgramComposition}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextProgramComposition" Command="{Binding Settings.HelpOpenProgramComposition}"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_AboutProgram}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextAboutProgram" Command="{Binding Settings.HelpOpenAboutProgram}"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_GeneralInformation}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextGeneralInformation" Command="{Binding Settings.HelpOpenGeneralInformationCommand}"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_LanguageControlPrograms}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextLanguageControlPrograms" Command="{Binding Settings.HelpOpenLanguageControlProgramsCommand}"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_ProgramComposition}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextProgramComposition" Command="{Binding Settings.HelpOpenProgramCompositionCommand}"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_AboutProgram}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextAboutProgram" Command="{Binding Settings.HelpOpenAboutProgramCommand}"/>
                     <Separator Background="{StaticResource ActiveBorderSolidColorBrush}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_FastMenuCommand}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="FastMenuCommand" Command="{Binding Settings.HelpOpenFastMenuCommand}"/>
                 </MenuItem>
