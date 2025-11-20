@@ -81,7 +81,7 @@ namespace ControlCommandExecutor.BaseStrategies
         {
           await DisconnectPointsToBusAsync(binaryPoints, methodExecutionContext.SchemeModel, step, methodExecutionContext.MessageService);
           await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Ошибка при проверке разряда {stepStr}", type: ShowMessageModel.MessageType.Error), IsBlockStart: true);
-          showMessageModels.Add(new ShowMessageModel($"({methodExecutionContext.LowerLimit}-{methodExecutionContext.HigherLimit} Ом)", message: $"Rизм - {result.Value} Ом. Переход к методу полного узла", type: ShowMessageModel.MessageType.Error));
+          showMessageModels.Add(new ShowMessageModel($"({methodExecutionContext.LowerLimit}-{methodExecutionContext.HigherLimit} Ом)", message: $"Rизм = {result.Value} Ом. Переход к методу полного узла", type: ShowMessageModel.MessageType.Error));
 
           await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Выполение измерения методом полного узла"), IsBlockStart: true);
           showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync
