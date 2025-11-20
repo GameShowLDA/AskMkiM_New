@@ -4,6 +4,7 @@ using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Service;
 using Errors.Device.ModuleRelayControl;
+using System.Runtime.CompilerServices;
 using Utilities;
 using static ControlCommandExecutor.BaseStrategies.NodeFullChecker;
 using static DTO.Enum.DeviceEnums;
@@ -17,23 +18,40 @@ namespace ControlCommandExecutor.BaseStrategies
     /// </summary>
     static int HighestBitCount { get; set; }
 
+
+
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, PerformMeasurementAsync performMeasurementAsync, CommandExecutionManager manager, BaseCommandModel siCommandModel, IUserMessageService messageService, double resistance)
+    {
+      MethodExecutionContext methodExecutionContext = new MethodExecutionContext
+      {
+        SchemeModel = schemeModel,
+        PerformMeasurementAsync = performMeasurementAsync,
+        CommandManager = manager,
+        CommandModel = siCommandModel,
+        MessageService = messageService,
+        Resistance = resistance,
+      };
+
+      return await CheckSequenceAsync(methodExecutionContext);
+    }
+
     /// <summary>
     /// Выполняет последовательную проверку точек групповым методом.
     /// </summary>
     /// <param name="points">Список точек для проверки.</param>
     /// <param name="messageService">Сервис отображения сообщений.</param>
     /// <returns>Задача, представляющая выполнение проверки.</returns>
-    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, PerformMeasurementAsync performMeasurementAsync, CommandExecutionManager manager, BaseCommandModel siCommandModel, IUserMessageService messageService, double resistance)
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(MethodExecutionContext methodExecutionContext)
     {
       List<ShowMessageModel> showMessageModels = new List<ShowMessageModel>();
 
-      var pointsList = schemeModel.GetPointsDisconnected();
+      var pointsList = methodExecutionContext.SchemeModel.GetPointsDisconnected();
       if (pointsList.Count == 0)
       {
         return showMessageModels;
       }
 
-      await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка разобщённых точек"));
+      await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка разобщённых точек"));
 
 
       List<ChainModel> chains = new List<ChainModel>();
@@ -48,21 +66,36 @@ namespace ControlCommandExecutor.BaseStrategies
 
       for (int step = 0; step < HighestBitCount; step++)
       {
-        await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка разряда {ConvertIntToString(step + 1)} ({HighestBitCount})"), IsBlockStart: true);
-        await ConnectPointsToBusAsync(binaryPoints, schemeModel, step, messageService);
-        var result = await performMeasurementAsync(resistance, messageService, messageService.GetCancellationToken());
+        char[] bits = new char[HighestBitCount];
+        for (int i = 0; i < bits.Length; i++)
+          bits[i] = '0';
+
+        bits[HighestBitCount - step - 1] = '1';
+
+        string stepStr = new string(bits);
+
+        await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка разряда {ConvertIntToString(step + 1)} ({HighestBitCount})"), IsBlockStart: true);
+        await ConnectPointsToBusAsync(binaryPoints, methodExecutionContext.SchemeModel, step, methodExecutionContext.MessageService);
+        var result = await methodExecutionContext.PerformMeasurementAsync(methodExecutionContext.Resistance, methodExecutionContext.MessageService, methodExecutionContext.MessageService.GetCancellationToken());
         if (!result.Result)
         {
-          await DisconnectPointsToBusAsync(binaryPoints, schemeModel, step, messageService);
-          await messageService.ShowMessageAsync(new ShowMessageModel($"Ошибка при проверке разряда {step} ({HighestBitCount})", type: ShowMessageModel.MessageType.Error), IsBlockStart: true);
-          showMessageModels.Add(new ShowMessageModel($"Ошибка при проверке разряда {step} ({HighestBitCount})", message: $"Измеренное значение - {result.Value}", type: ShowMessageModel.MessageType.Error));
+          await DisconnectPointsToBusAsync(binaryPoints, methodExecutionContext.SchemeModel, step, methodExecutionContext.MessageService);
+          await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Ошибка при проверке разряда {stepStr}", type: ShowMessageModel.MessageType.Error), IsBlockStart: true);
+          showMessageModels.Add(new ShowMessageModel($"({methodExecutionContext.LowerLimit}-{methodExecutionContext.HigherLimit} Ом)", message: $"Rизм - {result.Value} Ом. Переход к методу полного узла", type: ShowMessageModel.MessageType.Error));
 
-          await messageService.ShowMessageAsync(new ShowMessageModel($"Выполение измерения методом полного узла"), IsBlockStart: true);
-          showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync(schemeModel, performMeasurementAsync, manager, siCommandModel, messageService, resistance));
+          await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Выполение измерения методом полного узла"), IsBlockStart: true);
+          showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync
+            (
+            methodExecutionContext.SchemeModel, 
+            methodExecutionContext.PerformMeasurementAsync, 
+            methodExecutionContext.CommandManager, 
+            methodExecutionContext.CommandModel, 
+            methodExecutionContext.MessageService,
+            methodExecutionContext.Resistance));
 
           return showMessageModels;
         }
-        await DisconnectPointsToBusAsync(binaryPoints, schemeModel, step, messageService);
+        await DisconnectPointsToBusAsync(binaryPoints, methodExecutionContext.SchemeModel, step, methodExecutionContext.MessageService);
       }
 
       return showMessageModels;
