@@ -46,6 +46,7 @@ namespace ControlCommandExecutor.BaseStrategies
       {
         foreach (var chains in groups)
         {
+          bool errorPoint = false;
           var str = string.Empty;
 
           foreach (var point in chains)
@@ -59,7 +60,16 @@ namespace ControlCommandExecutor.BaseStrategies
           await ConnectToBusAAndBAsync(messageService, _basePoint);
 
           var Rt1 = await GetResistanceAsync(messageService, resistance);
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt1:F5} Ом") { IndentLevel = 1 });
+          if (Rt1 > 100)
+          {
+            errorPoint = true;
+            await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"Нет подлючения точки {_basePoint.Mnemonic}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 });
+          }
+          else
+          {
+            await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt1:F5} Ом") { IndentLevel = 1 });
+          }
+
           await DisconnectToBusBAsync(messageService, _basePoint);
 
           for (int i = 1; i < chains.Count; i++)
@@ -68,7 +78,16 @@ namespace ControlCommandExecutor.BaseStrategies
             await ConnectToBusAAndBAsync(messageService, point);
 
             var Rt2 = await GetResistanceAsync(messageService, resistance);
-            await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt2:F5} Ом") { IndentLevel = 1 });
+            if (Rt1 > 100)
+            {
+              errorPoint = true;
+              await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"Нет подлючения точки {point.Mnemonic}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 });
+            }
+            else
+            {
+              await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt2:F5} Ом") { IndentLevel = 1 });
+            }
+
             await DisconnectToBusAAsync(messageService, point);
 
             var Rt = await GetResistanceAsync(messageService, resistance);
@@ -80,17 +99,25 @@ namespace ControlCommandExecutor.BaseStrategies
             var LowerBound = (baseCommandModel as EhtCommandModel).LowerLimitResistance.Value;
             var UpperBound = (baseCommandModel as EhtCommandModel).HigherLimitResistance.Value;
 
-            var taskResult = Rt - (Rt1 + Rt2) / 2;
+            double Rx = 0;
+            if (!errorPoint)
+            {
+              Rx = Rt - (Rt1 + Rt2) / 2;
+            }
+            else
+            {
+              Rx = Rt;
+            }
 
-            var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? taskResult : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? (LowerBound + UpperBound) / 2 : taskResult;
+            var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? Rx : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? (LowerBound + UpperBound) / 2 : Rx;
 
             if (result < 0)
             {
               result = 0;
             }
 
-            string machineAdressFirst = await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo()? $"[{_basePoint.ToString()}]" : string.Empty;
-            string machineAdressSecond = await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo()? $"[{point.ToString()}]" : string.Empty;
+            string machineAdressFirst = await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo() ? $"[{_basePoint.ToString()}]" : string.Empty;
+            string machineAdressSecond = await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo() ? $"[{point.ToString()}]" : string.Empty;
 
             var succes = result >= LowerBound && result <= UpperBound;
             var error = new ShowMessageModel(
