@@ -123,7 +123,6 @@ namespace UI.Controls
       {
         MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
       }
-
     }
 
     public TextEditorUI GetRightEditor()

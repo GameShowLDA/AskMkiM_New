@@ -1,15 +1,18 @@
 ﻿using ControlCommandAnalyser;
 using ControlCommandAnalyser.Model.Ok;
+using DTO.Base.Interface;
 using DTO.Base.Models;
 using EventCore.Adapters;
 using ICSharpCode.AvalonEdit;
 using Message;
 using System.IO;
 using System.Windows;
+using System.Windows.Documents;
 using UI.Components.SearchControls;
 using UI.Controls;
 using UI.Controls.Runner;
 using UI.Controls.TextEditor;
+using UI.Services;
 using UI.Windows.WpfDocking.Windows.Docking;
 using Utilities;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
@@ -31,6 +34,8 @@ namespace MainWindowProgram.Services
     /// Сервис для работы с файлами.
     /// </summary>
     private readonly FileService _fileService;
+
+    private TextEditorUI _actualTextEditor;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="AdminServices"/>.
@@ -78,20 +83,24 @@ namespace MainWindowProgram.Services
     {
       var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
       var container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
-      if (container == null)
+      var runContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Run);
+      if (container == null && editor != null)
       {
         await BuildAsync();
         editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
         container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
       }
 
-
-      if (container == null)
+      if (container == null && runContainer == null && editor == null)
       {
         MessageBoxCustom.Show($"Не удалось запустить исполнитель программы контроля.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
         return;
       }
 
+      if (container == null && runContainer != null)
+      {
+        container = runContainer;
+      }
       var dockManager = container.GetDockControl();
       if (dockManager == null) return;
 
@@ -111,30 +120,50 @@ namespace MainWindowProgram.Services
         await Task.Delay(10);
       }
 
-      if (foundDockItem?.Content is not TranslatorItem translator) return;
-
-      editor = translator.GetRightEditor();
-      if (editor == null)
+      if (foundDockItem?.Content is not TranslatorItem translator)
       {
-        ShowEditorNotFoundError();
-        return;
+        if (foundDockItem?.Content is RunControl run)
+        {
+          //RunControl runControl = new RunControl();
+          //runControl.TranslationModels = run.TranslationModels;
+          await PrepareRun(runContainer, _actualTextEditor, run);
+          // TODO: закрыть вкладку со старым транслятором
+          //await _multiWindow.CloseRunItem(run, EditorType.Run);
+        }
+        else
+        {
+          return;
+        }
       }
-
-      if (translator.ErrorCount > 0)
+      else
       {
-        MessageBoxCustom.Show($"Возникли ошибки сборки ({translator.ErrorCount} ошибок). Устраните ошибки и повторите попытку.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
-        return;
+        _actualTextEditor = translator.GetRightEditor();
+        if (_actualTextEditor == null)
+        {
+          ShowEditorNotFoundError();
+          return;
+        }
+
+        if (translator.ErrorCount > 0)
+        {
+          MessageBoxCustom.Show($"Возникли ошибки сборки ({translator.ErrorCount} ошибок). Устраните ошибки и повторите попытку.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
+          return;
+        }
+
+        await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
+
+
+        RunControl runControl = new RunControl();
+        runControl.TranslationModels = translator.TranslationModels;
+        await PrepareRun(runContainer, _actualTextEditor, runControl);
       }
+    }
 
-      var models = translator.TranslationModels;
-
-      await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
-
-
-      RunControl runControl = new RunControl();
+    private async Task PrepareRun(TextEditorContainer runContainer, TextEditorUI editor, RunControl runControl)
+    {
       runControl.OpkFilePath = editor.TextEditorModel.FilePath;
       runControl.SetLeftEditor(editor);
-      var foundItem = models.FirstOrDefault(item => item.GetType() == typeof(OkCommandModel));
+      var foundItem = runControl.TranslationModels.FirstOrDefault(item => item.GetType() == typeof(OkCommandModel));
       if (foundItem != null && foundItem is OkCommandModel okCommandModel)
       {
         runControl.FileName = okCommandModel.ObjectCode;
@@ -142,9 +171,24 @@ namespace MainWindowProgram.Services
       runControl.HeaderFile = string.IsNullOrEmpty(editor.TextEditorModel.FileName) ?
         Path.GetFileName(editor.TextEditorModel.FilePath) : editor.TextEditorModel.FileName;
 
-      await _multiWindow.AddRunItem(runControl, EditorType.Run);
+      if (runContainer == null)
+      {
+        await _multiWindow.AddRunItem(runControl, EditorType.Run);
+      }
+      else
+      {
+        //await _multiWindow.CloseRunItem(runControl, EditorType.Run);
+        //dockItem.ItemClosed
+        var dockItem = runContainer.GetDockControl().DockItems.FirstOrDefault(item => item.Content == runControl);
+        if (dockItem != null)
+        {
+          dockItem.PerformClose();
+        }
+          
+        await _multiWindow.AddRunItem(runControl, EditorType.Run);
+      }
 
-      await runControl.Start(models);
+      await runControl.Start(runControl.TranslationModels);
     }
 
     /// <summary>
@@ -233,27 +277,27 @@ namespace MainWindowProgram.Services
 
         editor.TextChanged += async (_, __) =>
          {
-          redrawToken?.Cancel();
-          redrawToken = new CancellationTokenSource();
-          var token = redrawToken.Token;
+           redrawToken?.Cancel();
+           redrawToken = new CancellationTokenSource();
+           var token = redrawToken.Token;
 
-          try
-          {
-            await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
-            if (!token.IsCancellationRequested)
-            {
-              // безопасный вызов из UI-потока
-              Application.Current.Dispatcher.Invoke(() =>
-              {
-                editor.TextArea.TextView.Redraw();
-              });
-            }
-          }
-          catch (TaskCanceledException)
-          {
-            // просто игнорируем отменённую задержку
-          }
-        };
+           try
+           {
+             await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
+             if (!token.IsCancellationRequested)
+             {
+               // безопасный вызов из UI-потока
+               Application.Current.Dispatcher.Invoke(() =>
+               {
+                 editor.TextArea.TextView.Redraw();
+               });
+             }
+           }
+           catch (TaskCanceledException)
+           {
+             // просто игнорируем отменённую задержку
+           }
+         };
 
 
         if (translateEditor != null)

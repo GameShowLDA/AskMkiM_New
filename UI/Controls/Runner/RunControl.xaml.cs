@@ -26,6 +26,27 @@ namespace UI.Controls.Runner
     private ProtocolUI ProtocolUI { get; set; }
     public string FileName { get; set; }
     public string OpkFilePath { get; set; }
+    private List<BaseCommandModel> translationModels = new List<BaseCommandModel>();
+    public List<BaseCommandModel> TranslationModels
+    {
+      get
+      {
+        return translationModels;
+      }
+      set
+      {
+        translationModels = value;
+        ErrorClear();
+
+        foreach (var model in value)
+        {
+          if (model.Errors.Count > 0)
+          {
+            SetError(model.Errors);
+          }
+        }
+      }
+    }
     public string HeaderFile
     {
       get
@@ -77,6 +98,19 @@ namespace UI.Controls.Runner
       }
     }
 
+    private void SetError(List<ErrorItem> errorItems)
+    {
+      foreach (ErrorItem errorItem in errorItems)
+      {
+        ErrorListBoxVertical.Errors.Add(errorItem);
+        ErrorCount++;
+      }
+
+      if (ErrorCount > 0)
+      {
+        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+      }
+    }
 
     public void SetLeftEditor(TextEditorUI textEditorUI)
     {
