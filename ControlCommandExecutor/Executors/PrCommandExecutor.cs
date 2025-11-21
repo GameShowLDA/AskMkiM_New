@@ -107,16 +107,19 @@ namespace ControlCommandExecutor.Executors
       List<ShowMessageModel> errorMessage = new();
       ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
 
-      ConnectedPointContext pointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
-      pointContext.PerformMeasurementAsync = measurePointConnected;
+      ConnectedPointContext connectedPointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
+      connectedPointContext.PerformMeasurementAsync = measurePointConnected;
 
-      var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(pointContext);
+      var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(connectedPointContext);
       errorMessage.AddRange(connectErrMes);
 
       if (command.AlgorithmKey.Contains("К"))
       {
         NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        var errMes = await NodeFullChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
+        NodeFullContext nodeFullContext = methodExecutionContext.CreateChild<NodeFullContext>();
+        nodeFullContext.PerformMeasurementAsync = measure;
+
+        var errMes = await NodeFullChecker.CheckSequenceAsync(nodeFullContext);
         errorMessage.AddRange(errMes);
       }
       else if (command.AlgorithmKey.Contains("Г"))
@@ -224,6 +227,7 @@ namespace ControlCommandExecutor.Executors
         {
           answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
         }
+
         var result = answer >= firstValue && answer <= secondValue;
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);

@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Service;
@@ -84,14 +85,9 @@ namespace ControlCommandExecutor.BaseStrategies
           showMessageModels.Add(new ShowMessageModel($"({methodExecutionContext.LowerLimit}-{methodExecutionContext.HigherLimit} Ом)", message: $"Rизм = {result.Value} Ом. Переход к методу полного узла", type: ShowMessageModel.MessageType.Error));
 
           await methodExecutionContext.MessageService.ShowMessageAsync(new ShowMessageModel($"Выполение измерения методом полного узла"), IsBlockStart: true);
-          showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync
-            (
-            methodExecutionContext.SchemeModel, 
-            methodExecutionContext.PerformMeasurementAsync, 
-            methodExecutionContext.CommandManager, 
-            methodExecutionContext.CommandModel, 
-            methodExecutionContext.MessageService,
-            methodExecutionContext.Resistance));
+          NodeFullContext contextNodeFull = methodExecutionContext.CreateChild<NodeFullContext>();
+          contextNodeFull.PerformMeasurementAsync = methodExecutionContext.PerformMeasurementAsync;
+          showMessageModels.AddRange(await NodeFullChecker.CheckSequenceAsync(contextNodeFull));
 
           return showMessageModels;
         }

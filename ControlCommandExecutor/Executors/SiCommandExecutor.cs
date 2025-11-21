@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
@@ -73,10 +74,22 @@ namespace ControlCommandExecutor.Executors
 
       List<ShowMessageModel> errorMessage = new();
 
+
+      NodeFullContext methodExecutionContext = new NodeFullContext();
+      methodExecutionContext.SchemeModel = command.Scheme;
+      methodExecutionContext.CommandManager = context.CommandExecutionManager;
+      methodExecutionContext.CommandModel = command;
+      methodExecutionContext.MessageService = context.Console;
+      methodExecutionContext.Resistance = command.Resistance.Value;
+      methodExecutionContext.LowerLimit = 0;
+      methodExecutionContext.HigherLimit = 80;
+      methodExecutionContext.Unit = "МОм";
+      methodExecutionContext.UnitMnemonic = "R";
+
       if (command.AlgorithmKey.Contains("К"))
       {
         BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, command.Resistance.Value);
+        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
       else if (command.AlgorithmKey.Contains("Г"))
