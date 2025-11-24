@@ -84,13 +84,26 @@
                 Name="CustomerAgentInput"
                  />
             </Border>
-            <Button Grid.Row="9"
-            Content="Сохранить" 
-            Style="{StaticResource ConfigButtonStyle}" 
-            HorizontalAlignment="Center" 
-            Width="250"
-            Margin="20,0"
-            PreviewMouseDown="SaveButton_Click"/>
+            <Grid Grid.Row="9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button 
+                    Grid.Column="1"
+                    Content="Сохранить" 
+                    Style="{StaticResource ConfigButtonStyle}" 
+                    HorizontalAlignment="Center"
+                    Width="150"
+                    PreviewMouseDown="SaveButton_Click"/>
+                <Button 
+                    Grid.Column="0"
+                    Content="Отмена" 
+                    Style="{StaticResource ConfigButtonStyle}" 
+                    HorizontalAlignment="Center"
+                    Width="150"
+                    PreviewMouseDown="CancelButton_Click"/>
+            </Grid>
 
 
         </Grid>

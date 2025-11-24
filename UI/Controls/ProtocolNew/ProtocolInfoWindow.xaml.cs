@@ -82,5 +82,10 @@ namespace UI.Controls.ProtocolNew
         this.Close();
       }
     }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+      this.Close();
+    }
   }
 }
