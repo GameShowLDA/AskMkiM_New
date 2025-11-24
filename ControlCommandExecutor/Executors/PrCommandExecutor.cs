@@ -199,7 +199,11 @@ namespace ControlCommandExecutor.Executors
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer > resistance : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+
+        if (!result)
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        }
         return result;
 
       }, messageService);
@@ -222,7 +226,11 @@ namespace ControlCommandExecutor.Executors
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer > resistance : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+
+        if (!result)
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        }
 
         return result;
 
@@ -247,7 +255,11 @@ namespace ControlCommandExecutor.Executors
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < resistance : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+
+        if (!result)
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        }
 
         return result;
 
