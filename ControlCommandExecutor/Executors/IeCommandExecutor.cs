@@ -117,8 +117,11 @@ namespace ControlCommandExecutor.Executors
         }
         answer = await meter.CapacitanceManager.MeasureCapacitanceAsync(value, userMessageService: messageService);
         var result = answer >= firstValue && answer <= secondValue;
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения ёмкости", message: $"{answer} пкФ", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        }
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения ёмкости", message: $"{answer} пкФ", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         if (!result)
         {
           await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} пкФ") { IndentLevel = 2 }, skipPause: true);
