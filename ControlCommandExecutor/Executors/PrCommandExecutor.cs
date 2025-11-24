@@ -1,6 +1,7 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
@@ -13,6 +14,7 @@ using Errors.Device.Adapters;
 using Errors.Device.Breakdown;
 using Errors.Device.DeviceBusCommutation;
 using Errors.Device.ModuleRelayControl;
+using PdfSharp.Quality;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -91,33 +93,53 @@ namespace ControlCommandExecutor.Executors
       }
 
 
+      MethodExecutionContext methodExecutionContext = new MethodExecutionContext();
+      methodExecutionContext.SchemeModel = command.Scheme;
+      methodExecutionContext.CommandManager = context.CommandExecutionManager;
+      methodExecutionContext.CommandModel = command;
+      methodExecutionContext.MessageService = context.Console;
+      methodExecutionContext.Resistance = resistance;
+      methodExecutionContext.LowerLimit = command.LowerLimitResistance.Value;
+      methodExecutionContext.HigherLimit = command.HigherLimitResistance.Value;
+      methodExecutionContext.Unit = "Ом";
+      methodExecutionContext.UnitMnemonic = "R";
+
       List<ShowMessageModel> errorMessage = new();
-      BaseStrategies.ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
-      var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(command.Scheme, measurePointConnected, context.CommandExecutionManager, command, context.Console, resistance);
+      ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
+
+      ConnectedPointContext connectedPointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
+      connectedPointContext.PerformMeasurementAsync = measurePointConnected;
+
+      var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(connectedPointContext);
       errorMessage.AddRange(connectErrMes);
 
       if (command.AlgorithmKey.Contains("К"))
       {
-        BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
+        NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+        NodeFullContext nodeFullContext = methodExecutionContext.CreateChild<NodeFullContext>();
+        nodeFullContext.PerformMeasurementAsync = measure;
+
+        var errMes = await NodeFullChecker.CheckSequenceAsync(nodeFullContext);
         errorMessage.AddRange(errMes);
       }
       else if (command.AlgorithmKey.Contains("Г"))
       {
-        BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        var errMes = await BaseStrategies.MethodExecutor.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
+        NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+        methodExecutionContext.PerformMeasurementAsync = measure;
+
+        var errMes = await MethodExecutor.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
       else if (command.AlgorithmKey.Contains("Т1"))
       {
-        BaseStrategies.NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await BaseStrategies.PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
+        NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
+        var errMes = await PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
         errorMessage.AddRange(errMes);
       }
       else
       {
-        BaseStrategies.NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await BaseStrategies.NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), resistance);
+        NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
+        var errMes = await NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), resistance);
         errorMessage.AddRange(errMes);
       }
 
@@ -195,8 +217,18 @@ namespace ControlCommandExecutor.Executors
 
       var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
-        var answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
-        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer > resistance : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
+        double answer = 0;
+
+        if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() && await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled())
+        {
+          answer = new Random().Next(0, (int)secondValue + 1000);
+        }
+        else
+        {
+          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+        }
+
+        var result = answer >= firstValue && answer <= secondValue;
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
@@ -218,8 +250,15 @@ namespace ControlCommandExecutor.Executors
       double answer = -1;
       var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
-        answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
-        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer > resistance : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
+        if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() && await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled())
+        {
+          answer = new Random().Next(0, (int)secondValue + 1000);
+        }
+        else
+        { 
+          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+        }
+        var result = answer >= firstValue && answer <= secondValue;
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
@@ -236,24 +275,32 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> ConnectedPointCheckerMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken)
+    private async Task<(bool, double)> ConnectedPointCheckerMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = -1;
 
       var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
-        answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
-        var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < resistance : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
+        if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() && await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled())
+        {
+          answer = new Random().Next(0, (int)secondValue + 1000);
+        }
+        else
+        {
+          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+        }
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        var result = answer >= firstValue && answer <= secondValue;
+
+        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
 
         return result;
 
       }, messageService);
 
-      return (result, answer + "Ом");
+      return (result, answer);
     }
   }
 }

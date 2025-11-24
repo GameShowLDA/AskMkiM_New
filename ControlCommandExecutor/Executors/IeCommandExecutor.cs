@@ -1,6 +1,7 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
@@ -75,7 +76,20 @@ namespace ControlCommandExecutor.Executors
       }
 
       ConnectedPointChecker.PerformMeasurementAsync measure = ResistanceMeasure;
-      var errMes = await ConnectedPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2);
+
+      ConnectedPointContext pointContext = new ConnectedPointContext();
+      pointContext.SchemeModel = command.Scheme;
+      pointContext.CommandManager = context.CommandExecutionManager;
+      pointContext.CommandModel = command;
+      pointContext.MessageService = context.Console;
+      pointContext.Resistance = (firstValue + secondValue) / 2;
+      pointContext.LowerLimit = firstValue;
+      pointContext.HigherLimit = secondValue;
+      pointContext.PerformMeasurementAsync = measure;
+      pointContext.Unit = "пкф";
+      pointContext.UnitMnemonic = "C";
+
+      var errMes = await ConnectedPointChecker.CheckSequenceAsync(pointContext);
       errorMessage.AddRange(errMes);
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
@@ -95,7 +109,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> ResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
+    private async Task<(bool, double)> ResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
     {
       var meter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = 0;
@@ -115,7 +129,7 @@ namespace ControlCommandExecutor.Executors
         return result;
       }, messageService);
 
-      return (result, answer + "пкФ");
+      return (result, answer);
     }
 
     private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
