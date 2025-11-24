@@ -29,11 +29,14 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     {
       try
       {
-        var reslut = await _measurement.SetACVoltageModeAsync();
+        var result = await _measurement.SetACVoltageModeAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка режима измерения переменного напряжения", "CONF:VOLT:AC", reslut, 1, userMessageService);
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка режима измерения переменного напряжения", "CONF:VOLT:AC", result, 1, userMessageService);
+        }
 
-        return reslut;
+        return result;
       }
       catch (Exception ex)
       {

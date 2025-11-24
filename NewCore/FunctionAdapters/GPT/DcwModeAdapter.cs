@@ -148,13 +148,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.Mode.SetModeAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка режима DCW",
           result.Success ? "DCW" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetModeFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
@@ -230,13 +233,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.Voltage.SetVoltageAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка напряжения DCW",
           result.Success ? $"{value} В" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetVoltageFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
@@ -307,13 +313,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.CurrentLimits.SetHighCurrentLimitAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка верхнего предела тока DCW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetHighLimitFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
@@ -350,13 +359,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.CurrentLimits.SetLowCurrentLimitAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка нижнего предела тока DCW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetLowLimitFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
@@ -427,13 +439,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.Time.SetTestTimeAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка времени теста DCW",
           result.Success ? $"{value} сек" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetTestTimeFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
@@ -470,13 +485,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.Time.SetRampTimeAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка Ramp Time DCW",
           result.Success ? $"{value} сек" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetRampTimeFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
@@ -549,13 +567,16 @@ namespace NewCore.FunctionAdapters.GPT
           () => _dcwMode.Offset.SetOffsetAsync(value, userMessageService),
           userMessageService);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Connect || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка смещения DCW",
           result.Connect ? $"{value} мА" : result.Answer,
           result.Connect,
           1,
           userMessageService);
+        }
 
         if (!result.Connect)
           throw DcwExceptionFactory.SetOffsetFailed(_device.Name, _device.NumberChassis, _device.Number, result.Answer);
@@ -626,13 +647,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _dcwMode.ArcCurrent.SetArcCurrentAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка дугового тока DCW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw DcwExceptionFactory.SetArcCurrentFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);

@@ -36,11 +36,14 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       if (!result)
         result = await _pointManager.ConnectRelayAsync(bus, number);
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _moduleRelayControl,
           $"Подключение точки {description}",
           result,
           1, userMessageService);
+      }
 
       if (!result)
       {
@@ -61,13 +64,14 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       if (!result)
         result = await _pointManager.DisconnectRelayAsync(bus, number);
 
-
-
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _moduleRelayControl,
           $"Отключение точки {description}",
           result,
           1, userMessageService);
+      }
 
       if (!result)
       {

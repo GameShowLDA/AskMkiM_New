@@ -73,11 +73,25 @@ namespace ControlCommandExecutor.BaseStrategies
           {
             if ((z + 1) == points.Count)
             {
-              chainsStr += $"{points[z].Mnemonic}({points[z].ToString()})*";
+              if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync())
+              {
+                chainsStr += $"{points[z].Mnemonic}[{points[z].ToString()}]*";
+              }
+              else
+              {
+                chainsStr += $"{points[z].Mnemonic}*";
+              }
             }
             else
             {
-              chainsStr += $"{points[z].Mnemonic}({points[z].ToString()}),";
+              if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync())
+              {
+                chainsStr += $"{points[z].Mnemonic}[{points[z].ToString()}],";
+              }
+              else
+              {
+                chainsStr += $"{points[z].Mnemonic},";
+              }
             }
           }
 

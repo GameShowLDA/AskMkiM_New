@@ -266,9 +266,12 @@
 
     <!--#region Настрйоки приложения -->
 
+    <SolidColorBrush x:Key="SettingCardBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SettingCardBorderBrush" Color="#000000"/>
+    
     <Style x:Key="SettingCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="#FFFFFF"/>
-        <Setter Property="BorderBrush" Value="#000000"/>
+        <Setter Property="Background" Value="{DynamicResource SettingCardBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SettingCardBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="14"/>
     </Style>
