@@ -128,11 +128,15 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       var result = await _pointManager.DisconnectingAllPoint(userMessageService);
       var description = $"всех точек от всех шин";
 
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      { 
+
       await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _moduleRelayControl,
           $"Отключение {description}",
           result,
           1, userMessageService);
+      }
 
       if (!result)
         throw RelayExceptionFactory.DisconnectRangeFailed(description);

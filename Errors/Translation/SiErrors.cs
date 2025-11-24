@@ -112,11 +112,12 @@ namespace Errors.Translation
     };
 
     /// <inheritdoc />
-    public ErrorItem DisconnectChainError(string command, string chain) => new()
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult) => new()
     {
       Command = command,
       Code = ErrorCode.Si_ChainError,
-      Description = $"Разрыв в цепи {chain}"
+      Description = $"Разрыв в цепи {chain}",
+      MeasureResult = measureResult
     };
 
     /// <inheritdoc />

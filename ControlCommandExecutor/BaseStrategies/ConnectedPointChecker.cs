@@ -95,6 +95,7 @@ namespace ControlCommandExecutor.BaseStrategies
             }
           }
 
+          await context.MessageService.AppendEmptyLineAsync();
           await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка цепи", message: chainsStr, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 1 }, IsBlockStart: true);
           var _basePoint = points[0];
           points.Remove(_basePoint);
@@ -105,13 +106,21 @@ namespace ControlCommandExecutor.BaseStrategies
           foreach (var point in points)
           {
             context.MessageService.GetCancellationToken().ThrowIfCancellationRequested();
-            await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {point.Mnemonic}({point.ToString()})") { IndentLevel = 1 }, IsBlockStart: true);
+
+            string machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"({point.ToString()})" : string.Empty;
+            await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {point.Mnemonic}{machineAdress}") { IndentLevel = 1 }, IsBlockStart: true);
             await ConnectToBusAAsync(point, context.MessageService);
 
             var result = await context.PerformMeasurementAsync(context.Resistance, context.MessageService, context.MessageService.GetCancellationToken());
             if (!result.Result)
             {
-              errorChain.Add(new List<PointModel>() { _basePoint, point }, result.Value.ToString());
+              var item = new List<PointModel>() { _basePoint, point };
+              errorChain.Add(item, result.Value.ToString());
+
+              var chain = new ChainModel(item);
+              var chainStr = PointFormater.GetFormatConnectPoint(chain);
+
+              context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.DisconnectChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, $"{result.Value.ToString()} Ом"));
             }
 
             await DisconnectFromBusAAsync(point, context.MessageService);
@@ -136,7 +145,6 @@ namespace ControlCommandExecutor.BaseStrategies
           errorsMessage.Add(error);
 
           await context.MessageService.ShowMessageAsync(error);
-          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.DisconnectChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr));
         }
       }
 
