@@ -278,7 +278,10 @@ namespace ControlCommandExecutor.Executors
         {
           var answer = await breadDown.AcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+          {
+            await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          }
           return result;
         }
         else

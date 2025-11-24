@@ -206,7 +206,10 @@ namespace ControlCommandExecutor.Executors
         var answer = await breadDown.IrManger.Measure.MeasureAsync(value, userMessageService: messageService);
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{answer} МОм", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{answer} МОм", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        }
         return result;
       }, messageService);
 
