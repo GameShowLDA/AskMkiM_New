@@ -102,6 +102,8 @@ namespace ControlCommandAnalyser.Formatter
       if (pr.Scheme.GroupModels.Count > 0)
       {
         yield return "\tСообщенные точки:";
+
+        var j = 1;
         for (int i = 0; i < pr.Scheme.GroupModels.Count; i++)
         {
           var pointsAll = pr.Scheme.GetPointsConnected(pr.Scheme.GroupModels[i]);
@@ -110,8 +112,8 @@ namespace ControlCommandAnalyser.Formatter
             foreach (var points in pointsAll)
             {
               string str = string.Empty;
-              str += $"\t\t{i + 1}. *";
-
+              str += $"\t\t{j}. *";
+              j++;
               foreach (var point in points)
               {
                 str += $"{point.Mnemonic}({point}),";
