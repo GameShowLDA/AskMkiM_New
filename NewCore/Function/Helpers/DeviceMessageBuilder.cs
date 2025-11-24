@@ -49,16 +49,13 @@ namespace NewCore.Function.Helpers
     /// <param name="result">Результат выполнения операции: <c>true</c> — успех, <c>false</c> — ошибка.</param>
     public static async Task ShowDeviceMessage(IUserMessageService userMessageService, ShowMessageModel showMessageModel, bool result)
     {
-      if (!result || await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo())
+      if (userMessageService != null)
       {
-        if (userMessageService != null)
-        {
-          await userMessageService.ShowMessageAsync(showMessageModel, skipPause: true);
-        }
-        else
-        {
-          LogError($"{showMessageModel.Header}: {showMessageModel.Message}", isDeviceLog: true);
-        }
+        await userMessageService.ShowMessageAsync(showMessageModel, skipPause: true);
+      }
+      else
+      {
+        LogError($"{showMessageModel.Header}: {showMessageModel.Message}", isDeviceLog: true);
       }
     }
 

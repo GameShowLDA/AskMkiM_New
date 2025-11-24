@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using AppConfiguration.Protocol;
+using DTO.Settings.SettingsModels;
 using DTO.SettingsModels;
 using static AppConfiguration.Protocol.ProtocolConfig;
 
@@ -43,7 +44,7 @@ namespace UI.Controls.Settings.Protocol
       _baseProtocolModel = await GetProtocolModel();
       DefalultData();
 
-      DeviceInfo.CheckedChanged += CheckedChanged;
+      // DeviceInfo.CheckedChanged += CheckedChanged;
       AutoSave.CheckedChanged += CheckedChanged;
       AutoPrint.CheckedChanged += CheckedChanged;
       OperationTime.CheckedChanged += CheckedChanged;
@@ -58,6 +59,8 @@ namespace UI.Controls.Settings.Protocol
       Error.Visibility = Visibility.Collapsed;
       Success.Visibility = Visibility.Collapsed;
       HasUnsavedChanges = false;
+
+      DeviceDisplaySettingsCon.DeviceDisplayModelChanged += DeviceDisplaySettingsCon_DeviceDisplayModelChanged;
 
       if (BaseTextProtocol.Text != await ProtocolConfig.GetBaseTextProtocol())
       {
@@ -78,6 +81,22 @@ namespace UI.Controls.Settings.Protocol
       }
     }
 
+    private void DeviceDisplaySettingsCon_DeviceDisplayModelChanged(bool changed)
+    {
+      if (changed)
+      {
+        Error.Visibility = Visibility.Visible;
+        Success.Visibility = Visibility.Visible;
+        HasUnsavedChanges = true;
+      }
+      else
+      {
+        Error.Visibility = Visibility.Collapsed;
+        Success.Visibility = Visibility.Collapsed;
+        HasUnsavedChanges = false;
+      }
+    }
+
     /// <summary>
     /// Клик по галочке «сохранить»: сохраняет текущую модель,
     /// перечитывает базу и скрывает индикаторы изменений.
@@ -85,8 +104,13 @@ namespace UI.Controls.Settings.Protocol
     private async void Success_PreviewMouseDown(object sender, MouseButtonEventArgs e) => await SaveData();
     public async Task SaveData()
     {
+      DeviceDisplaySettingsModel model = DeviceDisplaySettingsCon.GetModel();
+
+      await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.SaveSettingsAsync(model);
       await SaveProtocolModel(GetModel());
+
       _baseProtocolModel = await GetProtocolModel();
+
 
       Error.Visibility = Visibility.Collapsed;
       Success.Visibility = Visibility.Collapsed;
@@ -100,6 +124,7 @@ namespace UI.Controls.Settings.Protocol
     private void Error_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
       DefalultData();
+      DeviceDisplaySettingsCon.DefalultData();
 
       Error.Visibility = Visibility.Collapsed;
       Success.Visibility = Visibility.Collapsed;
@@ -151,7 +176,6 @@ namespace UI.Controls.Settings.Protocol
     {
       var model = new SettingsProtocolModel
       {
-        ShowDeviceInfo = DeviceInfo.IsChecked,
         AutoSaveProtocol = AutoSave.IsChecked,
         AutoPrintProtocol = AutoPrint.IsChecked,
         DisplayOperationTime = OperationTime.IsChecked,
@@ -182,7 +206,6 @@ namespace UI.Controls.Settings.Protocol
     /// </summary>
     private void DefalultData()
     {
-      DeviceInfo.IsChecked = _baseProtocolModel.ShowDeviceInfo;
       AutoSave.IsChecked = _baseProtocolModel.AutoSaveProtocol;
       AutoPrint.IsChecked = _baseProtocolModel.AutoPrintProtocol;
       OperationTime.IsChecked = _baseProtocolModel.DisplayOperationTime;

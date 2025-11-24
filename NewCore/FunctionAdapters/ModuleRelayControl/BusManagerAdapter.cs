@@ -51,11 +51,15 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       var description = $"{type} шины [{bus}]";
 
       var result = await _busManager.ConnectBusAsync(bus, lowVoltage);
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(
-          _moduleRelayControl,
-          $"Подключение {description}",
-          result,
-          1, userMessageService);
+
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+            _moduleRelayControl,
+            $"Подключение {description}",
+            result,
+            1, userMessageService);
+      }
 
       if (result)
       {
@@ -77,7 +81,10 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
 
       var result = await _busManager.DisconnectBusAsync(bus, lowVoltage);
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_moduleRelayControl, $"Отключение {description}", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_moduleRelayControl, $"Отключение {description}", result, 1, userMessageService);
+      }
 
       if (result)
       {

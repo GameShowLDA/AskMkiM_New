@@ -168,13 +168,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.Mode.SetModeAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка режима ACW",
           result.Success ? "ACW" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке режима ACW: {result.Message}");
@@ -253,13 +256,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.Voltage.SetVoltageAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка напряжения ACW",
           result.Success ? $"{value} В" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
         {
@@ -348,13 +354,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.CurrentLimits.SetHighCurrentLimitAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка верхнего предела тока ACW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке верхнего предела тока ACW: {result.Message}");
@@ -385,13 +394,17 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.CurrentLimits.SetLowCurrentLimitAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка нижнего предела тока ACW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке нижнего предела тока ACW: {result.Message}");
@@ -455,13 +468,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.Time.SetTestTimeAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка времени теста ACW",
           result.Success ? $"{value} сек" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке времени теста ACW: {result.Message}");
@@ -501,13 +517,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.Time.SetRampTimeAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        { 
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка Ramp Time ACW",
           result.Success ? $"{value} сек" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке Ramp Time ACW: {result.Message}");
@@ -580,13 +599,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.FrequencyConfigurable.SetFrequencyAsync(frequency);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        { 
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка частоты ACW",
           result.Success ? $"{frequency} Гц" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке частоты ACW: {result.Message}");
@@ -659,13 +681,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.Offset.SetOffsetAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        { 
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка смещения ACW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке смещения ACW: {result.Message}");
@@ -738,13 +763,16 @@ namespace NewCore.FunctionAdapters.GPT
       {
         var result = await _acwMode.ArcCurrent.SetArcCurrentAsync(value);
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        { 
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка дугового тока ACW",
           result.Success ? $"{value} мА" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw new Exception($"Ошибка при установке дугового тока ACW: {result.Message}");

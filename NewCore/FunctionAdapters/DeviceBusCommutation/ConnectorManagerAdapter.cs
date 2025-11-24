@@ -67,7 +67,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
       var result = await _connectorManager.ConnectBreakdownTester();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Подключение пробойной установки", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Подключение пробойной установки", result, 1, userMessageService);
+      }
 
       if (!result)
       {
@@ -89,7 +92,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
       var result = await _connectorManager.DisconnectBreakdownTester();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Отключение пробойной установки", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Отключение пробойной установки", result, 1, userMessageService);
+      }
 
       if (!result)
       {
@@ -123,7 +129,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
       var result = await _connectorManager.ConnectMultimeter(bus);
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Подключение {description}", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Подключение {description}", result, 1, userMessageService);
+      }
 
       if (!result)
         throw ConnectorExceptionFactory.ConnectFailed(description);
@@ -142,7 +151,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       var description = $"мультиметра с шины [{bus}]";
       var result = await _connectorManager.DisconnectMultimeter(bus);
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Отключение {description}", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Отключение {description}", result, 1, userMessageService);
+      }
 
       if (!result)
         throw ConnectorExceptionFactory.DisconnectFailed(description);
@@ -168,7 +180,11 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       }
 
       var result = await _connectorManager.ConnectPINT(bus);
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Подключение {description}", result, 1, userMessageService);
+
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Подключение {description}", result, 1, userMessageService);
+      }
 
       if (!result)
         throw ConnectorExceptionFactory.ConnectFailed(description);
@@ -185,8 +201,11 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
       var description = $"ПИНТ с шины [{bus}]";
       var result = await _connectorManager.DisconnectPINT(bus);
-
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Отключение {description}", result, 1, userMessageService);
+      
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Отключение {description}", result, 1, userMessageService);
+      }
 
       if (!result)
         throw ConnectorExceptionFactory.DisconnectFailed(description);
@@ -200,7 +219,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       var description = $"(AB1, AB2, AB3, AB4)";
       var result = await _connectorManager.ConnectAllBuses();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Подключение {description}", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Подключение {description}", result, 1, userMessageService);
+      }
 
       if (!result)
         throw ConnectorExceptionFactory.DisconnectFailed(description);
@@ -214,7 +236,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       var description = $"(AB1, AB2, AB3, AB4)";
       var result = await _connectorManager.DisconnectAllBuses();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Отключение {description}", result, 1, userMessageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, $"Отключение {description}", result, 1, userMessageService);
+      }
 
       if (!result)
         throw ConnectorExceptionFactory.DisconnectFailed(description);

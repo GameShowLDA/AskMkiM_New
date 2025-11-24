@@ -34,14 +34,17 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     {
       var result = await _resistanceMeasurement.SetResistanceModeAsync();
 
-      if (UserMessageServiceProvider.Instance != null)
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
       {
+        if (UserMessageServiceProvider.Instance != null)
+        {
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
-          _device,
-          "Установка режима измерения сопротивления",
-          result,
-          1);
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
+            _device,
+            "Установка режима измерения сопротивления",
+            result,
+            1);
+        }
       }
 
       return result;

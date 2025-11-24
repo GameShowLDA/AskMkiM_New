@@ -48,7 +48,10 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       {
         var result = await _stateManager.ConnectAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Инициализация устройства", !result.Connect ? result.Answer : string.Empty, result.Connect, 1, userMessageService);
+        if (!result.Connect || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Инициализация устройства", !result.Connect ? result.Answer : string.Empty, result.Connect, 1, userMessageService);
+        }
 
         return result;
       }, userMessageService);
@@ -73,7 +76,12 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     public async Task<bool> ResetAsync(IUserMessageService userMessageService = null)
     {
       var result = await _stateManager.DisconnectAsync();
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Сброс устройства", result, 1, userMessageService);
+      
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_deviceBusCommutation, "Сброс устройства", result, 1, userMessageService);
+      }
+
       IsReset?.Invoke();
       return result;
     }

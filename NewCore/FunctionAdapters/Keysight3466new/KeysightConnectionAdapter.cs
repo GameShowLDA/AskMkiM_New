@@ -35,7 +35,10 @@ namespace NewCore.FunctionAdapters.Keysight3466new
       {
         var result = await _connection.ConnectAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Подключение к мультиметру Keysight", string.IsNullOrWhiteSpace(result.Answer) ? string.Empty : result.Answer, result.Connect, 1, messageService);
+        if (!result.Connect || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Подключение к мультиметру Keysight", string.IsNullOrWhiteSpace(result.Answer) ? string.Empty : result.Answer, result.Connect, 1, messageService);
+        }
 
         return result;
       }, messageService);
@@ -50,7 +53,11 @@ namespace NewCore.FunctionAdapters.Keysight3466new
       {
         var result = await _connection.InitializeAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация мультиметра Keysight", string.IsNullOrWhiteSpace(result.Answer) ? string.Empty : result.Answer, result.Connect, 1, messageService);
+        if (!result.Connect || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация мультиметра Keysight", string.IsNullOrWhiteSpace(result.Answer) ? string.Empty : result.Answer, result.Connect, 1, messageService);
+        }
+
         return result;
       }, messageService);
 
@@ -64,7 +71,11 @@ namespace NewCore.FunctionAdapters.Keysight3466new
       {
         var result = await _connection.DisconnectAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение мультиметра Keysight", result ? "Соединение разорвано" : "Ошибка отключения", result, 1, messageService);
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение мультиметра Keysight", result ? "Соединение разорвано" : "Ошибка отключения", result, 1, messageService);
+        }
+
         return result;
       }, messageService);
 
