@@ -25,11 +25,6 @@ namespace ControlCommandExecutor.Executors
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
-      {
-        await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
-      }
-
       var command = context.Command as IeCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 

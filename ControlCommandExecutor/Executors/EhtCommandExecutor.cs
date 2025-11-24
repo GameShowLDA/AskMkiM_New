@@ -28,11 +28,6 @@ namespace ControlCommandExecutor.Executors
     private double secondValue = 1000;
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
-      {
-        await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
-      }
-
       var command = context.Command as EhtCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 
