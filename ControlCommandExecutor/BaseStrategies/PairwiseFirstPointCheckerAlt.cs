@@ -76,10 +76,10 @@ namespace ControlCommandExecutor.BaseStrategies
             await ConnectToBusAAndBAsync(messageService, point);
 
             var Rt2 = await GetResistanceAsync(messageService, resistance);
-            if (Rt1 > 100)
+            if (Rt2 > 100)
             {
-              var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"({_basePoint.ToString()})" : string.Empty;
-              manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint}{machineAdress}"));
+              var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"({point.ToString()})" : string.Empty;
+              manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{point.Mnemonic}{machineAdress}"));
 
               var errorMessageModels = new ShowMessageModel("Результат измерения сопротивления", message: $"Нет подлючения точки {point.Mnemonic}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
               errorPoint = true;
