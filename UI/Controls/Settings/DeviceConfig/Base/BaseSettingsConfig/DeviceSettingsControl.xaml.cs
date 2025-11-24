@@ -1,11 +1,12 @@
-﻿using System.IO.Ports;
+﻿using DTO.Device.Base;
+using NewCore.Base.Device;
+using NewCore.Device;
+using System.IO.Ports;
 using System.Management;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using DTO.Device.Base;
-using NewCore.Base.Device;
-using NewCore.Device;
+using System.Windows.Input;
 
 namespace UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig
 {
@@ -221,6 +222,14 @@ namespace UI.Controls.Settings.DeviceConfig.Base.BaseSettingsConfig
           return;
         }
       }
+    }
+
+    /// <summary>
+    /// Блокирует выбор с помощью колесика мышки.
+    /// </summary>
+    private void ConnectionTypeSelectionBox_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+      e.Handled = true;
     }
   }
 }

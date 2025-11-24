@@ -162,19 +162,20 @@
                             </Border>
 
                             <ComboBox Grid.Row="1" 
-                                  Name="ConnectionTypeSelectionBox" 
-                                  Style="{StaticResource CustomComboBoxStyle}"
-                                  HorizontalAlignment="Stretch"
-                                  Margin="20,0"
-                                  Height="40"
-                                  SelectionChanged="ConnectionTypeSelectionBox_SelectionChanged"
-                                  >
+                                Name="ConnectionTypeSelectionBox" 
+                                Style="{StaticResource CustomComboBoxStyle}"
+                                HorizontalAlignment="Stretch"
+                                Margin="20,0"
+                                Height="40"
+                                SelectionChanged="ConnectionTypeSelectionBox_SelectionChanged"
+                                PreviewMouseWheel="ConnectionTypeSelectionBox_OnPreviewMouseWheel">
 
                                 <ComboBoxItem IsEnabled="False" Content="Выбор типа подключения:" IsSelected="True" Foreground="Gray"/>
                                 <ComboBoxItem Content="IP" Name="ConnectionTypeIPItem"/>
                                 <ComboBoxItem Content="COM" Name="ConnectionTypeCOMItem"/>
 
                             </ComboBox>
+
                         </Grid>
                     </Border>
 

@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using UI.Controls.ProtocolNew;
 using UI.Controls.TextEditor;
@@ -22,11 +23,21 @@ namespace UI.Controls.Runner
   public partial class RunControl : UserControl
   {
     List<BaseCommandModel> ControlProgram = null;
+
+    private bool _userResizing = false;
+
+    private const double MaxAutoHeight = 250.0;
+
     public int ErrorCount { get; private set; } = 0;
+
     private ProtocolUI ProtocolUI { get; set; }
+
     public string FileName { get; set; }
+
     public string OpkFilePath { get; set; }
+
     private List<BaseCommandModel> translationModels = new List<BaseCommandModel>();
+
     public List<BaseCommandModel> TranslationModels
     {
       get
@@ -209,6 +220,39 @@ namespace UI.Controls.Runner
       {
         MessageBoxCustom.Show("Ошибка обнаружения исходного файла", "Ошибка открытия файла", MessageBoxButton.OK, MessageBoxImage.Warning);
       }
+    }
+
+    // Пользователь начал тянуть сплиттер – не вмешиваемся
+    private void BottomSplitter_OnDragStarted(object sender, DragStartedEventArgs e)
+    {
+      _userResizing = true;
+
+      // Переводим строку из Auto → FixedHeight,
+      // чтобы пользователь мог растягивать вручную
+      BottomRow.Height = new GridLength(ErrorListBoxVertical.ActualHeight);
+      ErrorListBoxVertical.MaxHeight = double.PositiveInfinity;
+    }
+
+    // Закончил тянуть – теперь снова можем автоподстраивать при изменении контента
+    private void BottomSplitter_OnDragCompleted(object sender, DragCompletedEventArgs e)
+    {
+      _userResizing = false;
+    }
+
+    // Панель ошибок изменила размер (добавились/убрались строки)
+    private void ErrorListBoxVertical_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+      if (_userResizing)
+        return;
+
+      double desired = ErrorListBoxVertical.ActualHeight;
+
+      if (desired > MaxAutoHeight)
+        desired = MaxAutoHeight;
+
+      // Автоматический режим — строка остаётся Auto, но мы ограничиваем контент
+      BottomRow.Height = GridLength.Auto;
+      ErrorListBoxVertical.MaxHeight = desired;
     }
   }
 }
