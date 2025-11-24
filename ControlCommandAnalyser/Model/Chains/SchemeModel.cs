@@ -61,7 +61,7 @@ namespace ControlCommandAnalyser.Model.Chains
     {
       foreach (var chain in GroupModels)
       {
-        var disconnectedPoint = new List<List<PointModel>>();
+        var disconnectedPoint = new List<List<PointModel>>(); 
         foreach (var parts in chain.ChainModels)
         {
           if (parts.PointModels.Count > 1)
@@ -84,7 +84,7 @@ namespace ControlCommandAnalyser.Model.Chains
     {
       foreach (var group in GroupModels)
       {
-        List<PointModel> disconnectPoint = new List<PointModel>();
+        List<PointModel> disconnectPoint = new List<PointModel>(); 
         foreach (var chain in group.ChainModels)
         {
           foreach (var point in chain.PointModels)
@@ -96,7 +96,7 @@ namespace ControlCommandAnalyser.Model.Chains
           }
         }
 
-        if (disconnectPoint.Count > 1)
+        if (disconnectPoint.Count > 0)
         {
           ChainDisconnectedPointsMap.Add(group, disconnectPoint);
         }

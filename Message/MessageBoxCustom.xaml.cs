@@ -168,8 +168,6 @@ namespace Message
 
     protected override void OnPreviewKeyDown(KeyEventArgs e)
     {
-      base.OnPreviewKeyDown(e);
-
       switch (e.Key)
       {
         case Key.Enter:
@@ -185,6 +183,8 @@ namespace Message
           if (NoButton.IsVisible) NoButton_PreviewMouseDown(null, null);
           break;
       }
+
+      e.Handled = true;
     }
   }
 }
