@@ -114,9 +114,9 @@ namespace DTO.Base.Models
         var parent1 = directory.Parent;
         var parent2 = parent1?.Parent;
 
-        if (parent2 != null)
+        if (parent1 != null)
         {
-          var historyPath = Path.Combine(parent2.FullName, FileLocations.DataSaveDirectory);
+          var historyPath = Path.Combine(parent1.FullName, FileLocations.DataSaveDirectory);
           if (!Directory.Exists(historyPath))
           {
             Directory.CreateDirectory(historyPath);
