@@ -92,7 +92,7 @@ namespace ControlCommandAnalyser.Formatter
 
             foreach (var point in points)
             {
-              str += $"{point.Mnemonic}({point})#";
+              str += $"{point.Mnemonic}[{point}]#";
             }
             yield return str.Remove(str.Length - 1);
           }
@@ -116,7 +116,7 @@ namespace ControlCommandAnalyser.Formatter
               j++;
               foreach (var point in points)
               {
-                str += $"{point.Mnemonic}({point}),";
+                str += $"{point.Mnemonic}[{point}],";
               }
               yield return str.Remove(str.Length - 1);
             }
