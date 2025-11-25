@@ -190,7 +190,7 @@ namespace DTO.Base.Models
         //errorsText += $"\r\n\tОшибки команды: {item}";
         foreach (var error in protocolModel.Errors[item])
         {
-          errorsText += $"\r\nERR {i}. {item}: {error}";
+          errorsText += $"\r\nERR{i} {item}: {error}";
           i++;
         }
       }

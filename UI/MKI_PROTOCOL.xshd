@@ -36,7 +36,7 @@
 		<Rule color="Error">^\s*Ошибки\s+команды:</Rule>
 
 		<!-- Номер команды (вместе с номером строки, чтобы не перекрывало) -->
-		<Rule color="CommandNumber">^ERR\s*\d+\.\s*\d+</Rule>
+		<Rule color="CommandNumber">^ERR\d+\s*\d+</Rule>
 
 		<!-- Мнемоника -->
 		<Rule color="Mnemonic">\b(СИ|ОК|СП|РМ|ЦУ|ПР|ПИ|КЦ|УП|КС|ИЕ|ЭТ|НЭ)\b</Rule>
