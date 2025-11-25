@@ -81,11 +81,10 @@
 
                 <Components:SettingsCard
                     Title="Результаты измерений"
-                    Description="Отображает результаты измерений, полученные в ходе выполнения."
+                    Description="Отображает результаты измерений, полученные в ходе выполнения программ контроля."
                     Margin="10,10"
                     VerticalAlignment="Top"
                     x:Name="MeasurementResults"/>
-
             </WrapPanel>
         </Grid>
     </Border>

@@ -134,7 +134,10 @@ namespace Mode.Metrology.MeasurementSystem
         throw MetrologyValidationErrors.DeviceCollectFailed(ex);
       }
 
-      await messageService.ShowMessageAsync(new ShowMessageModel("Инициализация устройств", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
+      if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await messageService.ShowMessageAsync(new ShowMessageModel("Инициализация устройств", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
+      }
 
       try
       {
@@ -203,7 +206,10 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="dataModel">Модель данных, содержащая дополнительные значения для устройств.</param>
     public virtual async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
     {
-      await messageService.ShowMessageAsync(new ShowMessageModel("Настройка измерителя", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
+      if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await messageService.ShowMessageAsync(new ShowMessageModel("Настройка измерителя", type: ShowMessageModel.MessageType.Info), IsBlockStart: true);
+      }
     }
 
     /// <summary>
@@ -381,7 +387,10 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="modeDevice">Тип метрологического устройства.</param>
     private async Task ConnectBusesAsync(ISwitchingDevice busSwitcher, IPowerSourceModule mint, List<IRelaySwitchModule> relayModules, MetrologicalDeviceType modeDevice, ProtocolUI protocolUI)
     {
-      await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение шин"), IsBlockStart: true);
+      if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение шин"), IsBlockStart: true);
+      }
 
       foreach (var relayModule in relayModules)
       {
@@ -421,7 +430,10 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="point2">Вторая точка коммутации.</param>
     public virtual async Task ConnectRelayPointsAsync(List<IRelaySwitchModule> relayModules, PointModel point1, PointModel point2, ProtocolUI protocolUI)
     {
-      await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение точек"), IsBlockStart: true);
+      if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Подключение точек"), IsBlockStart: true);
+      }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => relayModules[0].PointManager.ConnectRelayAsync(DeviceEnums.BusPoint.A, point1.PointNumber, protocolUI), protocolUI))
         throw RelayExceptionFactory.ConnectPointFailed(point1.PointNumber.ToString(), relayModules[0].Name, relayModules[0].NumberChassis, relayModules[0].Number);

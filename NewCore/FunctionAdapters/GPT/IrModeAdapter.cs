@@ -156,14 +156,16 @@ namespace NewCore.FunctionAdapters.GPT
       public async Task<(bool, string)> SetModeAsync(IUserMessageService? userMessageService = null)
       {
         var result = await _irMode.Mode.SetModeAsync();
-
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+        if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка режима IR",
           result.Success ? "IR" : result.Message,
           result.Success,
           1,
           userMessageService);
+        }
 
         if (!result.Success)
           throw IrExceptionFactory.SetModeFailed(_device.Name, _device.NumberChassis, _device.Number, result.Message);
