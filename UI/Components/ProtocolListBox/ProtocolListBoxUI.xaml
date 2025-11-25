@@ -32,7 +32,15 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock TextWrapping="Wrap" FontSize="20"  Margin="{Binding IndentLevel, Converter={StaticResource IndentToMarginConverter}}">
-                            <Run Text="{Binding Message, Converter={StaticResource MessageToLeadingNewLineConverter}}" />
+                            <Run>
+                                <Run.Text>
+                                    <MultiBinding Converter="{StaticResource MessageToLeadingNewLineConverter}">
+                                        <Binding Path="Header"/>
+                                        <Binding Path="Message"/>
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+
                             <Run Text="{Binding Header}">
                                 <Run.Foreground>
                                     <MultiBinding Converter="{StaticResource HeaderToBrushIfNoMessageConverter}">

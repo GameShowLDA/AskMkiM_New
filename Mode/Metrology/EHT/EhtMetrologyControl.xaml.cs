@@ -68,6 +68,11 @@ namespace Mode.Metrology.EHT
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole);
 
+      var (LowerBound, UpperBound, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.EHT, data.Param);
+
+      await ProtocolUI.AppendEmptyLineAsync();
+      await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: $"от {LowerBound} до {UpperBound} Ом"));
+
       await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
     }
 
@@ -113,7 +118,6 @@ namespace Mode.Metrology.EHT
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Итог измерений"));
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат сопротивления", message: $"{result:F5} Ом", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} Ом") { IndentLevel = 2 }, skipPause: true);
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param)):F5} Ом", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
 
         await StepReset(protocolUI, metrologicalModeRole, points.Point1, points.Point2, param);
@@ -124,6 +128,7 @@ namespace Mode.Metrology.EHT
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.EHT);
+        Measurements.Clear();
       }
 
 

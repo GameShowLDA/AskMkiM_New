@@ -43,11 +43,6 @@ namespace DTO.SettingsModels
     public bool GenerateProtocol { get; set; }
 
     /// <summary>
-    /// Определяет, отображаются ли результаты расчитанной погрешности в метрологиеском режиме.
-    /// </summary>
-    public bool ShowRangeMetrology { get; set; }
-
-    /// <summary>
     /// Базовый текст протокола (без ошибок).
     /// </summary>
     public string CleanTextProtocol { get; set; } =

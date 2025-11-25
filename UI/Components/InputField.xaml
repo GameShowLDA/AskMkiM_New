@@ -36,7 +36,7 @@
                                           FontFamily="{DynamicResource WinstonLight}" 
                                           x:Name="FirstTextBox" 
                                           Placeholder="{Binding Source={StaticResource LS_Input_Placeholder}, Path=Value}" 
-                                          Text="1.1.1" Height="40" 
+                                          Text="1.6.1" Height="40" 
                                           Background="{DynamicResource TestsInputBackgroundInputPanelBrush}"/>
 
             </Grid>
@@ -57,7 +57,7 @@
                 <local:TextBoxPlaceholder x:Name="SecondTextBox" 
                                           FontFamily="{DynamicResource WinstonLight}" Grid.Row="1" 
                                           Placeholder="{Binding Source={StaticResource LS_Input_Placeholder}, Path=Value}" 
-                                          Text="1.1.100" Height="40" 
+                                          Text="1.6.100" Height="40" 
                                           Background="{DynamicResource TestsInputBackgroundInputPanelBrush}"/>
             </Grid>
         </Border>

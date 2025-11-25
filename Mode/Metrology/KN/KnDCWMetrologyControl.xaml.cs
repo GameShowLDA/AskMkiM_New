@@ -117,6 +117,7 @@ namespace Mode.Metrology.KN
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.KN_DCW);
+        Measurements.Clear();
       }
 
       private async Task<double> MeasuredFastMeter(IFastMeter fastMeter, IUserMessageService userMessageService, double param)

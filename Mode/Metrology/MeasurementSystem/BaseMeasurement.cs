@@ -287,6 +287,8 @@ namespace Mode.Metrology.MeasurementSystem
       string unit = info?.Unit ?? "";
 
       await messageService.ShowMessageAsync(new ShowMessageModel($"Результаты режима {displayName}"), skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} Ом") { IndentLevel = 1 }, skipPause: true);
+
       await messageService.ShowMessageAsync(new ShowMessageModel("Минимальное значение", message: $"{min:F5} {unit}", type: (min >= LowerBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
       await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное значение", message: $"{max:F5} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
 

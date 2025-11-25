@@ -21,11 +21,9 @@ namespace Mode.Metrology.IE
   /// </summary>
   public partial class IeMetrologyControl : UserControl, IExecution
   {
-    MeasurementTypeCommand metrologicalModeRole => MeasurementTypeCommand.IE;
+    private MeasurementTypeCommand MetrologicalModeRole => MeasurementTypeCommand.IE;
 
-    IeMeasurement testMeasurement = new IeMeasurement();
-
-    DataModel Data;
+    private IeMeasurement testMeasurement = new IeMeasurement();
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="IeMetrologyControl"/>.
@@ -65,11 +63,16 @@ namespace Mode.Metrology.IE
     {
       var data = await EnsureValidMetrologyInputAsync(ProtocolUI);
 
-      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
-      await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
-      await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole);
+      await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, MetrologicalModeRole, ProtocolUI);
+      await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, MetrologicalModeRole);
+      await testMeasurement.ConfigureMeter(ProtocolUI, MetrologicalModeRole);
 
-      await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
+      var (LowerBound, UpperBound, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.IE, data.Param);
+      
+      await ProtocolUI.AppendEmptyLineAsync();
+      await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: $"от {LowerBound} до {UpperBound} пкФ"));
+
+      await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(MetrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
       await testMeasurement.FinalizeMeasurement(ProtocolUI);
     }
 
@@ -103,7 +106,6 @@ namespace Mode.Metrology.IE
         Measurements.Add(result);
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения ёмкости", message: $"{result} нФ", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} нФ") { IndentLevel = 2 }, skipPause: true);
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} нФ", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
         return true;
       }
@@ -112,6 +114,7 @@ namespace Mode.Metrology.IE
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.IE);
+        Measurements.Clear();
       }
     }
   }

@@ -4,8 +4,6 @@ using DTO.Base.Models.MeasurementError;
 using DTO.Device.FastMeter;
 using DTO.Service;
 using Errors.Device.Multimeter;
-using Errors.Models;
-using Mode.Base;
 using Mode.Metrology.MeasurementSystem;
 using System.Windows.Controls;
 using UI.Controls.ProtocolNew;
@@ -80,6 +78,11 @@ namespace Mode.Metrology.PR
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, Data);
 
+      var (firstNorm, lastNorm, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PR, data.Param);
+
+      await ProtocolUI.AppendEmptyLineAsync();
+      await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: $"от {firstNorm} до {lastNorm} Ом"));
+
       await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
     }
 
@@ -115,7 +118,6 @@ namespace Mode.Metrology.PR
         Measurements.Add(result);
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{result} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstNorm} до {lastNorm} Ом") { IndentLevel = 2 }, skipPause: true);
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} Ом", type: (result >= firstNorm && result <= lastNorm ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
 
         return true;
@@ -125,6 +127,7 @@ namespace Mode.Metrology.PR
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.PR);
+        Measurements.Clear();
       }
     }
   }
