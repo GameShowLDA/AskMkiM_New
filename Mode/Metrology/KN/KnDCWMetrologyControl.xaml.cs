@@ -96,20 +96,44 @@ namespace Mode.Metrology.KN
       public override async Task<bool> PerformMeasurement(MeasurementTypeCommand metrologicalModeRole, double param, ProtocolUI protocolUI)
       {
         protocolUI.GetCancellationToken().ThrowIfCancellationRequested();
-
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
-        await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Выполнение измерения напряжения(DCW)"));
 
-        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.KN_DCW, param);
-        await fastMeter.DcVoltageManager.MeasureDCVoltageAsync(param, protocolUI);
+        var resultFastMeterMeasured = await MeasuredFastMeter(fastMeter, protocolUI, param);
+        var resultReferenceMeterMeasured = await MeasuredReferenceMeter(fastMeter, protocolUI, param);
 
+        (LowerBound, UpperBound, var delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.KN_DCW, resultReferenceMeterMeasured);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Результат проверки"));
+        var result = resultFastMeterMeasured >= LowerBound && resultFastMeterMeasured <= UpperBound;
+
+        await protocolUI.ShowMessageAsync(new ShowMessageModel($"Значение эталоного напряжения ", null, $"{resultReferenceMeterMeasured:F2} В") { IndentLevel = 1 });
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения напряжение", message: $"{resultFastMeterMeasured} В", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} В") { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(resultFastMeterMeasured - resultReferenceMeterMeasured))} В", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
+
+        return true;
+      }
+
+      public override async Task FinalizeMeasurement(IUserMessageService messageService)
+      {
+        await base.FinalizeMeasurement(messageService);
+        await PrintResult(messageService, MeasurementTypeCommand.KN_DCW);
+      }
+
+      private async Task<double> MeasuredFastMeter(IFastMeter fastMeter, IUserMessageService userMessageService, double param)
+      {
+        var result = await fastMeter.DcVoltageManager.MeasureDCVoltageAsync(param);
+        return result;
+      }
+
+      private async Task<double> MeasuredReferenceMeter(IFastMeter fastMeter, ProtocolUI userMessageService, double param)
+      {
         var result = await Application.Current.Dispatcher.InvokeAsync(() =>
         {
           VoltageValue chassisManagerWindow = new VoltageValue();
-          protocolUI.Effect = new System.Windows.Media.Effects.BlurEffect();
+          userMessageService.Effect = new System.Windows.Media.Effects.BlurEffect();
 
           bool? dialogResult = chassisManagerWindow.ShowDialog();
-          protocolUI.Effect = null;
+          userMessageService.Effect = null;
 
           if (dialogResult == true)
           {
@@ -121,25 +145,7 @@ namespace Mode.Metrology.KN
           }
         });
         Measurements.Add(result);
-
-
-
-        var answer = (result >= LowerBound && result <= UpperBound) ? false : true;
-
-        ShowMessageModel showMessageModel = new ShowMessageModel($"\tРезультат измерения напряжения", null, $"{result:F2}");
-        showMessageModel.Status = (!answer ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error);
-        showMessageModel.ExecutionError = (result >= LowerBound && result <= UpperBound) ? false : true;
-        showMessageModel.CanBeDeleted = showMessageModel.ExecutionError;
-        await protocolUI.ShowMessageAsync(showMessageModel, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("\tПогрешность измерения", message: $"{delta}В", type: showMessageModel.Status), skipPause: true);
-
-        return true;
-      }
-
-      public override async Task FinalizeMeasurement(IUserMessageService messageService)
-      {
-        await base.FinalizeMeasurement(messageService);
-        await PrintResult(messageService, MeasurementTypeCommand.KN_DCW);
+        return result;
       }
     }
   }
