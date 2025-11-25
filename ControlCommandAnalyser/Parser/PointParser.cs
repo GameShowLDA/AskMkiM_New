@@ -1,9 +1,11 @@
-﻿using System.Text.RegularExpressions;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
+using DTO.Enum;
 using Errors.Models;
+using System.Text.RegularExpressions;
+using YamlDotNet.Core.Tokens;
 
 namespace ControlCommandAnalyser.Parser
 {
@@ -168,6 +170,30 @@ namespace ControlCommandAnalyser.Parser
         chainModels.Add(new GroupModel(new List<ChainModel>(currentChainParts)));
       }
 
+      var count = 0;
+      if (chainModels.Count > 0)
+      {
+        for (int i = 0; i < chainModels.Count; i++)
+        {
+          var points = new SchemeModel(chainModels).GetPointsDisconnected(chainModels[i]);
+          if (points != null)
+          {
+            count++;
+          }
+        }
+      }
+      if (count < 2 && count != 0
+                && (mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.EHT).DisplayName
+                || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PR).DisplayName
+                || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.CI).DisplayName
+                || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PI).DisplayName))
+      {
+        errors.Add(new ErrorItem
+        {
+            Description = $"Количество разобщенных цепей должно быть не меньше двух либо необходимо указать ключ ЗР.",
+            Code = ErrorCode.Gen_InvalidNumberOfDisconnectedRanges
+        });
+      }
       return (new SchemeModel(chainModels), errors);
     }
 

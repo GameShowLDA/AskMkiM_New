@@ -15,7 +15,7 @@ namespace ControlCommandAnalyser.ComandBody
       {
         return newSourseLines;
       }
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(newSourseLines.ToString());
+      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(newSourseLines.ToString(), model);
       var strSourseLine = newSourseLines.ToString();
       foreach (var key in model.AlgorithmKey)
       {

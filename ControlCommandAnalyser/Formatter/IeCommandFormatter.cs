@@ -55,7 +55,7 @@ namespace ControlCommandAnalyser.Formatter
         }
       }
 
-      yield return "\tЗаданные точки:";
+      yield return "\tПроверяемые точки:";
       if (CommandsModel.GetRMModel() == null)
       {
         yield return "\t\tМодель РМ не задана!";
@@ -69,7 +69,6 @@ namespace ControlCommandAnalyser.Formatter
 
       if (ie.Scheme.GroupModels.Count > 0)
       {
-        yield return "\tСообщенные точки:";
         for (int i = 0; i < ie.Scheme.GroupModels.Count; i++)
         {
           var pointsAll = ie.Scheme.GetPointsConnected(ie.Scheme.GroupModels[i]);

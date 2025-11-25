@@ -317,14 +317,13 @@ namespace ControlCommandAnalyser.Parser.Si
 
     private static string ExtractSiKeys(string commandNumber, string mnemonic, int numberLine, SiCommandModel model, string body, string remainder)
     {
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(body);
+      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(body, model);
 
       foreach (var (key, hasError) in result)
       {
         if (hasError)
         {
-          LoggerUtility.LogWarning($"Пустое тело команды: {commandNumber} {mnemonic} (строка {numberLine})");
-          model.Errors.Add(SiErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
         }
         else
         {
@@ -333,8 +332,8 @@ namespace ControlCommandAnalyser.Parser.Si
         }
       }
 
-      // затем удаляем их из строки
-      foreach (var key in model.AlgorithmKey)
+      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
+      foreach (var (key, hasError) in result)
       {
         remainder = Regex.Replace(
         remainder,

@@ -7,6 +7,7 @@ using DTO.Device.Breakdown;
 using DTO.Enum;
 using System.Text.RegularExpressions;
 using Utilities;
+using Utilities.Extensions;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
@@ -93,6 +94,10 @@ namespace ControlCommandAnalyser.Parser.Pi
         }
 
         model.SiCommand = modelSi;
+        if (modelSi.Errors.Count > 0)
+        {
+          model.Errors.AddRange(modelSi.Errors);
+        }
 
 
         var remainderPi = piPart;
@@ -104,12 +109,13 @@ namespace ControlCommandAnalyser.Parser.Pi
         // --- парсим ПИ только из remainderPi ---
         string? voltage = null, time = null, unit = null, unitTime = null;
 
-        var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainderPi);
+        var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainderPi, model);
+
         foreach (var (key, hasError) in result)
         {
           if (hasError)
           {
-            model.Errors.Add(PiErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+            model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
           }
           else
           {
@@ -119,7 +125,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         }
 
         // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-        foreach (var key in model.AlgorithmKey)
+        foreach (var (key, hasError) in result)
         {
           remainderPi = Regex.Replace(
           remainderPi,

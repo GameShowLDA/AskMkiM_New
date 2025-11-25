@@ -77,14 +77,13 @@ namespace ControlCommandAnalyser.Parser.Pr
 
       string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = string.Empty, unitTime = string.Empty;
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder);
+      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
 
       foreach (var (key, hasError) in result)
       {
         if (hasError)
         {
-          LoggerUtility.LogWarning($"Пустое тело команды: {commandNumber} {mnemonic} (строка {numberLine})");
-          model.Errors.Add(PrErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
         }
         else
         {
@@ -93,7 +92,8 @@ namespace ControlCommandAnalyser.Parser.Pr
         }
       }
 
-      foreach (var key in model.AlgorithmKey)
+      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
+      foreach (var (key, hasError) in result)
       {
         remainder = Regex.Replace(
         remainder,
@@ -101,6 +101,7 @@ namespace ControlCommandAnalyser.Parser.Pr
         "",
         RegexOptions.IgnoreCase);
       }
+
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRangeWithR(remainder);
       LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
 
@@ -275,6 +276,11 @@ namespace ControlCommandAnalyser.Parser.Pr
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+        if(model.AlgorithmKey.Contains(AlgorithmKey.ЗР.ToString()) 
+          && pointErrors.FirstOrDefault(item=>item.Code==Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges)!=null)
+        {
+          pointErrors.Remove(pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges));
+        }
 
         // Поднимем ошибки парсера точек
         if (pointErrors?.Count > 0)

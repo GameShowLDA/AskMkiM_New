@@ -79,14 +79,13 @@ namespace ControlCommandAnalyser.Parser.Ie
 
       string? lowerLimitCapacity = null, higherLimitCapacity = null, unit = null;
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder);
+      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
 
       foreach (var (key, hasError) in result)
       {
         if (hasError)
         {
-          LoggerUtility.LogWarning($"Пустое тело команды: {commandNumber} {mnemonic} (строка {numberLine})");
-          model.Errors.Add(IeErrors.EmptyCommandBody(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
         }
         else
         {
@@ -95,8 +94,8 @@ namespace ControlCommandAnalyser.Parser.Ie
         }
       }
 
-      // затем удаляем их из строки
-      foreach (var key in model.AlgorithmKey)
+      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
+      foreach (var (key, hasError) in result)
       {
         remainder = Regex.Replace(
         remainder,

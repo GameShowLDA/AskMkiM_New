@@ -200,6 +200,22 @@ namespace Errors.Translation
     };
 
     /// <summary>
+    /// Возвращает ошибку, если ключ нельзя использовать для указанной команды.
+    /// </summary>
+    /// <param name="mnemonic">Мнемоника неизвестной команды.</param>
+    /// <param name="command">Полный текст команды, вызвавшей ошибку.</param>
+    /// <returns>
+    /// Объект <see cref="ErrorItem"/>, описывающий ошибку: команда не распознана.
+    /// </returns>
+    public static ErrorItem WrongKey(int lineNumber, string mnemonic, string command, string key) => new()
+    {
+      SourceLineNumber = lineNumber,
+      Command = command,
+      Description = $"Для команды {mnemonic} недопустимо использование ключа {key}",
+      Code = ErrorCode.Gen_WrongKey
+    };
+
+    /// <summary>
     /// Возвращает ошибку, если в строке команды обнаружены нераспознанные или лишние параметры.
     /// </summary>
     /// <param name="unparsed">Сами нераспознанные параметры.</param>

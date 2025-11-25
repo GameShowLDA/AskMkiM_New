@@ -101,6 +101,14 @@ namespace Errors.Models
     [ErrorCodeTag("GEN019")]
     Gen_FastMeterNotFound,
 
+    /// <summary> Неверне количество разобщенных цепей. </summary>
+    [ErrorCodeTag("GEN020")]
+    Gen_InvalidNumberOfDisconnectedRanges,
+
+    /// <summary> Ключ нельзя использовать для указанной команды. </summary>
+    [ErrorCodeTag("GEN021")]
+    Gen_WrongKey,
+
     #endregion
 
     #region Режим УМ

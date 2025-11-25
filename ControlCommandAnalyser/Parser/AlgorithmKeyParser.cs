@@ -1,4 +1,7 @@
-﻿namespace ControlCommandAnalyser.Parser
+﻿using ControlCommandAnalyser.Model;
+using System.Linq;
+
+namespace ControlCommandAnalyser.Parser
 {
   /// <summary>
   /// Утилита для извлечения ключей алгоритма из строки команды.
@@ -25,43 +28,73 @@
         .ToList();
     }
 
-    public static List<(string Key, bool HasError)> ExtractKeysWithTrailingCommaCheck(string line)
+    public static List<(string Key, bool HasError)> ExtractKeysWithTrailingCommaCheck(string line, BaseCommandModel model)
     {
       var result = new List<(string, bool)>();
 
       if (string.IsNullOrWhiteSpace(line))
         return result;
 
-      var enumKeys = Enum.GetNames(typeof(AlgorithmKey));
+      var allowedEnumKeys = KeysHelper
+        .GetAllowedKeysForModel(model)
+        .Select(k => k.ToString())
+        .ToHashSet();
 
       // Разбиваем строку на токены
       var tokens = line.Split(new[] { ' ', '\t', ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
 
       // Собираем только те, что являются ключами
-      var matchedKeys = tokens.Where(token => enumKeys.Contains(token)).ToList();
+      var matchedKeys = tokens.Where(token => allowedEnumKeys.Contains(token)).ToList();
 
-      if (matchedKeys.Count == 0)
+
+      var notAllowedKeys = KeysHelper
+        .GetNotAllowedKeysForModel(model)
+        .Select(k => k.ToString())
+        .ToHashSet();
+      var foundNotAllowedKeys = tokens.Where(token => notAllowedKeys.Contains(token)).ToList();
+
+      if (matchedKeys.Count == 0 && foundNotAllowedKeys.Count == 0)
         return result;
 
       // Проверка: была ли запятая после последнего ключа
-      string lastKey = matchedKeys.Last();
-      int lastKeyIndex = line.LastIndexOf(lastKey, StringComparison.Ordinal);
-
-      bool hasTrailingComma = false;
-
-      if (lastKeyIndex >= 0 && lastKeyIndex + lastKey.Length < line.Length)
+      if (matchedKeys.Count > 0)
       {
-        char nextChar = line[lastKeyIndex + lastKey.Length];
-        hasTrailingComma = nextChar == ',';
-      }
+        string lastKey = matchedKeys.Last();
+        int lastKeyIndex = line.LastIndexOf(lastKey, StringComparison.Ordinal);
 
-      for (int i = 0; i < matchedKeys.Count; i++)
+        bool hasTrailingComma = false;
+
+        if (lastKeyIndex >= 0 && lastKeyIndex + lastKey.Length < line.Length)
+        {
+          char nextChar = line[lastKeyIndex + lastKey.Length];
+          hasTrailingComma = nextChar == ',';
+        }
+
+        for (int i = 0; i < matchedKeys.Count; i++)
+        {
+          var key = matchedKeys[i];
+          bool hasError = (i == matchedKeys.Count - 1) && !hasTrailingComma;
+          result.Add((key, false));
+        }
+      }
+      if (foundNotAllowedKeys.Count > 0)
       {
-        var key = matchedKeys[i];
-        bool hasError = (i == matchedKeys.Count - 1) && !hasTrailingComma;
-        result.Add((key, false));
-      }
+        string lastKey = foundNotAllowedKeys.Last();
+        int lastKeyIndex = line.LastIndexOf(lastKey, StringComparison.Ordinal);
+        bool hasTrailingComma = false;
 
+        if (lastKeyIndex >= 0 && lastKeyIndex + lastKey.Length < line.Length)
+        {
+          char nextChar = line[lastKeyIndex + lastKey.Length];
+          hasTrailingComma = nextChar == ',';
+        }
+        for (int i = 0; i < foundNotAllowedKeys.Count; i++)
+        {
+          var key = foundNotAllowedKeys[i];
+          bool hasError = (i == foundNotAllowedKeys.Count - 1) && !hasTrailingComma;
+          result.Add((key, true));
+        }
+      }
       return result;
     }
   }
