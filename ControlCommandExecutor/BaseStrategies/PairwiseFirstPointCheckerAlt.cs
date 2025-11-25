@@ -51,10 +51,10 @@ namespace ControlCommandExecutor.BaseStrategies
           var Rt1 = await GetResistanceAsync(messageService, resistance);
           if (Rt1 > 100)
           {
-            var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"({_basePoint.ToString()})" : string.Empty;
+            var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{_basePoint.ToString()}]" : string.Empty;
             manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint}{machineAdress}"));
 
-            var errorMessageModels = new ShowMessageModel("Результат измерения сопротивления", message: $"Нет подлючения точки {_basePoint.Mnemonic}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
+            var errorMessageModels = new ShowMessageModel($"{_basePoint.Mnemonic}{machineAdress}", message: "Rизм = Нет подлючения точки", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
             errorPoint = true;
 
             await messageService.ShowMessageAsync(errorMessageModels);
@@ -62,9 +62,10 @@ namespace ControlCommandExecutor.BaseStrategies
           }
           else
           {
+            var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{_basePoint.ToString()}]" : string.Empty;
             if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
             {
-              await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt1:F5} Ом", type: ShowMessageModel.MessageType.Success) { IndentLevel = 1 });
+              await messageService.ShowMessageAsync(new ShowMessageModel($"{_basePoint.Mnemonic}{machineAdress}", message: $"Rизм = {Rt1:F5} Ом", type: ShowMessageModel.MessageType.Success) { IndentLevel = 1 });
             }
           }
 
@@ -78,10 +79,10 @@ namespace ControlCommandExecutor.BaseStrategies
             var Rt2 = await GetResistanceAsync(messageService, resistance);
             if (Rt2 > 100)
             {
-              var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"({point.ToString()})" : string.Empty;
+              var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{point.ToString()}]" : string.Empty;
               manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{point.Mnemonic}{machineAdress}"));
 
-              var errorMessageModels = new ShowMessageModel("Результат измерения сопротивления", message: $"Нет подлючения точки {point.Mnemonic}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
+              var errorMessageModels = new ShowMessageModel($"{point.Mnemonic}{machineAdress}", message: $"Нет подлючения точки", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
               errorPoint = true;
 
               await messageService.ShowMessageAsync(errorMessageModels);
@@ -89,9 +90,10 @@ namespace ControlCommandExecutor.BaseStrategies
             }
             else
             {
+              var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{point.ToString()}]" : string.Empty;
               if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
               {
-                await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt2:F5} Ом", type: ShowMessageModel.MessageType.Success) { IndentLevel = 1 });
+                await messageService.ShowMessageAsync(new ShowMessageModel($"{point.Mnemonic}{machineAdress}", message: $"Rизм = {Rt2:F5} Ом", type: ShowMessageModel.MessageType.Success) { IndentLevel = 1 });
               }
             }
 
@@ -101,8 +103,8 @@ namespace ControlCommandExecutor.BaseStrategies
             var LowerBound = (baseCommandModel as EhtCommandModel).LowerLimitResistance.Value;
             var UpperBound = (baseCommandModel as EhtCommandModel).HigherLimitResistance.Value;
 
-            string machineAdressFirst = await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo() ? $"[{_basePoint.ToString()}]" : string.Empty;
-            string machineAdressSecond = await AppConfiguration.Protocol.ProtocolConfig.GetDeviceInfo() ? $"[{point.ToString()}]" : string.Empty;
+            string machineAdressFirst = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{_basePoint.ToString()}]" : string.Empty;
+            string machineAdressSecond = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{point.ToString()}]" : string.Empty;
 
             if (!errorPoint)
             {
@@ -113,15 +115,15 @@ namespace ControlCommandExecutor.BaseStrategies
 
                 manager.AddErrorMethod(EhtErrors.CircuitOverload($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint.Mnemonic}{machineAdressFirst}", $"{point.Mnemonic}{machineAdressSecond}"));
 
-                var errorMessageModels = new ShowMessageModel("Результат измерения сопротивления", message: $"Overload", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
+                var errorMessageModels = new ShowMessageModel($"{_basePoint.Mnemonic}{machineAdressFirst}, {point.Mnemonic}{machineAdressSecond}", message: $"Overload", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
                 errorPoint = true;
 
                 await messageService.ShowMessageAsync(errorMessageModels);
                 errorsMessgae.Add(errorMessageModels);
               }
               else
-              { 
-                await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{Rt:F5} Ом") { IndentLevel = 1 });
+              {
+                await messageService.ShowMessageAsync(new ShowMessageModel($"{_basePoint.Mnemonic}{machineAdressFirst}, {point.Mnemonic}{machineAdressSecond}", message: $"{Rt:F5} Ом") { IndentLevel = 1 });
               }
             }
 
