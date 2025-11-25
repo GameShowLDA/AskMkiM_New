@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using DTO.Base.Models;
+using EventCore.Adapters;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using DTO.Base.Models;
-using EventCore.Adapters;
 using UI.Components.FileComparerControls;
 using UI.Components.Invoke;
 using UI.Controls;
@@ -50,6 +51,19 @@ namespace UI.Components.MultiEditorMethods
           CloseControl(tabButton, control, editorType);
           return;
         }
+        else if (control is RunControl)
+        {
+          editorType = SetEditorType(tabButton);
+          CloseControl(tabButton, control, editorType);
+          var container = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(textEditorContainer
+                    => textEditorContainer.Text == editorType.ToString()); // находим вкладку контейнера, содержащую нужный контрол
+          var containerIndex = fileManager.EditorWorkspaceModel.OpenPages.IndexOf(container);
+          if (containerIndex != null && fileManager.EditorWorkspaceModel.UserControls[containerIndex] is TextEditorContainer foundContainer)
+          {
+            control = foundContainer;
+          }
+
+        }
         else if (control is TextEditorContainer foundContainer) // если контрол сам является контейнером
         {
           CloseContainer(tabButton, control, ref index, ref editorType, foundContainer);
@@ -59,13 +73,21 @@ namespace UI.Components.MultiEditorMethods
           index = multiEditorControl.ContentPanel.Children.IndexOf(control);
         }
 
+        if (index < 0)
+        {
+          index = multiEditorControl.ContentPanel.Children.IndexOf(tabButton);
+        }
+
         if (control is TextEditorContainer)
         {
           HandleClosingEvents(control, tabButton);
         }
 
         RemoveTabAndControl(tabButton, control);
-        ShowNextTab(index);
+        if (index > -1)
+        {
+          ShowNextTab(index);
+        }
         var activeTab = fileManager.EditorWorkspaceModel.OpenPages.FirstOrDefault(page => page.Background == (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"]);
         if (fileManager.EditorWorkspaceModel.UserControls.OfType<TextEditorContainer>().Count() == 0 || activeTab == null
           || !(fileManager.EditorWorkspaceModel.UserControls[fileManager.EditorWorkspaceModel.OpenPages.IndexOf(activeTab)] is TextEditorContainer))
@@ -173,6 +195,10 @@ namespace UI.Components.MultiEditorMethods
       if (tabButton.Text == EditorType.TextEditor.ToString())
       {
         editorType = EditorType.TextEditor;
+      }
+      else if (tabButton.Text == EditorType.Run.ToString())
+      {
+        editorType = EditorType.Run;
       }
       else
       {
