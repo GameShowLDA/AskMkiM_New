@@ -19,7 +19,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <param name="points">Список точек для проверки.</param>
     /// <param name="messageService">Сервис отображения сообщений.</param>
     /// <returns>Задача, представляющая выполнение проверки.</returns>
-    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserMessageService messageService, double resistance = 0)
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserMessageService messageService, double resistance = 0, double cabelResistance = 0)
     {
       List<ShowMessageModel> errorsMessgae = new List<ShowMessageModel>();
 
@@ -144,6 +144,8 @@ namespace ControlCommandExecutor.BaseStrategies
 
               var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? Rx : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? (LowerBound + UpperBound) / 2 : Rx;
 
+              result -= cabelResistance;
+
               if (result < 0)
               {
                 result = 0;
@@ -152,6 +154,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
 
               var succes = result >= LowerBound && result <= UpperBound;
+
               var error = new ShowMessageModel(
                 $"{_basePoint.Mnemonic}{machineAdressFirst},{point.Mnemonic}{machineAdressSecond} ({LowerBound} - {UpperBound} Ом)",
                 message: $"Rизм = {result:F5} Ом",

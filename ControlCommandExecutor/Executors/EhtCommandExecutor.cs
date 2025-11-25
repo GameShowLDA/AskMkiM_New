@@ -74,7 +74,9 @@ namespace ControlCommandExecutor.Executors
         secondValue = command.HigherLimitResistance.Value;
       }
 
-      var errMes = await PairwiseFirstPointCheckerAlt.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2);
+      var cabelResistance = command.CabelResistance != null ? command.CabelResistance.Value : 0;
+
+      var errMes = await PairwiseFirstPointCheckerAlt.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2, cabelResistance);
       errorMessage.AddRange(errMes);
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
