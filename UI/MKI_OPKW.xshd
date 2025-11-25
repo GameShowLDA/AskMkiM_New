@@ -67,7 +67,7 @@
 		<Span color="Comment" begin="{" end="}" multiline="true"/>
 		<Span color="Comment" begin="//" end="\n" />
 		<Span color="Comment" begin="/\*" end="\*/" multiline="true" />
-		<Span color="OkParam" begin="\(" end="\)" />
+		<Span color="OkParam" begin="\[" end="\]" />
 		
 		<!--Обозначения-->
 		<Rule color="OkParam">^[ \t]*[А-Яа-яA-Za-z_0-9]+(?=\s*=)</Rule>
