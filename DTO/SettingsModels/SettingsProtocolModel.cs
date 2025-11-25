@@ -48,11 +48,6 @@ namespace DTO.SettingsModels
     public bool ShowRangeMetrology { get; set; }
 
     /// <summary>
-    /// Определяет, отображаются ли результаты погрешности измерения в метрологиеском режиме.
-    /// </summary>
-    public bool ShowErrorResultMetrology { get; set; }
-
-    /// <summary>
     /// Базовый текст протокола (без ошибок).
     /// </summary>
     public string CleanTextProtocol { get; set; } =
