@@ -28,7 +28,10 @@ namespace NewCore.FunctionAdapters.GPT
     {
       var (result, answer) = await _manager.ConnectAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация пробойной установки", string.IsNullOrWhiteSpace(answer) ? "Успешно" : answer, result, 1, messageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация пробойной установки", string.IsNullOrWhiteSpace(answer) ? "Успешно" : answer, result, 1, messageService);
+      }
 
       if (!result)
       {
@@ -42,7 +45,10 @@ namespace NewCore.FunctionAdapters.GPT
     {
       var result = await _manager.DisconnectAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение пробойной установки", result ? "Успешно" : "Ошибка отключения", result, 1, messageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение пробойной установки", result ? "Успешно" : "Ошибка отключения", result, 1, messageService);
+      }
 
       Task.Delay(1000).GetAwaiter().GetResult();
       if (!result)
@@ -58,7 +64,10 @@ namespace NewCore.FunctionAdapters.GPT
     {
       var (result, answer) = await _manager.InitializeAsync(messageService);
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация пробойной установки", string.IsNullOrWhiteSpace(answer) ? "ОК" : answer, result, 1, messageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация пробойной установки", string.IsNullOrWhiteSpace(answer) ? "ОК" : answer, result, 1, messageService);
+      }
 
       if (!result)
         throw ConnectionExceptionAdapter.InitializeFailed(_device.Name, _device.NumberChassis, _device.Number, answer);

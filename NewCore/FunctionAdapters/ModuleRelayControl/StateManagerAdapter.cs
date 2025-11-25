@@ -48,7 +48,11 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       {
         var answer = await _stateManager.ConnectAsync();
 
-        await DeviceMessageBuilder.ShowConnectionMessageAsync(_moduleRelayControl, "Инициализация модуля коммутации реле", !answer.Connect ? answer.Answer : string.Empty, answer.Connect, 1, messageService);
+        if (!answer.Connect || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+        {
+          await DeviceMessageBuilder.ShowConnectionMessageAsync(_moduleRelayControl, "Инициализация модуля коммутации реле", !answer.Connect ? answer.Answer : string.Empty, answer.Connect, 1, messageService);
+        }
+
         return answer;
       }, messageService);
 
@@ -74,7 +78,10 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     {
       var result = await _stateManager.DisconnectAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_moduleRelayControl, "Сброс устройства", string.Empty, result, 1, messageService);
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_moduleRelayControl, "Сброс устройства", string.Empty, result, 1, messageService);
+      }
 
       if (!result)
       {

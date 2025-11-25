@@ -6,8 +6,33 @@
              xmlns:local="clr-namespace:UI.Controls.Settings.Protocol"
              xmlns:Components ="clr-namespace:UI.Components"
              xmlns:Icons="clr-namespace:UI.Icon"
+             xmlns:DeviceInfo="clr-namespace:UI.Controls.Settings.DeviceInfo"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <Style x:Key="SettingCardWithToggleStyle" TargetType="Border">
+
+            <!-- копия базового стиля -->
+            <Setter Property="Background" Value="{DynamicResource SettingCardBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingCardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+
+            <!-- твой функциональный сеттер -->
+            <Setter Property="Visibility" Value="Visible"/>
+
+            <!-- триггер на кнопку -->
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=ToggleSettingsButton, Path=IsArrowUp}"
+                         Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+
+        </Style>
+
+    </UserControl.Resources>
 
     <Border 
        Style="{DynamicResource SettingPanelStyle}" Margin="15,10">
@@ -79,6 +104,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
 
@@ -93,16 +119,6 @@
                             </Style.Triggers>
                         </Style>
                     </WrapPanel.Style>
-
-                    <!-- Карточки настроек -->
-                    <Components:SettingsCard
-                        Title="Отображение оборудования"
-                        Description="Отображение информации выполняемых устройствами операций. В режиме отключения выводятся лишь измеренные значения. Ошибки показываются независимо от настройки."
-                        IsChecked="{Binding IdleMode, Mode=TwoWay}"
-                        Margin="10,10"
-                        VerticalAlignment="Top"
-                        x:Name="DeviceInfo"
-                        />
 
                     <Components:SettingsCard
                         Title="Вывод времени операции"
@@ -147,10 +163,24 @@
 
                 </WrapPanel>
 
-                <Border Grid.Row="1" 
-                        Style="{DynamicResource SettingCardStyle}" 
+                <DeviceInfo:DeviceDisplaySettingsControl x:Name="DeviceDisplaySettingsCon" Grid.Row="1">
+                    <DeviceInfo:DeviceDisplaySettingsControl.Style>
+                        <Style TargetType="DeviceInfo:DeviceDisplaySettingsControl">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=ToggleSettingsButton, Path=IsArrowUp}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DeviceInfo:DeviceDisplaySettingsControl.Style>
+                </DeviceInfo:DeviceDisplaySettingsControl>
+
+                <Border Grid.Row="2" 
+                        Style="{DynamicResource SettingCardWithToggleStyle}" 
                         Margin="15,10" 
                         >
+
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -212,9 +242,9 @@
                         </local:ProtocolTemplateEditorControl>
                     </Grid>
                 </Border>
-                
-                <Border Grid.Row="2" 
-                        Style="{DynamicResource SettingCardStyle}" 
+
+                <Border Grid.Row="3" 
+                        Style="{DynamicResource SettingCardWithToggleStyle}" 
                         Margin="15,10" 
                         >
                     <Grid>
@@ -279,7 +309,6 @@
                         </local:ProtocolTemplateEditorControl>
                     </Grid>
                 </Border>
-
 
             </Grid>
 

@@ -1,4 +1,5 @@
-﻿using AppConfiguration.Execution;
+﻿using AppConfiguration.DeviceDisplay;
+using AppConfiguration.Execution;
 using AppConfiguration.Parameter;
 using AppConfiguration.Protocol;
 using DataBaseConfiguration;
@@ -19,12 +20,14 @@ namespace MainWindowProgram.Init
         var protocolTask = new DataBaseConfiguration.Services.Settings.ProtocolService().GetProtocolAsync();
         var executionTask = new DataBaseConfiguration.Services.Settings.ExecutionService().GetExecutionAsync();
         var userInterfaceTask = new DataBaseConfiguration.Services.Settings.UserInterfaceService().GetUserInterfaceAsync();
+        var deviceDisplayTask = new DataBaseConfiguration.Services.Settings.DeviceDisplayService().GetDeviceDisplayAsync();
 
-        Task.WaitAll(protocolTask, executionTask, userInterfaceTask);
+        Task.WaitAll(protocolTask, executionTask, userInterfaceTask, deviceDisplayTask);
 
         var protocol = protocolTask.Result;
         var execution = executionTask.Result;
         var userInreface = userInterfaceTask.Result;
+        var deviceDisplay = deviceDisplayTask.Result;
 
         if (protocol != null)
         {
@@ -41,6 +44,11 @@ namespace MainWindowProgram.Init
         if (userInreface != null)
         {
           await UserInterfaceConfig.SetUserInterfaceModel(userInreface);
+        }
+
+        if (deviceDisplay != null)
+        {
+          await DeviceDisplayConfig.SetDeviceDisplaySettingsModel(deviceDisplay);
         }
 
         ProtocolConfig.SaveProtocolEvent += async (model) =>
@@ -61,6 +69,12 @@ namespace MainWindowProgram.Init
         {
           var service = new DataBaseConfiguration.Services.Settings.UserInterfaceService();
           await service.SaveUserInterfaceAsync(model);
+        };
+
+        DeviceDisplayConfig.DeviceDisplaySettingsSaved += async (model) =>
+        {
+          var service = new DataBaseConfiguration.Services.Settings.DeviceDisplayService();
+          await service.SaveDeviceDisplayAsync(model);
         };
       }
       catch (Exception ex)

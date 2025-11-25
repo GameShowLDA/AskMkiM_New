@@ -30,7 +30,10 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     {
       var (success, message) = await _stateManager.ConnectAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Подключение", message, success, 1, messageService);
+      if (!success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Подключение", message, success, 1, messageService);
+      }
 
       if (!success)
         throw ConnectionExceptionAdapter.ConnectFailed(_device.Name, _device.NumberChassis, _device.Number, message);
@@ -43,7 +46,10 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     {
       bool success = await _stateManager.DisconnectAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение", success, 1);
+      if (!success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Отключение", success, 1);
+      }
 
       if (!success)
         throw ConnectionExceptionAdapter.DisconnectFailed(_device.Name, _device.NumberChassis, _device.Number);
@@ -56,7 +62,10 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     {
       var (success, message) = await _stateManager.InitializeAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация", message, success, 1, messageService);
+      if (!success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Инициализация", message, success, 1, messageService);
+      }
 
       if (!success)
         throw ConnectionExceptionAdapter.InitializeFailed(_device.Name, _device.NumberChassis, _device.Number, message);
@@ -69,7 +78,10 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     {
       bool success = await _stateManager.ResetAsync();
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Сброс", success, 1);
+      if (!success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Сброс", success, 1);
+      }
 
       if (!success)
         throw ConnectionExceptionAdapter.ResetFailed(_device.Name, _device.NumberChassis, _device.Number);

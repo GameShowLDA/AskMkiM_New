@@ -1,6 +1,7 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
@@ -25,11 +26,6 @@ namespace ControlCommandExecutor.Executors
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
-      {
-        await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
-      }
-
       firstValue = 0;
       secondValue = 10000000;
       var command = context.Command as KsCommandModel;
@@ -88,7 +84,19 @@ namespace ControlCommandExecutor.Executors
         measure = ResistanceMeasure;
       }
 
-      var errMes = await ConnectedPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, (firstValue + secondValue) / 2);
+      ConnectedPointContext pointContext = new ConnectedPointContext();
+      pointContext.SchemeModel = command.Scheme;
+      pointContext.CommandManager = context.CommandExecutionManager;
+      pointContext.CommandModel = command;
+      pointContext.MessageService = context.Console;
+      pointContext.Resistance = (firstValue + secondValue) / 2;
+      pointContext.LowerLimit = firstValue;
+      pointContext.HigherLimit = secondValue;
+      pointContext.PerformMeasurementAsync = measure;
+      pointContext.Unit = "Ом";
+      pointContext.UnitMnemonic = "R";
+
+      var errMes = await ConnectedPointChecker.CheckSequenceAsync(pointContext);
       errorMessage.AddRange(errMes);
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
@@ -108,7 +116,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> ResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
+    private async Task<(bool, double)> ResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
     {
       var meter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = 0;
@@ -118,13 +126,20 @@ namespace ControlCommandExecutor.Executors
         answer = await meter.ResistanceManager.MeasureResistanceAsync(value, firstValue, secondValue);
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= firstValue && answer <= secondValue : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        }
+
+        if (!result)
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        }
 
         return result;
       }, messageService);
 
-      return (result, answer + "Ом");
+      return (result, answer);
     }
 
     /// <summary>
@@ -132,7 +147,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> FastResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
+    private async Task<(bool, double)> FastResistanceMeasure(double value, IUserMessageService messageService, CancellationToken cancellationToken)
     {
       var meter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = 0;
@@ -142,13 +157,20 @@ namespace ControlCommandExecutor.Executors
         answer = await meter.ContinuityManager.CheckContinuityAsync(value);
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= firstValue && answer <= secondValue : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        }
+
+        if (!result)
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
+        }
 
         return result;
       }, messageService);
 
-      return (result, answer + "Ом");
+      return (result, answer);
     }
     private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
     {

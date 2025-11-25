@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
@@ -22,11 +23,6 @@ namespace ControlCommandExecutor.Executors
     public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PI).DisplayName;
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-
-      if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
-      {
-        await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
-      }
 
       var command = context.Command as PiCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
@@ -84,11 +80,22 @@ namespace ControlCommandExecutor.Executors
 
       List<ShowMessageModel> errorMessage = new();
 
+      NodeFullContext methodExecutionContext = new NodeFullContext();
+      methodExecutionContext.SchemeModel = command.Scheme;
+      methodExecutionContext.CommandManager = context.CommandExecutionManager;
+      methodExecutionContext.CommandModel = command;
+      methodExecutionContext.MessageService = context.Console;
+      methodExecutionContext.Resistance = 80;
+      methodExecutionContext.LowerLimit = 0;
+      methodExecutionContext.HigherLimit = 80;
+      methodExecutionContext.Unit = "МОм";
+      methodExecutionContext.UnitMnemonic = "R";
 
       if (command.AlgorithmKey.Contains("К"))
       {
         BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, 80);
+        methodExecutionContext.PerformMeasurementAsync = measure;
+        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
       else if (command.AlgorithmKey.Contains("Г"))
@@ -271,7 +278,10 @@ namespace ControlCommandExecutor.Executors
         {
           var answer = await breadDown.AcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+          {
+            await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          }
           return result;
         }
         else

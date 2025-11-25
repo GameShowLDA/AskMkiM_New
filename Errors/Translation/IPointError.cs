@@ -45,7 +45,7 @@ namespace Errors.Translation
     /// <param name="countStep">Кол-во разрядов.</param>
     /// <param name="resultMeasure">Результат измерения.</param>
     /// <returns></returns>
-    public ErrorItem DisconnectChainError(string command, string chain);
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult);
 
     /// <summary>
     /// Ошибка: Ошибка при проверке одно из разряда в групповом методе.

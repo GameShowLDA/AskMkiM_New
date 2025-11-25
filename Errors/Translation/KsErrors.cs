@@ -105,11 +105,12 @@ namespace Errors.Translation
       Description = $"Замкнутая цепь {chain}"
     };
 
-    public ErrorItem DisconnectChainError(string command, string chain) => new()
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult) => new()
     {
       Command = command,
       Code = ErrorCode.Ks_ChainError,
-      Description = $"Разрыв в цепи {chain}"
+      Description = $"Разрыв в цепи {chain}",
+      MeasureResult = measureResult
     };
 
     public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure)

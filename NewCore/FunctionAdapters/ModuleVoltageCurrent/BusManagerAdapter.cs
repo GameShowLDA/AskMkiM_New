@@ -26,7 +26,11 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     public async Task<bool> ConnectBusToPositiveAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
     {
       bool result = await _busManager.ConnectBusToPositiveAsync(bus);
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Подключение к +", bus.ToString(), result, 1, userMessageService);
+
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Подключение к +", bus.ToString(), result, 1, userMessageService);
+      }
 
       if (!result)
         throw BusExceptionFactory.ConnectPositiveFailed(bus.ToString());
@@ -38,7 +42,11 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     public async Task<bool> ConnectBusToNegativeAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
     {
       bool result = await _busManager.ConnectBusToNegativeAsync(bus);
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Подключение к -", bus.ToString(), result, 1, userMessageService);
+
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Подключение к -", bus.ToString(), result, 1, userMessageService);
+      }
 
       if (!result)
         throw BusExceptionFactory.ConnectNegativeFailed(bus.ToString());
@@ -50,7 +58,11 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     public async Task<bool> DisconnectBusToPositiveAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
     {
       bool result = await _busManager.DisconnectBusToPositiveAsync(bus);
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Отключение от +", bus.ToString(), result, 1, userMessageService);
+
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Отключение от +", bus.ToString(), result, 1, userMessageService);
+      }
 
       if (!result)
         throw BusExceptionFactory.DisconnectPositiveFailed(bus.ToString());
@@ -62,7 +74,11 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     public async Task<bool> DisconnectBusToNegativeAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
     {
       bool result = await _busManager.DisconnectBusToNegativeAsync(bus);
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Отключение от -", bus.ToString(), result, 1, userMessageService);
+
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(_module, "Отключение от -", bus.ToString(), result, 1, userMessageService);
+      }
 
       if (!result)
         throw BusExceptionFactory.DisconnectNegativeFailed(bus.ToString());

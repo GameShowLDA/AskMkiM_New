@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using DTO.Base.Models;
+﻿using DTO.Base.Models;
+using DTO.Settings.SettingsModels;
 using DTO.SettingsModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBaseConfiguration.Context
 {
@@ -30,5 +31,10 @@ namespace DataBaseConfiguration.Context
     /// Таблица настроек интерфейса программы
     /// </summary>
     public DbSet<UserInterfaceModel> UserInterface { get; set; }
+
+    /// <summary>
+    /// Таблица настроек отображения информации об устройствах.
+    /// </summary>
+    public DbSet<DeviceDisplaySettingsModel> DeviceDisplaySettings { get; set; }
   }
 }

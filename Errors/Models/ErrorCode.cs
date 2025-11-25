@@ -401,24 +401,32 @@ namespace Errors.Models
     [ErrorCodeTag("EHT001")]
     Eht_CannotParseParameters,
 
-    /// <summary> Тело команды ПР отсутствует или пустое. </summary>
+    /// <summary> Тело команды ЭТ отсутствует или пустое. </summary>
     [ErrorCodeTag("EHT002")]
     Eht_EmptyCommandBody,
 
-    /// <summary> В команде ПР отсутствует список точек. </summary>
+    /// <summary> В команде ЭТ отсутствует список точек. </summary>
     [ErrorCodeTag("EHT003")]
     Eht_EmptyPoints,
 
-    /// <summary> В команде ПР нижняя граница сопротивления больше верхней границы сопротивления. </summary>
+    /// <summary> В команде ЭТ нижняя граница сопротивления больше верхней границы сопротивления. </summary>
     [ErrorCodeTag("EHT004")]
     Eht_ResistanceLimitsConflict,
 
-    /// <summary> В команде ПР верхняя граница сопротивления больше максимально допустимой границы сопротивления.  </summary>
+    /// <summary> В команде ЭТ верхняя граница сопротивления больше максимально допустимой границы сопротивления.  </summary>
     [ErrorCodeTag("EHT005")]
     Eht_ResistanceMaxLimitsConflict,
 
     [ErrorCodeTag("EHT006")]
     Eht_ResistanceOutOfRange,
+
+    /// <summary> В команде ЭТ нет подлючения одной из точек.  </summary>
+    [ErrorCodeTag("EHT007")]
+    Eht_PointNotConnected,
+
+    /// <summary> В команде ЭТ разрыв цепи. </summary>
+    [ErrorCodeTag("EHT008")]
+    Eht_CircuitOverload,
 
     #endregion
 

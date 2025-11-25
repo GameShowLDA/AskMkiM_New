@@ -264,13 +264,16 @@
 
     <!--#region Настройки приложения -->
 
+    <SolidColorBrush x:Key="SettingCardBackground" Color="#303843"/>
+    <SolidColorBrush x:Key="SettingCardBorderBrush" Color="#415163"/>
+    
     <Style x:Key="SettingCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="#303843"/>
-        <Setter Property="BorderBrush" Value="#415163"/>
+        <Setter Property="Background" Value="{DynamicResource SettingCardBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SettingCardBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="14"/>
     </Style>
-
+    
     <SolidColorBrush x:Key="SettingsTitleSolidColorBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="SettingsDescriptionSolidColorBrush" Color="#A9B5C3"/>
     <SolidColorBrush x:Key="SettingsHeaderSolidColorBrush" Color="#FFFFFF"/>

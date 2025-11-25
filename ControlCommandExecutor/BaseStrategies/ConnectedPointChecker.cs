@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
@@ -26,7 +27,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// Асинхронная операция, возвращающая <c>true</c>, если измерение прошло успешно,
     /// или <c>false</c>, если обнаружена ошибка.
     /// </returns>
-    internal delegate Task<(bool Result, string Value)> PerformMeasurementAsync(double value, IUserMessageService userMessageService, CancellationToken cancellationToken);
+    internal delegate Task<(bool Result, double Value)> PerformMeasurementAsync(double value, IUserMessageService userMessageService, CancellationToken cancellationToken);
 
     /// <summary>
     /// Асинхронно выполняет проверку соединённых точек в схеме.
@@ -48,17 +49,17 @@ namespace ControlCommandExecutor.BaseStrategies
     /// (<see cref="ShowMessageModel"/>), если были обнаружены разрывы цепей;
     /// в противном случае возвращается пустой список.
     /// </returns>
-    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, PerformMeasurementAsync performMeasurementAsync, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserMessageService messageService, double resistance)
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(ConnectedPointContext context)
     {
       List<ShowMessageModel> errorsMessage = new List<ShowMessageModel>();
       Dictionary<List<PointModel>, string> errorChain = new();
-      var pointsList = schemeModel.GetPointsConnected();
+      var pointsList = context.SchemeModel.GetPointsConnected();
       if (pointsList.Count == 0)
       {
         return errorsMessage;
       }
 
-      await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка сообщенных точек"));
+      await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка сообщенных точек"));
 
       for (int i = 0; i < pointsList.Count; i++)
       {
@@ -72,42 +73,65 @@ namespace ControlCommandExecutor.BaseStrategies
           {
             if ((z + 1) == points.Count)
             {
-              chainsStr += $"{points[z].Mnemonic}({points[z].ToString()})*";
+              if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync())
+              {
+                chainsStr += $"{points[z].Mnemonic}[{points[z].ToString()}]*";
+              }
+              else
+              {
+                chainsStr += $"{points[z].Mnemonic}*";
+              }
             }
             else
             {
-              chainsStr += $"{points[z].Mnemonic}({points[z].ToString()}),";
+              if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync())
+              {
+                chainsStr += $"{points[z].Mnemonic}[{points[z].ToString()}],";
+              }
+              else
+              {
+                chainsStr += $"{points[z].Mnemonic},";
+              }
             }
           }
 
-          await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка цепи", message: chainsStr, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 1 }, IsBlockStart: true);
+          await context.MessageService.AppendEmptyLineAsync();
+          await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка цепи", message: chainsStr, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 1 }, IsBlockStart: true);
           var _basePoint = points[0];
           points.Remove(_basePoint);
-          await messageService.ShowMessageAsync(new ShowMessageModel($"Подлючение точек") { IndentLevel = 1 }, IsBlockStart: true);
-          await ConnectToBusBAsync(_basePoint, messageService);
+          await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Подлючение точек") { IndentLevel = 1 }, IsBlockStart: true);
+          await ConnectToBusBAsync(_basePoint, context.MessageService);
 
 
           foreach (var point in points)
           {
-            messageService.GetCancellationToken().ThrowIfCancellationRequested();
-            await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка {point.Mnemonic}({point.ToString()})") { IndentLevel = 1 }, IsBlockStart: true);
-            await ConnectToBusAAsync(point, messageService);
+            context.MessageService.GetCancellationToken().ThrowIfCancellationRequested();
 
-            var result = await performMeasurementAsync(resistance, messageService, messageService.GetCancellationToken());
+            string machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"({point.ToString()})" : string.Empty;
+            await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {point.Mnemonic}{machineAdress}") { IndentLevel = 1 }, IsBlockStart: true);
+            await ConnectToBusAAsync(point, context.MessageService);
+
+            var result = await context.PerformMeasurementAsync(context.Resistance, context.MessageService, context.MessageService.GetCancellationToken());
             if (!result.Result)
             {
-              errorChain.Add(new List<PointModel>() { _basePoint, point }, result.Value);
+              var item = new List<PointModel>() { _basePoint, point };
+              errorChain.Add(item, result.Value.ToString());
+
+              var chain = new ChainModel(item);
+              var chainStr = PointFormater.GetFormatConnectPoint(chain);
+
+              context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.DisconnectChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, $"{result.Value.ToString()} Ом"));
             }
 
-            await DisconnectFromBusAAsync(point, messageService);
+            await DisconnectFromBusAAsync(point, context.MessageService);
           }
-          await DisconnectFromBusBAsync(_basePoint, messageService);
+          await DisconnectFromBusBAsync(_basePoint, context.MessageService);
         }
       }
 
       if (errorChain.Count > 0)
       {
-        await messageService.ShowMessageAsync(
+        await context.MessageService.ShowMessageAsync(
           new ShowMessageModel($"Результаты проверки")
           { IndentLevel = 1 });
 
@@ -117,11 +141,10 @@ namespace ControlCommandExecutor.BaseStrategies
           var chain = new ChainModel(item);
           var chainStr = PointFormater.GetFormatConnectPoint(chain);
 
-          var error = new ShowMessageModel($"{chainStr}", message: $"{errorChain.GetValueOrDefault(item)}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          var error = new ShowMessageModel($"{chainStr} ({context.LowerLimit} - {context.HigherLimit} {context.Unit})", message: $"{context.UnitMnemonic}изм = {errorChain.GetValueOrDefault(item)} {context.Unit}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
           errorsMessage.Add(error);
 
-          await messageService.ShowMessageAsync(error);
-          manager.AddErrorMethod(baseCommandModel.PointErrors.DisconnectChainError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", chainStr));
+          await context.MessageService.ShowMessageAsync(error);
         }
       }
 

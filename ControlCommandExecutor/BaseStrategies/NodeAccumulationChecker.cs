@@ -131,55 +131,62 @@ namespace ControlCommandExecutor.BaseStrategies
         CancellationToken cancellationToken
         )
     {
-      List<PointModel> errorPoint = null;
-      step++;
-
-      await messageService.ShowMessageAsync(new ShowMessageModel($"Выполенение шага {step}"));
-      var (leftPart, rightPart) = SplitInHalf(candidates);
-
-      await messageService.ShowMessageAsync(new ShowMessageModel("Отключение левой части группы точек"));
-      await DisconnectAllFromBusBAsync(leftPart, messageService);
-
-      if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
+      try
       {
-        if (rightPart.Count > 1)
-        {
-          errorPoint = await LocalizeFaultyPointAsync(performMeasurementAsync, rightPart, resistance, messageService, cancellationToken);
-        }
-        else
-        {
-          errorPoint = rightPart[0];
-          return errorPoint;
-        }
-      }
-      else
-      {
-        await messageService.ShowMessageAsync(new ShowMessageModel("Отключение правой части группы точек"));
-        await DisconnectAllFromBusBAsync(rightPart, messageService);
+        List<PointModel> errorPoint = null;
+        step++;
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Подключение левой части группы точек"));
-        await ConnectAllFromBusBAsync(leftPart, messageService);
+        await messageService.ShowMessageAsync(new ShowMessageModel($"Выполенение шага {step}"));
+        var (leftPart, rightPart) = SplitInHalf(candidates);
 
-        if (leftPart.Count > 1)
+        await messageService.ShowMessageAsync(new ShowMessageModel("Отключение левой части группы точек"));
+        await DisconnectAllFromBusBAsync(leftPart, messageService);
+
+        if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
         {
-          errorPoint = await LocalizeFaultyPointAsync(performMeasurementAsync, leftPart, resistance, messageService, cancellationToken);
-        }
-        else
-        {
-          if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
+          if (rightPart.Count > 1)
           {
-            errorPoint = leftPart[0];
-            return errorPoint;
+            errorPoint = await LocalizeFaultyPointAsync(performMeasurementAsync, rightPart, resistance, messageService, cancellationToken);
           }
           else
           {
+            errorPoint = rightPart[0];
             return errorPoint;
           }
         }
-      }
+        else
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Отключение правой части группы точек"));
+          await DisconnectAllFromBusBAsync(rightPart, messageService);
 
-      await ConnectAllFromBusBAsync(candidates, messageService);
-      return errorPoint;
+          await messageService.ShowMessageAsync(new ShowMessageModel("Подключение левой части группы точек"));
+          await ConnectAllFromBusBAsync(leftPart, messageService);
+
+          if (leftPart.Count > 1)
+          {
+            errorPoint = await LocalizeFaultyPointAsync(performMeasurementAsync, leftPart, resistance, messageService, cancellationToken);
+          }
+          else
+          {
+            if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
+            {
+              errorPoint = leftPart[0];
+              return errorPoint;
+            }
+            else
+            {
+              return errorPoint;
+            }
+          }
+        }
+
+        await ConnectAllFromBusBAsync(candidates, messageService);
+        return errorPoint;
+      }
+      catch
+      {
+        return null;
+      }
     }
 
 

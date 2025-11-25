@@ -75,5 +75,27 @@ namespace Errors.Translation
       Description = $"{firstPoint}, {secondPoint} ({lowerBound:F3}–{upperBound:F3} Ом)"
     };
 
+    /// <summary>
+    /// Ошибка: указанная точка не подключена.
+    /// </summary>
+    public static ErrorItem PointNotConnected(string command, string point) => new()
+    {
+      Command = command,
+      Code = ErrorCode.Eht_PointNotConnected,
+      Description = $"Точка '{point}' не подключена."
+    };
+
+    /// <summary>
+    /// Ошибка: между указанными точками разрыв цепи (Overload).
+    /// </summary>
+    public static ErrorItem CircuitOverload(string command, string firstPoint, string secondPoint) => new()
+    {
+      Command = command,
+      MeasureResult = "Overload",
+      Code = ErrorCode.Eht_CircuitOverload,
+      Description = $"*{firstPoint}**{secondPoint}*"
+    };
+
+
   }
 }

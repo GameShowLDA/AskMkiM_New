@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
@@ -23,11 +24,6 @@ namespace ControlCommandExecutor.Executors
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
-      if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
-      {
-        await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
-      }
-
       var command = context.Command as SiCommandModel;
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 
@@ -73,10 +69,22 @@ namespace ControlCommandExecutor.Executors
 
       List<ShowMessageModel> errorMessage = new();
 
+
+      NodeFullContext methodExecutionContext = new NodeFullContext();
+      methodExecutionContext.SchemeModel = command.Scheme;
+      methodExecutionContext.CommandManager = context.CommandExecutionManager;
+      methodExecutionContext.CommandModel = command;
+      methodExecutionContext.MessageService = context.Console;
+      methodExecutionContext.Resistance = command.Resistance.Value;
+      methodExecutionContext.LowerLimit = 0;
+      methodExecutionContext.HigherLimit = 80;
+      methodExecutionContext.Unit = "МОм";
+      methodExecutionContext.UnitMnemonic = "R";
+
       if (command.AlgorithmKey.Contains("К"))
       {
         BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, command.Resistance.Value);
+        var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
       else if (command.AlgorithmKey.Contains("Г"))
@@ -198,7 +206,10 @@ namespace ControlCommandExecutor.Executors
         var answer = await breadDown.IrManger.Measure.MeasureAsync(value, userMessageService: messageService);
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
-        await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{answer} МОм", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
+        {
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{answer} МОм", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+        }
         return result;
       }, messageService);
 

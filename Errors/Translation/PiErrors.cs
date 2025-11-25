@@ -105,11 +105,12 @@ namespace Errors.Translation
       Description = $"Замыкание цепи {chain}"
     };
 
-    public ErrorItem DisconnectChainError(string command, string chain) => new()
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult) => new()
     {
       Command = command,
       Code = ErrorCode.Pi_ChainError,
-      Description = $"Замыкание в цепи {chain}"
+      Description = $"Замыкание в цепи {chain}",
+      MeasureResult = measureResult
     };
 
     public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure)
