@@ -105,10 +105,13 @@ namespace Mode.Metrology.KN
         await protocolUI.ShowMessageAsync(new ShowMessageModel(header: "Результат проверки"));
         var result = resultFastMeterMeasured >= LowerBound && resultFastMeterMeasured <= UpperBound;
 
+        var err = resultFastMeterMeasured - resultReferenceMeterMeasured;
+        Measurements.Add(err);
+
         await protocolUI.ShowMessageAsync(new ShowMessageModel($"Значение эталоного напряжения ", null, $"{resultReferenceMeterMeasured:F2} В") { IndentLevel = 1 });
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения напряжение", message: $"{resultFastMeterMeasured} В", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} В") { IndentLevel = 2 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(resultFastMeterMeasured - resultReferenceMeterMeasured))} В", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{err} В", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
 
         return true;
       }
@@ -145,7 +148,7 @@ namespace Mode.Metrology.KN
             return -1;
           }
         });
-        Measurements.Add(result);
+
         return result;
       }
     }

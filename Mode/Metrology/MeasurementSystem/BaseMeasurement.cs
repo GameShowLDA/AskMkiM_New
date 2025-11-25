@@ -282,15 +282,23 @@ namespace Mode.Metrology.MeasurementSystem
       var min = Measurements.Min();
       var max = Measurements.Max();
 
+      if (min > 0)
+      {
+        min = 0;
+      }
+
+      if (max < 0)
+      {
+        max = 0;
+      }
+
       var info = command.GetDisplayInfo();
       string displayName = info?.DisplayName ?? command.ToString();
       string unit = info?.Unit ?? "";
 
       await messageService.ShowMessageAsync(new ShowMessageModel($"Результаты режима {displayName}"), skipPause: true);
-      await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} Ом") { IndentLevel = 1 }, skipPause: true);
-
-      await messageService.ShowMessageAsync(new ShowMessageModel("Минимальное значение", message: $"{min:F5} {unit}", type: (min >= LowerBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальное значение", message: $"{max:F5} {unit}", type: (max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальная отрицательная погрешность", message: $"{min:F5} {unit}", type: (min >= LowerBound && min <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+      await messageService.ShowMessageAsync(new ShowMessageModel("Максимальная положительная погрешность", message: $"{max:F5} {unit}", type: (max >= LowerBound && max <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
 
       Measurements = new();
     }
