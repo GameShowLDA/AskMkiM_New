@@ -2,6 +2,7 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
@@ -131,7 +132,7 @@ namespace ControlCommandExecutor.Executors
         await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
       }
 
-      await PointFormater.MessageResult(errorMessage, context.Console);
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
       if (errorMessage.Count > 0)
       {
         protocolModel.Errors.Add(nameCommand, errorMessage);

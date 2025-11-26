@@ -1,8 +1,11 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using ControlCommandAnalyser.Model.Pr;
 using ControlCommandExecutor.BaseStrategies;
 using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
@@ -31,6 +34,7 @@ namespace ControlCommandExecutor.Executors
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
       var command = context.Command as PrCommandModel;
+
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 
       string nameCommand = $"{command.CommandNumber} {command.Mnemonic}";
@@ -150,7 +154,7 @@ namespace ControlCommandExecutor.Executors
         }
       }
 
-      await PointFormater.MessageResult(errorMessage, context.Console);
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
       foreach (var item in modules)
@@ -362,6 +366,15 @@ namespace ControlCommandExecutor.Executors
       }, messageService);
 
       return (result, answer);
+    }
+
+    public class BuildMessage : IDislpayInfo
+    {
+      public async Task<string> BuildErrorChainStringAsync(ChainModel chain)
+      {
+        var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatConnectPoint(chain);
+        return chainStr;
+      }
     }
   }
 }

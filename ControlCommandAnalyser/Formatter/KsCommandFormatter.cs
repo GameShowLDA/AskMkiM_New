@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Ks;
 
 namespace ControlCommandAnalyser.Formatter
 {

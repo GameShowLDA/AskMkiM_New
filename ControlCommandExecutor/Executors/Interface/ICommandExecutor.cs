@@ -1,7 +1,7 @@
 ﻿using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 
-namespace ControlCommandExecutor.Executors
+namespace ControlCommandExecutor.Executors.Interface
 {
   /// <summary>
   /// Интерфейс исполнителя команды контроля.

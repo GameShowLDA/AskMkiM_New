@@ -1,7 +1,9 @@
-﻿using Errors.Translation;
-using ControlCommandAnalyser.Model.Chains;
+﻿using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using ControlCommandAnalyser.Model.Ks;
+using Errors.Translation;
 
-namespace ControlCommandAnalyser.Model
+namespace ControlCommandAnalyser.Model.Pr
 {
   [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
    ControlCommandAnalyser.AlgorithmKey.ЗР,
@@ -59,5 +61,10 @@ namespace ControlCommandAnalyser.Model
     /// Ошибки связанные с замыканием точек.
     /// </summary>
     public override IPointError PointErrors => new PrErrors();
+
+    /// <summary>
+    /// Сбор данных в сообщение.
+    /// </summary>
+    public override IDislpayInfo BuildDislpayInfo => new PrMessageBuild();
   }
 }

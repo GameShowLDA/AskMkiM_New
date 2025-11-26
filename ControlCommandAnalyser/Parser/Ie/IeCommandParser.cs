@@ -1,10 +1,10 @@
-﻿using Errors.Translation;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Ie;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
+using Errors.Translation;
 using System.Text.RegularExpressions;
-using System.Windows;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Ie

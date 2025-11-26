@@ -67,7 +67,7 @@ namespace ControlCommandExecutor.BaseStrategies
       {
         foreach (var chain in errorChain)
         {
-          var chainStr = PointFormater.GetFormatDisconnectPoint(chain);
+          var chainStr = ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
           errorsMessgae.Add(
              new ShowMessageModel($"{chainStr}",
                  message: "Обнаружено замыкание",

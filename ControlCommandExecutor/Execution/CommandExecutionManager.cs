@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using ControlCommandAnalyser.Model;
-using ControlCommandExecutor.Executors;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Service;
 using Errors.Models;

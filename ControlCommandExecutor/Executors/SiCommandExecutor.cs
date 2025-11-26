@@ -2,6 +2,7 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
@@ -105,7 +106,7 @@ namespace ControlCommandExecutor.Executors
         var errMes = await BaseStrategies.NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), command.Resistance.Value);
         errorMessage.AddRange(errMes);
       }
-      await PointFormater.MessageResult(errorMessage, context.Console);
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
 
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });

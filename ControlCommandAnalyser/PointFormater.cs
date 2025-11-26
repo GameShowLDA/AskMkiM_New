@@ -2,12 +2,12 @@
 using DTO.Base.Models;
 using DTO.Service;
 
-namespace ControlCommandExecutor
+namespace ControlCommandAnalyser
 {
-  internal static class PointFormater
+  public static class PointFormater
   {
 
-    internal static string GetFormatDisconnectPoint(List<ChainModel> chainModels)
+    public static string GetFormatDisconnectPoint(List<ChainModel> chainModels)
     {
       var formatPoint = new List<string>();
 
@@ -71,26 +71,24 @@ namespace ControlCommandExecutor
       return result;
     }
 
-    internal static string GetFormatConnectPoint(ChainModel chainModels)
+    public static async Task<string> GetFormatConnectPoint(ChainModel chainModels)
     {
       var result = string.Empty;
       var count = chainModels.PointModels.Count;
+
 
       for (int i = 0; i < count; i++)
       {
         var point = chainModels.PointModels[i].Mnemonic;
 
-        result += $"*{point}*";
-        //if (i + 1 != count)
-        //{
-        //  result += $" ** ";
-        //}
+        var machineAddress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $" [{point.ToString()}]" : string.Empty;
+        result += $"*{point}{machineAddress}*";
       }
 
       return result;
     }
 
-    internal static async Task MessageResult(List<ShowMessageModel> showMessageModels, IUserMessageService messageService)
+    public static async Task MessageResult(List<ShowMessageModel> showMessageModels, IUserMessageService messageService)
     {
       if (showMessageModels.Count > 0)
       {
