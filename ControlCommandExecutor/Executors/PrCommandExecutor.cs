@@ -26,6 +26,7 @@ namespace ControlCommandExecutor.Executors
     static private PointModel _basePoint;
     private double firstValue = 0;
     private double secondValue = 100000;
+    private bool continuityManager = true;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
@@ -63,9 +64,6 @@ namespace ControlCommandExecutor.Executors
       await SettingsDeviceBusCommutatuion(dbc, context.Console);
 
       var meter = EquipmentService.GetFastMeterOrThrow(context.Console);
-      await SettingMeter(meter, context.Console);
-
-      await context.Console.ShowMessageAsync(new ShowMessageModel($"Выполнение измерений"), IsBlockStart: true);
 
       double resistance = 0;
       if (command.LowerLimitResistance.HasValue)
@@ -87,6 +85,14 @@ namespace ControlCommandExecutor.Executors
         secondValue = meter.MaxContinuityResistance;
       }
 
+      if (secondValue >= 1000)
+      {
+        continuityManager = false;
+      }
+
+      await SettingMeter(meter, context.Console);
+
+      await context.Console.ShowMessageAsync(new ShowMessageModel($"Выполнение измерений"), IsBlockStart: true);
 
       MethodExecutionContext methodExecutionContext = new MethodExecutionContext();
       methodExecutionContext.SchemeModel = command.Scheme;
@@ -201,9 +207,20 @@ namespace ControlCommandExecutor.Executors
       {
         throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
       }
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ContinuityManager.SetContinuityModeAsync(userMessageService)), userMessageService))
+
+      if (continuityManager)
       {
-        throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ContinuityManager.SetContinuityModeAsync(userMessageService)), userMessageService))
+        {
+          throw Errors.Device.Multimeter.ContinuityExceptionFactory.SetContinuityFailed(name, numberChassis, number);
+        }
+      }
+      else
+      {
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ResistanceManager.SetResistanceModeAsync(userMessageService)), userMessageService))
+        {
+          throw Errors.Device.Multimeter.ResistanceExceptionFactory.SetModeFailed(name, numberChassis, number);
+        }
       }
     }
 
@@ -212,7 +229,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<bool> NodeAccumulationPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
 
@@ -226,21 +243,28 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          if (continuityManager)
+          {
+            answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance);
+          }
+          else
+          { 
+            answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
+          }
         }
 
-        var result = answer >= firstValue && answer <= secondValue;
+        var result = answer > secondValue;
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
         {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
 
         if (!result)
         {
           await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
         }
-        return result;
+        return (result, answer.ToString());
 
       }, messageService);
 
@@ -264,7 +288,14 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          if (continuityManager)
+          { 
+            answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          }
+          else
+          {
+            answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
+          }
         }
         var result = answer >= firstValue && answer <= secondValue;
 
@@ -303,7 +334,14 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          if (continuityManager)
+          {
+            answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          }
+          else
+          {
+            answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
+          }
         }
 
         var result = answer >= firstValue && answer <= secondValue;

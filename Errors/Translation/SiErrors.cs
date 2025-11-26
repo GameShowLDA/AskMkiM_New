@@ -129,12 +129,13 @@ namespace Errors.Translation
     };
 
     /// <inheritdoc />
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast)
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value)
     {
       var eroror = new ErrorItem()
       {
         Command = command,
         Code = ErrorCode.Si_PairError,
+        MeasureResult = value,
       };
 
       var firstChain = string.Empty;

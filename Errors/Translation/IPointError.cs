@@ -25,7 +25,7 @@ namespace Errors.Translation
     /// <param name="pointFirst">Первая точка.</param>
     /// <param name="pointLast">Вторая точка.</param>
     /// <returns></returns>
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast);
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value);
 
     /// <summary>
     /// Ошибка: Ошибка замкнутой цепи.
