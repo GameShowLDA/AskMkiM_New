@@ -100,13 +100,17 @@ namespace ControlCommandExecutor.Executors
       methodExecutionContext.UnitMnemonic = "R";
 
       List<ShowMessageModel> errorMessage = new();
-      ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
 
-      ConnectedPointContext connectedPointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
-      connectedPointContext.PerformMeasurementAsync = measurePointConnected;
+      if (!command.AlgorithmKey.Contains("ЗС"))
+      {
+        ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
 
-      var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(connectedPointContext);
-      errorMessage.AddRange(connectErrMes);
+        ConnectedPointContext connectedPointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
+        connectedPointContext.PerformMeasurementAsync = measurePointConnected;
+
+        var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(connectedPointContext);
+        errorMessage.AddRange(connectErrMes);
+      }
 
       if (command.AlgorithmKey.Contains("К"))
       {
