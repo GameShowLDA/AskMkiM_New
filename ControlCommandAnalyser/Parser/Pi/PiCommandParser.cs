@@ -37,9 +37,9 @@ namespace ControlCommandAnalyser.Parser.Pi
       }
       else
       {
-        var maxDCWVoltage = Measurement.MeasurementTypeCommand.PI_DCW.GetDisplayInfo().UpperLimit; ;// постоянный ток
-        var minVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().LowerLimit; ;
-        var maxACWVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().UpperLimit; ; // переменный ток
+        var maxDCWVoltage = Measurement.MeasurementTypeCommand.PI_DCW.GetDisplayInfo().UpperLimit; // постоянный ток
+        var minVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().LowerLimit;
+        var maxACWVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().UpperLimit; // переменный ток
 
         var rmCommandModel = CommandsModel.GetRMModel();
 
@@ -83,6 +83,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         }
 
         var modelSi = new SiCommandModel();
+        modelSi.SourceLines = new List<string> { siPart };
         var siRemainder = SiCommandParser.ManageSiParametersParse(modelSi, commandNumber, mnemonic, numberLine, siPart, breakDown);
 
         // Если СИ что-то не допарсила, логни отдельно (в модель СИ, не ПИ)
@@ -98,7 +99,6 @@ namespace ControlCommandAnalyser.Parser.Pi
         {
           model.Errors.AddRange(modelSi.Errors);
         }
-
 
         var remainderPi = piPart;
 
@@ -199,20 +199,22 @@ namespace ControlCommandAnalyser.Parser.Pi
         }
         else
         {
-          LoggerUtility.LogError($"В команде ПИ не указано напряжение.");
-          model.Errors.Add(PiErrors.EmptyVoltage(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Voltage = minVoltage;
+          model.VoltageSource = model.Voltage.Value.ToString() + "В";
+          LoggerUtility.LogDebug($"В команде ПИ не указано напряжение. Установлено значение по умолчанию {minVoltage} В.");
+          //model.Errors.Add(PiErrors.EmptyVoltage(numberLine, $"{commandNumber} {mnemonic}"));
         }
 
         model.Time = string.IsNullOrEmpty(time) || time == null ? 1 : CommonParameterParser.ParseToDouble(time);
         model.TimeSource = string.IsNullOrEmpty(time) || time == null ? "1c" : time + unitTime;
 
-        if (string.IsNullOrWhiteSpace(voltage))
+        if (model.Voltage == null)
         {
           model.Errors.Add(PiErrors.CannotParseParameters("Не указано напряжение", numberLine, $"{commandNumber} {mnemonic}"));
           LoggerUtility.LogWarning($"Не указано напряжение (строка {numberLine}): {commandNumber} {mnemonic}");
         }
 
-        if (string.IsNullOrWhiteSpace(time))
+        if (model.Time == null)
         {
           model.Errors.Add(PiErrors.CannotParseParameters("Не указано время", numberLine, $"{commandNumber} {mnemonic}"));
           LoggerUtility.LogWarning($"Не указано время (строка {numberLine}): {commandNumber} {mnemonic}");

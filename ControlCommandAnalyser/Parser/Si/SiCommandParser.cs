@@ -162,6 +162,7 @@ namespace ControlCommandAnalyser.Parser.Si
         remainder = match.Groups[1].Value.Trim();
 
 
+
       // сначала извлекаем ключи
       remainder = ExtractSiKeys(commandNumber, mnemonic, numberLine, model, body, remainder);
 
