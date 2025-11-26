@@ -76,7 +76,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         var remainder = head.Success ? head.Groups[1].Value : body;
 
         LoggerUtility.LogDebug($"Хвост после ПИ: \"{remainder}\"");
-        var (siPart, piPart, errs) = PiSiSplitter.SplitSiFromPiStrict(remainder);
+        var (siPart, piPart, errs) = PiSiSplitter.SplitSiFromPiStrict(body);
         if (errs.Count > 0)
         {
           LoggerUtility.LogWarning($"Strict WS issues: {string.Join(" | ", errs)}");
