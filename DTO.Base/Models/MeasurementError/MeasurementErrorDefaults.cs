@@ -75,7 +75,7 @@ namespace DTO.Base.Models.MeasurementError
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
-          new MeasurementErrorRangeEntity {  MinValue = 50,  MaxValue = 1000, NumericError = 5,  PercentageError = 2 },
+          new MeasurementErrorRangeEntity {  MinValue = 50,  MaxValue = 1000, NumericError = 3,  PercentageError = 2 },
         }
       },
 
@@ -83,7 +83,7 @@ namespace DTO.Base.Models.MeasurementError
       {
         Ranges = new List<MeasurementErrorRangeEntity>
         {
-          new MeasurementErrorRangeEntity { MinValue = 50,  MaxValue = 650, NumericError = 5,  PercentageError = 2 },
+          new MeasurementErrorRangeEntity { MinValue = 50,  MaxValue = 650, NumericError = 3,  PercentageError = 2 },
         }
       },
 
