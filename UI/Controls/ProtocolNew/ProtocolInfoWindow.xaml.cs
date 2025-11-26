@@ -59,6 +59,10 @@ namespace UI.Controls.ProtocolNew
       {
         SaveButton_Click(sender, e);
       }
+      if (e.Key == Key.Escape)
+      {
+        CancelButton_Click(sender, e);
+      }
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
