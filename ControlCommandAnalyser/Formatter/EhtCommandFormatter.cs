@@ -77,7 +77,7 @@ namespace ControlCommandAnalyser.Formatter
         yield return $"\tВремя выдержки не задано";
       }
 
-      yield return "\tЗаданные точки:";
+      yield return "\tПроверяемые точки:";
       if (CommandsModel.GetRMModel() == null)
       {
         yield return "\tМодель РМ не задана!";
@@ -91,27 +91,6 @@ namespace ControlCommandAnalyser.Formatter
 
       if (eht.Scheme.GroupModels.Count > 0)
       {
-        yield return "\t\tРазобщенные точки:";
-        for (int i = 0; i < eht.Scheme.GroupModels.Count; i++)
-        {
-          var points = eht.Scheme.GetPointsDisconnected(eht.Scheme.GroupModels[i]);
-          if (points != null)
-          {
-            string str = string.Empty;
-            str += $"\t\t{i + 1}. *";
-
-            foreach (var point in points)
-            {
-              str += $"{point.Mnemonic}[{point}]#";
-            }
-            yield return str.Remove(str.Length - 1);
-          }
-        }
-      }
-
-      if (eht.Scheme.GroupModels.Count > 0)
-      {
-        yield return "\tСообщенные точки:";
         for (int i = 0; i < eht.Scheme.GroupModels.Count; i++)
         {
           var pointsAll = eht.Scheme.GetPointsConnected(eht.Scheme.GroupModels[i]);
