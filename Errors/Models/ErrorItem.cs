@@ -10,7 +10,7 @@ namespace Errors.Models
   /// Представляет элемент ошибки, возникшей при выполнении команды или измерения.
   /// Содержит сведения о строке исходного кода, команде, описании и результате измерения.
   /// </summary>
-  public class ErrorItem
+  public class ErrorItem : IDisplayIssue
   {
     /// <summary>
     /// Номер строки в исходном файле, где произошла ошибка.
@@ -43,5 +43,9 @@ namespace Errors.Models
     /// Использует перечисление <see cref="ErrorCode"/>.
     /// </summary>
     public ErrorCode? Code { get; set; }
+
+    public string? CodeString => Code?.ToString();
+
+    public bool IsWarning => false;
   }
 }
