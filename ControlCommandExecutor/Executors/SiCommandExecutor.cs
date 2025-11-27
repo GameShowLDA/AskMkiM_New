@@ -117,21 +117,7 @@ namespace ControlCommandExecutor.Executors
       }
       if (errorMessage.Count > 0)
       {
-        if (!string.IsNullOrEmpty(message))
-        {
-          if (protocolModel.Errors.Keys.Contains(nameCommand + " " + 1))
-          {
-            protocolModel.Errors.Add(nameCommand + " " + 2, errorMessage);
-          }
-          else if (protocolModel.Errors.Keys.Contains(nameCommand + " " + 2))
-          {
-            protocolModel.Errors.Add(nameCommand + " " + 1, errorMessage);
-          }
-          else
-          { 
-            protocolModel.Errors.Add(nameCommand, errorMessage);
-          }
-        }
+        protocolModel.Errors.Add(nameCommand, errorMessage);
       }
     }
 
@@ -246,7 +232,7 @@ namespace ControlCommandExecutor.Executors
           answer = await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? new Random().Next((int)value / 2, (int)value * 2) : value;
         }
 
-          var type = ShowMessageModel.MessageType.Success;
+        var type = ShowMessageModel.MessageType.Success;
         if (answer < value)
         {
           type = ShowMessageModel.MessageType.Error;

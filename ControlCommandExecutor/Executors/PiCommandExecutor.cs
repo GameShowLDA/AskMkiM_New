@@ -64,13 +64,13 @@ namespace ControlCommandExecutor.Executors
 
       var dbc = EquipmentService.GetSwitchingDevice();
       await SettingsDeviceBusCommutatuion(dbc, context.Console);
-
+      var siCommanNumber = command.SiCommand.CommandNumber;
       // Первый тест СИ
       if (command.SiCommand != null)
       {
         await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 1", message: $"{nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
         command.SiCommand.FormattedStartLineNumber = command.FormattedStartLineNumber;
-        command.SiCommand.Mnemonic = nameSiCommand + " " + 1;
+        command.SiCommand.CommandNumber = siCommanNumber + " " + 1;
 
         var commandExecutionContext = new CommandExecutionContext(context.CommandExecutionManager, command.SiCommand, context.Console, context.TranslationControl, context.OpkFilePath);
         var siCommandExecutor = new SiCommandExecutor();
@@ -120,6 +120,12 @@ namespace ControlCommandExecutor.Executors
         errorMessage.AddRange(errMes);
       }
 
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
+      if (errorMessage.Count > 0)
+      {
+        protocolModel.Errors.Add(nameCommand, errorMessage);
+      }
+
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
       foreach (var item in modules)
       {
@@ -131,15 +137,9 @@ namespace ControlCommandExecutor.Executors
         await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 3", message: $"{nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
         var commandExecutionContext = new CommandExecutionContext(context.CommandExecutionManager, command.SiCommand, context.Console, context.TranslationControl, context.OpkFilePath);
         var siCommandExecutor = new SiCommandExecutor();
-        command.SiCommand.Mnemonic = nameSiCommand + " " + 2;
 
+        command.SiCommand.CommandNumber = siCommanNumber + " " + 2;
         await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
-      }
-
-      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
-      if (errorMessage.Count > 0)
-      {
-        protocolModel.Errors.Add(nameCommand, errorMessage);
       }
     }
 
