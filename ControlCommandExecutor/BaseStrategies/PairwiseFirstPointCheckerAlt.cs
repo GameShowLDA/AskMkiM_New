@@ -52,7 +52,6 @@ namespace ControlCommandExecutor.BaseStrategies
           if (Rt1 > 100)
           {
             var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{_basePoint.ToString()}]" : string.Empty;
-            manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint}{machineAdress}"));
 
             var errorMessageModels = new ShowMessageModel($"{_basePoint.Mnemonic}{machineAdress}", message: "Rизм = Нет подлючения точки", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
             errorPoint = true;
@@ -60,6 +59,8 @@ namespace ControlCommandExecutor.BaseStrategies
             await messageService.ShowMessageAsync(errorMessageModels);
             errorsMessgae.Add(errorMessageModels);
             await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
+
+            manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint}{machineAdress}", messageService.GetLastLineNumber(), baseCommandModel.FormattedStartLineNumber));
           }
           else
           {
@@ -81,13 +82,14 @@ namespace ControlCommandExecutor.BaseStrategies
             if (Rt2 > 100)
             {
               var machineAdress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $"[{point.ToString()}]" : string.Empty;
-              manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{point.Mnemonic}{machineAdress}"));
 
               var errorMessageModels = new ShowMessageModel($"{point.Mnemonic}{machineAdress}", message: $"Нет подлючения точки", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
               errorPoint = true;
 
               await messageService.ShowMessageAsync(errorMessageModels);
               errorsMessgae.Add(errorMessageModels);
+              manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{point.Mnemonic}{machineAdress}", messageService.GetLastLineNumber(), baseCommandModel.FormattedStartLineNumber));
+
               await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
             }
             else
@@ -115,12 +117,12 @@ namespace ControlCommandExecutor.BaseStrategies
               if (Rt > 100)
               {
 
-                manager.AddErrorMethod(EhtErrors.CircuitOverload($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint.Mnemonic}{machineAdressFirst}", $"{point.Mnemonic}{machineAdressSecond}"));
 
                 var errorMessageModels = new ShowMessageModel($"{_basePoint.Mnemonic}{machineAdressFirst}, {point.Mnemonic}{machineAdressSecond}", message: $"Overload", type: ShowMessageModel.MessageType.Error) { IndentLevel = 1 };
                 errorPoint = true;
 
                 await messageService.ShowMessageAsync(errorMessageModels);
+                manager.AddErrorMethod(EhtErrors.CircuitOverload($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint.Mnemonic}{machineAdressFirst}", $"{point.Mnemonic}{machineAdressSecond}", messageService.GetLastLineNumber(), baseCommandModel.FormattedStartLineNumber));
                 errorsMessgae.Add(errorMessageModels);
                 await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
               }
@@ -171,8 +173,9 @@ namespace ControlCommandExecutor.BaseStrategies
               if (!succes)
               {
                 errorsMessgae.Add(error);
+                manager.AddErrorMethod(EhtErrors.ResistanceOutOfRange($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", result, _basePoint.ToString(), point.ToString(), LowerBound, UpperBound, messageService.GetLastLineNumber(), baseCommandModel.FormattedStartLineNumber));
+
                 await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {error.ToString()}"));
-                manager.AddErrorMethod(EhtErrors.ResistanceOutOfRange($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", result, _basePoint.ToString(), point.ToString(), LowerBound, UpperBound));
               }
             }
           }

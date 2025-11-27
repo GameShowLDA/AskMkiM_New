@@ -199,7 +199,7 @@ namespace UI.Components.ProtocolListBox
       return;
     }
 
-    public int GetLastLineNumberAsync()
+    public int GetLastLineNumber()
     {
       if (Messages.Count > 0)
       {

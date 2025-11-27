@@ -94,7 +94,7 @@
             <ErrorList:ErrorListControl  
                 x:Name="ErrorListBoxVertical" 
                 MinHeight="60"
-                StringsNumberVisible="Collapsed" 
+                StringsNumberVisible="Visible" 
                 MeasureResultVisible="Visible" 
                 Grid.ColumnSpan="3"
                 SizeChanged="ErrorListBoxVertical_OnSizeChanged"/>
