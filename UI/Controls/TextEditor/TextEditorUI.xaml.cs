@@ -169,6 +169,17 @@ namespace UI.Controls.TextEditor
       }
     }
 
+    /// <summary>
+    /// Список строк, на которых установлены точки остановки.
+    /// </summary>
+    public IReadOnlyCollection<int> Breakpoints =>
+      _executionMargin?.Breakpoints ?? Array.Empty<int>();
+
+    /// <summary>
+    /// Событие вызывается при изменении набора точек остановки.
+    /// </summary>
+    public event EventHandler<BreakpointChangedEventArgs> BreakpointChanged;
+
     #endregion
 
     /// <summary>
@@ -178,6 +189,31 @@ namespace UI.Controls.TextEditor
     {
       _executionMargin.SetActiveLine(lineNumber);
     }
+
+    /// <summary>
+    /// Установить или снять точку остановки на указанной строке.
+    /// </summary>
+    public void SetBreakpoint(int lineNumber, bool enabled = true)
+    {
+      _executionMargin?.SetBreakpoint(lineNumber, enabled);
+    }
+
+    /// <summary>
+    /// Переключить точку остановки на строке.
+    /// </summary>
+    public void ToggleBreakpoint(int lineNumber)
+    {
+      _executionMargin?.ToggleBreakpoint(lineNumber);
+    }
+
+    /// <summary>
+    /// Очистить все точки остановки.
+    /// </summary>
+    public void ClearAllBreakpoints()
+    {
+      _executionMargin?.ClearAllBreakpoints();
+    }
+
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="TextMarkerService"/>.
@@ -410,17 +446,20 @@ namespace UI.Controls.TextEditor
         if (_executionMargin == null)
         {
           _executionMargin = new ExecutionGlyphMargin(textEditor);
+
+          _executionMargin.BreakpointChanged += (sender, args) =>
+          {
+            BreakpointChanged?.Invoke(this, args);
+          };
+
           textEditor.TextArea.LeftMargins.Insert(0, _executionMargin);
         }
-
       };
 
       HelpProvider.SetHelpKeyProvider(textEditor, () =>
       {
-        // Берём текущий выделенный текст
         var sel = textEditor.SelectedText?.Trim();
 
-        // Если ничего не выделено – отдаём «Текстовый редактор»
         return string.IsNullOrWhiteSpace(sel) ? "DescriptionWorkTextEditor" : sel;
       });
       EventCore.Services.EventAggregator.Subscribe<EventCore.Events.ThemeEvent.SyntaxHighlighting>(e => ApplySyntaxHighlighting(e.IsEnabled));
