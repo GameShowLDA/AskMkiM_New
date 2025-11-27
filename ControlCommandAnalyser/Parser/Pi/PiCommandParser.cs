@@ -265,29 +265,29 @@ namespace ControlCommandAnalyser.Parser.Pi
           // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
           int idxStarInFirstLine = remainderPi.IndexOf('*');
           remainderPi = idxStarInFirstLine >= 0 ? remainderPi[..idxStarInFirstLine].Trim() : remainderPi.Trim();
-          if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.П.ToString())
-            || model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+          if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString())
+            || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
           {
             // находим цепи точек из предыдущей команды проверки
             model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme, model.SiCommand);
             model.SiCommand.Scheme = model.Scheme;
           }
-          else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.С.ToString())
-            || model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+          else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
+            || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
           {
             model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
             model.SiCommand.Scheme = model.Scheme;
           }
         }
-        else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.П.ToString())
-          || model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString())
+          || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
           model.Scheme = CommandsModel.CheckKeyP(model.SiCommand, model.Scheme);
           model.SiCommand.Scheme = model.Scheme;
         }
-        else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.С.ToString())
-          || model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
+          || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
           model.SiCommand.Scheme = model.Scheme;

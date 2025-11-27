@@ -1,13 +1,16 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Model.Interface;
+using DTO.Enum;
+using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model.Ks
 {
   /// <summary>
   /// Модель для команды КС (контроль сопротивения).
   /// </summary>
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Б, ControlCommandAnalyser.AlgorithmKey.Д)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Б, TranslationKey.AlgorithmKey.Д)]
+  [MeasurementDevice(MeasurementDevice.Multimeter)]
   public class KsCommandModel : BaseCommandModel
   {
 

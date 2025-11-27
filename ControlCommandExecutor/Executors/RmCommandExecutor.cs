@@ -3,6 +3,9 @@ using ControlCommandExecutor.Execution;
 using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
+using DTO.Enum;
+using Errors.Device.Adapters;
+using Utilities;
 
 namespace ControlCommandExecutor.Executors
 {
@@ -28,6 +31,27 @@ namespace ControlCommandExecutor.Executors
       List<PointModel> pointsModel = PointModel.ConvertToPointModels(points);
       await EquipmentService.AnalyzePoints(pointsModel, command.PointsMap, context.Console);
 
+      var unique = context.GetUniqueMeasurementDevices();
+
+      if (unique.Contains(MeasurementDevice.Multimeter))
+      {
+        var meter = EquipmentService.GetFastMeterOrThrow(context.Console);
+
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ConnectableManager.InitializeAsync(context.Console)).Connect, context.Console))
+        {
+          throw ConnectionExceptionAdapter.ConnectFailed(meter.Name, meter.NumberChassis, meter.Number);
+        }
+      }
+
+      if (unique.Contains(MeasurementDevice.BreakdownTester))
+      {
+        var breakDown = await EquipmentService.GetBreakdownTesterOrThrow(context.Console);
+
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(context.Console)).Connect, context.Console))
+        {
+          throw ConnectionExceptionAdapter.ConnectFailed(breakDown.Name, breakDown.NumberChassis, breakDown.Number);
+        }
+      }
     }
   }
 }

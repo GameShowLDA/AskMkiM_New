@@ -1,5 +1,7 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model.Chains;
+using DTO.Enum;
+using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model
 {
@@ -7,11 +9,12 @@ namespace ControlCommandAnalyser.Model
   /// <summary>
   /// Модель для команды СИ (сопротивление изоляции).
   /// </summary>
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
-    ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П,
-     ControlCommandAnalyser.AlgorithmKey.Т,
-      ControlCommandAnalyser.AlgorithmKey.И,
-    ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.К,
+    TranslationKey.AlgorithmKey.С, TranslationKey.AlgorithmKey.П,
+     TranslationKey.AlgorithmKey.Т,
+      TranslationKey.AlgorithmKey.И,
+    TranslationKey.AlgorithmKey.Г, TranslationKey.AlgorithmKey.Т1)]
+  [MeasurementDevice(MeasurementDevice.BreakdownTester)]
   public class SiCommandModel : BaseCommandModel, IHasScheme
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.CI).DisplayName;

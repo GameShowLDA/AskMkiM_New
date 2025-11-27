@@ -1,4 +1,5 @@
 ﻿using ControlCommandAnalyser.Model;
+using DTO.Enum;
 using System.Linq;
 
 namespace ControlCommandAnalyser.Parser
@@ -18,7 +19,7 @@ namespace ControlCommandAnalyser.Parser
       if (string.IsNullOrWhiteSpace(line))
         return new();
 
-      var enumKeys = Enum.GetNames(typeof(AlgorithmKey));
+      var enumKeys = Enum.GetNames(typeof(TranslationKey.AlgorithmKey));
 
       // Разбиваем строку и ищем совпадения с допустимыми ключами (точно по имени)
       return line

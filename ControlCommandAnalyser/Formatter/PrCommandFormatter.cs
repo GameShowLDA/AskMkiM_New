@@ -1,6 +1,7 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Model.Pr;
+using DTO.Enum;
 
 namespace ControlCommandAnalyser.Formatter
 {
@@ -80,7 +81,7 @@ namespace ControlCommandAnalyser.Formatter
         yield break;
       }
 
-      if (pr.Scheme.GroupModels.Count > 0 && !pr.AlgorithmKey.Contains(AlgorithmKey.ЗР.ToString()))
+      if (pr.Scheme.GroupModels.Count > 0 && !pr.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.ЗР.ToString()))
       {
         yield return "\t\tРазобщенные точки:";
         for (int i = 0; i < pr.Scheme.GroupModels.Count; i++)
@@ -101,7 +102,7 @@ namespace ControlCommandAnalyser.Formatter
       }
 
 
-      if (pr.Scheme.GroupModels.Count > 0 && !pr.AlgorithmKey.Contains(AlgorithmKey.ЗС.ToString()))
+      if (pr.Scheme.GroupModels.Count > 0 && !pr.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.ЗС.ToString()))
       {
         yield return "\tСообщенные точки:";
 
