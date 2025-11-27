@@ -36,5 +36,32 @@ namespace EventCore.Events
         IsEnabled = isEnabled;
       }
     }
+
+    /// <summary>
+    /// Событие, генерируемое при изменении состояния режима выполнения с точками остановки.
+    /// </summary>
+    /// <remarks>
+    /// Событие уведомляет компоненты о том, что режим выполнения с использованием breakpoints был включён или выключен.
+    /// Логически аналогично <see cref="StepByStepModeChanged"/>, но относится к отдельному режиму.
+    /// </remarks>
+    public sealed class BreakpointsModeChanged : IEvent
+    {
+      /// <summary>
+      /// Показывает, активирован ли режим точек остановки.
+      /// </summary>
+      public bool IsEnabled { get; }
+
+      /// <summary>
+      /// Инициализирует новый экземпляр события изменения состояния режима точек остановки.
+      /// </summary>
+      /// <param name="isEnabled">
+      /// <see langword="true"/> — если режим точек остановки включён;  
+      /// <see langword="false"/> — если режим выключен.
+      /// </param>
+      public BreakpointsModeChanged(bool isEnabled)
+      {
+        IsEnabled = isEnabled;
+      }
+    }
   }
 }

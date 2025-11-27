@@ -27,5 +27,20 @@ namespace EventCore.Adapters
     /// </example>
     public static void RaiseStepByStepModeChanged(bool isEnabled)
       => EventAggregator.Publish(new ExecutionEvents.StepByStepModeChanged(isEnabled));
+
+    /// <summary>
+    /// Генерирует событие изменения состояния режима выполнения с точками остановки.
+    /// </summary>
+    /// <param name="isEnabled">
+    /// <see langword="true"/> — если режим точек остановки включён;  
+    /// <see langword="false"/> — если он выключен.
+    /// </param>
+    /// <example>
+    /// <code>
+    /// ExecutionEventAdapter.RaiseBreakpointsModeChanged(true);
+    /// </code>
+    /// </example>
+    public static void RaiseBreakpointsModeChanged(bool isEnabled)
+      => EventAggregator.Publish(new ExecutionEvents.BreakpointsModeChanged(isEnabled));
   }
 }

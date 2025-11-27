@@ -71,6 +71,28 @@ namespace AppConfiguration.Execution
       });
     }
 
+    /// <summary>
+    /// Устанавливает режим выполнения с точками остановки.
+    /// При включении отключает пошаговый режим.
+    /// </summary>
+    public static async Task SetBreakpointsMode(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        SettingsExecutionModel.BreakpointsMode = enable;
+
+        // Если включаем режим точек остановки — выключаем пошаговый режим.
+        if (enable && SettingsExecutionModel.StepByStepMode)
+        {
+          SettingsExecutionModel.StepByStepMode = false;
+          ExecutionEventAdapter.RaiseStepByStepModeChanged(false);
+        }
+
+        // новое событие/адаптер — нужно добавить в ExecutionEventAdapter
+        ExecutionEventAdapter.RaiseBreakpointsModeChanged(enable);
+      });
+    }
+
     public static async Task SetExecutionModel(SettingsExecutionModel protocolModel)
     {
       await Task.Run(async () =>
@@ -79,6 +101,7 @@ namespace AppConfiguration.Execution
         await SetIsErrorSimulationMode(protocolModel.IsErrorSimulationMode);
         await SetStepByStepMode(protocolModel.StepByStepMode);
         await SetStopOnError(protocolModel.StopOnError);
+        await SetBreakpointsMode(protocolModel.BreakpointsMode);
       });
     }
 
@@ -110,6 +133,11 @@ namespace AppConfiguration.Execution
     /// <returns>true, если включен; false, если выключена.</returns>
     public static Task<bool> GetIsStepByStepModeEnabled() => Task.FromResult(SettingsExecutionModel?.StepByStepMode ?? false);
 
+    /// <summary>
+    /// Возвращает, включён ли режим выполнения с точками остановки.
+    /// </summary>
+    public static Task<bool> GetIsBreakpointsModeEnabled() => Task.FromResult(SettingsExecutionModel?.BreakpointsMode ?? false);
+
     public static async Task<SettingsExecutionModel> GetExecitonModel()
     {
       return await Task.Run(() =>
@@ -119,6 +147,7 @@ namespace AppConfiguration.Execution
         executionModel.IsErrorSimulationMode = SettingsExecutionModel.IsErrorSimulationMode;
         executionModel.StepByStepMode = SettingsExecutionModel.StepByStepMode;
         executionModel.StopOnError = SettingsExecutionModel.StopOnError;
+        executionModel.BreakpointsMode = SettingsExecutionModel.BreakpointsMode;
         return executionModel;
       });
     }
@@ -132,6 +161,7 @@ namespace AppConfiguration.Execution
         await SetIsErrorSimulationMode(execution.IsErrorSimulationMode);
         await SetStepByStepMode(execution.StepByStepMode);
         await SetStopOnError(execution.StopOnError);
+        await SetBreakpointsMode(execution.BreakpointsMode);
       });
 
       SaveExecutionEvent?.Invoke(execution);

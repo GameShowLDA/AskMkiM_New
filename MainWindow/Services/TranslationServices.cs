@@ -5,7 +5,12 @@ using DTO.Base.Models;
 using EventCore.Adapters;
 using ICSharpCode.AvalonEdit;
 using Message;
+using System;
+using System.Collections.Generic;      // ★ для IReadOnlyCollection<int>
 using System.IO;
+using System.Linq;                     // ★ для FirstOrDefault
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using UI.Components.SearchControls;
@@ -35,13 +40,12 @@ namespace MainWindowProgram.Services
     /// </summary>
     private readonly FileService _fileService;
 
+    /// <summary>
+    /// Редактор, на основании которого был подготовлен текущий RunControl.
+    /// Обычно это правый редактор транслятора (внутренний язык).
+    /// </summary>
     private TextEditorUI _actualTextEditor;
 
-    /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="AdminServices"/>.
-    /// </summary>
-    /// <param name="multiWindow">Сервис управления многооконным интерфейсом.</param>
-    /// <param name="fileService">Сервис  для работы с файлами.</param>
     public TranslationServices(MultiWindowService multiWindow, FileService fileService)
     {
       _multiWindow = multiWindow;
@@ -49,11 +53,19 @@ namespace MainWindowProgram.Services
     }
 
     /// <summary>
+    /// Возвращает список строк с установленными точками останова для указанного редактора.
+    /// Если редактор null, возвращает пустой список.
+    /// </summary>
+    private static IReadOnlyCollection<int> GetBreakpointsFromEditor(TextEditorUI editor)
+    {
+      return editor?.Breakpoints ?? Array.Empty<int>();
+    }
+
+    /// <summary>
     /// Запускает процесс трансляции текущего открытого текста из редактора.
     /// Выполняет распознавание команд, логирует результат и применяет подсветку
     /// в соответствии с успешностью распознавания.
     /// </summary>
-    /// <returns>Задача, представляющая асинхронную операцию трансляции.</returns>
     public async Task BuildAsync()
     {
       var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
@@ -74,16 +86,15 @@ namespace MainWindowProgram.Services
     }
 
     /// <summary>
-    /// Запускает процесс трансляции текущего открытого текста из редактора.
-    /// Выполняет распознавание команд, логирует результат и применяет подсветку
-    /// в соответствии с успешностью распознавания.
+    /// Обычный запуск программы контроля без учёта точек останова.
+    /// (старое поведение, без изменений логики интерпретатора)
     /// </summary>
-    /// <returns>Задача, представляющая асинхронную операцию трансляции.</returns>
     public async Task RunAsync()
     {
       var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
       var container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
       var runContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Run);
+
       if (container == null && editor != null)
       {
         await BuildAsync();
@@ -93,7 +104,10 @@ namespace MainWindowProgram.Services
 
       if (container == null && runContainer == null && editor == null)
       {
-        MessageBoxCustom.Show($"Не удалось запустить исполнитель программы контроля.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
+        MessageBoxCustom.Show(
+          "Не удалось запустить исполнитель программы контроля.",
+          "Ошибка запуска программы контроля",
+          image: MessageBoxImage.Error);
         return;
       }
 
@@ -101,21 +115,20 @@ namespace MainWindowProgram.Services
       {
         container = runContainer;
       }
+
       var dockManager = container.GetDockControl();
       if (dockManager == null) return;
 
       DockItem? foundDockItem = null;
 
-      // Ждём, пока хотя бы один DockItem появится
-      for (int i = 0; i < 500; i++) // максимум 500 мс
+      // Ждём, пока хотя бы один DockItem появится (максимум 500 мс)
+      for (int i = 0; i < 500; i++)
       {
         if (dockManager.DockItems.Count > 0)
         {
           foundDockItem = dockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
           if (foundDockItem != null)
-          {
             break;
-          }
         }
         await Task.Delay(10);
       }
@@ -124,11 +137,7 @@ namespace MainWindowProgram.Services
       {
         if (foundDockItem?.Content is RunControl run)
         {
-          //RunControl runControl = new RunControl();
-          //runControl.TranslationModels = run.TranslationModels;
           await PrepareRun(runContainer, _actualTextEditor, run);
-          // TODO: закрыть вкладку со старым транслятором
-          //await _multiWindow.CloseRunItem(run, EditorType.Run);
         }
         else
         {
@@ -146,30 +155,165 @@ namespace MainWindowProgram.Services
 
         if (translator.ErrorCount > 0)
         {
-          MessageBoxCustom.Show($"Возникли ошибки сборки ({translator.ErrorCount} ошибок). Устраните ошибки и повторите попытку.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
+          MessageBoxCustom.Show(
+            $"Возникли ошибки сборки ({translator.ErrorCount} ошибок). Устраните ошибки и повторите попытку.",
+            "Ошибка запуска программы контроля",
+            image: MessageBoxImage.Error);
           return;
         }
 
         await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
 
+        RunControl runControl = new RunControl
+        {
+          TranslationModels = translator.TranslationModels
+        };
 
-        RunControl runControl = new RunControl();
-        runControl.TranslationModels = translator.TranslationModels;
         await PrepareRun(runContainer, _actualTextEditor, runControl);
       }
     }
 
-    private async Task PrepareRun(TextEditorContainer runContainer, TextEditorUI editor, RunControl runControl)
+    /// <summary>
+    /// Запуск программы контроля с учётом точек останова, выставленных в редакторе.
+    /// Точки останова передаются в RunControl через свойство Breakpoints.
+    /// </summary>
+    public async Task RunWithBreakpointsAsync()
     {
+      var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
+      var container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
+      var runContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Run);
+
+      // Если транслятор ещё не создан, создаём его
+      if (container == null && editor != null)
+      {
+        await BuildAsync();
+        editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
+        container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
+      }
+
+      if (container == null && runContainer == null && editor == null)
+      {
+        MessageBoxCustom.Show(
+          "Не удалось запустить исполнитель программы контроля.",
+          "Ошибка запуска программы контроля",
+          image: MessageBoxImage.Error);
+        return;
+      }
+
+      if (container == null && runContainer != null)
+      {
+        container = runContainer;
+      }
+
+      var dockManager = container.GetDockControl();
+      if (dockManager == null) return;
+
+      DockItem? foundDockItem = null;
+
+      // Ждём, пока хотя бы один DockItem появится (максимум 500 мс)
+      for (int i = 0; i < 500; i++)
+      {
+        if (dockManager.DockItems.Count > 0)
+        {
+          foundDockItem = dockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
+          if (foundDockItem != null)
+            break;
+        }
+        await Task.Delay(10);
+      }
+
+      if (foundDockItem?.Content is not TranslatorItem translator)
+      {
+        // Уже открыта вкладка Run — просто перезапускаем, но с текущими брейкпоинтами
+        if (foundDockItem?.Content is RunControl run)
+        {
+          if (_actualTextEditor == null)
+          {
+            ShowEditorNotFoundError();
+            return;
+          }
+
+          var breakpoints = GetBreakpointsFromEditor(_actualTextEditor);
+          await PrepareRun(runContainer, _actualTextEditor, run, breakpoints);
+        }
+        else
+        {
+          return;
+        }
+      }
+      else
+      {
+        // Есть активный TranslatorItem: берём правый редактор (внутренний язык)
+        _actualTextEditor = translator.GetRightEditor();
+        if (_actualTextEditor == null)
+        {
+          ShowEditorNotFoundError();
+          return;
+        }
+
+        if (translator.ErrorCount > 0)
+        {
+          MessageBoxCustom.Show(
+            $"Возникли ошибки сборки ({translator.ErrorCount} ошибок). Устраните ошибки и повторите попытку.",
+            "Ошибка запуска программы контроля",
+            image: MessageBoxImage.Error);
+          return;
+        }
+
+        // Берём брейкпоинты из этого редактора
+        var breakpoints = GetBreakpointsFromEditor(_actualTextEditor);
+
+        await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
+
+        RunControl runControl = new RunControl
+        {
+          TranslationModels = translator.TranslationModels
+        };
+
+        await PrepareRun(runContainer, _actualTextEditor, runControl, breakpoints);
+      }
+    }
+
+    /// <summary>
+    /// Подготовка и запуск RunControl.
+    /// Если переданы точки останова, они попадают в RunControl.Breakpoints.
+    /// </summary>
+    private async Task PrepareRun(
+      TextEditorContainer runContainer,
+      TextEditorUI editor,
+      RunControl runControl,
+      IReadOnlyCollection<int>? breakpoints = null)      // ★ добавлен параметр
+    {
+      if (editor == null)
+      {
+        ShowEditorNotFoundError();
+        return;
+      }
+
       runControl.OpkFilePath = editor.TextEditorModel.FilePath;
       runControl.SetLeftEditor(editor);
-      var foundItem = runControl.TranslationModels.FirstOrDefault(item => item.GetType() == typeof(OkCommandModel));
-      if (foundItem != null && foundItem is OkCommandModel okCommandModel)
+
+      var foundItem = runControl.TranslationModels
+        .FirstOrDefault(item => item.GetType() == typeof(OkCommandModel));
+
+      if (foundItem is OkCommandModel okCommandModel)
       {
         runControl.FileName = okCommandModel.ObjectCode;
       }
-      runControl.HeaderFile = string.IsNullOrEmpty(editor.TextEditorModel.FileName) ?
-        Path.GetFileName(editor.TextEditorModel.FilePath) : editor.TextEditorModel.FileName;
+
+      runControl.HeaderFile = string.IsNullOrEmpty(editor.TextEditorModel.FileName)
+        ? Path.GetFileName(editor.TextEditorModel.FilePath)
+        : editor.TextEditorModel.FileName;
+
+      // ★ Передаём точки останова в RunControl (свойство нужно добавить в RunControl)
+      if (breakpoints != null && breakpoints.Count > 0)
+      {
+        runControl.Breakpoints = breakpoints;
+      }
+      else
+      {
+        runControl.Breakpoints = Array.Empty<int>();
+      }
 
       if (runContainer == null)
       {
@@ -177,24 +321,21 @@ namespace MainWindowProgram.Services
       }
       else
       {
-        //await _multiWindow.CloseRunItem(runControl, EditorType.Run);
-        //dockItem.ItemClosed
-        var dockItem = runContainer.GetDockControl().DockItems.FirstOrDefault(item => item.Content == runControl);
+        var dock = runContainer.GetDockControl();
+        var dockItem = dock?.DockItems.FirstOrDefault(item => item.Content == runControl);
         if (dockItem != null)
         {
           dockItem.PerformClose();
         }
-          
+
         await _multiWindow.AddRunItem(runControl, EditorType.Run);
       }
 
       await runControl.Start(runControl.TranslationModels);
     }
 
-    /// <summary>
-    /// Пытается создать новый транслятор, используя текст из указанного редактора.
-    /// </summary>
-    /// <param name="editor">Редактор с исходным текстом.</param>
+    // ======= Остальной код без изменений =======
+
     private async Task TryCreateNewTranslator(TextEditorUI editor)
     {
       string text = editor.Text;
@@ -206,10 +347,6 @@ namespace MainWindowProgram.Services
       }
     }
 
-    /// <summary>
-    /// Пытается обновить существующий транслятор, если активен соответствующий элемент интерфейса.
-    /// </summary>
-    /// <param name="container">Контейнер, содержащий редактор трансляции.</param>
     private async Task TryUpdateExistingTranslator(TextEditorContainer container)
     {
       var dockManager = container.GetDockControl();
@@ -228,20 +365,11 @@ namespace MainWindowProgram.Services
       EditExistingTranslator(editor, foundDockItem);
     }
 
-    /// <summary>
-    /// Выводит сообщение об ошибке, если редактор не найден.
-    /// </summary>
     private void ShowEditorNotFoundError()
     {
       MessageBoxCustom.Show("Редактор не найден", "Ошибка", MessageBoxButton.OK, image: MessageBoxImage.Error);
     }
 
-    /// <summary>
-    /// Обновляет существующий компонент транслятора на основе текста из заданного редактора.
-    /// Выполняет трансляцию команд и выводит результат во второй (правый) редактор.
-    /// </summary>
-    /// <param name="editor">Редактор с исходным текстом.</param>
-    /// <param name="foundDockItem">Док-элемент, содержащий компонент транслятора.</param>
     private void EditExistingTranslator(TextEditorUI editor, DockItem foundDockItem)
     {
       string text = editor.Text;
@@ -258,47 +386,37 @@ namespace MainWindowProgram.Services
       }
     }
 
-    /// <summary>
-    /// Создаёт новый компонент транслятора, содержащий редактор исходного текста и редактор результата трансляции.
-    /// Выполняет разбор команд и отображает результат трансляции.
-    /// </summary>
-    /// <param name="editor">Редактор с исходным текстом.</param>
-    /// <param name="text">Текст, подлежащий трансляции.</param>
-    /// <returns>Асинхронная задача создания компонента транслятора.</returns>
     private async Task CreateNewTranslator(TextEditorUI editor, string text)
     {
       try
       {
         var translateEditor = _fileService.CreateTranslationFileAsync();
-        //text = PkPreprocessor.PreprocessText(text);
         editor.TextArea.Document.Text = text;
         editor.TextArea.TextView.LineTransformers.Add(new BracesCommentColorizer());
         CancellationTokenSource redrawToken = null;
 
         editor.TextChanged += async (_, __) =>
-         {
-           redrawToken?.Cancel();
-           redrawToken = new CancellationTokenSource();
-           var token = redrawToken.Token;
+        {
+          redrawToken?.Cancel();
+          redrawToken = new CancellationTokenSource();
+          var token = redrawToken.Token;
 
-           try
-           {
-             await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
-             if (!token.IsCancellationRequested)
-             {
-               // безопасный вызов из UI-потока
-               Application.Current.Dispatcher.Invoke(() =>
-               {
-                 editor.TextArea.TextView.Redraw();
-               });
-             }
-           }
-           catch (TaskCanceledException)
-           {
-             // просто игнорируем отменённую задержку
-           }
-         };
-
+          try
+          {
+            await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
+            if (!token.IsCancellationRequested)
+            {
+              Application.Current.Dispatcher.Invoke(() =>
+              {
+                editor.TextArea.TextView.Redraw();
+              });
+            }
+          }
+          catch (TaskCanceledException)
+          {
+            // игнорируем отменённую задержку
+          }
+        };
 
         if (translateEditor != null)
         {
@@ -315,7 +433,11 @@ namespace MainWindowProgram.Services
       }
       catch (Exception ex)
       {
-        MessageBoxCustom.Show($"Не удалось запустить трансляцию программы контроля.", "Ошибка запуска программы контроля", image: MessageBoxImage.Error);
+        MessageBoxCustom.Show(
+          "Не удалось запустить трансляцию программы контроля.",
+          "Ошибка запуска программы контроля",
+          image: MessageBoxImage.Error);
+
         LoggerUtility.LogError($"Не удалось запустить трансляцию программы контроля: {ex}.");
 
         EditorEventAdapter.RaiseTextEditorActivated(editor);

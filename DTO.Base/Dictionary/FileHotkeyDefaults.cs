@@ -30,6 +30,7 @@ namespace DTO.Base.Dictionary
         { "Build", "F9" },
         { "Run", "Ctrl+F5" },
         { "RunStepByStepMode", "Ctrl+F10" },
+        { "BreakpointsMode", "Ctrl+F8" },
 
         // Включение питания
         { "Power", "Ctrl+Shift+P" },

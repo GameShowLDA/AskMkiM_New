@@ -31,6 +31,7 @@ namespace MainWindowProgram.ViewModels
     [RelayCommand]
     private async Task RunAsync()
     {
+      await AppConfiguration.Execution.ExecutionConfig.SetBreakpointsMode(false);
       await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(false);
       await _service.RunAsync();
     }
@@ -41,8 +42,17 @@ namespace MainWindowProgram.ViewModels
     [RelayCommand]
     private async Task RunStepByStepModeAsync()
     {
+      await AppConfiguration.Execution.ExecutionConfig.SetBreakpointsMode(false);
       await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(true);
       await _service.RunAsync();
+    }
+
+    [RelayCommand]
+    private async Task RunWithStopPointsAsync()
+    {
+      await AppConfiguration.Execution.ExecutionConfig.SetBreakpointsMode(true);
+      await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(false);
+      await _service.RunWithBreakpointsAsync();
     }
   }
 }

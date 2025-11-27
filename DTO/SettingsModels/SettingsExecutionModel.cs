@@ -32,5 +32,10 @@ namespace DTO.SettingsModels
     /// Указывает, нужно ли останавливать выполнение при ошибке.
     /// </summary>
     public bool StopOnError { get; set; }
+
+    /// <summary>
+    /// Режим выполнения с точками остановки.
+    /// </summary>
+    public bool BreakpointsMode { get; set; }
   }
 }

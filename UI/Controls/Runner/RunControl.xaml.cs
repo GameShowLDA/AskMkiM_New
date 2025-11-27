@@ -38,6 +38,12 @@ namespace UI.Controls.Runner
 
     private List<BaseCommandModel> translationModels = new List<BaseCommandModel>();
 
+    public IReadOnlyCollection<int> Breakpoints { get; set; } = Array.Empty<int>();
+
+    private TextEditorUI? _editor;                       // ★ текущий редактор
+
+    private CommandExecutionManager? _executionManager;  // ★ текущий менеджер
+
     public List<BaseCommandModel> TranslationModels
     {
       get
@@ -130,6 +136,8 @@ namespace UI.Controls.Runner
       if (textEditorUI == null)
         return;
 
+      _editor = textEditorUI;
+
       if (textEditorUI.Parent is Panel oldParent)
       {
         oldParent.Children.Remove(textEditorUI);
@@ -149,6 +157,7 @@ namespace UI.Controls.Runner
 
     public async Task Start(List<BaseCommandModel> models)
     {
+      LogInformation($"[RunControl] Breakpoints: {string.Join(", ", Breakpoints)}");
       ProtocolUI.MenuButtonVisibility(false);
       ControlProgram = models;
 
@@ -167,19 +176,41 @@ namespace UI.Controls.Runner
 
     private async Task StartTest(CancellationToken cancellationToken)
     {
+      // Берём редактор, в котором пользователь расставил точки
       TextEditorUI? editor = null;
 
       Application.Current.Dispatcher.Invoke(() =>
       {
-        editor = LeftBox.Children[0] as TextEditorUI;
+        editor = LeftBox.Children.Count > 0
+          ? LeftBox.Children[0] as TextEditorUI
+          : _editor;
       });
 
-      var manager = new CommandExecutionManager(ProtocolUI, editor, ControlProgram, OpkFilePath);
-      manager.ClearError += ErrorClear;
-      manager.AddError += AddError;
+      if (editor == null)
+      {
+        MessageBoxCustom.Show("Редактор не найден", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
+      }
 
-      await manager.ExecuteAllAsync();
+      // Лог для проверки, что брейкпоинты реально дошли до RunControl
+      LogInformation($"[RunControl] Breakpoints: {string.Join(", ", Breakpoints)}");
+
+      // ★ создаём менеджер с брейкпоинтами
+      _executionManager = new CommandExecutionManager(
+        ProtocolUI,
+        editor,
+        ControlProgram,
+        OpkFilePath,
+        Breakpoints  // ← вот они
+      );
+
+      _executionManager.ClearError += ErrorClear;
+      _executionManager.AddError += AddError;
+
+      // ★ передаём туда cancellationToken
+      await _executionManager.ExecuteAllAsync(cancellationToken);
     }
+
     private void AddError(ErrorItem errorItem)
     {
       Application.Current.Dispatcher?.Invoke(() =>
@@ -202,6 +233,12 @@ namespace UI.Controls.Runner
         ErrorCount = 0;
       });
     }
+
+    public void ContinueFromBreakpoint()
+    {
+      _executionManager?.ContinueFromBreakpoint();
+    }
+
 
     private void ArrowButton_Click(object sender, RoutedEventArgs e)
     {
