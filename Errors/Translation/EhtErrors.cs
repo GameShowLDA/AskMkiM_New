@@ -89,7 +89,7 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: сопротивление между точками вне допустимого диапазона.
     /// </summary>
-    public static ErrorItem ResistanceOutOfRange(string command, double measured, string firstPoint, string secondPoint, double lowerBound, double upperBound,
+    public static ErrorItem ResistanceOutOfRange(string command, double measured, string firstPoint, string secondPoint, double lowerBound, double upperBound, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
@@ -97,6 +97,8 @@ namespace Errors.Translation
         Command = command,
         MeasureResult = measured.ToString() + " Ом",
         Code = ErrorCode.Eht_ResistanceOutOfRange,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"{firstPoint}, {secondPoint} ({lowerBound:F3}–{upperBound:F3} Ом)"
       };
@@ -104,13 +106,15 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: указанная точка не подключена.
     /// </summary>
-    public static ErrorItem PointNotConnected(string command, string point,
+    public static ErrorItem PointNotConnected(string command, string point, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
       {
         Command = command,
         Code = ErrorCode.Eht_PointNotConnected,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Точка '{point}' не подключена."
       };
@@ -118,7 +122,7 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: между указанными точками разрыв цепи (Overload).
     /// </summary>
-    public static ErrorItem CircuitOverload(string command, string firstPoint, string secondPoint,
+    public static ErrorItem CircuitOverload(string command, string firstPoint, string secondPoint, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
@@ -126,6 +130,8 @@ namespace Errors.Translation
         Command = command,
         MeasureResult = "Overload",
         Code = ErrorCode.Eht_CircuitOverload,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"*{firstPoint}**{secondPoint}*"
       };

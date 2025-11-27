@@ -290,9 +290,9 @@ namespace UI.Controls.ProtocolNew
       await protocolTextBox.AppendEmptyLineAsync();
     }
 
-    public int GetLastLineNumberAsync()
+    public int GetLastLineNumber()
     {
-      return protocolTextBox.GetLastLineNumberAsync();
+      return protocolTextBox.GetLastLineNumber();
     }
 
     public async Task MoveToLineAsync(int lineNumber)

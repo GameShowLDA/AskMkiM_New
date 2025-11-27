@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using UI.Controls.ProtocolNew;
 using UI.Controls.TextEditor;
 using WindowsInput;
@@ -38,6 +39,7 @@ namespace UI.Controls.Runner
 
     private List<BaseCommandModel> translationModels = new List<BaseCommandModel>();
 
+    private TextEditorUI _leftEditor;
     public List<BaseCommandModel> TranslationModels
     {
       get
@@ -77,10 +79,28 @@ namespace UI.Controls.Runner
       ProtocolUI = new ProtocolUI(true);
       ProtocolUI.ErrorListBoxVerticalVisibility = Visibility.Collapsed;
       MainContent.Content = ProtocolUI;
-
+      ErrorListBoxVertical.ErrorItemDoubleClicked += ErrorItemDoubleClicked;
 
       Loaded += RunControl_Loaded;
       LeftBox.AddHandler(UIElement.PreviewGotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(LeftBox_PreviewGotKeyboardFocus), true);
+    }
+
+    private async void ErrorItemDoubleClicked(ErrorItem obj)
+    {
+      var protocolUI = MainContent.Content as ProtocolUI;
+      if (protocolUI != null)
+      {
+        if (obj.SourceLineNumber >= 0)
+        {
+          await protocolUI.MoveToLineAsync(obj.SourceLineNumber);
+        }
+
+        if (obj.FormattedLineNumber >= 0)
+        {
+          _leftEditor?.GoToLine(obj.FormattedLineNumber);
+        }
+      }
+
     }
 
     private void RunControl_Loaded(object sender, RoutedEventArgs e)
@@ -145,7 +165,10 @@ namespace UI.Controls.Runner
 
       LeftBox.Children.Clear();
       LeftBox.Children.Add(textEditorUI);
+
+      _leftEditor = textEditorUI;
     }
+
 
     public async Task Start(List<BaseCommandModel> models)
     {

@@ -60,7 +60,7 @@ namespace DTO.Service
 
     void AddError(ErrorItem errorItem);
 
-    int GetLastLineNumberAsync();
+    int GetLastLineNumber();
 
     Task MoveToLineAsync(int lineNumber);
 
