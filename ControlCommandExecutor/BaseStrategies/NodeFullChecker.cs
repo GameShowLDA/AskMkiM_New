@@ -75,7 +75,6 @@ namespace ControlCommandExecutor.BaseStrategies
         }
 
         await context.MessageService.ShowMessageAsync(new ShowMessageModel("Анализ на наличие короткого замыкания между точками"), IsBlockStart: true);
-
         var chains = await FindAllShortCircuitChainsAsync(context.PerformMeasurementAsync, ErrorsPoints, context.Resistance, context.MessageService);
 
 
@@ -85,10 +84,9 @@ namespace ControlCommandExecutor.BaseStrategies
 
         foreach (var chain in chains)
         {
-          var chainStr = ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
+          var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
 
           ErrorMessage.Add(new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 });
-
           context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr));
         }
       }
@@ -138,7 +136,6 @@ namespace ControlCommandExecutor.BaseStrategies
         if (visited.Contains(point))
           continue;
 
-        // Найти всю компоненту связности, к которой относится эта точка
         var chain = await FindChainAsync(performMeasurementAsync, point, faultyPoints, resistance, messageService, visited);
 
         if (chain.Count > 1)
@@ -181,7 +178,6 @@ namespace ControlCommandExecutor.BaseStrategies
           if (visited.Contains(candidate) || candidate.Equals(current))
             continue;
 
-          // Проверяем только потенциально ещё не найденные связи!
           bool isConnected = await IsShortCircuitedAsync(performMeasurementAsync, current, candidate, resistance, messageService);
           if (isConnected)
           {

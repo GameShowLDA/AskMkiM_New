@@ -1,14 +1,16 @@
 ﻿using ControlCommandAnalyser.Model.Chains;
 using DTO.Base.Models;
 using DTO.Service;
+using System.Threading.Tasks;
 
 namespace ControlCommandAnalyser
 {
   public static class PointFormater
   {
 
-    public static string GetFormatDisconnectPoint(List<ChainModel> chainModels)
+    public static async Task<string> GetFormatDisconnectPoint(List<ChainModel> chainModels)
     {
+      // TODO : вот тут надо пересмотреть метод. Так как замыкание, он должен выдать как одну цепь, а не несколько тобишь всего две * вначале одна и в конце одна
       var formatPoint = new List<string>();
 
 
@@ -19,7 +21,8 @@ namespace ControlCommandAnalyser
         var chainStr = string.Empty;
         for (int i = 0; i < count; i++)
         {
-          var point = item.PointModels[i].Mnemonic;
+          string point = item.PointModels[i].Mnemonic;
+          point += await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $" [{item.PointModels[i].ToString()}]" : string.Empty;
 
           if (i == 0 && i + 1 == count)
           {
@@ -68,6 +71,7 @@ namespace ControlCommandAnalyser
       }
 
       result = result.Replace("* ## *", "##");
+      result = result.Replace("* ,, *", ",,");
       return result;
     }
 

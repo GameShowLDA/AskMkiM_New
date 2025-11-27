@@ -73,7 +73,7 @@ namespace ControlCommandExecutor.BaseStrategies
               manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(points), PointModel.ConvertToPointStrings(localized), measured.Value));
             }
 
-            var strError = ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });
+            var strError = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });
             await messageService.ShowMessageAsync(new ShowMessageModel(strError,
               message: $"Обнаружено замыкание Rизм = {measured.Value}",
               type: ShowMessageModel.MessageType.Error)
