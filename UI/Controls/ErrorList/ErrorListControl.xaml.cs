@@ -13,6 +13,7 @@ namespace UI.Controls.ErrorList
   public partial class ErrorListControl : UserControl
   {
     public ObservableCollection<ErrorItem> Errors { get; } = new();
+    public ObservableCollection<WarningItem> Warnings { get; } = new();
     public ErrorListControl()
     {
       InitializeComponent();
@@ -55,11 +56,20 @@ namespace UI.Controls.ErrorList
     /// </summary>
     public event Action<ErrorItem>? ErrorItemDoubleClicked;
 
+    /// <summary>
+    /// Событие вызывается при двойном клике по строке с предупреждением.
+    /// </summary>
+    public event Action<WarningItem>? WarningItemDoubleClicked;
+
     private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-      if (sender is DataGrid grid && grid.SelectedItem is ErrorItem selectedError)
+      if (sender is DataGrid errorGrid && errorGrid.SelectedItem is ErrorItem selectedError)
       {
         ErrorItemDoubleClicked?.Invoke(selectedError);
+      }
+      if (sender is DataGrid warningGrid && warningGrid.SelectedItem is WarningItem selectedWarning)
+      {
+        WarningItemDoubleClicked?.Invoke(selectedWarning);
       }
     }
   }

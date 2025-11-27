@@ -213,16 +213,24 @@ namespace ControlCommandAnalyser.Parser.Ie
         // 9️⃣ Установка значений (только если всё прошло проверки)
         if (hasErrors == false)
         {
+          model.CapacityUnit = unit ?? string.Empty;
           // нижняя всегда должна быть → если есть — устанавливаем
           model.LowerLimitCapacity = lower.Value;
           model.LowerLimitCapacitySource = $"{lower.Value} {unit}";
 
           // верхняя: если есть — используем, если нет — ставим дефолт
-          double finalHigher = higher ?? maxCapacity;
+          double finalHigher = -1;
+          if (higher == null)
+          {
+            finalHigher = maxCapacity;
+            model.Warnings.Add(GeneralWarnings.DefaultCapacityHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{finalHigher} {model.CapacityUnit}"));
+          }
+          else
+          {
+            finalHigher = higher.Value;
+          }
           model.HigherLimitCapacity = finalHigher;
           model.HigherLimitCapacitySource = $"{finalHigher} {unit}";
-
-          model.CapacityUnit = unit ?? string.Empty;
         }
 
         if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitCapacity ?? higherLimitCapacity, out string err))

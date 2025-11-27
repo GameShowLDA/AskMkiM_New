@@ -9,7 +9,7 @@ namespace Errors.Models
 {
   /// <summary>
   /// Базовый тип исключения для всех системных компонентов проекта.
-  /// Поддерживает структурированное описание ошибки через <see cref="ErrorItem"/>.
+  /// Поддерживает структурированное описание ошибки через <see cref="WarningItem"/>.
   /// </summary>
   public class SystemWarningBase : Exception
   {
@@ -47,10 +47,10 @@ namespace Errors.Models
     /// </summary>
     /// <param name="code">Код ошибки.</param>
     /// <param name="description">Описание ошибки.</param>
-    public SystemWarningBase(ErrorCode code, string description)
+    public SystemWarningBase(WarningCode code, string description)
       : base(description)
     {
-      Error = new ErrorItem
+      Warning = new WarningItem
       {
         Code = code,
         Description = description
@@ -60,12 +60,16 @@ namespace Errors.Models
     /// <summary>
     /// Инициализирует новое системное исключение с вложенным исключением.
     /// </summary>
-    /// <param name="error">Объект ошибки.</param>
-    /// <param name="inner">Вложенное исключение.</param>
-    public SystemWarningBase(WarningItem warning, Warning inner)
-      : base(warning?.Description ?? "Ошибка системы.", inner)
+    /// <param name="warning">Описание ошибки.</param>
+    /// <param name="innerException">Вложенное исключение.</param>
+    public SystemWarningBase(WarningItem warning, Exception innerException)
+      : base(warning?.Description ?? "Ошибка системы.", innerException)
     {
-      Warning = warning;
+      Warning = warning ?? new WarningItem
+      {
+        Description = "Ошибка не определена.",
+        Code = WarningCode.Unknown
+      };
     }
 
     /// <summary>
@@ -78,5 +82,4 @@ namespace Errors.Models
       return $"[{code}] {Description}";
     }
   }
-}
 }

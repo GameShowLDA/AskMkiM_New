@@ -12,6 +12,7 @@ namespace ControlCommandAnalyser.Model
     public List<string> SourceLines { get; set; } = new List<string>();
 
     public List<ErrorItem> Errors { get; set; } = new List<ErrorItem>();
+    public List<WarningItem> Warnings { get; set; } = new List<WarningItem>();
 
     /// <summary>
     /// Номер строки, с которой начинается команда (в исходном тексте).

@@ -300,6 +300,10 @@ namespace UI.Controls.ProtocolNew
     {
       await MoveToLineAsync(error.SourceLineNumber);
     }
+    private async void ErrorListBoxVertical_WarningItemDoubleClicked(WarningItem warning)
+    {
+      await MoveToLineAsync(warning.SourceLineNumber);
+    }
 
 
     /// <summary>

@@ -71,5 +71,27 @@ namespace Errors.Translation
       Code = WarningCode.Gen_DefaultResistainceHighLimit,
       Description = $"В команде {command} значение верхней границы сопротивления установлено по умолчанию:{resistance}."
     };
+
+    /// <summary>
+    /// Предупреждение: значение нижней границы элктрической емкости установлено по умолчанию.
+    /// </summary>
+    public static WarningItem DefaultCapacityLowLimit(int startLineNumber, string command, string сapacity) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = WarningCode.Gen_DefaultResistainceLowLimit,
+      Description = $"В команде {command} значение нижней границы элктрической емкости установлено по умолчанию:{сapacity}."
+    };
+
+    /// <summary>
+    /// Предупреждение: значение верхней границы элктрической емкости установлено по умолчанию.
+    /// </summary>
+    public static WarningItem DefaultCapacityHighLimit(int startLineNumber, string command, string сapacity) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = WarningCode.Gen_DefaultResistainceHighLimit,
+      Description = $"В команде {command} значение верхней границы элктрической емкости установлено по умолчанию:{сapacity}."
+    };
   }
 }

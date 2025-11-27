@@ -15,6 +15,8 @@ namespace UI.Controls
     public string SecondFilePath { get; set; }
 
     public int ErrorCount { get; private set; } = 0;
+    public int WarningCount { get; private set; } = 0;
+    public int GeneralCount { get; private set; } = 0;
 
     private List<BaseCommandModel> translationModels = new List<BaseCommandModel>();
     public List<BaseCommandModel> TranslationModels
@@ -34,6 +36,10 @@ namespace UI.Controls
           {
             SetError(model.Errors);
           }
+          if (model.Warnings.Count > 0)
+          {
+            SetWarning(model.Warnings);
+          }
         }
       }
     }
@@ -42,6 +48,7 @@ namespace UI.Controls
     {
       InitializeComponent();
       ErrorListBoxVertical.ErrorItemDoubleClicked += ErrorListBoxVertical_ErrorItemDoubleClicked;
+      ErrorListBoxVertical.WarningItemDoubleClicked += ErrorListBoxVertical_WarningItemDoubleClicked;
     }
 
     private void ErrorListBoxVertical_ErrorItemDoubleClicked(ErrorItem error)
@@ -71,10 +78,40 @@ namespace UI.Controls
       }
     }
 
+    private void ErrorListBoxVertical_WarningItemDoubleClicked(WarningItem warning)
+    {
+      // Левый редактор (исходник)
+      var leftLine = warning.SourceLineNumber;
+      var leftEditor = GetLeftEditor();
+
+      if (leftLine > 0 && leftLine <= leftEditor.Document.LineCount)
+      {
+        var line = leftEditor.Document.GetLineByNumber(leftLine);
+        leftEditor.ScrollToLine(leftLine);
+        leftEditor.Select(line.Offset, line.Length);
+        leftEditor.Focus();
+      }
+
+      // Правый редактор (трансляция)
+      var rightLine = warning.FormattedLineNumber;
+      var rightEditor = GetRightEditor();
+
+      if (rightLine > 0 && rightLine <= rightEditor.Document.LineCount)
+      {
+        var line = rightEditor.Document.GetLineByNumber(rightLine);
+        rightEditor.ScrollToLine(rightLine);
+        rightEditor.Select(line.Offset, line.Length);
+        rightEditor.Focus();
+      }
+    }
+
     private void ErrorClear()
     {
       ErrorListBoxVertical.Errors.Clear();
-      ErrorCount = 0;
+      GeneralCount = 0;
+      ErrorListBoxVertical.Warnings.Clear();
+      WarningCount = 0;
+      GeneralCount = 0;
     }
 
     public void SetLeftEditor(TextEditorUI textEditorUI)
@@ -116,12 +153,28 @@ namespace UI.Controls
       foreach (ErrorItem errorItem in errorItems)
       {
         ErrorListBoxVertical.Errors.Add(errorItem);
-        ErrorCount++;
+        GeneralCount++;
+        GeneralCount++;
       }
 
-      if (ErrorCount > 0)
+      if (GeneralCount > 0)
       {
-        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
+        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок и предупреждений: {GeneralCount}");
+      }
+    }
+
+    private void SetWarning(List<WarningItem> warningItems)
+    {
+      foreach (WarningItem warningItem in warningItems)
+      {
+        ErrorListBoxVertical.Warnings.Add(warningItem);
+        WarningCount++;
+        GeneralCount++;
+      }
+
+      if (GeneralCount > 0)
+      {
+        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок и предупреждений: {GeneralCount}");
       }
     }
 
