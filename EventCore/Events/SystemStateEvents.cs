@@ -67,5 +67,25 @@ namespace EventCore.Events
         IsAdmin = isAdmin;
       }
     }
+
+    /// <summary>
+    /// Событие, обозначающее изменение состояния прав администратора.
+    /// </summary>
+    public class DebugRightsChanged : IEvent
+    {
+      /// <summary>
+      /// Указывает, активен ли режим администратора.
+      /// </summary>
+      public bool IsDebug { get; }
+
+      /// <summary>
+      /// Создаёт новое событие изменения прав администратора.
+      /// </summary>
+      /// <param name="isAdmin">Новое состояние прав администратора: true — права администратора активны; false — обычный пользователь.</param>
+      public DebugRightsChanged(bool isAdmin)
+      {
+        IsDebug = isAdmin;
+      }
+    }
   }
 }
