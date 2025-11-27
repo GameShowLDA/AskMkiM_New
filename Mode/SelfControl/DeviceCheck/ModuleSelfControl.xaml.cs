@@ -64,6 +64,7 @@ namespace Mode.SelfControl.DeviceCheck
             var dbcChassinumbers = relay.NumberChassis;
             var dbc = new SwitchingDeviceServices().GetDevicesByNumberChassis(dbcChassinumbers).FirstOrDefault();
             await relay.SelfTestManager.StartSelfCheck(ProtocolUI.GetCancellationToken(), part, ProtocolUI, dbc);
+            await dbc.ConnectableManager.ResetAsync();
             break;
 
           case RelayDeviceType.SwitchingDevice when device is ISwitchingDevice switcher:

@@ -280,7 +280,7 @@ namespace NewCore.Function.ModuleRelayControl
 
       var cmd = new DeviceCommand(81, (int)bus, nubmerPoint);
       string response = await _moduleRelayControl.DeviceProtocol.QueryAsync(cmd.ToString(), timeout: 1000);
-      var result = response.Contains(cmd.ToString());
+      var result = response.Contains(cmd.ToString()[..^1]);
       if (result)
       {
         if (bus == BusPoint.A)

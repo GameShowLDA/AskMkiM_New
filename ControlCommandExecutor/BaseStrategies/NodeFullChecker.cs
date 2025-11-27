@@ -52,7 +52,9 @@ namespace ControlCommandExecutor.BaseStrategies
 
         await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {chainModels.ToString()}"), IsBlockStart: true);
 
-        await SwitichingFromBToA(chainModels, context.MessageService);
+        await DisconnectFromBusBAsync(chainModels, context.MessageService);
+        await ConnectToBusAAsync(chainModels, context.MessageService);
+
         var answer = await context.PerformMeasurementAsync(context.Resistance, context.MessageService, context.MessageService.GetCancellationToken());
 
         if (!answer.Result)
@@ -60,8 +62,10 @@ namespace ControlCommandExecutor.BaseStrategies
           context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.NodeExecutePointError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", PointModel.ConvertToPointStrings(chainModels.PointModels), ($"{answer.Value} МОм (>{context.Resistance} МОм)")));
           ErrorsPoints.Add(chainModels);
         }
+       
+        await DisconnectFromBusAAsync(chainModels, context.MessageService);
+        await ConnectToBusBAsync(chainModels, context.MessageService);
 
-        await SwitichingFromAToB(chainModels, context.MessageService);
       }
 
       if (ErrorsPoints.Count > 0)
@@ -303,28 +307,5 @@ namespace ControlCommandExecutor.BaseStrategies
       }
     }
 
-    private static async Task SwitichingFromAToB(ChainModel chain, IUserMessageService messageService)
-    {
-      foreach (var point in chain.PointModels)
-      {
-        var module = EquipmentService.GetModuleByPoint(point);
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.B, point.PointNumber, messageService), messageService))
-        {
-          throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
-        }
-      }
-    }
-
-    private static async Task SwitichingFromBToA(ChainModel chain, IUserMessageService messageService)
-    {
-      foreach (var point in chain.PointModels)
-      {
-        var module = EquipmentService.GetModuleByPoint(point);
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.A, point.PointNumber, messageService), messageService))
-        {
-          throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
-        }
-      }
-    }
   }
 }
