@@ -1,18 +1,20 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using DTO.Enum;
+using Errors.Translation;
 
-namespace ControlCommandAnalyser.Model
+namespace ControlCommandAnalyser.Model.Ks
 {
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
-   ControlCommandAnalyser.AlgorithmKey.ЗР,
-   ControlCommandAnalyser.AlgorithmKey.ЗС,
-   ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П,
-    ControlCommandAnalyser.AlgorithmKey.И,
-    ControlCommandAnalyser.AlgorithmKey.Т,
-   ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
-  public class PrCommandModel : BaseCommandModel, IError, IHasScheme
+  /// <summary>
+  /// Модель для команды КС (контроль сопротивения).
+  /// </summary>
+  [AllowedKeys(TranslationKey.AlgorithmKey.Б, TranslationKey.AlgorithmKey.Д)]
+  [MeasurementDevice(MeasurementDevice.Multimeter)]
+  public class KsCommandModel : BaseCommandModel
   {
-    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
+
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.KC).DisplayName;
 
     /// <summary>
     /// Единицы измерения сопротивления (например, "МОм", "кОм" и т.п.)
@@ -50,14 +52,13 @@ namespace ControlCommandAnalyser.Model
     public string? UnparsedParameters { get; set; }
 
     /// <summary>
-    /// Значение времени (например, "1c").
-    /// </summary>
-    public string? TimeSource { get; set; }
-    public double? Time { get; set; }
-
-    /// <summary>
     /// Ошибки связанные с замыканием точек.
     /// </summary>
-    public override IPointError PointErrors => new PrErrors();
+    public override IPointError PointErrors => new KsErrors();
+
+    /// <summary>
+    /// Сбор данных в сообщение.
+    /// </summary>
+    public override IDislpayInfo BuildDislpayInfo => new KsMessageBuild();
   }
 }

@@ -192,10 +192,22 @@ namespace UI.Controls.ProtocolNew
           break;
 
         case Key.F5:
+          // 1. Если запуск доступен → запускаем
           if (StartButtonElement.Visibility == Visibility.Visible)
           {
             KeyboardManager.OnStartPressed?.Invoke();
           }
+          // 2. Если можно продолжить → Continue
+          else if (ContinueButtonElement.Visibility == Visibility.Visible)
+          {
+            KeyboardManager.OnContinuePressed?.Invoke();
+          }
+          // 3. Если можно поставить на паузу → Pause
+          else if (PauseButtonElement.Visibility == Visibility.Visible)
+          {
+            KeyboardManager.OnPausePressed?.Invoke();
+          }
+
           e.Handled = true;
           break;
 

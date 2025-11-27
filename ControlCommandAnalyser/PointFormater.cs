@@ -1,14 +1,16 @@
 ﻿using ControlCommandAnalyser.Model.Chains;
 using DTO.Base.Models;
 using DTO.Service;
+using System.Threading.Tasks;
 
-namespace ControlCommandExecutor
+namespace ControlCommandAnalyser
 {
-  internal static class PointFormater
+  public static class PointFormater
   {
 
-    internal static string GetFormatDisconnectPoint(List<ChainModel> chainModels)
+    public static async Task<string> GetFormatDisconnectPoint(List<ChainModel> chainModels)
     {
+      // TODO : вот тут надо пересмотреть метод. Так как замыкание, он должен выдать как одну цепь, а не несколько тобишь всего две * вначале одна и в конце одна
       var formatPoint = new List<string>();
 
 
@@ -19,7 +21,8 @@ namespace ControlCommandExecutor
         var chainStr = string.Empty;
         for (int i = 0; i < count; i++)
         {
-          var point = item.PointModels[i].Mnemonic;
+          string point = item.PointModels[i].Mnemonic;
+          point += await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $" [{item.PointModels[i].ToString()}]" : string.Empty;
 
           if (i == 0 && i + 1 == count)
           {
@@ -68,29 +71,28 @@ namespace ControlCommandExecutor
       }
 
       result = result.Replace("* ## *", "##");
+      result = result.Replace("* ,, *", ",,");
       return result;
     }
 
-    internal static string GetFormatConnectPoint(ChainModel chainModels)
+    public static async Task<string> GetFormatConnectPoint(ChainModel chainModels)
     {
       var result = string.Empty;
       var count = chainModels.PointModels.Count;
+
 
       for (int i = 0; i < count; i++)
       {
         var point = chainModels.PointModels[i].Mnemonic;
 
-        result += $"*{point}*";
-        //if (i + 1 != count)
-        //{
-        //  result += $" ** ";
-        //}
+        var machineAddress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $" [{point.ToString()}]" : string.Empty;
+        result += $"*{point}{machineAddress}*";
       }
 
       return result;
     }
 
-    internal static async Task MessageResult(List<ShowMessageModel> showMessageModels, IUserMessageService messageService)
+    public static async Task MessageResult(List<ShowMessageModel> showMessageModels, IUserMessageService messageService)
     {
       if (showMessageModels.Count > 0)
       {

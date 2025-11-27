@@ -9,12 +9,15 @@ namespace AppConfiguration
     static AdminConfig()
     {
       EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => IsAdmin = e.IsAdmin);
+      EventAggregator.Subscribe<SystemStateEvents.DebugRightsChanged>(e => IsDebug = e.IsDebug);
     }
 
     /// <summary>
     /// Флаг, указывающий, запущено ли приложение с правами администратора.
     /// </summary>
     static internal bool IsAdmin { get; set; }
+
+    static internal bool IsDebug { get; set; }
 
     /// <summary>
     /// Флаг, указывающий перехват Exception в режиме админа.
@@ -39,5 +42,24 @@ namespace AppConfiguration
     /// <see langword="false"/> — если без них.
     /// </returns>
     public static async Task<bool> GetAdminRights() => await Task.Run(() => IsAdmin);
+
+    /// <summary>
+    /// Асинхронно устанавливает статус прав администратора и уведомляет систему.
+    /// </summary>
+    /// <param name="enable">
+    /// <see langword="true"/>, если запущено с правами администратора;
+    /// <see langword="false"/> — если в обычном режиме.
+    /// </param>
+    public static async Task SetDebugRights(bool enable) =>
+      await Task.Run(() => SystemStateEventAdapter.RaiseDebugRightsChanged(enable));
+
+    /// <summary>
+    /// Асинхронно возвращает текущий статус прав администратора.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/>, если приложение работает с правами администратора;
+    /// <see langword="false"/> — если без них.
+    /// </returns>
+    public static bool GetDebugRights() =>  IsDebug;
   }
 }

@@ -1,9 +1,11 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Ks;
 using ControlCommandAnalyser.Parser.HelperParserParametr; // Для LoggerUtility
 using DTO.Enum;
-using System.Text.RegularExpressions;
 using Errors.Translation;
+using System.Text.RegularExpressions;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Kc
@@ -11,7 +13,7 @@ namespace ControlCommandAnalyser.Parser.Kc
   /// <summary>
   /// Парсер для команд КС (контроль сопротивления).
   /// </summary>
-  [AllowedKeys(AlgorithmKey.Б, AlgorithmKey.Д)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Б, TranslationKey.AlgorithmKey.Д)]
   internal class KcCommandParser : ICommandParser
   {
     public bool CanParse(MnemonicIdentifier mnemonic) => mnemonic.Mnemonic.MatchesEnum(Measurement.MeasurementTypeCommand.KC);

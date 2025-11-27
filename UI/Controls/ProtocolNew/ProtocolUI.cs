@@ -1,16 +1,17 @@
-﻿using System.Globalization;
+﻿using AppConfiguration.Protocol;
+using DTO.Base.Models;
+using DTO.Service;
+using DTO.Settings.SettingsModels;
+using Errors.Models;
+using Message;
+using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using AppConfiguration.Protocol;
-using DTO.Base.Models;
-using DTO.Service;
-using Errors.Models;
-using DTO.Settings.SettingsModels;
-using Message;
 using Utilities;
 using static AppConfiguration.Protocol.ProtocolConfig;
 using static AppConfiguration.SystemStateManager;
@@ -226,13 +227,28 @@ namespace UI.Controls.ProtocolNew
     /// </summary>
     /// <param name="showMessageModel">Модель сообщения.</param>
     /// <returns>Возвращает режим по шагам.</returns>
-    public async Task ShowMessageAsync(ShowMessageModel showMessageModel, bool IsBlockStart = false, bool SkipStepModeCheck = false, bool skipPause = false)
+    public async Task ShowMessageAsync(ShowMessageModel showMessageModel, bool IsBlockStart = false, bool SkipStepModeCheck = false, bool skipPause = false,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0)
     {
       await CheckBlockStart(IsBlockStart);
 
       if (await GetTimeStart() && showMessageModel.Status != MessageType.Info && showMessageModel.Status != MessageType.Command)
       {
         showMessageModel.Time = _stopwatch.Elapsed.ToString(@"mm\:ss\.fff", CultureInfo.InvariantCulture);
+      }
+
+      if (AppConfiguration.AdminConfig.GetDebugRights())
+      {
+        if (string.IsNullOrEmpty(showMessageModel.Debug))
+        {
+          showMessageModel.Debug = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
+        }
+        else
+        { 
+          showMessageModel.Debug += $"|| {Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
+        }
       }
 
       await ShouldShowDetailedProtocol(showMessageModel);
@@ -274,9 +290,9 @@ namespace UI.Controls.ProtocolNew
       await protocolTextBox.AppendEmptyLineAsync();
     }
 
-    public int GetLastLineNumberAsync()
+    public int GetLastLineNumber()
     {
-      return protocolTextBox.GetLastLineNumberAsync();
+      return protocolTextBox.GetLastLineNumber();
     }
 
     public async Task MoveToLineAsync(int lineNumber)

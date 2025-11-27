@@ -49,5 +49,17 @@ namespace EventCore.Adapters
     /// </example>
     public static void RaiseAdminRightsChanged(bool isAdmin) =>
       EventAggregator.Publish(new SystemStateEvents.AdminRightsChanged(isAdmin));
+
+    /// <summary>
+    /// Генерирует событие изменения прав отладки (для программисотов).
+    /// </summary>
+    /// <param name="isDebug">Новое состояние прав отладки: true — активен режим отладки; false — обычный пользователь.</param>
+    /// <example>
+    /// <code>
+    /// SystemStateEventAdapter.RaiseAdminRightsChanged(true);
+    /// </code>
+    /// </example>
+    public static void RaiseDebugRightsChanged(bool isDebug) =>
+      EventAggregator.Publish(new SystemStateEvents.DebugRightsChanged(isDebug));
   }
 }

@@ -21,7 +21,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <param name="value">Ожидаемое значение.</param>
     /// <param name="userMessageService">Элемент управления для вывода сообщений.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    internal delegate Task<bool> PerformMeasurementAsync(double value, IUserMessageService userMessageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW);
+    internal delegate Task<(bool Result, string Value)> PerformMeasurementAsync(double value, IUserMessageService userMessageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW);
     static private int step = 0;
 
     /// <summary>
@@ -59,7 +59,8 @@ namespace ControlCommandExecutor.BaseStrategies
           await ConnectToBusAAsync(point, messageService);
         }
 
-        if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
+        var measured = await performMeasurementAsync(resistance, messageService, cancellationToken);
+        if (!measured.Result)
         {
           step = 0;
           var chains = EquipmentService.GetDisconnectChainsBefore(schemeModel, points);
@@ -69,19 +70,21 @@ namespace ControlCommandExecutor.BaseStrategies
 
             if (baseCommandModel.PointErrors != null)
             {
-              manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(points), PointModel.ConvertToPointStrings(localized)));
+              manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(points), PointModel.ConvertToPointStrings(localized), measured.Value));
             }
 
-            var strError = PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });
-            await messageService.ShowMessageAsync(new ShowMessageModel(strError,
-              message: "Обнаружено замыкание",
-              type: ShowMessageModel.MessageType.Error)
-            { IndentLevel = 3 });
+            var strError = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });
 
-            ErrorMessage.Add(new ShowMessageModel(strError,
-              message: "Обнаружено замыкание",
+            var err = new ShowMessageModel(strError,
+              message: $"Обнаружено замыкание Rизм = {measured.Value}",
               type: ShowMessageModel.MessageType.Error)
-            { IndentLevel = 3 });
+            { IndentLevel = 3 };
+
+            await messageService.ShowMessageAsync(err);
+
+            ErrorMessage.Add(err);
+            await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {err.ToString()}"));
+
           }
           else
           {
@@ -142,7 +145,8 @@ namespace ControlCommandExecutor.BaseStrategies
         await messageService.ShowMessageAsync(new ShowMessageModel("Отключение левой части группы точек"));
         await DisconnectAllFromBusBAsync(leftPart, messageService);
 
-        if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
+        var measured = await performMeasurementAsync(resistance, messageService, cancellationToken);
+        if (!measured.Result)
         {
           if (rightPart.Count > 1)
           {
@@ -168,7 +172,8 @@ namespace ControlCommandExecutor.BaseStrategies
           }
           else
           {
-            if (!await performMeasurementAsync(resistance, messageService, cancellationToken))
+            measured = await performMeasurementAsync(resistance, messageService, cancellationToken);
+            if (!measured.Result)
             {
               errorPoint = leftPart[0];
               return errorPoint;

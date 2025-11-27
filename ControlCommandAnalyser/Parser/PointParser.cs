@@ -183,8 +183,7 @@ namespace ControlCommandAnalyser.Parser
         }
       }
       if (count < 2 && count != 0
-                && (mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.EHT).DisplayName
-                || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PR).DisplayName
+                && (mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PR).DisplayName
                 || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.CI).DisplayName
                 || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PI).DisplayName))
       {

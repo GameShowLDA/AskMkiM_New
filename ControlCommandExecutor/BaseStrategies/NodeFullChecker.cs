@@ -51,9 +51,8 @@ namespace ControlCommandExecutor.BaseStrategies
 
 
         await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {chainModels.ToString()}"), IsBlockStart: true);
-        await DisconnectFromBusBAsync(chainModels, context.MessageService);
-        await ConnectToBusAAsync(chainModels, context.MessageService);
 
+        await SwitichingFromBToA(chainModels, context.MessageService);
         var answer = await context.PerformMeasurementAsync(context.Resistance, context.MessageService, context.MessageService.GetCancellationToken());
 
         if (!answer.Result)
@@ -62,8 +61,7 @@ namespace ControlCommandExecutor.BaseStrategies
           ErrorsPoints.Add(chainModels);
         }
 
-        await DisconnectFromBusAAsync(chainModels, context.MessageService);
-        await ConnectToBusBAsync(chainModels, context.MessageService);
+        await SwitichingFromAToB(chainModels, context.MessageService);
       }
 
       if (ErrorsPoints.Count > 0)
@@ -75,7 +73,6 @@ namespace ControlCommandExecutor.BaseStrategies
         }
 
         await context.MessageService.ShowMessageAsync(new ShowMessageModel("Анализ на наличие короткого замыкания между точками"), IsBlockStart: true);
-
         var chains = await FindAllShortCircuitChainsAsync(context.PerformMeasurementAsync, ErrorsPoints, context.Resistance, context.MessageService);
 
 
@@ -85,11 +82,13 @@ namespace ControlCommandExecutor.BaseStrategies
 
         foreach (var chain in chains)
         {
-          var chainStr = PointFormater.GetFormatDisconnectPoint(chain);
-
-          ErrorMessage.Add(new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 });
+          var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
 
           context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr));
+
+          var err = new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          ErrorMessage.Add(err);
+          await context.MessageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {err.ToString()}"));
         }
       }
 
@@ -138,7 +137,6 @@ namespace ControlCommandExecutor.BaseStrategies
         if (visited.Contains(point))
           continue;
 
-        // Найти всю компоненту связности, к которой относится эта точка
         var chain = await FindChainAsync(performMeasurementAsync, point, faultyPoints, resistance, messageService, visited);
 
         if (chain.Count > 1)
@@ -181,7 +179,6 @@ namespace ControlCommandExecutor.BaseStrategies
           if (visited.Contains(candidate) || candidate.Equals(current))
             continue;
 
-          // Проверяем только потенциально ещё не найденные связи!
           bool isConnected = await IsShortCircuitedAsync(performMeasurementAsync, current, candidate, resistance, messageService);
           if (isConnected)
           {
@@ -300,6 +297,30 @@ namespace ControlCommandExecutor.BaseStrategies
       {
         var module = EquipmentService.GetModuleByPoint(point);
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+        {
+          throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        }
+      }
+    }
+
+    private static async Task SwitichingFromAToB(ChainModel chain, IUserMessageService messageService)
+    {
+      foreach (var point in chain.PointModels)
+      {
+        var module = EquipmentService.GetModuleByPoint(point);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+        {
+          throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        }
+      }
+    }
+
+    private static async Task SwitichingFromBToA(ChainModel chain, IUserMessageService messageService)
+    {
+      foreach (var point in chain.PointModels)
+      {
+        var module = EquipmentService.GetModuleByPoint(point);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.A, point.PointNumber, messageService), messageService))
         {
           throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
         }

@@ -64,6 +64,7 @@ namespace DTO.Base.Models
     public string Message { get; set; }
 
     public string Time { get; set; }
+    public string Debug { get; set; }
 
     /// <summary>
     /// Получает или задает цвет заголовка сообщения.
@@ -260,7 +261,7 @@ namespace DTO.Base.Models
     /// <param name="headerColor">Цвет заголовка сообщения (по умолчанию null).</param>
     /// <param name="message">Основной текст сообщения (по умолчанию null).</param>
     /// <param name="messageColor">Цвет основного текста сообщения (по умолчанию null).</param>
-    public ShowMessageModel(string header = null, Color? headerColor = null, string message = null, Color? messageColor = null, MessageType? type = MessageType.Info) : this()
+    public ShowMessageModel(string header = null, Color? headerColor = null, string message = null, string debug = null, Color? messageColor = null, MessageType? type = MessageType.Info) : this()
     {
       if (headerColor != null)
       {

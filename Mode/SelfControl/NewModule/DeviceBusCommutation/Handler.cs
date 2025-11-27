@@ -89,7 +89,7 @@ namespace Mode.SelfControl.NewModule.DeviceBusCommutation
     {
       LogInformation($"Запущен метод завершения самоконтроля");
       await ProtocolSelfCheckControl.FinalizeAsync();
-      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("\tСамоконтроль", null, $"[{ShowMessageModel.SuccessMessage.Title}]", ShowMessageModel.SuccessMessage.TitleColor));
+      await ProtocolSelfCheckControl.ShowMessageAsync(new ShowMessageModel("\tСамоконтроль", null, $"[{ShowMessageModel.SuccessMessage.Title}]", messageColor: ShowMessageModel.SuccessMessage.TitleColor));
       LogInformation($"Завершён метод завершения самоконтроля");
     }
     #endregion

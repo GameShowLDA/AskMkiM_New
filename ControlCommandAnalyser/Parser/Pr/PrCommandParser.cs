@@ -1,5 +1,7 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Pr;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
 using Errors.Translation;
@@ -276,8 +278,8 @@ namespace ControlCommandAnalyser.Parser.Pr
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
-        if(model.AlgorithmKey.Contains(AlgorithmKey.ЗР.ToString()) 
-          && pointErrors.FirstOrDefault(item=>item.Code==Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges)!=null)
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.ЗР.ToString())
+          && pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges) != null)
         {
           pointErrors.Remove(pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges));
         }
@@ -311,27 +313,27 @@ namespace ControlCommandAnalyser.Parser.Pr
         // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
         int idxStarInFirstLine = remainder.IndexOf('*');
         remainder = idxStarInFirstLine >= 0 ? remainder[..idxStarInFirstLine].Trim() : remainder.Trim();
-        if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
           model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
         }
-        if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
         }
       }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+      else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
       {
         // находим цепи точек из предыдущей команды проверки
         model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
 
-        if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
         }
       }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+      else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
       {
         model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
       }

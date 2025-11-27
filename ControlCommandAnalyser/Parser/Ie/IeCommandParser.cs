@@ -1,10 +1,11 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Ie;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
+using Errors.Translation;
 using System.Text.RegularExpressions;
-using System.Windows;
 using Utilities;
 
 namespace ControlCommandAnalyser.Parser.Ie
@@ -12,7 +13,7 @@ namespace ControlCommandAnalyser.Parser.Ie
   /// <summary>
   /// Парсер для команд ИЕ (измерение емкости).
   /// </summary>
-  [AllowedKeys(AlgorithmKey.Д)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Д)]
   internal class IeCommandParser : ICommandParser
   {
     public bool CanParse(MnemonicIdentifier mnemonic)

@@ -2,6 +2,7 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
@@ -84,6 +85,7 @@ namespace ControlCommandExecutor.Executors
       if (command.AlgorithmKey.Contains("К"))
       {
         BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+        methodExecutionContext.PerformMeasurementAsync = measure;
         var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
@@ -105,7 +107,7 @@ namespace ControlCommandExecutor.Executors
         var errMes = await BaseStrategies.NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), command.Resistance.Value);
         errorMessage.AddRange(errMes);
       }
-      await PointFormater.MessageResult(errorMessage, context.Console);
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
 
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
@@ -115,26 +117,12 @@ namespace ControlCommandExecutor.Executors
       }
       if (errorMessage.Count > 0)
       {
-        if (!string.IsNullOrEmpty(message))
-        {
-          if (protocolModel.Errors.Keys.Contains(nameCommand + " " + 1))
-          {
-            protocolModel.Errors.Add(nameCommand + " " + 2, errorMessage);
-          }
-          else
-          {
-            protocolModel.Errors.Add(nameCommand + " " + 1, errorMessage);
-          }
-        }
+        protocolModel.Errors.Add(nameCommand, errorMessage);
       }
     }
 
     private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserMessageService userMessageService)
     {
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await dbc.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-      {
-        throw ConnectionExceptionAdapter.InitializeFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
-      }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectBreakdownTester(userMessageService), userMessageService))
       {
         throw ConnectorExceptionFactory.ConnectBreakdownFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
@@ -144,10 +132,6 @@ namespace ControlCommandExecutor.Executors
     {
       foreach (var module in relaySwitchModules)
       {
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await module.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-        {
-          throw ConnectionExceptionAdapter.InitializeFailed(module.Name, module.NumberChassis, module.Number);
-        }
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: userMessageService), userMessageService))
         {
           throw BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
@@ -166,10 +150,6 @@ namespace ControlCommandExecutor.Executors
       int number = breakDown.Number;
 
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка пробойной установки"));
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-      {
-        throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
-      }
 
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.IrManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
       {
@@ -197,7 +177,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private static async Task<bool> NodeAccumulationPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW)
+    private static async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
 
@@ -210,7 +190,7 @@ namespace ControlCommandExecutor.Executors
         {
           await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления изоляции", message: $"{answer} МОм", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
-        return result;
+        return (result, answer.ToString());
       }, messageService);
 
       return result;
@@ -231,7 +211,15 @@ namespace ControlCommandExecutor.Executors
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Измерение сопротивления изоляции"));
 
-        answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, messageService);
+        if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
+        {
+          answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, messageService);
+        }
+        else
+        {
+          answer = await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? new Random().Next((int)value / 2, (int)value * 2) : value;
+        }
+
         var type = ShowMessageModel.MessageType.Success;
         if (answer < value)
         {

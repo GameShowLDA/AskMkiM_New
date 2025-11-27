@@ -271,6 +271,23 @@ namespace UI.Controls.TextEditor
     }
 
     /// <summary>
+    /// Переходит к указанной строке, разворачивает folding при необходимости
+    /// и прокручивает редактор так, чтобы строка была видна.
+    /// </summary>
+    /// <param name="lineNumber">Номер строки (1-based).</param>
+    public void GoToLine(int lineNumber)
+    {
+      if (lineNumber > 0 && lineNumber <= textEditor.Document.LineCount)
+      {
+        var line = textEditor.Document.GetLineByNumber(lineNumber);
+        textEditor.ScrollToLine(lineNumber);
+        textEditor.Select(line.Offset, line.Length);
+        textEditor.Focus();
+      }
+    }
+
+
+    /// <summary>
     /// Получает область текста редактора.
     /// </summary>
     /// <value>

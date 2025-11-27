@@ -1,16 +1,17 @@
-﻿using System.Text.RegularExpressions;
+﻿using DTO.Enum;
+using System.Text.RegularExpressions;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
   public static partial class PiSiSplitter
   {
     private static readonly HashSet<string> SiKeys = new(StringComparer.OrdinalIgnoreCase)
-    { AlgorithmKey.К.ToString(),
-      AlgorithmKey.С.ToString(),
-      AlgorithmKey.П.ToString(),
-      AlgorithmKey.И.ToString(),
-      AlgorithmKey.Г.ToString(),
-      AlgorithmKey.Т1.ToString() };
+    { TranslationKey.AlgorithmKey.К.ToString(),
+      TranslationKey.AlgorithmKey.С.ToString(),
+      TranslationKey.AlgorithmKey.П.ToString(),
+      TranslationKey.AlgorithmKey.И.ToString(),
+      TranslationKey.AlgorithmKey.Г.ToString(),
+      TranslationKey.AlgorithmKey.Т1.ToString() };
 
     private enum TokType { Volt, Time, Res, Key, Points, Comma, Ws, Other }
 
@@ -332,12 +333,56 @@ namespace ControlCommandAnalyser.Parser.Pi
     private static readonly Regex BadInnerWhitespaceRegex =
       new(@"(?:\t| {2,})", RegexOptions.Compiled);
 
-    /// <summary>
-    /// Разделение СИ/ПИ в "строгом" режиме:
-    /// - граница = 2+ пробелов или таб;
-    /// - внутри частей допускается максимум один пробел (запятая+пробел), табы запрещены;
-    /// - если строгая граница не найдена — fallback к обычной грамматике SplitSiFromPi.
-    /// </summary>
+    ///// <summary>
+    ///// Разделение СИ/ПИ в "строгом" режиме:
+    ///// - граница = 2+ пробелов или таб;
+    ///// - внутри частей допускается максимум один пробел (запятая+пробел), табы запрещены;
+    ///// - если строгая граница не найдена — fallback к обычной грамматике SplitSiFromPi.
+    ///// </summary>
+    //public static (string SiPart, string PiPart, List<string> Errors) SplitSiFromPiStrict(string input)
+    //{
+    //  var errors = new List<string>();
+
+    //  if (string.IsNullOrWhiteSpace(input))
+    //    return ("", "", errors);
+
+    //  if (StrictWhitespaceMode)
+    //  {
+    //    var m = StrictBoundaryRegex.Matches(input);
+
+    //    if (m.Count >= 1)
+    //    {
+    //      // Берём ПЕРВУЮ «жёсткую» границу как разделитель СИ/ПИ.
+    //      // (Опционально: если m.Count > 1 — добавим предупреждение.)
+    //      if (m.Count > 1)
+    //        errors.Add("E-WS-AMB: найдено несколько жёстких разделителей, используется первый.");
+
+    //      int cutStart = m[0].Index;
+    //      int cutLen = m[0].Length;
+
+    //      var siRaw = input[..cutStart];
+    //      var piRaw = input[(cutStart + cutLen)..];
+
+    //      // Проверка «внутренней» чистоты пробелов
+    //      if (BadInnerWhitespaceRegex.IsMatch(siRaw))
+    //        errors.Add("E-WS-SI: внутри параметров СИ есть таб/двойные пробелы (недопустимо в strict).");
+
+    //      if (BadInnerWhitespaceRegex.IsMatch(piRaw))
+    //        errors.Add("E-WS-PI: внутри параметров ПИ есть таб/двойные пробелы (недопустимо в strict).");
+
+    //      // Нормализуем вид СИ (запятые, один пробел)
+    //      var si = NormalizeSi(siRaw);
+    //      var pi = piRaw.Trim(); // ПИ вид оставляем как в исходнике
+
+    //      return (si, pi, errors);
+    //    }
+    //  }
+
+    //  // Fallback к «умной» грамматике, если строгая граница не найдена
+    //  var (siPart, piPart) = SplitSiFromPi(input);
+    //  return (siPart, piPart, errors);
+    //}
+
     public static (string SiPart, string PiPart, List<string> Errors) SplitSiFromPiStrict(string input)
     {
       var errors = new List<string>();
@@ -345,41 +390,70 @@ namespace ControlCommandAnalyser.Parser.Pi
       if (string.IsNullOrWhiteSpace(input))
         return ("", "", errors);
 
-      if (StrictWhitespaceMode)
+      // 1) Хвост после ПИ / СИ
+      var matchAfterPi = Regex.Match(input, @"\bПИ\b\s*(.*)", RegexOptions.IgnoreCase);
+      var matchAfterSi = Regex.Match(input, @"\bСИ\b\s*(.*)", RegexOptions.IgnoreCase);
+
+      string tail;
+
+      if (matchAfterPi.Success)
+        tail = matchAfterPi.Groups[1].Value;
+      else if (matchAfterSi.Success)
+        tail = matchAfterSi.Groups[1].Value;
+      else
       {
-        var m = StrictBoundaryRegex.Matches(input);
-
-        if (m.Count >= 1)
-        {
-          // Берём ПЕРВУЮ «жёсткую» границу как разделитель СИ/ПИ.
-          // (Опционально: если m.Count > 1 — добавим предупреждение.)
-          if (m.Count > 1)
-            errors.Add("E-WS-AMB: найдено несколько жёстких разделителей, используется первый.");
-
-          int cutStart = m[0].Index;
-          int cutLen = m[0].Length;
-
-          var siRaw = input[..cutStart];
-          var piRaw = input[(cutStart + cutLen)..];
-
-          // Проверка «внутренней» чистоты пробелов
-          if (BadInnerWhitespaceRegex.IsMatch(siRaw))
-            errors.Add("E-WS-SI: внутри параметров СИ есть таб/двойные пробелы (недопустимо в strict).");
-
-          if (BadInnerWhitespaceRegex.IsMatch(piRaw))
-            errors.Add("E-WS-PI: внутри параметров ПИ есть таб/двойные пробелы (недопустимо в strict).");
-
-          // Нормализуем вид СИ (запятые, один пробел)
-          var si = NormalizeSi(siRaw);
-          var pi = piRaw.Trim(); // ПИ вид оставляем как в исходнике
-
-          return (si, pi, errors);
-        }
+        errors.Add("E-NOT-PI-SI");
+        return ("", "", errors);
       }
 
-      // Fallback к «умной» грамматике, если строгая граница не найдена
-      var (siPart, piPart) = SplitSiFromPi(input);
-      return (siPart, piPart, errors);
+      // Regex напряжений: 10В, +50В, -25В, 100В,
+      var voltageRegex = new Regex(@"[+-]?\d+\s*В\s*,?", RegexOptions.IgnoreCase);
+
+      var allVoltages = voltageRegex.Matches(tail);
+      if (allVoltages.Count == 0)
+      {
+        errors.Add("E-NO-VOLTAGE");
+        return ("", "", errors);
+      }
+
+      // 2) Из всех напряжений выбираем только те,
+      //    перед которыми НЕТ запятой.
+      var validSplitPoints = new List<Match>();
+
+      foreach (Match m in allVoltages)
+      {
+        int idx = m.Index;
+
+        // Если начинается с 0 — не подходит
+        if (idx == 0)
+          continue;
+
+        // Берём символ перед напряжением
+        char before = tail[idx - 1];
+
+        // Считаем допустимым split, если символ перед номером напряжения НЕ запятая.
+        if (before != ',')
+          validSplitPoints.Add(m);
+      }
+
+      if (validSplitPoints.Count == 0)
+      {
+        // Ни одного безопасного разделителя → строка выглядит как одиночная команда
+        string piOnly = tail.Trim();
+        return ("", piOnly, errors);
+      }
+
+      // 3) Берём ПОСЛЕДНИЙ валидный split point
+      var split = validSplitPoints.Last();
+      int splitIndex = split.Index;
+
+      var siRaw = tail[..splitIndex];
+      var piRaw = tail[splitIndex..];
+
+      var si = NormalizeSi(siRaw).Trim();
+      var pi = piRaw.Trim();
+
+      return (si, pi, errors);
     }
 
     /// <summary>

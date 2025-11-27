@@ -98,10 +98,18 @@
                 <!--Результат измерения-->
                 <DataGridTextColumn x:Name="MeasureResult" Header="Результат измерения" Binding="{Binding MeasureResult}" Width="150" FontFamily="{DynamicResource WinstonLight}" FontSize="14" Visibility="Collapsed"/>
                 <!-- Описание ошибки -->
-                <DataGridTextColumn Header="Описание" Width="*"
+                <DataGridTextColumn Header="Описание" Width="Auto"
                     Binding="{Binding Description}"
                     ElementStyle="{StaticResource CellTextTrim}"
                     FontFamily="{DynamicResource WinstonLight}" FontSize="14"/>
+
+                <DataGridTextColumn Header="DEBUG" Width="*"
+                                    x:Name="DebugColumn"
+                    Binding="{Binding DebugInfo}"
+                    ElementStyle="{StaticResource CellTextTrim}"
+                    FontFamily="{DynamicResource WinstonLight}" FontSize="14"
+                    Visibility="Collapsed"
+                                    />
             </DataGrid.Columns>
 
         </DataGrid>

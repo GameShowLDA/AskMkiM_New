@@ -37,9 +37,9 @@ namespace ControlCommandAnalyser.Parser.Pi
       }
       else
       {
-        var maxDCWVoltage = Measurement.MeasurementTypeCommand.PI_DCW.GetDisplayInfo().UpperLimit; ;// постоянный ток
-        var minVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().LowerLimit; ;
-        var maxACWVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().UpperLimit; ; // переменный ток
+        var maxDCWVoltage = Measurement.MeasurementTypeCommand.PI_DCW.GetDisplayInfo().UpperLimit; // постоянный ток
+        var minVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().LowerLimit;
+        var maxACWVoltage = Measurement.MeasurementTypeCommand.PI_ACW.GetDisplayInfo().UpperLimit; // переменный ток
 
         var rmCommandModel = CommandsModel.GetRMModel();
 
@@ -76,13 +76,14 @@ namespace ControlCommandAnalyser.Parser.Pi
         var remainder = head.Success ? head.Groups[1].Value : body;
 
         LoggerUtility.LogDebug($"Хвост после ПИ: \"{remainder}\"");
-        var (siPart, piPart, errs) = PiSiSplitter.SplitSiFromPiStrict(remainder);
+        var (siPart, piPart, errs) = PiSiSplitter.SplitSiFromPiStrict(body);
         if (errs.Count > 0)
         {
           LoggerUtility.LogWarning($"Strict WS issues: {string.Join(" | ", errs)}");
         }
 
         var modelSi = new SiCommandModel();
+        modelSi.SourceLines = new List<string> { siPart };
         var siRemainder = SiCommandParser.ManageSiParametersParse(modelSi, commandNumber, mnemonic, numberLine, siPart, breakDown);
 
         // Если СИ что-то не допарсила, логни отдельно (в модель СИ, не ПИ)
@@ -98,7 +99,6 @@ namespace ControlCommandAnalyser.Parser.Pi
         {
           model.Errors.AddRange(modelSi.Errors);
         }
-
 
         var remainderPi = piPart;
 
@@ -199,20 +199,22 @@ namespace ControlCommandAnalyser.Parser.Pi
         }
         else
         {
-          LoggerUtility.LogError($"В команде ПИ не указано напряжение.");
-          model.Errors.Add(PiErrors.EmptyVoltage(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Voltage = minVoltage;
+          model.VoltageSource = model.Voltage.Value.ToString() + "В";
+          LoggerUtility.LogDebug($"В команде ПИ не указано напряжение. Установлено значение по умолчанию {minVoltage} В.");
+          //model.Errors.Add(PiErrors.EmptyVoltage(numberLine, $"{commandNumber} {mnemonic}"));
         }
 
         model.Time = string.IsNullOrEmpty(time) || time == null ? 1 : CommonParameterParser.ParseToDouble(time);
         model.TimeSource = string.IsNullOrEmpty(time) || time == null ? "1c" : time + unitTime;
 
-        if (string.IsNullOrWhiteSpace(voltage))
+        if (model.Voltage == null)
         {
           model.Errors.Add(PiErrors.CannotParseParameters("Не указано напряжение", numberLine, $"{commandNumber} {mnemonic}"));
           LoggerUtility.LogWarning($"Не указано напряжение (строка {numberLine}): {commandNumber} {mnemonic}");
         }
 
-        if (string.IsNullOrWhiteSpace(time))
+        if (model.Time == null)
         {
           model.Errors.Add(PiErrors.CannotParseParameters("Не указано время", numberLine, $"{commandNumber} {mnemonic}"));
           LoggerUtility.LogWarning($"Не указано время (строка {numberLine}): {commandNumber} {mnemonic}");
@@ -263,29 +265,29 @@ namespace ControlCommandAnalyser.Parser.Pi
           // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
           int idxStarInFirstLine = remainderPi.IndexOf('*');
           remainderPi = idxStarInFirstLine >= 0 ? remainderPi[..idxStarInFirstLine].Trim() : remainderPi.Trim();
-          if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.П.ToString())
-            || model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+          if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString())
+            || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
           {
             // находим цепи точек из предыдущей команды проверки
             model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme, model.SiCommand);
             model.SiCommand.Scheme = model.Scheme;
           }
-          else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.С.ToString())
-            || model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+          else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
+            || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
           {
             model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
             model.SiCommand.Scheme = model.Scheme;
           }
         }
-        else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.П.ToString())
-          || model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString())
+          || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
           model.Scheme = CommandsModel.CheckKeyP(model.SiCommand, model.Scheme);
           model.SiCommand.Scheme = model.Scheme;
         }
-        else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.С.ToString())
-          || model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
+          || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
           model.SiCommand.Scheme = model.Scheme;

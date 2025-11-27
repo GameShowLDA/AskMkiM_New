@@ -162,7 +162,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
         model.SelfControl = model.ConnectPoint && model.DisconnectBusA && model.DisconnectBusB;
         if (!model.SelfControl)
         {
-          var lastLine = userMessageService.GetLastLineNumberAsync();
+          var lastLine = userMessageService.GetLastLineNumber();
           userMessageService.AddError(ModuleRelayControlError.PointError(lastLine, $"{relaySwitchModule.NumberChassis}.{model.NumberDevice}.{model.NumberPoint}"));
           showMessageModel = new ShowMessageModel()
           {

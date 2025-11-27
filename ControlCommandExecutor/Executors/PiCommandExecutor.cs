@@ -2,6 +2,7 @@
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.Breakdown;
 using DTO.Device.RelaySwitchModule;
@@ -40,7 +41,7 @@ namespace ControlCommandExecutor.Executors
       string nameCommand = $"{command.CommandNumber} {command.Mnemonic}";
       string nameSiCommand = $"{command.CommandNumber} СИ";
 
-      await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение команды {nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: message, type: ShowMessageModel.MessageType.Command) { IndentLevel = 1 }, IsBlockStart: true);
+      await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение команды {nameCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: message, type: ShowMessageModel.MessageType.Command) { IndentLevel = 1 }, IsBlockStart: true);
 
 
 
@@ -63,12 +64,14 @@ namespace ControlCommandExecutor.Executors
 
       var dbc = EquipmentService.GetSwitchingDevice();
       await SettingsDeviceBusCommutatuion(dbc, context.Console);
-
+      var siCommanNumber = command.SiCommand.CommandNumber;
       // Первый тест СИ
       if (command.SiCommand != null)
       {
-        await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 1", message: $"{nameCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
+        await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 1", message: $"{nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
         command.SiCommand.FormattedStartLineNumber = command.FormattedStartLineNumber;
+        command.SiCommand.CommandNumber = siCommanNumber + " " + 1;
+
         var commandExecutionContext = new CommandExecutionContext(context.CommandExecutionManager, command.SiCommand, context.Console, context.TranslationControl, context.OpkFilePath);
         var siCommandExecutor = new SiCommandExecutor();
         await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
@@ -117,6 +120,12 @@ namespace ControlCommandExecutor.Executors
         errorMessage.AddRange(errMes);
       }
 
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
+      if (errorMessage.Count > 0)
+      {
+        protocolModel.Errors.Add(nameCommand, errorMessage);
+      }
+
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
       foreach (var item in modules)
       {
@@ -128,13 +137,9 @@ namespace ControlCommandExecutor.Executors
         await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 3", message: $"{nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
         var commandExecutionContext = new CommandExecutionContext(context.CommandExecutionManager, command.SiCommand, context.Console, context.TranslationControl, context.OpkFilePath);
         var siCommandExecutor = new SiCommandExecutor();
-        await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
-      }
 
-      await PointFormater.MessageResult(errorMessage, context.Console);
-      if (errorMessage.Count > 0)
-      {
-        protocolModel.Errors.Add(nameCommand, errorMessage);
+        command.SiCommand.CommandNumber = siCommanNumber + " " + 2;
+        await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
       }
     }
 
@@ -142,10 +147,6 @@ namespace ControlCommandExecutor.Executors
     {
       foreach (var module in relaySwitchModules)
       {
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await module.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-        {
-          throw ConnectionExceptionAdapter.InitializeFailed(module.Name, module.NumberChassis, module.Number);
-        }
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.BusManager.ConnectBusAsync(SwitchingBus.A1, userMessageService: userMessageService), userMessageService))
         {
           throw BusExceptionFactory.ConnectFailed(SwitchingBus.A1.ToString(), module.Name, module.NumberChassis, module.Number);
@@ -159,10 +160,6 @@ namespace ControlCommandExecutor.Executors
 
     private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserMessageService userMessageService)
     {
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await dbc.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-      {
-        throw ConnectionExceptionAdapter.InitializeFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
-      }
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectBreakdownTester(userMessageService), userMessageService))
       {
         throw ConnectorExceptionFactory.ConnectBreakdownFailed(dbc.Name, dbc.NumberChassis, dbc.Number);
@@ -179,11 +176,6 @@ namespace ControlCommandExecutor.Executors
 
       if (voltageType == VoltageEnum.Type.ACW)
       {
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-        {
-          throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
-        }
-
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.AcwManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
         {
           throw IrExceptionFactory.SetModeFailed(name, numberChassis, number);
@@ -221,11 +213,6 @@ namespace ControlCommandExecutor.Executors
       }
       else if (voltageType == VoltageEnum.Type.DCW)
       {
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.ConnectableManager.InitializeAsync(userMessageService)).Connect, userMessageService))
-        {
-          throw ConnectionExceptionAdapter.ConnectFailed(name, numberChassis, number);
-        }
-
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.Mode.SetModeAsync(userMessageService)).Success, userMessageService))
         {
           throw IrExceptionFactory.SetModeFailed(name, numberChassis, number);
@@ -268,7 +255,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private static async Task<bool> NodeAccumulationPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private static async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
 
@@ -282,14 +269,14 @@ namespace ControlCommandExecutor.Executors
           {
             await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
           }
-          return result;
+          return (result, answer.ToString());
         }
         else
         {
           var answer = await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
           await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-          return result;
+          return (result, answer.ToString());
         }
 
       }, messageService);

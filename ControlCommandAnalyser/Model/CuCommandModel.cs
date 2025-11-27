@@ -1,4 +1,7 @@
-﻿namespace ControlCommandAnalyser.Model
+﻿using ControlCommandAnalyser.Attributes;
+using DTO.Enum;
+
+namespace ControlCommandAnalyser.Model
 {
   /// <summary>
   /// Тип команды ЦУ: информация, вопрос, переход (вопрос с условием).
@@ -18,7 +21,7 @@
   /// <summary>
   /// Модель команды ЦУ (сообщение оператору).
   /// </summary>
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Д)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Д)]
   public class CuCommandModel : BaseCommandModel
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayOrganizationalInfo(DTO.Enum.Measurement.OrganizationalComands.CU).DisplayName;

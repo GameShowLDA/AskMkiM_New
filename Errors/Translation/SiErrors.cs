@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,57 +16,77 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: выражение не распознано.
     /// </summary>
-    public static ErrorItem CannotParseExpression(string expr, int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Si_CannotParseExpression,
-      Description = $"Не удалось распознать выражение: {expr}"
-    };
+    public static ErrorItem CannotParseExpression(string expr, int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_CannotParseExpression,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Не удалось распознать выражение: {expr}"
+      };
 
     /// <summary>
     /// Ошибка: не удалось распознать параметры (напряжение, сопротивление, время).
     /// </summary>
-    public static ErrorItem CannotParseParameters(string parameters, int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Si_CannotParseParameters,
-      Description = $"Не удалось распознать параметры: {parameters}"
-    };
+    public static ErrorItem CannotParseParameters(string parameters, int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_CannotParseParameters,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Не удалось распознать параметры: {parameters}"
+      };
 
     /// <summary>
     /// Ошибка: не указаны точки для измерения.
     /// </summary>
-    public static ErrorItem EmptyPoints(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Si_EmptyPoints,
-      Description = "Не указаны точки для измерения."
-    };
+    public static ErrorItem EmptyPoints(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_EmptyPoints,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Не указаны точки для измерения."
+      };
 
     /// <summary>
     /// Ошибка: не указано напряжение для измерения.
     /// </summary>
-    public static ErrorItem EmptyVoltage(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Si_EmptyVoltage,
-      Description = "Не указано напряжение для измерения."
-    };
+    public static ErrorItem EmptyVoltage(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_EmptyVoltage,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Не указано напряжение для измерения."
+      };
 
     /// <summary>
     /// Ошибка: команда СИ не содержит ни одного параметра.
     /// </summary>
-    public static ErrorItem EmptyCommandBody(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Si_EmptyCommandBody,
-      Description = "Команда СИ должна содержать хотя бы один параметр. Тело команды не может быть пустым."
-    };
+    public static ErrorItem EmptyCommandBody(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_EmptyCommandBody,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Команда СИ должна содержать хотя бы один параметр. Тело команды не может быть пустым."
+      };
 
     /// <summary>
     /// Ошибка: Ошибка при проверке одно из разряда в групповом методе.
@@ -75,21 +96,29 @@ namespace Errors.Translation
     /// <param name="countStep">Кол-во разрядов.</param>
     /// <param name="resultMeasure">Результат измерения.</param>
     /// <returns></returns>
-    public static ErrorItem WrongDigitCheckForGroupedMethod(string command, int step, int countStep, string resultMeasure) => new()
-    {
-      MeasureResult = resultMeasure,
-      Command = command,
-      Code = ErrorCode.Si_WrongDigitCheckForGroupedMethod,
-      Description = $"Ошибка при проверке разряда {step} ({countStep}) при групповом методе."
-    };
+    public static ErrorItem WrongDigitCheckForGroupedMethod(string command, int step, int countStep, string resultMeasure,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        MeasureResult = resultMeasure,
+        Command = command,
+        Code = ErrorCode.Si_WrongDigitCheckForGroupedMethod,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Ошибка при проверке разряда {step} ({countStep}) при групповом методе."
+      };
 
     /// <inheritdoc />
-    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure)
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0)
     {
       var error = new ErrorItem()
       {
         MeasureResult = resultMeasure,
         Command = command,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Code = ErrorCode.Pr_NodeExecutePointError,
       };
 
@@ -104,37 +133,54 @@ namespace Errors.Translation
     }
 
     /// <inheritdoc />
-    public ErrorItem ChainError(string command, string chain) => new()
-    {
-      Command = command,
-      Code = ErrorCode.Si_ChainError,
-      Description = $"Замкнутая цепь {chain}"
-    };
+    public ErrorItem ChainError(string command, string chain,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        Command = command,
+        Code = ErrorCode.Si_ChainError,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Замкнутая цепь {chain}"
+      };
 
     /// <inheritdoc />
-    public ErrorItem DisconnectChainError(string command, string chain, string measureResult) => new()
-    {
-      Command = command,
-      Code = ErrorCode.Si_ChainError,
-      Description = $"Разрыв в цепи {chain}",
-      MeasureResult = measureResult
-    };
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        Command = command,
+        Code = ErrorCode.Si_ChainError,
+        Description = $"Разрыв в цепи {chain}",
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        MeasureResult = measureResult
+      };
 
     /// <inheritdoc />
-    public ErrorItem PairError(string command, string pointFirst, string pointLast) => new()
-    {
-      Command = command,
-      Code = ErrorCode.Si_PairError,
-      Description = $"Замкнутая пара точек: {pointFirst}, {pointLast}"
-    };
+    public ErrorItem PairError(string command, string pointFirst, string pointLast,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        Command = command,
+        Code = ErrorCode.Si_PairError,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Замкнутая пара точек: {pointFirst}, {pointLast}"
+      };
 
     /// <inheritdoc />
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast)
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0)
     {
       var eroror = new ErrorItem()
       {
         Command = command,
         Code = ErrorCode.Si_PairError,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        MeasureResult = value,
       };
 
       var firstChain = string.Empty;
@@ -156,12 +202,16 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: конфликт границ сопротивления.
     /// </summary>
-    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command, string description) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Si_ResistanceLimitsConflict,
-      Description = description
-    };
+    public static ErrorItem ResistanceLimitsConflict(int startLineNumber, string command, string description,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_ResistanceLimitsConflict,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = description
+      };
   }
 }

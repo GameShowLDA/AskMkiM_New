@@ -1,16 +1,23 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using ControlCommandAnalyser.Model.Ks;
+using DTO.Enum;
+using Errors.Translation;
 
-namespace ControlCommandAnalyser.Model
+namespace ControlCommandAnalyser.Model.Pr
 {
-  /// <summary>
-  /// Модель для команды КС (контроль сопротивения).
-  /// </summary>
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Б, ControlCommandAnalyser.AlgorithmKey.Д)]
-  public class KsCommandModel : BaseCommandModel
+  [AllowedKeys(TranslationKey.AlgorithmKey.К,
+   TranslationKey.AlgorithmKey.ЗР,
+   TranslationKey.AlgorithmKey.ЗС,
+   TranslationKey.AlgorithmKey.С, TranslationKey.AlgorithmKey.П,
+    TranslationKey.AlgorithmKey.И,
+    TranslationKey.AlgorithmKey.Т,
+   TranslationKey.AlgorithmKey.Г, TranslationKey.AlgorithmKey.Т1)]
+  [MeasurementDevice(MeasurementDevice.Multimeter)]
+  public class PrCommandModel : BaseCommandModel, IError, IHasScheme
   {
-
-    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.KC).DisplayName;
+    public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
 
     /// <summary>
     /// Единицы измерения сопротивления (например, "МОм", "кОм" и т.п.)
@@ -48,8 +55,19 @@ namespace ControlCommandAnalyser.Model
     public string? UnparsedParameters { get; set; }
 
     /// <summary>
+    /// Значение времени (например, "1c").
+    /// </summary>
+    public string? TimeSource { get; set; }
+    public double? Time { get; set; }
+
+    /// <summary>
     /// Ошибки связанные с замыканием точек.
     /// </summary>
-    public override IPointError PointErrors => new KsErrors();
+    public override IPointError PointErrors => new PrErrors();
+
+    /// <summary>
+    /// Сбор данных в сообщение.
+    /// </summary>
+    public override IDislpayInfo BuildDislpayInfo => new PrMessageBuild();
   }
 }

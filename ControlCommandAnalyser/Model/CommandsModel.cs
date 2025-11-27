@@ -1,7 +1,8 @@
-﻿using Errors.Translation;
-using ControlCommandAnalyser.Model.Chains;
+﻿using ControlCommandAnalyser.Model.Chains;
 using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
+using DTO.Enum;
+using Errors.Translation;
 using Utilities;
 
 namespace ControlCommandAnalyser.Model
@@ -243,14 +244,14 @@ namespace ControlCommandAnalyser.Model
 
         if (modelSi != null)
         {
-          if (modelSi.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+          if (modelSi.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
           {
             scheme = GetPointsFromPM(scheme);
           }
         }
         else
         {
-          if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+          if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
           {
             scheme = GetPointsFromPM(scheme);
           }

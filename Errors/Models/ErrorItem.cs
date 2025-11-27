@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DTO.Base.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,6 +39,11 @@ namespace Errors.Models
     /// Результат измерения, при котором зафиксирована ошибка (если применимо).
     /// </summary>
     public string MeasureResult { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Отладочная информация.
+    /// </summary>
+    public string DebugInfo { get; set; } = string.Empty;
 
     /// <summary>
     /// Код ошибки, определяющий её тип и причину.

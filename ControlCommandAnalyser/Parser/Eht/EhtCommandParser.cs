@@ -1,4 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DataBaseConfiguration.Migrations;

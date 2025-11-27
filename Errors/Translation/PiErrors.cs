@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,71 +16,100 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: выражение не распознано.
     /// </summary>
-    public static ErrorItem CannotParseExpression(string expr, int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Pi_CannotParseExpression,
-      Description = $"Не удалось распознать выражение: {expr}"
-    };
+    public static ErrorItem CannotParseExpression(string expr, int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pi_CannotParseExpression,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Не удалось распознать выражение: {expr}"
+      };
 
     /// <summary>
     /// Ошибка: не удалось распознать параметры (напряжение, пороговое сопротивление, время).
     /// </summary>
-    public static ErrorItem CannotParseParameters(string parameters, int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Pi_CannotParseParameters,
-      Description = $"Не удалось распознать параметры: {parameters}"
-    };
+    public static ErrorItem CannotParseParameters(string parameters, int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pi_CannotParseParameters,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Не удалось распознать параметры: {parameters}"
+      };
 
     /// <summary>
     /// Ошибка: не указаны точки для измерения.
     /// </summary>
-    public static ErrorItem EmptyPoints(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Pi_EmptyPoints,
-      Description = "Не указаны точки для измерения."
-    };
+    public static ErrorItem EmptyPoints(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pi_EmptyPoints,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Не указаны точки для измерения."
+      };
 
     /// <summary>
     /// Ошибка: команда ПИ не содержит ни одного параметра.
     /// </summary>
-    public static ErrorItem EmptyCommandBody(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Pi_EmptyCommandBody,
-      Description = "Команда ПИ должна содержать хотя бы один параметр. Тело команды не может быть пустым."
-    };
+    public static ErrorItem EmptyCommandBody(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pi_EmptyCommandBody,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Команда ПИ должна содержать хотя бы один параметр. Тело команды не может быть пустым."
+      };
 
     /// <summary>
     /// Ошибка: команда ПИ не может содержать ключ Г, если для команды СИ присвоен ключ Т1.
     /// </summary>
-    public static ErrorItem KeysConflict(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Pi_KeysConflict,
-      Description = "Команда ПИ не может содержать ключ Г, если для команды СИ присвоен ключ Т1."
-    };
+    public static ErrorItem KeysConflict(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pi_KeysConflict,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Команда ПИ не может содержать ключ Г, если для команды СИ присвоен ключ Т1."
+      };
 
-    public ErrorItem PairError(string command, string pointFirst, string pointLast) => new()
-    {
-      Command = command,
-      Code = ErrorCode.Pi_PairError,
-      Description = $"Замыкание точек: {pointFirst}, {pointLast}"
-    };
+    public ErrorItem PairError(string command, string pointFirst, string pointLast,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        Command = command,
+        Code = ErrorCode.Pi_PairError,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Замыкание точек: {pointFirst}, {pointLast}"
+      };
 
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast)
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0)
     {
       var eroror = new ErrorItem()
       {
         Command = command,
         Code = ErrorCode.Si_PairError,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        MeasureResult = value,
       };
 
       var firstChain = string.Empty;
@@ -98,27 +128,39 @@ namespace Errors.Translation
       return eroror;
     }
 
-    public ErrorItem ChainError(string command, string chain) => new()
-    {
-      Command = command,
-      Code = ErrorCode.Pi_ChainError,
-      Description = $"Замыкание цепи {chain}"
-    };
+    public ErrorItem ChainError(string command, string chain,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        Command = command,
+        Code = ErrorCode.Pi_ChainError,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Замыкание цепи {chain}"
+      };
 
-    public ErrorItem DisconnectChainError(string command, string chain, string measureResult) => new()
-    {
-      Command = command,
-      Code = ErrorCode.Pi_ChainError,
-      Description = $"Замыкание в цепи {chain}",
-      MeasureResult = measureResult
-    };
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        Command = command,
+        Code = ErrorCode.Pi_ChainError,
+        Description = $"Замыкание в цепи {chain}",
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        MeasureResult = measureResult
+      };
 
-    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure)
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0)
     {
       var error = new ErrorItem()
       {
         MeasureResult = resultMeasure,
         Command = command,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Code = ErrorCode.Pi_NodeExecutePointError,
       };
 
@@ -136,12 +178,16 @@ namespace Errors.Translation
     /// <summary>
     /// Ошибка: не указано напряжение для измерения.
     /// </summary>
-    public static ErrorItem EmptyVoltage(int startLineNumber, string command) => new()
-    {
-      SourceLineNumber = startLineNumber,
-      Command = command,
-      Code = ErrorCode.Pi_EmptyVoltage,
-      Description = "Не указано напряжение для измерения."
-    };
+    public static ErrorItem EmptyVoltage(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pi_EmptyVoltage,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Не указано напряжение для измерения."
+      };
   }
 }

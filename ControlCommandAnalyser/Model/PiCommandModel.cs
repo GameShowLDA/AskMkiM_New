@@ -1,9 +1,12 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model.Chains;
+using DTO.Enum;
+using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model
 {
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.К, ControlCommandAnalyser.AlgorithmKey.Т1)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Г, TranslationKey.AlgorithmKey.К, TranslationKey.AlgorithmKey.Т1)]
+  [MeasurementDevice(MeasurementDevice.BreakdownTester)]
   public class PiCommandModel : BaseCommandModel, IHasScheme
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PI).DisplayName;

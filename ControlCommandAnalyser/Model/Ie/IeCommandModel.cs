@@ -1,12 +1,17 @@
-﻿using Errors.Translation;
+﻿using ControlCommandAnalyser.Attributes;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using ControlCommandAnalyser.Model.Ks;
+using DTO.Enum;
+using Errors.Translation;
 
-namespace ControlCommandAnalyser.Model
+namespace ControlCommandAnalyser.Model.Ie
 {
   /// <summary>
   /// Модель для команды ИЕ (измерение емкости).
   /// </summary>
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Д)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Д)]
+  [MeasurementDevice(MeasurementDevice.Multimeter)]
   public class IeCommandModel : BaseCommandModel, IHasScheme
   {
 
@@ -51,5 +56,10 @@ namespace ControlCommandAnalyser.Model
     /// Ошибки связанные с замыканием точек.
     /// </summary>
     public override IPointError PointErrors => new IeErrors();
+
+    /// <summary>
+    /// Сбор данных в сообщение.
+    /// </summary>
+    public override IDislpayInfo BuildDislpayInfo => new IeMessageBuild();
   }
 }

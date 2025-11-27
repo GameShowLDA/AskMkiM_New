@@ -1,13 +1,9 @@
 ﻿using Errors.Translation;
 using ControlCommandAnalyser.Model;
+using static DTO.Enum.TranslationKey;
 
-namespace ControlCommandAnalyser
+namespace ControlCommandAnalyser.Attributes
 {
-  public enum AlgorithmKey
-  {
-    ЗР, ЗС, П, И, Г, С, Т1, Ш, Т, Б, К, Н, Д
-  }
-
   [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
   public sealed class AllowedKeysAttribute : Attribute
   {

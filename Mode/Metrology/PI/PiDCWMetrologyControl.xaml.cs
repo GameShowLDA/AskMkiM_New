@@ -69,6 +69,12 @@ namespace Mode.Metrology.PI
       await testMeasurement.ConnectToEquipment(data.FirstPoint, data.SecondPoint, metrologicalModeRole, ProtocolUI);
       await testMeasurement.SetupCommutation(ProtocolUI, data.FirstPoint, data.SecondPoint, metrologicalModeRole);
       await testMeasurement.ConfigureMeter(ProtocolUI, metrologicalModeRole, data);
+
+      var (LowerBound, UpperBound, delta) = MeasurementErrorDefaults.CalculateToleranceRange(MeasurementTypeCommand.PI_DCW, data.Param);
+
+      await ProtocolUI.AppendEmptyLineAsync();
+      await ProtocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: $"от {LowerBound} до {UpperBound} В"));
+
       await UserActionHelper.RunWithUserRepeatAsync(async () => await testMeasurement.PerformMeasurement(metrologicalModeRole, data.Param, ProtocolUI), ProtocolUI, true);
     }
 
@@ -139,11 +145,12 @@ namespace Mode.Metrology.PI
         });
 
         var answer = (result >= LowerBound && result <= UpperBound) ? false : true;
-        Measurements.Add(result);
+        var err = result - param;
+
+        Measurements.Add(err);
 
         await protocolUI.ShowMessageAsync(new ShowMessageModel("Результат измерения напряжения", message: $"{result} В", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {LowerBound} до {UpperBound} В") { IndentLevel = 2 }, skipPause: true);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{(Math.Abs(result - param))} В", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
+        await protocolUI.ShowMessageAsync(new ShowMessageModel("Погрешность измерения", message: $"{err} В", type: (result >= LowerBound && result <= UpperBound ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 2 }, skipPause: true);
 
         return true;
       }
@@ -152,6 +159,9 @@ namespace Mode.Metrology.PI
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.PI_DCW);
+        await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: $"от {LowerBound} до {UpperBound} В"));
+
+        Measurements.Clear();
       }
     }
   }

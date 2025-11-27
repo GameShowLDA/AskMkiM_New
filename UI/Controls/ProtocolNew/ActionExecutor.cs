@@ -481,6 +481,8 @@ namespace UI.Controls.ProtocolNew
         catch (Exception ex)
         {
           LogException($"Ошибка при запуске \"{name}\"", ex);
+          await ProtocolSelfCheck.AppendEmptyLineAsync();
+          await ProtocolSelfCheck.ShowMessageAsync(new ShowMessageModel("Системная ошибка программы АСК-МКИ-М", headerColor:ShowMessageModel.ErrorMessage.TitleColor, message: ex.Message) { IndentLevel = 1 });
           await SetIsLocked(false);
           _stopwatch.Stop();
           await ProtocolSelfCheck.FinalizeAsync(stop);

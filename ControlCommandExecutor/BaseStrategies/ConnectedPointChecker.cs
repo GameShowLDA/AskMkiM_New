@@ -118,7 +118,7 @@ namespace ControlCommandExecutor.BaseStrategies
               errorChain.Add(item, result.Value.ToString());
 
               var chain = new ChainModel(item);
-              var chainStr = PointFormater.GetFormatConnectPoint(chain);
+              var chainStr = await context.CommandModel.BuildDislpayInfo.BuildErrorChainStringAsync(chain);
 
               context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.DisconnectChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, $"{result.Value.ToString()} Ом"));
             }
@@ -139,12 +139,13 @@ namespace ControlCommandExecutor.BaseStrategies
         foreach (var item in errorChain.Keys)
         {
           var chain = new ChainModel(item);
-          var chainStr = PointFormater.GetFormatConnectPoint(chain);
+          var chainStr = await context.CommandModel.BuildDislpayInfo.BuildErrorChainStringAsync(chain);
 
           var error = new ShowMessageModel($"{chainStr} ({context.LowerLimit} - {context.HigherLimit} {context.Unit})", message: $"{context.UnitMnemonic}изм = {errorChain.GetValueOrDefault(item)} {context.Unit}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
-          errorsMessage.Add(error);
 
           await context.MessageService.ShowMessageAsync(error);
+          errorsMessage.Add(error);
+          await context.MessageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {error.ToString()}"));
         }
       }
 
