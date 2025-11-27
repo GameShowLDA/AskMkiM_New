@@ -85,6 +85,7 @@ namespace ControlCommandExecutor.Executors
       if (command.AlgorithmKey.Contains("К"))
       {
         BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+        methodExecutionContext.PerformMeasurementAsync = measure;
         var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
@@ -232,8 +233,16 @@ namespace ControlCommandExecutor.Executors
 
         await messageService.ShowMessageAsync(new ShowMessageModel("Измерение сопротивления изоляции"));
 
-        answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, messageService);
-        var type = ShowMessageModel.MessageType.Success;
+        if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
+        {
+          answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, messageService);
+        }
+        else
+        {
+          answer = await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? new Random().Next((int)value / 2, (int)value * 2) : value;
+        }
+
+          var type = ShowMessageModel.MessageType.Success;
         if (answer < value)
         {
           type = ShowMessageModel.MessageType.Error;
