@@ -85,6 +85,7 @@ namespace ControlCommandExecutor.Executors
       if (command.AlgorithmKey.Contains("К"))
       {
         BaseStrategies.NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+        methodExecutionContext.PerformMeasurementAsync = measure;
         var errMes = await BaseStrategies.NodeFullChecker.CheckSequenceAsync(methodExecutionContext);
         errorMessage.AddRange(errMes);
       }
@@ -122,9 +123,13 @@ namespace ControlCommandExecutor.Executors
           {
             protocolModel.Errors.Add(nameCommand + " " + 2, errorMessage);
           }
-          else
+          else if (protocolModel.Errors.Keys.Contains(nameCommand + " " + 2))
           {
             protocolModel.Errors.Add(nameCommand + " " + 1, errorMessage);
+          }
+          else
+          { 
+            protocolModel.Errors.Add(nameCommand, errorMessage);
           }
         }
       }

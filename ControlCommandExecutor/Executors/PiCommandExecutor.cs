@@ -41,7 +41,7 @@ namespace ControlCommandExecutor.Executors
       string nameCommand = $"{command.CommandNumber} {command.Mnemonic}";
       string nameSiCommand = $"{command.CommandNumber} СИ";
 
-      await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение команды {nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: message, type: ShowMessageModel.MessageType.Command) { IndentLevel = 1 }, IsBlockStart: true);
+      await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение команды {nameCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, message: message, type: ShowMessageModel.MessageType.Command) { IndentLevel = 1 }, IsBlockStart: true);
 
 
 
@@ -68,8 +68,10 @@ namespace ControlCommandExecutor.Executors
       // Первый тест СИ
       if (command.SiCommand != null)
       {
-        await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 1", message: $"{nameCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
+        await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 1", message: $"{nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
         command.SiCommand.FormattedStartLineNumber = command.FormattedStartLineNumber;
+        command.SiCommand.Mnemonic = nameSiCommand + " " + 1;
+
         var commandExecutionContext = new CommandExecutionContext(context.CommandExecutionManager, command.SiCommand, context.Console, context.TranslationControl, context.OpkFilePath);
         var siCommandExecutor = new SiCommandExecutor();
         await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
@@ -129,6 +131,8 @@ namespace ControlCommandExecutor.Executors
         await context.Console.ShowMessageAsync(new ShowMessageModel($"\r\nВыполнение 3", message: $"{nameSiCommand}", headerColor: ShowMessageModel.SuccessMessage.TitleColor, type: ShowMessageModel.MessageType.CommandBlock) { IndentLevel = 2 }, IsBlockStart: true);
         var commandExecutionContext = new CommandExecutionContext(context.CommandExecutionManager, command.SiCommand, context.Console, context.TranslationControl, context.OpkFilePath);
         var siCommandExecutor = new SiCommandExecutor();
+        command.SiCommand.Mnemonic = nameSiCommand + " " + 2;
+
         await siCommandExecutor.ExecuteAsync(commandExecutionContext, protocolModel);
       }
 
