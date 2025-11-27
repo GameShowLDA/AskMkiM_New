@@ -59,7 +59,6 @@ namespace ControlCommandExecutor.BaseStrategies
             await messageService.ShowMessageAsync(errorMessageModels);
             errorsMessgae.Add(errorMessageModels);
             await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
-
             manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{_basePoint}{machineAdress}", messageService.GetLastLineNumber(), baseCommandModel.FormattedStartLineNumber));
           }
           else
@@ -89,7 +88,6 @@ namespace ControlCommandExecutor.BaseStrategies
               await messageService.ShowMessageAsync(errorMessageModels);
               errorsMessgae.Add(errorMessageModels);
               manager.AddErrorMethod(EhtErrors.PointNotConnected($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", $"{point.Mnemonic}{machineAdress}", messageService.GetLastLineNumber(), baseCommandModel.FormattedStartLineNumber));
-
               await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
             }
             else
