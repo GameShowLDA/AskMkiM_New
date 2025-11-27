@@ -650,10 +650,10 @@ namespace NewCore.FunctionAdapters.GPT
       /// Результат измерения сопротивления изоляции в МОм.  
       /// В случае ошибки возвращает значение <c>-1</c>.
       /// </returns>
-      public async Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 60000, IUserMessageService? userMessageService = null)
+      public async Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 600000, IUserMessageService? userMessageService = null)
       {
         if (rangeTo == -1)
-          rangeTo = 60000;
+          rangeTo = 600000;
 
         try
         {

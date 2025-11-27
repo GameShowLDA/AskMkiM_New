@@ -54,7 +54,7 @@ namespace DTO.Device.RelaySwitchModule.Capabilities
     /// Переподключение точки к другой шине.
     /// </summary>
     /// <param name="bus">Подключаемая шина.</param>
-    /// <param name="numberPoint">Номер точки.</param>
+    /// <param name="nubmerPoint">Номер точки.</param>
     /// <returns>True, если успешно.</returns>
     Task<bool> ConnectingPointToNewBus(BusPoint bus, int nubmerPoint, IUserMessageService? userMessageService = null);
 
