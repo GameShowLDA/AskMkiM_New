@@ -1,5 +1,6 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Pr;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DTO.Enum;
 using Errors.Translation;
@@ -276,8 +277,8 @@ namespace ControlCommandAnalyser.Parser.Pr
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
-        if(model.AlgorithmKey.Contains(AlgorithmKey.ЗР.ToString()) 
-          && pointErrors.FirstOrDefault(item=>item.Code==Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges)!=null)
+        if (model.AlgorithmKey.Contains(AlgorithmKey.ЗР.ToString())
+          && pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges) != null)
         {
           pointErrors.Remove(pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges));
         }

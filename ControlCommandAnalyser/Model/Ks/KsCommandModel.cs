@@ -1,7 +1,8 @@
 ﻿using Errors.Translation;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
 
-namespace ControlCommandAnalyser.Model
+namespace ControlCommandAnalyser.Model.Ks
 {
   /// <summary>
   /// Модель для команды КС (контроль сопротивения).
@@ -51,5 +52,10 @@ namespace ControlCommandAnalyser.Model
     /// Ошибки связанные с замыканием точек.
     /// </summary>
     public override IPointError PointErrors => new KsErrors();
+
+    /// <summary>
+    /// Сбор данных в сообщение.
+    /// </summary>
+    public override IDislpayInfo BuildDislpayInfo => new KsMessageBuild();
   }
 }

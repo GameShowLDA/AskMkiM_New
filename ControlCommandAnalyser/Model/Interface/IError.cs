@@ -1,6 +1,6 @@
 ﻿using Errors.Translation;
 
-namespace ControlCommandAnalyser.Model
+namespace ControlCommandAnalyser.Model.Interface
 {
   public interface IError
   {

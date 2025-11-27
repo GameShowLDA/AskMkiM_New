@@ -4,6 +4,7 @@ using ControlCommandExecutor.Execution;
 using DTO.Base.Models;
 using DTO.Service;
 using Errors.Device.ModuleRelayControl;
+using System.Threading;
 using Utilities;
 using static DTO.Enum.DeviceEnums;
 
@@ -53,7 +54,8 @@ namespace ControlCommandExecutor.BaseStrategies
         await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка {str}"), IsBlockStart: true);
         await ConnectToBusAAsync(chain, messageService);
 
-        if (!await performMeasurementAsync(resistance, messageService, messageService.GetCancellationToken()))
+        var measured = await performMeasurementAsync(resistance, messageService, messageService.GetCancellationToken());
+        if (!measured.Result)
         {
           errorChain.Add(new List<ChainModel>() { _basePoint, chain });
         }
@@ -65,7 +67,7 @@ namespace ControlCommandExecutor.BaseStrategies
       {
         foreach (var chain in errorChain)
         {
-          var chainStr = PointFormater.GetFormatDisconnectPoint(chain);
+          var chainStr = ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
           errorsMessgae.Add(
              new ShowMessageModel($"{chainStr}",
                  message: "Обнаружено замыкание",

@@ -1,8 +1,11 @@
 ﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using ControlCommandAnalyser.Model.Pr;
 using ControlCommandExecutor.BaseStrategies;
 using ControlCommandExecutor.BaseStrategies.Data;
 using ControlCommandExecutor.Execution;
+using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Device.FastMeter;
 using DTO.Device.RelaySwitchModule;
@@ -26,10 +29,12 @@ namespace ControlCommandExecutor.Executors
     static private PointModel _basePoint;
     private double firstValue = 0;
     private double secondValue = 100000;
+    private bool continuityManager = true;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
     {
       var command = context.Command as PrCommandModel;
+
       context.TranslationControl.SetActiveLine(command.FormattedStartLineNumber);
 
       string nameCommand = $"{command.CommandNumber} {command.Mnemonic}";
@@ -63,9 +68,6 @@ namespace ControlCommandExecutor.Executors
       await SettingsDeviceBusCommutatuion(dbc, context.Console);
 
       var meter = EquipmentService.GetFastMeterOrThrow(context.Console);
-      await SettingMeter(meter, context.Console);
-
-      await context.Console.ShowMessageAsync(new ShowMessageModel($"Выполнение измерений"), IsBlockStart: true);
 
       double resistance = 0;
       if (command.LowerLimitResistance.HasValue)
@@ -87,6 +89,14 @@ namespace ControlCommandExecutor.Executors
         secondValue = meter.MaxContinuityResistance;
       }
 
+      if (secondValue >= 1000)
+      {
+        continuityManager = false;
+      }
+
+      await SettingMeter(meter, context.Console);
+
+      await context.Console.ShowMessageAsync(new ShowMessageModel($"Выполнение измерений"), IsBlockStart: true);
 
       MethodExecutionContext methodExecutionContext = new MethodExecutionContext();
       methodExecutionContext.SchemeModel = command.Scheme;
@@ -100,45 +110,51 @@ namespace ControlCommandExecutor.Executors
       methodExecutionContext.UnitMnemonic = "R";
 
       List<ShowMessageModel> errorMessage = new();
-      ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
 
-      ConnectedPointContext connectedPointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
-      connectedPointContext.PerformMeasurementAsync = measurePointConnected;
-
-      var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(connectedPointContext);
-      errorMessage.AddRange(connectErrMes);
-
-      if (command.AlgorithmKey.Contains("К"))
+      if (!command.AlgorithmKey.Contains("ЗС"))
       {
-        NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        NodeFullContext nodeFullContext = methodExecutionContext.CreateChild<NodeFullContext>();
-        nodeFullContext.PerformMeasurementAsync = measure;
+        ConnectedPointChecker.PerformMeasurementAsync measurePointConnected = ConnectedPointCheckerMeasurementAsync;
 
-        var errMes = await NodeFullChecker.CheckSequenceAsync(nodeFullContext);
-        errorMessage.AddRange(errMes);
-      }
-      else if (command.AlgorithmKey.Contains("Г"))
-      {
-        NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
-        methodExecutionContext.PerformMeasurementAsync = measure;
+        ConnectedPointContext connectedPointContext = methodExecutionContext.CreateChild<ConnectedPointContext>();
+        connectedPointContext.PerformMeasurementAsync = measurePointConnected;
 
-        var errMes = await MethodExecutor.CheckSequenceAsync(methodExecutionContext);
-        errorMessage.AddRange(errMes);
+        var connectErrMes = await ConnectedPointChecker.CheckSequenceAsync(connectedPointContext);
+        errorMessage.AddRange(connectErrMes);
       }
-      else if (command.AlgorithmKey.Contains("Т1"))
+      if (!command.AlgorithmKey.Contains("ЗР"))
       {
-        NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
-        errorMessage.AddRange(errMes);
-      }
-      else
-      {
-        NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), resistance);
-        errorMessage.AddRange(errMes);
+        if (command.AlgorithmKey.Contains("К"))
+        {
+          NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+          NodeFullContext nodeFullContext = methodExecutionContext.CreateChild<NodeFullContext>();
+          nodeFullContext.PerformMeasurementAsync = measure;
+
+          var errMes = await NodeFullChecker.CheckSequenceAsync(nodeFullContext);
+          errorMessage.AddRange(errMes);
+        }
+        else if (command.AlgorithmKey.Contains("Г"))
+        {
+          NodeFullChecker.PerformMeasurementAsync measure = NodeFullPerformMeasurementAsync;
+          methodExecutionContext.PerformMeasurementAsync = measure;
+
+          var errMes = await MethodExecutor.CheckSequenceAsync(methodExecutionContext);
+          errorMessage.AddRange(errMes);
+        }
+        else if (command.AlgorithmKey.Contains("Т1"))
+        {
+          NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
+          var errMes = await PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, resistance);
+          errorMessage.AddRange(errMes);
+        }
+        else
+        {
+          NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
+          var errMes = await NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), resistance);
+          errorMessage.AddRange(errMes);
+        }
       }
 
-      await PointFormater.MessageResult(errorMessage, context.Console);
+      await ControlCommandAnalyser.PointFormater.MessageResult(errorMessage, context.Console);
 
       await context.Console.ShowMessageAsync(new ShowMessageModel("Сброс точек") { IndentLevel = 1 });
       foreach (var item in modules)
@@ -195,9 +211,20 @@ namespace ControlCommandExecutor.Executors
       {
         throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
       }
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ContinuityManager.SetContinuityModeAsync(userMessageService)), userMessageService))
+
+      if (continuityManager)
       {
-        throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ContinuityManager.SetContinuityModeAsync(userMessageService)), userMessageService))
+        {
+          throw Errors.Device.Multimeter.ContinuityExceptionFactory.SetContinuityFailed(name, numberChassis, number);
+        }
+      }
+      else
+      {
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await meter.ResistanceManager.SetResistanceModeAsync(userMessageService)), userMessageService))
+        {
+          throw Errors.Device.Multimeter.ResistanceExceptionFactory.SetModeFailed(name, numberChassis, number);
+        }
       }
     }
 
@@ -206,7 +233,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<bool> NodeAccumulationPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
 
@@ -220,21 +247,28 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          if (continuityManager)
+          {
+            answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance);
+          }
+          else
+          { 
+            answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
+          }
         }
 
-        var result = answer >= firstValue && answer <= secondValue;
+        var result = answer > secondValue;
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
         {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
 
         if (!result)
         {
           await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
         }
-        return result;
+        return (result, answer.ToString());
 
       }, messageService);
 
@@ -258,7 +292,14 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          if (continuityManager)
+          { 
+            answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          }
+          else
+          {
+            answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
+          }
         }
         var result = answer >= firstValue && answer <= secondValue;
 
@@ -297,7 +338,14 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          if (continuityManager)
+          {
+            answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
+          }
+          else
+          {
+            answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
+          }
         }
 
         var result = answer >= firstValue && answer <= secondValue;
@@ -318,6 +366,15 @@ namespace ControlCommandExecutor.Executors
       }, messageService);
 
       return (result, answer);
+    }
+
+    public class BuildMessage : IDislpayInfo
+    {
+      public async Task<string> BuildErrorChainStringAsync(ChainModel chain)
+      {
+        var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatConnectPoint(chain);
+        return chainStr;
+      }
     }
   }
 }

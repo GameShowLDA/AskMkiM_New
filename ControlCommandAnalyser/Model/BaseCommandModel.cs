@@ -1,4 +1,6 @@
-﻿using Errors.Models;
+﻿using ControlCommandAnalyser.Model.Chains;
+using ControlCommandAnalyser.Model.Interface;
+using Errors.Models;
 using Errors.Translation;
 namespace ControlCommandAnalyser.Model
 {
@@ -34,13 +36,19 @@ namespace ControlCommandAnalyser.Model
 
     public virtual IPointError PointErrors => null;
 
+    public virtual IDislpayInfo BuildDislpayInfo => null;
+
     public string CommandNumber { get; set; }
     public virtual string Mnemonic { get; set; }
     public string PointsSourse { get; set; }
 
+    #region Методы
     public virtual T GetModel<T>(BaseCommandModel baseCommandModel) where T : class
     {
       return baseCommandModel as T;
     }
+
+    #endregion
+
   }
 }

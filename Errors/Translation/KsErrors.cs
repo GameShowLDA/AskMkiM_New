@@ -74,12 +74,13 @@ namespace Errors.Translation
       Description = $"Замкнутая пара точек: {pointFirst}, {pointLast}"
     };
 
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast)
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value)
     {
       var eroror = new ErrorItem()
       {
         Command = command,
         Code = ErrorCode.Ks_PairError,
+        MeasureResult = value,
       };
 
       var firstChain = string.Empty;
