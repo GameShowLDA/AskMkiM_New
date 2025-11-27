@@ -46,33 +46,11 @@ namespace UI.Controls
 
     private void ErrorListBoxVertical_ErrorItemDoubleClicked(ErrorItem error)
     {
-      // Левый редактор (исходник)
-      //var leftLine = error.SourceLineNumber;
-
       var leftEditor = GetLeftEditor();
       leftEditor.GoToLine(error.SourceLineNumber);
-
-      //if (leftLine > 0 && leftLine <= leftEditor.Document.LineCount)
-      //{
-      //  var line = leftEditor.Document.GetLineByNumber(leftLine);
-      //  leftEditor.ScrollToLine(leftLine);
-      //  leftEditor.Select(line.Offset, line.Length);
-      //  leftEditor.Focus();
-      //}
-
-      // Правый редактор (трансляция)
-      // var rightLine = error.FormattedLineNumber;
       
       var rightEditor = GetRightEditor();
       rightEditor.GoToLine(error.FormattedLineNumber);
-
-      // if (rightLine > 0 && rightLine <= rightEditor.Document.LineCount)
-      // {
-      //   var line = rightEditor.Document.GetLineByNumber(rightLine);
-      //   rightEditor.ScrollToLine(rightLine);
-      //   rightEditor.Select(line.Offset, line.Length);
-      //   rightEditor.Focus();
-      // }
     }
 
     private void ErrorClear()
