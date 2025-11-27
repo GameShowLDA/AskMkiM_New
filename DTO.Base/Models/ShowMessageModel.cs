@@ -64,6 +64,7 @@ namespace DTO.Base.Models
     public string Message { get; set; }
 
     public string Time { get; set; }
+    public string Debug { get; set; }
 
     /// <summary>
     /// Получает или задает цвет заголовка сообщения.

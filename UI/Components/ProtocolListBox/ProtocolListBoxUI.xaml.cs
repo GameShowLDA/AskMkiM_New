@@ -1,11 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using DTO.Base.Models;
+using DTO.Service;
+using Errors.Models;
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using DTO.Base.Models;
-using DTO.Service;
-using Errors.Models;
 using Utilities;
 using static Utilities.LoggerUtility;
 
@@ -136,7 +137,10 @@ namespace UI.Components.ProtocolListBox
       return AppendLineAsync(emptyLine);
     }
 
-    public async Task ShowMessageAsync(ShowMessageModel model, bool IsBlockStart = false, bool SkipStepModeCheck = false, bool skipPause = false)
+    public async Task ShowMessageAsync(ShowMessageModel model, bool IsBlockStart = false, bool SkipStepModeCheck = false, bool skipPause = false,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0)
     {
       await AppendLineAsync(model);
     }

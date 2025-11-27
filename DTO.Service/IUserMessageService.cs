@@ -1,5 +1,6 @@
 ﻿using DTO.Base.Models;
 using Errors.Models;
+using System.Runtime.CompilerServices;
 
 namespace DTO.Service
 {
@@ -27,7 +28,10 @@ namespace DTO.Service
     /// <param name="IsBlockStart">Указывает, считать ли это сообщение началом логического блока (для форматирования).</param>
     /// <param name="SkipStepModeCheck">Указывает, следует ли пропускать ожидание пользовательского действия в пошаговом режиме.</param>
     /// <returns>Задача, представляющая асинхронную операцию отображения.</returns>
-    Task ShowMessageAsync(ShowMessageModel model, bool IsBlockStart = false, bool SkipStepModeCheck = false, bool skipPause = false);
+    Task ShowMessageAsync(ShowMessageModel model, bool IsBlockStart = false, bool SkipStepModeCheck = false, bool skipPause = false,
+    [CallerMemberName] string callerName = "",
+    [CallerFilePath] string callerFile = "",
+    [CallerLineNumber] int callerLine = 0);
 
     /// <summary>
     /// Асинхронно добавляет пустую строку в вывод сообщений.

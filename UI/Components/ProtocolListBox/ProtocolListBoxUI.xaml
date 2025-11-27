@@ -54,6 +54,7 @@
                             <Run Text="{Binding Message}" Foreground="{Binding MessageColor, Converter={StaticResource ColorToBrushConverter}}" />
                             <Run Text="{Binding Time, Converter={StaticResource TimeToSeparatorConverter}}" Foreground="{Binding TimeColor, Converter={StaticResource ColorToBrushConverter}}"/>
                             <Run Text="{Binding Time}" Foreground="{Binding TimeColor, Converter={StaticResource ColorToBrushConverter}}"/>
+                            <Run Text="{Binding Debug}" Foreground="DarkGray"/>
                         </TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
