@@ -59,6 +59,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
             await messageService.ShowMessageAsync(errorMessageModels);
             errorsMessgae.Add(errorMessageModels);
+            await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
           }
           else
           {
@@ -87,6 +88,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
               await messageService.ShowMessageAsync(errorMessageModels);
               errorsMessgae.Add(errorMessageModels);
+              await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
             }
             else
             {
@@ -120,6 +122,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
                 await messageService.ShowMessageAsync(errorMessageModels);
                 errorsMessgae.Add(errorMessageModels);
+                await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {errorMessageModels.ToString()}"));
               }
               else
               {
@@ -168,6 +171,7 @@ namespace ControlCommandExecutor.BaseStrategies
               if (!succes)
               {
                 errorsMessgae.Add(error);
+                await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {error.ToString()}"));
                 manager.AddErrorMethod(EhtErrors.ResistanceOutOfRange($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", result, _basePoint.ToString(), point.ToString(), LowerBound, UpperBound));
               }
             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,13 +26,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: первая команда должна быть ОК.
     /// </returns>
-    public static ErrorItem FirstCommandMustBeOk(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_FirstMustBeOk,
-      Description = "Первая команда должна быть ОК"
-    };
+    public static ErrorItem FirstCommandMustBeOk(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_FirstMustBeOk,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Первая команда должна быть ОК"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если последней командой не является КЦ.
@@ -41,13 +46,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: последняя команда должна быть КЦ.
     /// </returns>
-    public static ErrorItem LastCommandMustBeKc(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_LastMustBeKc,
-      Description = "Последняя команда должна быть КЦ"
-    };
+    public static ErrorItem LastCommandMustBeKc(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_LastMustBeKc,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Последняя команда должна быть КЦ"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если в программе отсутствует обязательная команда с указанной мнемоникой.
@@ -58,13 +67,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку отсутствия требуемой команды.
     /// </returns>
-    public static ErrorItem MissingRequiredCommand(string mnemonic, int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_MissingRequiredCommand,
-      Description = $"Команда {mnemonic} должна присутствовать в программе"
-    };
+    public static ErrorItem MissingRequiredCommand(string mnemonic, int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_MissingRequiredCommand,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Команда {mnemonic} должна присутствовать в программе"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если команда с указанной мнемоникой встречается в программе более одного раза.
@@ -75,13 +88,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования команды.
     /// </returns>
-    public static ErrorItem DuplicateCommand(string mnemonic, int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_DuplicateCommand,
-      Description = $"Команда {mnemonic} должна быть только одна"
-    };
+    public static ErrorItem DuplicateCommand(string mnemonic, int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_DuplicateCommand,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Команда {mnemonic} должна быть только одна"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если команда с указанным номером и мнемоникой встречается в программе более одного раза.
@@ -92,13 +109,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования команды.
     /// </returns>
-    public static ErrorItem CommandAlreadyExists(string mnemonic, int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_CommandAlreadyExists,
-      Description = $"Команда {command} уже существует. Измените номер команды и повторите попытку."
-    };
+    public static ErrorItem CommandAlreadyExists(string mnemonic, int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_CommandAlreadyExists,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Команда {command} уже существует. Измените номер команды и повторите попытку."
+      };
 
     /// <summary>
     /// Возвращает ошибку, если карта точек (РМ) отсутствует и невозможна дальнейшая проверка точек.
@@ -108,13 +129,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку отсутствия карты точек.
     /// </returns>
-    public static ErrorItem MissingPointsMap(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_MissingPointsMap,
-      Description = "Карта точек (РМ) отсутствует — невозможно проверить точки"
-    };
+    public static ErrorItem MissingPointsMap(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_MissingPointsMap,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Карта точек (РМ) отсутствует — невозможно проверить точки"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если указанная точка не найдена в карте точек RM.
@@ -125,13 +150,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку отсутствия точки в RM.
     /// </returns>
-    public static ErrorItem UnknownPoint(string point, int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_UnknownPoint,
-      Description = $"Точка '{point}' не найдена в RM"
-    };
+    public static ErrorItem UnknownPoint(string point, int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_UnknownPoint,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"Точка '{point}' не найдена в RM"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если точка назначения используется более одного раза.
@@ -142,11 +171,12 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования точки назначения.
     /// </returns>
-    public static ErrorItem DuplicateDestinationPoint(string point, int lineNumber, string command) => new()
+    public static ErrorItem DuplicateDestinationPoint(string point, int lineNumber, string command, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFile = "", [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Code = ErrorCode.Gen_DuplicateDestination,
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Description = $"Точка назначения '{point}' используется более одного раза"
     };
 
@@ -158,11 +188,15 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования точки(-ек) в схеме назначения.
     /// </returns>
-    public static ErrorItem SchemeConflict(int lineNumber, string command) => new()
+    public static ErrorItem SchemeConflict(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Code = ErrorCode.Gen_SchemeConflict,
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Description = $"Попытка добавить схему из предыдущей команды проверки, в которой дублируются уже указанные точки."
     };
 
@@ -174,11 +208,15 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку дублирования точки(-ек) в схеме назначения.
     /// </returns>
-    public static ErrorItem VoltageConflict(int lineNumber, string command, string description) => new()
+    public static ErrorItem VoltageConflict(int lineNumber, string command, string description,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Code = ErrorCode.Gen_VoltageConflict,
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Description = description
     };
 
@@ -191,11 +229,12 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: команда не распознана.
     /// </returns>
-    public static ErrorItem UnknownCommand(string mnemonic, int lineNumber, string command) => new()
+    public static ErrorItem UnknownCommand(string mnemonic, int lineNumber, string command, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFile = "", [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Description = $"Неизвестная команда {mnemonic}",
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Code = ErrorCode.Gen_UnknownCommand
     };
 
@@ -207,11 +246,15 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: команда не распознана.
     /// </returns>
-    public static ErrorItem WrongKey(int lineNumber, string mnemonic, string command, string key) => new()
+    public static ErrorItem WrongKey(int lineNumber, string mnemonic, string command, string key,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Description = $"Для команды {mnemonic} недопустимо использование ключа {key}",
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Code = ErrorCode.Gen_WrongKey
     };
 
@@ -224,11 +267,12 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: нераспознанные параметры в строке.
     /// </returns>
-    public static ErrorItem UnrecognizedParameters(string unparsed, int lineNumber, string command) => new()
+    public static ErrorItem UnrecognizedParameters(string unparsed, int lineNumber, string command, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFile = "", [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Code = ErrorCode.Gen_UnrecognizedParameters,
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Description = $"Обнаружены нераспознанные параметры: {unparsed}"
     };
 
@@ -238,13 +282,17 @@ namespace Errors.Translation
     /// <param name="lineNumber">Номер строки, в которой находится команда ЦУ.</param>
     /// <param name="command">Текст команды ЦУ.</param>
     /// <returns>Объект <see cref="ErrorItem"/>, описывающий ошибку отсутствия УП после ЦУ-вопроса.</returns>
-    public static ErrorItem ExpectedConditionalJumpAfterCu(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_ExpectedConditionalJumpAfterCu,
-      Description = "После команды ЦУ с вопросом ожидается команда УП (условный переход)"
-    };
+    public static ErrorItem ExpectedConditionalJumpAfterCu(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_ExpectedConditionalJumpAfterCu,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "После команды ЦУ с вопросом ожидается команда УП (условный переход)"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если команда УП стоит после информационной ЦУ (без вопроса), что недопустимо.
@@ -252,13 +300,17 @@ namespace Errors.Translation
     /// <param name="lineNumber">Номер строки, где находится команда УП.</param>
     /// <param name="command">Текст команды УП.</param>
     /// <returns>Объект <see cref="ErrorItem"/>, описывающий ошибку положения УП.</returns>
-    public static ErrorItem ConditionalJumpAfterInformationCu(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_ConditionalJumpAfterInformationCu,
-      Description = "Команда УП не должна следовать за информационной ЦУ (без вопроса)"
-    };
+    public static ErrorItem ConditionalJumpAfterInformationCu(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_ConditionalJumpAfterInformationCu,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Команда УП не должна следовать за информационной ЦУ (без вопроса)"
+      };
 
     /// <summary>
     /// Возвращает ошибку, если не найден быстрый измеритель.
@@ -266,13 +318,17 @@ namespace Errors.Translation
     /// <param name="lineNumber">Номер строки, где находится команда.</param>
     /// <param name="command">Текст команды.</param>
     /// <returns>Объект <see cref="ErrorItem"/>, описывающий ошибку положения УП.</returns>
-    public static ErrorItem FastMeterNotFound(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_FastMeterNotFound,
-      Description = "Не найден быстрый измеритель."
-    };
+    public static ErrorItem FastMeterNotFound(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_FastMeterNotFound,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Не найден быстрый измеритель."
+      };
 
     /// <summary>
     /// Возвращает ошибку, если не найдена пробойная установка.
@@ -280,13 +336,17 @@ namespace Errors.Translation
     /// <param name="lineNumber">Номер строки, где находится команда.</param>
     /// <param name="command">Текст команды.</param>
     /// <returns>Объект <see cref="ErrorItem"/>, описывающий ошибку положения УП.</returns>
-    public static ErrorItem BreakDownNotFound(int lineNumber, string command) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Code = ErrorCode.Gen_FastMeterNotFound,
-      Description = "Не найдена пробойная установка."
-    };
+    public static ErrorItem BreakDownNotFound(int lineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Code = ErrorCode.Gen_FastMeterNotFound,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = "Не найдена пробойная установка."
+      };
 
     /// <summary>
     /// Возвращает ошибку, если имеются отступы в начале строки перед номером команды.
@@ -297,11 +357,12 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: команда не распознана.
     /// </returns>
-    public static ErrorItem IndentationError(string mnemonic, int lineNumber, string command) => new()
+    public static ErrorItem IndentationError(string mnemonic, int lineNumber, string command, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFile = "", [CallerLineNumber] int callerLine = 0) => new()
     {
       SourceLineNumber = lineNumber,
       Command = command,
       Description = $"Возможно присутсвуют лишние пробелы перед номером команды или отсутсвуют необходимые отступы при переносе тела команды {mnemonic}.",
+      DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
       Code = ErrorCode.Gen_UnknownCommand
     };
 
@@ -314,13 +375,17 @@ namespace Errors.Translation
     /// <returns>
     /// Объект <see cref="ErrorItem"/>, описывающий ошибку: команда не распознана.
     /// </returns>
-    public static ErrorItem InvalidParameterOrder(string mnemonic, int lineNumber, string command, string descr) => new()
-    {
-      SourceLineNumber = lineNumber,
-      Command = command,
-      Description = $"{descr}",
-      Code = ErrorCode.Gen_InvalidParameterOrder
-    };
+    public static ErrorItem InvalidParameterOrder(string mnemonic, int lineNumber, string command, string descr,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = lineNumber,
+        Command = command,
+        Description = $"{descr}",
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Code = ErrorCode.Gen_InvalidParameterOrder
+      };
 
   }
 }
