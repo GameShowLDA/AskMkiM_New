@@ -74,15 +74,17 @@ namespace ControlCommandExecutor.BaseStrategies
             }
 
             var strError = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });
-            await messageService.ShowMessageAsync(new ShowMessageModel(strError,
-              message: $"Обнаружено замыкание Rизм = {measured.Value}",
-              type: ShowMessageModel.MessageType.Error)
-            { IndentLevel = 3 });
 
-            ErrorMessage.Add(new ShowMessageModel(strError,
+            var err = new ShowMessageModel(strError,
               message: $"Обнаружено замыкание Rизм = {measured.Value}",
               type: ShowMessageModel.MessageType.Error)
-            { IndentLevel = 3 });
+            { IndentLevel = 3 };
+
+            await messageService.ShowMessageAsync(err);
+
+            ErrorMessage.Add(err);
+            await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {err.ToString()}"));
+
           }
           else
           {

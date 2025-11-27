@@ -60,6 +60,6 @@ namespace AppConfiguration
     /// <see langword="true"/>, если приложение работает с правами администратора;
     /// <see langword="false"/> — если без них.
     /// </returns>
-    public static async Task<bool> GetDebugRights() => await Task.Run(() => IsDebug);
+    public static bool GetDebugRights() =>  IsDebug;
   }
 }

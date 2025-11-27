@@ -68,13 +68,12 @@ namespace ControlCommandExecutor.BaseStrategies
         foreach (var chain in errorChain)
         {
           var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
-          errorsMessgae.Add(
-             new ShowMessageModel($"{chainStr}",
-                 message: "Обнаружено замыкание",
-                 type: ShowMessageModel.MessageType.Error)
-             { IndentLevel = 3 });
+          var err = new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+
+          errorsMessgae.Add(err);
 
           manager.AddErrorMethod(baseCommandModel.PointErrors.ChainError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", chainStr));
+          await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {err.ToString()}"));
         }
       }
 

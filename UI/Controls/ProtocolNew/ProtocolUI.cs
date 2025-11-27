@@ -239,9 +239,16 @@ namespace UI.Controls.ProtocolNew
         showMessageModel.Time = _stopwatch.Elapsed.ToString(@"mm\:ss\.fff", CultureInfo.InvariantCulture);
       }
 
-      if (await AppConfiguration.AdminConfig.GetDebugRights())
+      if (AppConfiguration.AdminConfig.GetDebugRights())
       {
-        showMessageModel.Debug = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
+        if (string.IsNullOrEmpty(showMessageModel.Debug))
+        {
+          showMessageModel.Debug = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
+        }
+        else
+        { 
+          showMessageModel.Debug += $"|| {Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
+        }
       }
 
       await ShouldShowDetailedProtocol(showMessageModel);

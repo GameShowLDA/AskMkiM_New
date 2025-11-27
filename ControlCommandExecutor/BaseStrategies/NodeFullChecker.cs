@@ -84,8 +84,11 @@ namespace ControlCommandExecutor.BaseStrategies
         {
           var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
 
-          ErrorMessage.Add(new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 });
           context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr));
+
+          var err = new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          ErrorMessage.Add(err);
+          await context.MessageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {err.ToString()}"));
         }
       }
 
