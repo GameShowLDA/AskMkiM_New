@@ -11,16 +11,12 @@ jobs:
     runs-on: [ "windows", "dotnet" ]
 
     steps:
-      - name: Allow PowerShell scripts for this run
+      - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Checkout (local Gitea repo)
-        run: |
-          git init .
-          git remote add origin ${{ gitea.repository.clone_url }}
-          git fetch origin ${{ gitea.ref }}
-          git checkout FETCH_HEAD
+      - name: Checkout code
+        uses: https://gitea.com/gitea/act_runner/checkout@v1
 
       - name: Setup .NET SDK (local installation)
         run: |
