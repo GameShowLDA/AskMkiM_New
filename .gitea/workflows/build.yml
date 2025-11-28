@@ -15,7 +15,7 @@ jobs:
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Manual checkout (safe for Gitea)
+      - name: Manual checkout (robust for Gitea)
         run: |
           git init repo
           cd repo
@@ -23,14 +23,9 @@ jobs:
           echo "Cloning from: http://192.168.1.91:3000/game_show_lda/AskMkiM.git"
           git remote add origin http://192.168.1.91:3000/game_show_lda/AskMkiM.git
 
-          echo "Fetching base branch: develop"
-          git fetch origin develop
-
-          echo "Fetching PR head: refs/pull/${{ gitea.pull_request.number }}/head"
-          git fetch origin "refs/pull/${{ gitea.pull_request.number }}/head:pr"
-
-          echo "Checking out PR branch"
-          git checkout pr
+          echo "Fetching ref: $env:GITEA_REF"
+          git fetch origin $env:GITEA_REF
+          git checkout FETCH_HEAD
         shell: powershell
 
       - name: Restore dependencies
