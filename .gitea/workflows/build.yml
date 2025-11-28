@@ -2,26 +2,31 @@ name: Build .NET
 
 on:
   push:
-    branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: [ "windows", "dotnet" ]
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
+      - name: Checkout (local Gitea repo)
+        run: |
+          git init .
+          git remote add origin ${{ gitea.repository.clone_url }}
+          git fetch origin ${{ gitea.ref }}
+          git checkout FETCH_HEAD
 
-      - name: Restore
+      - name: Setup .NET SDK (local installation)
+        run: |
+          echo "Using system-installed .NET"
+          dotnet --version
+
+      - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build
