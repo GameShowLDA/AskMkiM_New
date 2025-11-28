@@ -17,7 +17,7 @@ jobs:
 
       - name: Checkout repository manually
         run: |
-          git clone http://192.168.1.91:3000/GameShowLDA/AskMkiM_New.git repo
+          git clone http://192.168.1.91:3000/game_show_lda/AskMkiM.git repo
           cd repo
           if ("${{ gitea.ref }}" -ne "") {
             git checkout "${{ gitea.ref }}"
@@ -27,10 +27,10 @@ jobs:
         shell: powershell
 
       - name: Restore dependencies
-        run: dotnet restore repo\AskMkiM_New.sln
+        run: dotnet restore repo\AskMkiM.sln
 
       - name: Build
-        run: dotnet build repo\AskMkiM_New.sln --configuration Release
+        run: dotnet build repo\AskMkiM.sln --configuration Release
 
       - name: Test
-        run: dotnet test repo\AskMkiM_New.sln --no-build
+        run: dotnet test repo\AskMkiM.sln --no-build
