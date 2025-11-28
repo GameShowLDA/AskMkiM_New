@@ -4,11 +4,11 @@ using Errors.Models;
 
 namespace UI.Controls.ErrorList
 {
-  public class ErrorLinePairConverter : IValueConverter
+  public class DiagnosticsCodeLinePairConverter : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-      if (value is ErrorItem error)
+      if (value is IDisplayIssue error)
       {
         if (error.SourceLineNumber > 0 && error.FormattedLineNumber > 0)
           return $"{error.SourceLineNumber} ({error.FormattedLineNumber})";

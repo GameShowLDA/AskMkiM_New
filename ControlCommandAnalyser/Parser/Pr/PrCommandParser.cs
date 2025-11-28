@@ -148,6 +148,7 @@ namespace ControlCommandAnalyser.Parser.Pr
           if (higher.Value <= 1000)
           {
             maxDefaultResistance = meter.MaxContinuityResistance;
+            //model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{maxDefaultResistance} {unit}"));
           }
           else
           {
@@ -207,6 +208,7 @@ namespace ControlCommandAnalyser.Parser.Pr
             if (value.Item1 <= 1000)
             {
               maxDefaultResistance = meter.MaxContinuityResistance;
+              //model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{maxDefaultResistance} {unit}"));
             }
             else
             {
@@ -235,9 +237,27 @@ namespace ControlCommandAnalyser.Parser.Pr
         if (hasResistanceErrors == false)
         {
           // если нижняя не задана → дефолт
-          double lowerFinal = lower ?? defaultLower;
+          double lowerFinal = -1;
+          if (lower == null)
+          {
+            lowerFinal = defaultLower;
+            model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unit}"));
+          }
+          else
+          {
+            lowerFinal = lower.Value;
+          }
           // если верхняя не задана → дефолт
-          double higherFinal = higher ?? defaultHigher;
+          double higherFinal = -1;
+          if (higher == null)
+          {
+            higherFinal = defaultHigher;
+            model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{higherFinal} {unit}"));
+          }
+          else
+          {
+            higherFinal = higher.Value;
+          }
 
           model.LowerLimitResistance = lowerFinal;
           model.LowerLimitResistanceSource = $"{lowerFinal} {unit}";
@@ -256,6 +276,7 @@ namespace ControlCommandAnalyser.Parser.Pr
       else if (!string.IsNullOrEmpty(unitTime))
       {
         timeValue = 1;
+        model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{timeValue} {unitTime}"));
       }
 
       if (timeValue.HasValue && timeValue > -1)

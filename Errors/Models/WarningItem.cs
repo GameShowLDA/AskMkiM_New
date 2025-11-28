@@ -1,8 +1,6 @@
-﻿using DTO.Base.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,10 +10,10 @@ namespace Errors.Models
   /// Представляет элемент ошибки, возникшей при выполнении команды или измерения.
   /// Содержит сведения о строке исходного кода, команде, описании и результате измерения.
   /// </summary>
-  public class ErrorItem : IDisplayIssue
+  public class WarningItem : IDisplayIssue
   {
     /// <summary>
-    /// Номер строки в исходном файле, где произошла ошибка.
+    /// Номер строки в исходном файле, где вызвано предупреждение.
     /// </summary>
     public int SourceLineNumber { get; set; }
 
@@ -26,33 +24,28 @@ namespace Errors.Models
     public int FormattedLineNumber { get; set; }
 
     /// <summary>
-    /// Команда, в которой возникла ошибка.
+    /// Команда, в которой возникло предупреждение.
     /// </summary>
     public string Command { get; set; } = string.Empty;
 
     /// <summary>
-    /// Текстовое описание ошибки или пояснение к ней.
+    /// Текстовое описание предупреждение или пояснение к нему.
     /// </summary>
     public string Description { get; set; } = string.Empty;
 
     /// <summary>
-    /// Результат измерения, при котором зафиксирована ошибка (если применимо).
+    /// Результат измерения, при котором зафиксировано предупреждение (если применимо).
     /// </summary>
     public string MeasureResult { get; set; } = string.Empty;
 
     /// <summary>
-    /// Отладочная информация.
+    /// Код предупреждения, определяющий его тип и причину.
+    /// Использует перечисление <see cref="WarningCode"/>.
     /// </summary>
-    public string DebugInfo { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Код ошибки, определяющий её тип и причину.
-    /// Использует перечисление <see cref="ErrorCode"/>.
-    /// </summary>
-    public ErrorCode? Code { get; set; }
+    public WarningCode? Code { get; set; }
 
     public string? CodeString => Code?.ToString();
 
-    public bool IsWarning => false;
+    public bool IsWarning => true;
   }
 }

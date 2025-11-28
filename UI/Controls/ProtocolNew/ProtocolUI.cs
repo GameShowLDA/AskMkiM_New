@@ -312,9 +312,9 @@ namespace UI.Controls.ProtocolNew
         StepControlManager.EnterBlock();
       }
     }
-    private async void ErrorListBoxVertical_ErrorItemDoubleClicked(ErrorItem error)
+    private async void ErrorListBoxVertical_ErrorItemDoubleClicked(IDisplayIssue item)
     {
-      await MoveToLineAsync(error.SourceLineNumber);
+      await MoveToLineAsync(item.SourceLineNumber);
     }
 
 

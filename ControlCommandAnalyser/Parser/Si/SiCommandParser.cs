@@ -162,8 +162,6 @@ namespace ControlCommandAnalyser.Parser.Si
       if (match.Success)
         remainder = match.Groups[1].Value.Trim();
 
-
-
       // сначала извлекаем ключи
       remainder = ExtractSiKeys(commandNumber, mnemonic, numberLine, model, body, remainder);
 
@@ -238,9 +236,10 @@ namespace ControlCommandAnalyser.Parser.Si
       if (string.IsNullOrEmpty(resistance) || resistance == null)
       {
         resistance = "100";
-        LoggerUtility.LogDebug($"Для сопротивления установлено значение по умолчанию '100<МОм'");
         resistanceValue = 100 * 1_000_000;
         unitResistance = "МОм";
+        LoggerUtility.LogDebug($"Для сопротивления установлено значение по умолчанию '100<МОм'");
+        model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{resistance} {unitResistance}"));
       }
       else
       {
@@ -280,6 +279,7 @@ namespace ControlCommandAnalyser.Parser.Si
         LoggerUtility.LogDebug($"Для времени установлено значение по умолчанию 5 с.'");
         time = "5с";
         timeValue = 5;
+        model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", time));
       }
       else
       {
