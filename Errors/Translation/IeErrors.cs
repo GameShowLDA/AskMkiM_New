@@ -71,7 +71,7 @@ namespace Errors.Translation
         Description = "Команда ИЕ должна содержать хотя бы один параметр. Тело команды не может быть пустым."
       };
 
-    public ErrorItem PairError(string command, string pointFirst, string pointLast,
+    public ErrorItem PairError(string command, string pointFirst, string pointLast, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
@@ -79,10 +79,12 @@ namespace Errors.Translation
         Command = command,
         Code = ErrorCode.Ie_PairError,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         Description = $"Замкнутая пара точек: {pointFirst}, {pointLast}"
       };
 
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value,
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0)
@@ -91,6 +93,8 @@ namespace Errors.Translation
       {
         Command = command,
         Code = ErrorCode.Ie_PairError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         MeasureResult = value,
       };
 
@@ -110,7 +114,7 @@ namespace Errors.Translation
       return eroror;
     }
 
-    public ErrorItem ChainError(string command, string chain,
+    public ErrorItem ChainError(string command, string chain, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
@@ -118,10 +122,12 @@ namespace Errors.Translation
         Command = command,
         Code = ErrorCode.Ie_ChainError,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         Description = $"Замкнутая цепь {chain}"
       };
 
-    public ErrorItem DisconnectChainError(string command, string chain, string measureResult,
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
@@ -130,10 +136,12 @@ namespace Errors.Translation
         Code = ErrorCode.Ie_ChainError,
         Description = $"Разрыв в цепи {chain}",
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         MeasureResult = measureResult
       };
 
-    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure,
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0)
@@ -142,6 +150,8 @@ namespace Errors.Translation
       {
         MeasureResult = resultMeasure,
         Command = command,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         Code = ErrorCode.Ie_NodeExecutePointError,
       };
 

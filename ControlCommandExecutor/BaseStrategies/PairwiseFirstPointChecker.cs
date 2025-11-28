@@ -72,7 +72,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
           errorsMessgae.Add(err);
 
-          manager.AddErrorMethod(baseCommandModel.PointErrors.ChainError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", chainStr));
+          manager.AddErrorMethod(baseCommandModel.PointErrors.ChainError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", chainStr, baseCommandModel.StartLineNumber, baseCommandModel.FormattedStartLineNumber));
           await messageService.ShowMessageAsync(new ShowMessageModel(debug: $"Добавлена ошибка: {err.ToString()}"));
         }
       }

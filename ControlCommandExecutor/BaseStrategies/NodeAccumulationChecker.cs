@@ -70,7 +70,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
             if (baseCommandModel.PointErrors != null)
             {
-              manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(points), PointModel.ConvertToPointStrings(localized), measured.Value));
+              manager.AddErrorMethod(baseCommandModel.PointErrors.ChainPairError($"{baseCommandModel.CommandNumber} {baseCommandModel.Mnemonic}", PointModel.ConvertToPointStrings(points), PointModel.ConvertToPointStrings(localized), measured.Value, baseCommandModel.StartLineNumber, baseCommandModel.FormattedStartLineNumber));
             }
 
             var strError = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(new List<ChainModel>() { new ChainModel(points), new ChainModel(localized) });

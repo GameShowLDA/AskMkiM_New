@@ -88,18 +88,20 @@ namespace Errors.Translation
         Description = "Команда ПИ не может содержать ключ Г, если для команды СИ присвоен ключ Т1."
       };
 
-    public ErrorItem PairError(string command, string pointFirst, string pointLast,
+    public ErrorItem PairError(string command, string pointFirst, string pointLast, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
       {
         Command = command,
         Code = ErrorCode.Pi_PairError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Замыкание точек: {pointFirst}, {pointLast}"
       };
 
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value,
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0)
@@ -108,6 +110,8 @@ namespace Errors.Translation
       {
         Command = command,
         Code = ErrorCode.Si_PairError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         MeasureResult = value,
       };
@@ -128,30 +132,34 @@ namespace Errors.Translation
       return eroror;
     }
 
-    public ErrorItem ChainError(string command, string chain,
+    public ErrorItem ChainError(string command, string chain, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
       {
         Command = command,
         Code = ErrorCode.Pi_ChainError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Замыкание цепи {chain}"
       };
 
-    public ErrorItem DisconnectChainError(string command, string chain, string measureResult,
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
       {
         Command = command,
         Code = ErrorCode.Pi_ChainError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         Description = $"Замыкание в цепи {chain}",
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         MeasureResult = measureResult
       };
 
-    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure,
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0)
@@ -160,6 +168,8 @@ namespace Errors.Translation
       {
         MeasureResult = resultMeasure,
         Command = command,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Code = ErrorCode.Pi_NodeExecutePointError,
       };

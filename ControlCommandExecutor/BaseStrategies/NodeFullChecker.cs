@@ -61,7 +61,7 @@ namespace ControlCommandExecutor.BaseStrategies
 
         if (!answer.Result)
         {
-          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.NodeExecutePointError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", PointModel.ConvertToPointStrings(chainModels.PointModels), ($"{answer.Value} МОм (>{context.Resistance} МОм)")));
+          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.NodeExecutePointError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", PointModel.ConvertToPointStrings(chainModels.PointModels), ($"{answer.Value} МОм (>{context.Resistance} МОм)"), context.CommandModel.StartLineNumber, context.CommandModel.FormattedStartLineNumber));
           ErrorsPoints.Add(chainModels);
         }
        
@@ -92,7 +92,7 @@ namespace ControlCommandExecutor.BaseStrategies
         {
           var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
 
-          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr));
+          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, context.CommandModel.StartLineNumber, context.CommandModel.FormattedStartLineNumber));
 
           var err = new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
           ErrorMessage.Add(err);
