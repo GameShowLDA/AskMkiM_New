@@ -1,16 +1,17 @@
-﻿using System.Text.RegularExpressions;
+﻿using DTO.Enum;
+using System.Text.RegularExpressions;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
   public static partial class PiSiSplitter
   {
     private static readonly HashSet<string> SiKeys = new(StringComparer.OrdinalIgnoreCase)
-    { AlgorithmKey.К.ToString(),
-      AlgorithmKey.С.ToString(),
-      AlgorithmKey.П.ToString(),
-      AlgorithmKey.И.ToString(),
-      AlgorithmKey.Г.ToString(),
-      AlgorithmKey.Т1.ToString() };
+    { TranslationKey.AlgorithmKey.К.ToString(),
+      TranslationKey.AlgorithmKey.С.ToString(),
+      TranslationKey.AlgorithmKey.П.ToString(),
+      TranslationKey.AlgorithmKey.И.ToString(),
+      TranslationKey.AlgorithmKey.Г.ToString(),
+      TranslationKey.AlgorithmKey.Т1.ToString() };
 
     private enum TokType { Volt, Time, Res, Key, Points, Comma, Ws, Other }
 

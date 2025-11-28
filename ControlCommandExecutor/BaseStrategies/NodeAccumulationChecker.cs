@@ -101,8 +101,10 @@ namespace ControlCommandExecutor.BaseStrategies
 
         foreach (var point in points)
         {
-          await DisconnectFromBusAAsync(point, messageService);
-          await ConnectToBusBAsync(point, messageService);
+          await SwitchFromBusAToBAsync(point, messageService);
+
+          // await DisconnectFromBusAAsync(point, messageService);
+          // await ConnectToBusBAsync(point, messageService);
         }
       }
 
@@ -300,6 +302,43 @@ namespace ControlCommandExecutor.BaseStrategies
         {
           await ConnectToBusBAsync(item, messageService);
         }
+      }
+    }
+
+
+    /// <summary>
+    /// Отключает указанную точку от шины B через соответствующий модуль коммутации.
+    /// В случае неудачи предлагает пользователю повторить попытку.
+    /// </summary>
+    /// <param name="point">Точка, которую необходимо отключить от шины A.</param>
+    /// <param name="messageService">Сервис для отображения сообщений и взаимодействия с пользователем.</param>
+    /// <exception cref="RelayControlException">
+    /// Выбрасывается при невозможности отключить точку после всех попыток.
+    /// </exception>
+    private static async Task SwitchFromBusAToBAsync(PointModel point, IUserMessageService messageService)
+    {
+      var module = EquipmentService.GetModuleByPoint(point);
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+      {
+        throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+      }
+    }
+
+    /// <summary>
+    /// Отключает указанную точку от шины B через соответствующий модуль коммутации.
+    /// В случае неудачи предлагает пользователю повторить попытку.
+    /// </summary>
+    /// <param name="point">Точка, которую необходимо отключить от шины A.</param>
+    /// <param name="messageService">Сервис для отображения сообщений и взаимодействия с пользователем.</param>
+    /// <exception cref="RelayControlException">
+    /// Выбрасывается при невозможности отключить точку после всех попыток.
+    /// </exception>
+    private static async Task SwitchFromBusBToAAsync(PointModel point, IUserMessageService messageService)
+    {
+      var module = EquipmentService.GetModuleByPoint(point);
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.A, point.PointNumber, messageService), messageService))
+      {
+        throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
     }
   }

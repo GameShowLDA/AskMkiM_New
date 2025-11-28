@@ -15,6 +15,8 @@ namespace UI.Controls
     public string SecondFilePath { get; set; }
 
     public int ErrorCount { get; private set; } = 0;
+    public int WarningCount { get; private set; } = 0;
+    public int GeneralCount => ErrorCount + WarningCount;
 
     private List<BaseCommandModel> translationModels = new List<BaseCommandModel>();
     public List<BaseCommandModel> TranslationModels
@@ -32,53 +34,41 @@ namespace UI.Controls
         {
           if (model.Errors.Count > 0)
           {
-            SetError(model.Errors);
+            ErrorListBoxVertical.AddErrors(model.Errors);
+            ErrorCount += model.Errors.Count;
+          }
+
+          if (model.Warnings.Count > 0)
+          {
+            ErrorListBoxVertical.AddWarnings(model.Warnings);
+            WarningCount += model.Warnings.Count;
           }
         }
+        MessageEventAdapter.RaiseInfoMessage(
+               $"Общее кол-во ошибок и предупреждений: {GeneralCount}");
       }
     }
 
     public TranslatorItem()
     {
       InitializeComponent();
-      ErrorListBoxVertical.ErrorItemDoubleClicked += ErrorListBoxVertical_ErrorItemDoubleClicked;
+      ErrorListBoxVertical.ItemDoubleClicked += ErrorListBoxVertical_ErrorItemDoubleClicked;
     }
 
-    private void ErrorListBoxVertical_ErrorItemDoubleClicked(ErrorItem error)
+    private void ErrorListBoxVertical_ErrorItemDoubleClicked(IDisplayIssue item)
     {
-      // Левый редактор (исходник)
-      //var leftLine = error.SourceLineNumber;
-
       var leftEditor = GetLeftEditor();
-      leftEditor.GoToLine(error.SourceLineNumber);
-
-      //if (leftLine > 0 && leftLine <= leftEditor.Document.LineCount)
-      //{
-      //  var line = leftEditor.Document.GetLineByNumber(leftLine);
-      //  leftEditor.ScrollToLine(leftLine);
-      //  leftEditor.Select(line.Offset, line.Length);
-      //  leftEditor.Focus();
-      //}
-
-      // Правый редактор (трансляция)
-      // var rightLine = error.FormattedLineNumber;
+      leftEditor.GoToLine(item.SourceLineNumber);
       
       var rightEditor = GetRightEditor();
-      rightEditor.GoToLine(error.FormattedLineNumber);
-
-      // if (rightLine > 0 && rightLine <= rightEditor.Document.LineCount)
-      // {
-      //   var line = rightEditor.Document.GetLineByNumber(rightLine);
-      //   rightEditor.ScrollToLine(rightLine);
-      //   rightEditor.Select(line.Offset, line.Length);
-      //   rightEditor.Focus();
-      // }
+      rightEditor.GoToLine(item.FormattedLineNumber);
     }
 
     private void ErrorClear()
     {
-      ErrorListBoxVertical.Errors.Clear();
+      ErrorListBoxVertical.Items.Clear();
       ErrorCount = 0;
+      WarningCount = 0;
     }
 
     public void SetLeftEditor(TextEditorUI textEditorUI)
@@ -113,20 +103,6 @@ namespace UI.Controls
 
       RightBox.Children.Clear();
       RightBox.Children.Add(textEditorUI);
-    }
-
-    private void SetError(List<ErrorItem> errorItems)
-    {
-      foreach (ErrorItem errorItem in errorItems)
-      {
-        ErrorListBoxVertical.Errors.Add(errorItem);
-        ErrorCount++;
-      }
-
-      if (ErrorCount > 0)
-      {
-        MessageEventAdapter.RaiseInfoMessage($"Общее кол-во ошибок: {ErrorCount}");
-      }
     }
 
     public TextEditorUI GetRightEditor()

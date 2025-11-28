@@ -150,7 +150,7 @@ namespace UI.Controls.ProtocolNew
 
       this.Loaded += (s, e) =>
       {
-        ErrorListBoxVertical.ErrorItemDoubleClicked += ErrorListBoxVertical_ErrorItemDoubleClicked;
+        ErrorListBoxVertical.ItemDoubleClicked += ErrorListBoxVertical_ErrorItemDoubleClicked;
         _attachedWindow = Application.Current?.MainWindow;
         if (_attachedWindow != null)
         {

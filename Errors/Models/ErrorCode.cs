@@ -604,7 +604,7 @@ namespace Errors.Models
   }
 
   /// <summary>
-  /// Расширения для <see cref="ErrorCode"/>.
+  /// Расширения для <see cref="WarningCode"/>.
   /// </summary>
   public static class ErrorCodeExtensions
   {

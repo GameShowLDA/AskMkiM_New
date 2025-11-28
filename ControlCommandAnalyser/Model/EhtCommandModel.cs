@@ -1,9 +1,12 @@
-﻿using ControlCommandAnalyser.Model.Chains;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model.Chains;
+using DTO.Enum;
 using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model
 {
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.Д)]
+  [MeasurementDevice(MeasurementDevice.Multimeter)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Д)]
   public class EhtCommandModel : BaseCommandModel
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.EHT).DisplayName;

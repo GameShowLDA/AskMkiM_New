@@ -47,6 +47,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
           await CheckBusesConnection(cancellationToken, _moduleRelay, device, userMessageService);
           break;
       }
+      await _moduleRelay.ConnectableManager.ResetAsync(userMessageService);
     }
 
     /// <summary>
@@ -62,6 +63,8 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       {
         return;
       }
+
+      await _moduleRelay.ConnectableManager.ResetAsync(userMessageService);
       await _moduleRelay.MeterManager.ConnectMeterAsync();
 
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Проверка подключения точек"));
@@ -78,6 +81,8 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       {
         return;
       }
+
+      await _moduleRelay.ConnectableManager.ResetAsync(userMessageService);
 
       await switchingDevice.ConnectableManager.ResetAsync(userMessageService);
       if (!await switchingDevice.ConnectorManager.ConnectAllBuses(userMessageService))

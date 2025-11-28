@@ -173,6 +173,14 @@ namespace ControlCommandAnalyser
           else
             error.FormattedLineNumber = -1;
         }
+        foreach (var warning in model.Warnings)
+        {
+          var match = lineMapping.FirstOrDefault(m => m.SourceLineNumber == warning.SourceLineNumber);
+          if (match != default)
+            warning.FormattedLineNumber = match.FormattedLineNumber;
+          else
+            warning.FormattedLineNumber = -1;
+        }
       }
     }
 

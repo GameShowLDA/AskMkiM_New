@@ -1,4 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Model.Ie;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
@@ -12,7 +13,7 @@ namespace ControlCommandAnalyser.Parser.Ie
   /// <summary>
   /// Парсер для команд ИЕ (измерение емкости).
   /// </summary>
-  [AllowedKeys(AlgorithmKey.Д)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.Д)]
   internal class IeCommandParser : ICommandParser
   {
     public bool CanParse(MnemonicIdentifier mnemonic)
@@ -213,16 +214,24 @@ namespace ControlCommandAnalyser.Parser.Ie
         // 9️⃣ Установка значений (только если всё прошло проверки)
         if (hasErrors == false)
         {
+          model.CapacityUnit = unit ?? string.Empty;
           // нижняя всегда должна быть → если есть — устанавливаем
           model.LowerLimitCapacity = lower.Value;
           model.LowerLimitCapacitySource = $"{lower.Value} {unit}";
 
           // верхняя: если есть — используем, если нет — ставим дефолт
-          double finalHigher = higher ?? maxCapacity;
+          double finalHigher = -1;
+          if (higher == null)
+          {
+            finalHigher = maxCapacity;
+            model.Warnings.Add(GeneralWarnings.DefaultCapacityHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{finalHigher} {model.CapacityUnit}"));
+          }
+          else
+          {
+            finalHigher = higher.Value;
+          }
           model.HigherLimitCapacity = finalHigher;
           model.HigherLimitCapacitySource = $"{finalHigher} {unit}";
-
-          model.CapacityUnit = unit ?? string.Empty;
         }
 
         if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitCapacity ?? higherLimitCapacity, out string err))

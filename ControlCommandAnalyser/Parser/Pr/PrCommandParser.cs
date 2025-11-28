@@ -1,4 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Model.Pr;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
@@ -147,6 +148,7 @@ namespace ControlCommandAnalyser.Parser.Pr
           if (higher.Value <= 1000)
           {
             maxDefaultResistance = meter.MaxContinuityResistance;
+            //model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{maxDefaultResistance} {unit}"));
           }
           else
           {
@@ -206,6 +208,7 @@ namespace ControlCommandAnalyser.Parser.Pr
             if (value.Item1 <= 1000)
             {
               maxDefaultResistance = meter.MaxContinuityResistance;
+              //model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{maxDefaultResistance} {unit}"));
             }
             else
             {
@@ -234,9 +237,27 @@ namespace ControlCommandAnalyser.Parser.Pr
         if (hasResistanceErrors == false)
         {
           // если нижняя не задана → дефолт
-          double lowerFinal = lower ?? defaultLower;
+          double lowerFinal = -1;
+          if (lower == null)
+          {
+            lowerFinal = defaultLower;
+            model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unit}"));
+          }
+          else
+          {
+            lowerFinal = lower.Value;
+          }
           // если верхняя не задана → дефолт
-          double higherFinal = higher ?? defaultHigher;
+          double higherFinal = -1;
+          if (higher == null)
+          {
+            higherFinal = defaultHigher;
+            model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{higherFinal} {unit}"));
+          }
+          else
+          {
+            higherFinal = higher.Value;
+          }
 
           model.LowerLimitResistance = lowerFinal;
           model.LowerLimitResistanceSource = $"{lowerFinal} {unit}";
@@ -255,6 +276,7 @@ namespace ControlCommandAnalyser.Parser.Pr
       else if (!string.IsNullOrEmpty(unitTime))
       {
         timeValue = 1;
+        model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{timeValue} {unitTime}"));
       }
 
       if (timeValue.HasValue && timeValue > -1)
@@ -277,7 +299,7 @@ namespace ControlCommandAnalyser.Parser.Pr
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
         var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
-        if (model.AlgorithmKey.Contains(AlgorithmKey.ЗР.ToString())
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.ЗР.ToString())
           && pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges) != null)
         {
           pointErrors.Remove(pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges));
@@ -312,27 +334,27 @@ namespace ControlCommandAnalyser.Parser.Pr
         // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
         int idxStarInFirstLine = remainder.IndexOf('*');
         remainder = idxStarInFirstLine >= 0 ? remainder[..idxStarInFirstLine].Trim() : remainder.Trim();
-        if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
           model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
         }
-        if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
         }
       }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+      else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
       {
         // находим цепи точек из предыдущей команды проверки
         model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
 
-        if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
         }
       }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+      else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
       {
         model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
       }

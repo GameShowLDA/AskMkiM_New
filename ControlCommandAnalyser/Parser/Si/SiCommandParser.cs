@@ -6,6 +6,7 @@ using DTO.Device.Breakdown;
 using DTO.Enum;
 using System.Text.RegularExpressions;
 using Utilities;
+using ControlCommandAnalyser.Attributes;
 
 namespace ControlCommandAnalyser.Parser.Si
 {
@@ -72,12 +73,12 @@ namespace ControlCommandAnalyser.Parser.Si
         {
           remainder = ParsePoints(commandNumber, mnemonic, numberLine, model, rmCommandModel, remainder, bodyNoWs, firstStar, lastStar);
         }
-        else if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
           model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
         }
-        else if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
         }
@@ -141,12 +142,12 @@ namespace ControlCommandAnalyser.Parser.Si
       // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
       int idxStarInFirstLine = remainder.IndexOf('*');
       remainder = idxStarInFirstLine >= 0 ? remainder[..idxStarInFirstLine].Trim() : remainder.Trim();
-      if (model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+      if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
       {
         // находим цепи точек из предыдущей команды проверки
         model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
       }
-      else if (model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+      else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
       {
         model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
       }
@@ -160,8 +161,6 @@ namespace ControlCommandAnalyser.Parser.Si
       var match = Regex.Match(remainder, @"^\s*\d+\s+[А-ЯA-Z]{2,}\s*(.*)$");
       if (match.Success)
         remainder = match.Groups[1].Value.Trim();
-
-
 
       // сначала извлекаем ключи
       remainder = ExtractSiKeys(commandNumber, mnemonic, numberLine, model, body, remainder);
@@ -237,9 +236,10 @@ namespace ControlCommandAnalyser.Parser.Si
       if (string.IsNullOrEmpty(resistance) || resistance == null)
       {
         resistance = "100";
-        LoggerUtility.LogDebug($"Для сопротивления установлено значение по умолчанию '100<МОм'");
         resistanceValue = 100 * 1_000_000;
         unitResistance = "МОм";
+        LoggerUtility.LogDebug($"Для сопротивления установлено значение по умолчанию '100<МОм'");
+        model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{resistance} {unitResistance}"));
       }
       else
       {
@@ -279,6 +279,7 @@ namespace ControlCommandAnalyser.Parser.Si
         LoggerUtility.LogDebug($"Для времени установлено значение по умолчанию 5 с.'");
         time = "5с";
         timeValue = 5;
+        model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", time));
       }
       else
       {

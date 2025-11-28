@@ -141,12 +141,6 @@ namespace ControlCommandAnalyser.Parser.Pi
         (time, unitTime, remainderPi) = CommonParameterParser.TimeParser.ParseTime(remainderPi);
         LoggerUtility.LogDebug($"После парсинга времени: time='{time}{unitTime}', remainder='{remainderPi}'");
 
-        //if (remainderPi.Contains('+'))
-        //{
-        //  model.VoltageType = VoltageEnum.Type.DCW;
-        //  remainderPi = remainderPi.Replace("+", string.Empty);
-        //}
-
         bool isDcw = remainderPi.Contains('+');
         if (isDcw)
         {
@@ -157,7 +151,6 @@ namespace ControlCommandAnalyser.Parser.Pi
         {
           model.VoltageType = VoltageEnum.Type.ACW;
         }
-
 
         model.VoltageSource = voltage;
 
@@ -202,11 +195,19 @@ namespace ControlCommandAnalyser.Parser.Pi
           model.Voltage = minVoltage;
           model.VoltageSource = model.Voltage.Value.ToString() + "В";
           LoggerUtility.LogDebug($"В команде ПИ не указано напряжение. Установлено значение по умолчанию {minVoltage} В.");
-          //model.Errors.Add(PiErrors.EmptyVoltage(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Warnings.Add(GeneralWarnings.DefaultVoltage(model.StartLineNumber, $"{commandNumber} {mnemonic}", model.VoltageSource));
         }
 
         model.Time = string.IsNullOrEmpty(time) || time == null ? 1 : CommonParameterParser.ParseToDouble(time);
-        model.TimeSource = string.IsNullOrEmpty(time) || time == null ? "1c" : time + unitTime;
+        if(string.IsNullOrEmpty(time) || time == null)
+        {
+          model.TimeSource = "1c";
+          model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", model.TimeSource));
+        }
+        else
+        {
+          model.TimeSource = time + unitTime;
+        }
 
         if (model.Voltage == null)
         {
@@ -219,7 +220,6 @@ namespace ControlCommandAnalyser.Parser.Pi
           model.Errors.Add(PiErrors.CannotParseParameters("Не указано время", numberLine, $"{commandNumber} {mnemonic}"));
           LoggerUtility.LogWarning($"Не указано время (строка {numberLine}): {commandNumber} {mnemonic}");
         }
-
 
         string bodyNoWs = string.Concat(processedLines.Select(l => Regex.Replace(l ?? string.Empty, @"\s+", "")));
 
@@ -265,29 +265,29 @@ namespace ControlCommandAnalyser.Parser.Pi
           // Обновим remainder: оставим в нём только то, что до первой '*' в ПЕРВОЙ строке
           int idxStarInFirstLine = remainderPi.IndexOf('*');
           remainderPi = idxStarInFirstLine >= 0 ? remainderPi[..idxStarInFirstLine].Trim() : remainderPi.Trim();
-          if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.П.ToString())
-            || model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+          if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString())
+            || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
           {
             // находим цепи точек из предыдущей команды проверки
             model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme, model.SiCommand);
             model.SiCommand.Scheme = model.Scheme;
           }
-          else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.С.ToString())
-            || model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+          else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
+            || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
           {
             model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
             model.SiCommand.Scheme = model.Scheme;
           }
         }
-        else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.П.ToString())
-          || model.AlgorithmKey.Contains(AlgorithmKey.П.ToString()))
+        else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString())
+          || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
           model.Scheme = CommandsModel.CheckKeyP(model.SiCommand, model.Scheme);
           model.SiCommand.Scheme = model.Scheme;
         }
-        else if (model.SiCommand.AlgorithmKey.Contains(AlgorithmKey.С.ToString())
-          || model.AlgorithmKey.Contains(AlgorithmKey.С.ToString()))
+        else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
+          || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
           model.Scheme = CommandsModel.CheckKeyS(model.Scheme);
           model.SiCommand.Scheme = model.Scheme;

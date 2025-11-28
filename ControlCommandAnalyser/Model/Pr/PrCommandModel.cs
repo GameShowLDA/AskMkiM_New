@@ -1,17 +1,20 @@
-﻿using ControlCommandAnalyser.Model.Chains;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Model.Interface;
 using ControlCommandAnalyser.Model.Ks;
+using DTO.Enum;
 using Errors.Translation;
 
 namespace ControlCommandAnalyser.Model.Pr
 {
-  [AllowedKeys(ControlCommandAnalyser.AlgorithmKey.К,
-   ControlCommandAnalyser.AlgorithmKey.ЗР,
-   ControlCommandAnalyser.AlgorithmKey.ЗС,
-   ControlCommandAnalyser.AlgorithmKey.С, ControlCommandAnalyser.AlgorithmKey.П,
-    ControlCommandAnalyser.AlgorithmKey.И,
-    ControlCommandAnalyser.AlgorithmKey.Т,
-   ControlCommandAnalyser.AlgorithmKey.Г, ControlCommandAnalyser.AlgorithmKey.Т1)]
+  [AllowedKeys(TranslationKey.AlgorithmKey.К,
+   TranslationKey.AlgorithmKey.ЗР,
+   TranslationKey.AlgorithmKey.ЗС,
+   TranslationKey.AlgorithmKey.С, TranslationKey.AlgorithmKey.П,
+    TranslationKey.AlgorithmKey.И,
+    TranslationKey.AlgorithmKey.Т,
+   TranslationKey.AlgorithmKey.Г, TranslationKey.AlgorithmKey.Т1)]
+  [MeasurementDevice(MeasurementDevice.Multimeter)]
   public class PrCommandModel : BaseCommandModel, IError, IHasScheme
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;

@@ -1,4 +1,5 @@
-﻿using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Attributes;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using DataBaseConfiguration.Migrations;
@@ -75,10 +76,8 @@ namespace ControlCommandAnalyser.Parser.Eht
       if (match.Success)
         remainder = match.Groups[1].Value.Trim();
 
-      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, 
-        voltage = string.Empty, voltageUnit = string.Empty,
-        amperage = string.Empty, amperageUnit = string.Empty,
-        time = string.Empty, unitTime = string.Empty, 
+      string? lowerLimitResistance = null, higherLimitResistance = null, unit = null,
+        time = string.Empty, unitTime = string.Empty,
         cabelLimitResistance = null, cabelUnit = null;
 
       var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
@@ -113,12 +112,6 @@ namespace ControlCommandAnalyser.Parser.Eht
 
       (time, unitTime, remainder) = CommonParameterParser.TimeParser.ParseTime(remainder);
       LoggerUtility.LogDebug($"После парсинга времени: time='{time}{unitTime}', remainder='{remainder}'");
-
-      (voltage, voltageUnit, remainder) = CommonParameterParser.VoltageParser.ParseVoltage(remainder);
-      LoggerUtility.LogDebug($"После парсинга напряжения: voltage='{voltage}{unit}', remainder='{remainder}'");
-
-      (amperage, amperageUnit, remainder) = CommonParameterParser.AmperageParser.ParseAmperage(remainder);
-      LoggerUtility.LogDebug($"После парсинга напряжения: voltage='{voltage}{unit}', remainder='{remainder}'");
 
       // флаг ошибок при проверке
       bool hasResistanceErrors = false;
@@ -183,17 +176,45 @@ namespace ControlCommandAnalyser.Parser.Eht
 
       if (hasResistanceErrors == false)
       {
-        // если нижняя не задана → дефолт
-        double lowerFinal = lower ?? defaultLower;
-        // если верхняя не задана → дефолт
-        double higherFinal = higher ?? defaultHigher;
         // если юнит не задан → дефолт
         string unitFinal = !string.IsNullOrWhiteSpace(unit) ? unit : defaultUnit;
+        // если нижняя не задана → дефолт
+        double lowerFinal = -1;
+        if (lower == null)
+        {
+          lowerFinal = defaultLower;
+          model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unitFinal}"));
+        }
+        else
+        {
+          lowerFinal = lower.Value;
+        }
+        // если верхняя не задана → дефолт
+        double higherFinal = -1;
+        if (higher == null)
+        {
+          higherFinal = defaultHigher;
+          model.Warnings.Add(GeneralWarnings.DefaultResistainceHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{higherFinal} {unitFinal}"));
+        }
+        else
+        {
+          higherFinal = higher.Value;
+        }
         string cabelUnitFinal = !string.IsNullOrWhiteSpace(cabelUnit) ? cabelUnit : defaultUnit;
 
         if (!string.IsNullOrWhiteSpace(cabelLimitResistance))
         {
           double cabelFinal = cabelLimit ?? 0;
+          if (cabelLimit == null)
+          {
+            cabelLimit = 0;
+            model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{cabelLimit} {cabelUnit}"));
+          }
+          else
+          {
+            cabelFinal = cabelLimit.Value;
+          }
+
           model.CabelResistance = cabelFinal;
           model.CabelResistanceSource = $"{cabelFinal} {cabelUnit}";
         }
@@ -213,6 +234,7 @@ namespace ControlCommandAnalyser.Parser.Eht
       else if (!string.IsNullOrEmpty(unitTime))
       {
         timeValue = 1;
+        model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{timeValue}{unitTime}"));
       }
 
       if (timeValue.HasValue && timeValue > -1)
