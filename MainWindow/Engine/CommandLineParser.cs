@@ -39,6 +39,10 @@ namespace MainWindowProgram.Engine
           isAdmin = true;
           HandleAdminMode();
         }
+        else if (token.Equals("debug", StringComparison.OrdinalIgnoreCase))
+        {
+          AppConfiguration.AdminConfig.SetDebugRights(true).ConfigureAwait(false);
+        }
         else
         {
           HandleUnknownArgument(raw);
