@@ -79,13 +79,13 @@ namespace UI.Controls.Runner
       ProtocolUI = new ProtocolUI(true);
       ProtocolUI.ErrorListBoxVerticalVisibility = Visibility.Collapsed;
       MainContent.Content = ProtocolUI;
-      ErrorListBoxVertical.ErrorItemDoubleClicked += ErrorItemDoubleClicked;
+      ErrorListBoxVertical.ItemDoubleClicked += ErrorItemDoubleClicked;
 
       Loaded += RunControl_Loaded;
       LeftBox.AddHandler(UIElement.PreviewGotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(LeftBox_PreviewGotKeyboardFocus), true);
     }
 
-    private async void ErrorItemDoubleClicked(ErrorItem obj)
+    private async void ErrorItemDoubleClicked(IDisplayIssue obj)
     {
       var protocolUI = MainContent.Content as ProtocolUI;
       if (protocolUI != null)
