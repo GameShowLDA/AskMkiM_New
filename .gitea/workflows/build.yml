@@ -15,19 +15,22 @@ jobs:
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Checkout code
-        uses: https://gitea.com/gitea/act_runner/checkout@v1
-
-      - name: Setup .NET SDK (local installation)
+      - name: Checkout repository manually
         run: |
-          echo "Using system-installed .NET"
-          dotnet --version
+          git clone http://192.168.1.91:3000/GameShowLDA/AskMkiM_New.git repo
+          cd repo
+          if ("${{ gitea.ref }}" -ne "") {
+            git checkout "${{ gitea.ref }}"
+          } else {
+            git checkout develop
+          }
+        shell: powershell
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore repo\AskMkiM_New.sln
 
       - name: Build
-        run: dotnet build --configuration Release
+        run: dotnet build repo\AskMkiM_New.sln --configuration Release
 
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test repo\AskMkiM_New.sln --no-build
