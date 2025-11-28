@@ -52,8 +52,10 @@ namespace ControlCommandExecutor.BaseStrategies
 
         await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {chainModels.ToString()}"), IsBlockStart: true);
 
-        await DisconnectFromBusBAsync(chainModels, context.MessageService);
-        await ConnectToBusAAsync(chainModels, context.MessageService);
+        //await DisconnectFromBusBAsync(chainModels, context.MessageService);
+        //await ConnectToBusAAsync(chainModels, context.MessageService);
+
+        await SwitchFromBusBToAAsync(chainModels, context.MessageService);
 
         var answer = await context.PerformMeasurementAsync(context.Resistance, context.MessageService, context.MessageService.GetCancellationToken());
 
@@ -63,8 +65,10 @@ namespace ControlCommandExecutor.BaseStrategies
           ErrorsPoints.Add(chainModels);
         }
        
-        await DisconnectFromBusAAsync(chainModels, context.MessageService);
-        await ConnectToBusBAsync(chainModels, context.MessageService);
+        // await DisconnectFromBusAAsync(chainModels, context.MessageService);
+        // await ConnectToBusBAsync(chainModels, context.MessageService);
+
+        await SwitchFromBusAToBAsync(chainModels, context.MessageService);
 
       }
 
@@ -301,6 +305,48 @@ namespace ControlCommandExecutor.BaseStrategies
       {
         var module = EquipmentService.GetModuleByPoint(point);
         if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+        {
+          throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Отключает указанную точку от шины B через соответствующий модуль коммутации.
+    /// В случае неудачи предлагает пользователю повторить попытку.
+    /// </summary>
+    /// <param name="point">Точка, которую необходимо отключить от шины A.</param>
+    /// <param name="messageService">Сервис для отображения сообщений и взаимодействия с пользователем.</param>
+    /// <exception cref="RelayControlException">
+    /// Выбрасывается при невозможности отключить точку после всех попыток.
+    /// </exception>
+    private static async Task SwitchFromBusAToBAsync(ChainModel chain, IUserMessageService messageService)
+    {
+      foreach (var point in chain.PointModels)
+      {
+        var module = EquipmentService.GetModuleByPoint(point);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+        {
+          throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
+        }
+      }
+    }
+
+    /// <summary>
+    /// Отключает указанную точку от шины B через соответствующий модуль коммутации.
+    /// В случае неудачи предлагает пользователю повторить попытку.
+    /// </summary>
+    /// <param name="point">Точка, которую необходимо отключить от шины A.</param>
+    /// <param name="messageService">Сервис для отображения сообщений и взаимодействия с пользователем.</param>
+    /// <exception cref="RelayControlException">
+    /// Выбрасывается при невозможности отключить точку после всех попыток.
+    /// </exception>
+    private static async Task SwitchFromBusBToAAsync(ChainModel chain, IUserMessageService messageService)
+    {
+      foreach (var point in chain.PointModels)
+      {
+        var module = EquipmentService.GetModuleByPoint(point);
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectingPointToNewBus(bus: BusPoint.A, point.PointNumber, messageService), messageService))
         {
           throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
         }

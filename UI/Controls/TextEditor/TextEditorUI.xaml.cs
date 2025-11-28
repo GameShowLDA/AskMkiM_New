@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit.Document;
+﻿using ControlCommandAnalyser.Model;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;

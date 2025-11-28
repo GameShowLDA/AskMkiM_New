@@ -278,7 +278,7 @@ namespace NewCore.Function.ModuleRelayControl
         return true;
       }
 
-      var cmd = new DeviceCommand(81, (int)bus, nubmerPoint);
+      var cmd = new DeviceCommand(81, nubmerPoint, (int)bus);
       string response = await _moduleRelayControl.DeviceProtocol.QueryAsync(cmd.ToString(), timeout: 1000);
       var result = response.Contains(cmd.ToString()[..^1]);
       if (result)
