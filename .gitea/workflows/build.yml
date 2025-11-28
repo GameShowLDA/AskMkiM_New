@@ -15,15 +15,30 @@ jobs:
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Checkout repository manually
+            - name: Checkout repository manually (Gitea PR safe)
         run: |
-          git clone http://192.168.1.91:3000/game_show_lda/AskMkiM.git repo
+          git init repo
           cd repo
-          if ("${{ gitea.ref }}" -ne "") {
-            git checkout "${{ gitea.ref }}"
-          } else {
-            git checkout develop
-          }
+
+          echo "Cloning from: ${{ gitea.repository.clone_url }}"
+          git remote add origin "${{ gitea.repository.clone_url }}"
+
+          echo "Fetching ref: ${{ gitea.ref }}"
+
+          # 1. Fetch обычного ref (ветки)
+          git fetch origin "${{ gitea.ref }}" || true
+
+          # 2. Fetch PR refs (формат Gitea)
+          git fetch origin "refs/pulls/*:refs/remotes/origin/pulls/*" || true
+          git fetch origin "refs/pull/*:refs/remotes/origin/pull/*" || true
+          git fetch origin "refs/merge-requests/*:refs/remotes/origin/mr/*" || true
+
+          # 3. Попытка checkout всех известных форматов
+          git checkout FETCH_HEAD 2>nul || ^
+          git checkout "origin/pulls/${{ gitea.pull_request.number }}/head" 2>nul || ^
+          git checkout "origin/pull/${{ gitea.pull_request.number }}/head" 2>nul || ^
+          git checkout "origin/mr/${{ gitea.pull_request.number }}/head"
+
         shell: powershell
 
       - name: Restore dependencies
