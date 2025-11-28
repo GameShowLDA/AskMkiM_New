@@ -158,11 +158,7 @@ namespace UI.Controls.ErrorList
     /// </summary>
     public event Action<IDisplayIssue>? ItemDoubleClicked;
 
-    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-      if (sender is DataGrid grid && grid.SelectedItem is IDisplayIssue item)
-        ItemDoubleClicked?.Invoke(item);
-    }
+
 
     private void ApplyFilter()
     {
@@ -253,6 +249,14 @@ namespace UI.Controls.ErrorList
 
       // Перерисовываем видимость сразу
       UpdateButtons();
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      if (sender is DataGrid grid && grid.SelectedItem is ErrorItem selectedError)
+      {
+        ItemDoubleClicked?.Invoke(selectedError);
+      }
     }
   }
 }
