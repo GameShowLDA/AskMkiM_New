@@ -35,6 +35,15 @@ namespace UI.Controls.ProtocolNew
     public static Action? OnExitPressed;
     public static Action? OnRepeatPressed;
 
+    /// <summary>
+    /// Запуск программы с точками останова (Ctrl+F8).
+    /// </summary>
+    public static Action? OnRunWithBreakpointsPressed;
+
+    /// <summary>
+    /// Переход к следующей точке останова (F8).
+    /// </summary>
+    public static Action? OnNextBreakpointPressed;
 
     /// <summary>
     /// Регистрирует глобальный обработчик нажатий клавиш.
@@ -61,14 +70,30 @@ namespace UI.Controls.ProtocolNew
     /// <param name="e">Аргументы события нажатия клавиши.</param>
     private static void OnGlobalKeyPressed(object sender, PreProcessInputEventArgs e)
     {
-      if (_tcs == null) return;
-
       var args = e.StagingItem.Input as KeyEventArgs;
-      if (args == null || args.RoutedEvent != Keyboard.KeyDownEvent) return;
+      if (args == null || args.RoutedEvent != Keyboard.KeyDownEvent)
+        return;
 
       var key = args.Key == Key.System ? args.SystemKey : args.Key;
+      var modifiers = Keyboard.Modifiers;
 
-      LogInformation($"[KEYBOARD] Detected key: {key}");
+      if (key == Key.F8 && (modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+      {
+        LogInformation("[KEYBOARD] Ctrl+F8 -> Run with breakpoints");
+        OnRunWithBreakpointsPressed?.Invoke();
+        args.Handled = true;
+        return;
+      }
+
+      if (key == Key.F8 && modifiers == ModifierKeys.None)
+      {
+        LogInformation("[KEYBOARD] F8 -> Next breakpoint");
+        OnNextBreakpointPressed?.Invoke();
+        args.Handled = true;
+        return;
+      }
+
+      if (_tcs == null) return;
 
       switch (key)
       {

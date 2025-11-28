@@ -263,18 +263,18 @@ namespace ControlCommandExecutor.Execution
       }
 
       // Автоматическое продолжение через 3 секунды
-      _ = Task.Run(async () =>
-      {
-        try
-        {
-          await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
-          tcs.TrySetResult(true); // если уже нажали "Продолжить" — тихо проигнорируется
-        }
-        catch (TaskCanceledException)
-        {
-          // игнорируем, если выполнение отменили раньше
-        }
-      }, cancellationToken);
+      //_ = Task.Run(async () =>
+      //{
+      //  try
+      //  {
+      //    await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
+      //    tcs.TrySetResult(true); // если уже нажали "Продолжить" — тихо проигнорируется
+      //  }
+      //  catch (TaskCanceledException)
+      //  {
+      //    // игнорируем, если выполнение отменили раньше
+      //  }
+      //}, cancellationToken);
 
       return tcs.Task;
     }

@@ -184,6 +184,11 @@ namespace UI.Controls.Runner
       ProtocolUI.MenuButtonVisibility(false);
       ControlProgram = models;
 
+      KeyboardManager.OnNextBreakpointPressed = () =>
+      {
+        Application.Current.Dispatcher.Invoke(() => ContinueFromBreakpoint());
+      };
+
       var ok = models[0];
       if (ok.Mnemonic != "ОК")
       {
