@@ -15,16 +15,17 @@ jobs:
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Manual checkout (safe for Gitea)
+        - name: Manual checkout (safe for Gitea)
         run: |
-          git init repo
-          cd repo
-
-          echo "Cloning from: ${{ gitea.repository.clone_url }}"
-          git remote add origin "${{ gitea.repository.clone_url }}"
-          git fetch origin "${{ gitea.ref }}"
-          git checkout FETCH_HEAD
+            git init repo
+            cd repo
+        
+            echo "Cloning from: http://192.168.1.91:3000/game_show_lda/AskMkiM.git"
+            git remote add origin "http://192.168.1.91:3000/game_show_lda/AskMkiM.git"
+            git fetch origin develop
+            git checkout FETCH_HEAD
         shell: powershell
+
 
       - name: Restore dependencies
         run: dotnet restore repo\\AskMkiM.sln
