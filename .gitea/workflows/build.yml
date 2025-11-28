@@ -1,13 +1,10 @@
 name: Build .NET
 
 on:
-  pull_request:
+  push:
     branches:
-      - "develop"
+      - develop
   workflow_dispatch:
-
-env:
-  REPO_URL: "${{ gitea.repository.html_url }}.git"
 
 jobs:
   build:
@@ -18,36 +15,25 @@ jobs:
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Checkout repository (universal for Gitea)
+      - name: Manual checkout (safe for Gitea)
         run: |
           git init repo
           cd repo
 
-          echo "Cloning URL: $env:REPO_URL"
-          git remote add origin "$env:REPO_URL"
-
-          # If this is MR — fetch head/base refs
-          if ("${{ gitea.event_name }}" -eq "pull_request") {
-            echo "Fetching BASE branch: ${{ gitea.base_ref }}"
-            git fetch origin "${{ gitea.base_ref }}"
-
-            echo "Fetching HEAD branch: ${{ gitea.head_ref }}"
-            git fetch origin "${{ gitea.head_ref }}"
-
-            git checkout "${{ gitea.head_ref }}"
-          }
-          else {
-            echo "Fetching default branch: develop"
-            git fetch origin develop
-            git checkout develop
-          }
+          echo "Cloning from: ${{ gitea.repository.clone_url }}"
+          git remote add origin "${{ gitea.repository.clone_url }}"
+          git fetch origin "${{ gitea.ref }}"
+          git checkout FETCH_HEAD
         shell: powershell
 
       - name: Restore dependencies
-        run: dotnet restore repo\AskMkiM.sln
+        run: dotnet restore repo\\AskMkiM.sln
+        shell: powershell
 
       - name: Build
-        run: dotnet build repo\AskMkiM.sln --configuration Release
+        run: dotnet build repo\\AskMkiM.sln --configuration Release
+        shell: powershell
 
       - name: Test
-        run: dotnet test repo\AskMkiM.sln --no-build
+        run: dotnet test repo\\AskMkiM.sln --no-build
+        shell: powershell
