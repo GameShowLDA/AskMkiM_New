@@ -1,8 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using DTO.Settings.SettingsModels;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
+using SQLitePCL;
+using System;
+using System.Diagnostics;
+using System.IO;
 using static Utilities.LoggerUtility;
 
 namespace UI.Services.ProtocolManager
@@ -47,16 +49,21 @@ namespace UI.Services.ProtocolManager
     /// </summary>
     private string BuildOutputPath(string programName)
     {
+
       var baseDir = new DirectoryInfo(AppContext.BaseDirectory);
-      var root = baseDir?.Parent?.Parent?.FullName ?? AppContext.BaseDirectory;
+      var root = baseDir?.Parent;
+      if (root != null)
+      {
+        var historyDir = Path.Combine(root.FullName, FileLocations.DataSaveDirectory);
 
-      var historyDir = Path.Combine(root, "History");
-      var dateDir = Path.Combine(historyDir, DateTime.Now.ToString("yyyy-MM-dd"));
+        var dateDir = Path.Combine(historyDir, DateTime.Now.ToString("yyyy-MM-dd"));
 
-      Directory.CreateDirectory(dateDir); // ✅ гарантируем, что папка существует
+        Directory.CreateDirectory(dateDir); // ✅ гарантируем, что папка существует
 
-      var fileName = $"{programName}_{DateTime.Now:HHmmss}.pdf";
-      return Path.Combine(dateDir, fileName);
+        var fileName = $"{programName}_{DateTime.Now:HHmmss}.pdf";
+        return Path.Combine(dateDir, fileName);
+      }
+      return null;
     }
 
     #endregion
