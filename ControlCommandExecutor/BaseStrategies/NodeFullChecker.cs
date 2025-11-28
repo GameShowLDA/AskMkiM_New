@@ -65,8 +65,8 @@ namespace ControlCommandExecutor.BaseStrategies
           ErrorsPoints.Add(chainModels);
         }
        
-        // await DisconnectFromBusAAsync(chainModels, context.MessageService);
-        // await ConnectToBusBAsync(chainModels, context.MessageService);
+        //await DisconnectFromBusAAsync(chainModels, context.MessageService);
+        //await ConnectToBusBAsync(chainModels, context.MessageService);
 
         await SwitchFromBusAToBAsync(chainModels, context.MessageService);
 
