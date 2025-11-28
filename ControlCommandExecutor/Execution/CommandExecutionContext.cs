@@ -32,14 +32,17 @@ namespace ControlCommandExecutor.Execution
 
     public string? OpkFilePath { get; set; }
 
+    public CancellationToken CancellationToken { get; }
 
-    public CommandExecutionContext(CommandExecutionManager commandExecutionManager, BaseCommandModel command, IUserMessageService console, ITextEditorAdapter editorAdapter, string opkFileName)
+
+    public CommandExecutionContext(CommandExecutionManager commandExecutionManager, BaseCommandModel command, IUserMessageService console, ITextEditorAdapter editorAdapter, string opkFileName, CancellationToken cancellationToken = default)
     {
       Command = command;
       Console = console;
       TranslationControl = editorAdapter;
       CommandExecutionManager = commandExecutionManager;
       OpkFilePath = opkFileName;
+      CancellationToken = cancellationToken;
     }
 
     /// <summary>

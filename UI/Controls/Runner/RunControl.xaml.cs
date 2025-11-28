@@ -41,9 +41,9 @@ namespace UI.Controls.Runner
 
     public IReadOnlyCollection<int> Breakpoints { get; set; } = Array.Empty<int>();
 
-    private TextEditorUI? _editor;                       // ★ текущий редактор
+    private TextEditorUI? _editor;
 
-    private CommandExecutionManager? _executionManager;  // ★ текущий менеджер
+    private CommandExecutionManager? _executionManager;
 
     private TextEditorUI _leftEditor;
     public List<BaseCommandModel> TranslationModels
@@ -218,19 +218,19 @@ namespace UI.Controls.Runner
       // Лог для проверки, что брейкпоинты реально дошли до RunControl
       LogInformation($"[RunControl] Breakpoints: {string.Join(", ", Breakpoints)}");
 
-      // ★ создаём менеджер с брейкпоинтами
+      // создаём менеджер с брейкпоинтами
       _executionManager = new CommandExecutionManager(
         ProtocolUI,
         editor,
         ControlProgram,
         OpkFilePath,
-        Breakpoints  // ← вот они
+        Breakpoints
       );
 
       _executionManager.ClearError += ErrorClear;
       _executionManager.AddError += AddError;
 
-      // ★ передаём туда cancellationToken
+      // передаём туда cancellationToken
       await _executionManager.ExecuteAllAsync(cancellationToken);
     }
 
@@ -286,9 +286,6 @@ namespace UI.Controls.Runner
     private void BottomSplitter_OnDragStarted(object sender, DragStartedEventArgs e)
     {
       _userResizing = true;
-
-      // Переводим строку из Auto → FixedHeight,
-      // чтобы пользователь мог растягивать вручную
       BottomRow.Height = new GridLength(ErrorListBoxVertical.ActualHeight);
       ErrorListBoxVertical.MaxHeight = double.PositiveInfinity;
     }
