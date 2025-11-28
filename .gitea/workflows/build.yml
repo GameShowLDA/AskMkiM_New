@@ -9,7 +9,11 @@ on:
 jobs:
   build:
     runs-on: [ "windows", "dotnet" ]
+
     steps:
+      - name: Allow PowerShell scripts for this run
+        run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+        shell: powershell
 
       - name: Checkout (local Gitea repo)
         run: |
