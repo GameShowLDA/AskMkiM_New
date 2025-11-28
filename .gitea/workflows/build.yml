@@ -6,6 +6,9 @@ on:
       - "develop"
   workflow_dispatch:
 
+env:
+  REPO_URL: "${{ gitea.repository.html_url }}.git"
+
 jobs:
   build:
     runs-on: ["windows", "dotnet"]
@@ -15,22 +18,29 @@ jobs:
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-      - name: Checkout repository manually (Gitea PR Safe)
+      - name: Checkout repository (universal for Gitea)
         run: |
           git init repo
           cd repo
 
-          echo "Cloning from: ${{ gitea.repository.clone_url }}"
-          git remote add origin "${{ gitea.repository.clone_url }}"
+          echo "Cloning URL: $env:REPO_URL"
+          git remote add origin "$env:REPO_URL"
 
-          echo "Fetching BASE (target) branch: ${{ gitea.base_ref }}"
-          git fetch origin "${{ gitea.base_ref }}"
+          # If this is MR — fetch head/base refs
+          if ("${{ gitea.event_name }}" -eq "pull_request") {
+            echo "Fetching BASE branch: ${{ gitea.base_ref }}"
+            git fetch origin "${{ gitea.base_ref }}"
 
-          echo "Fetching HEAD (source) branch: ${{ gitea.head_ref }}"
-          git fetch origin "${{ gitea.head_ref }}"
+            echo "Fetching HEAD branch: ${{ gitea.head_ref }}"
+            git fetch origin "${{ gitea.head_ref }}"
 
-          echo "Checkout HEAD of PR: ${{ gitea.head_ref }}"
-          git checkout "${{ gitea.head_ref }}"
+            git checkout "${{ gitea.head_ref }}"
+          }
+          else {
+            echo "Fetching default branch: develop"
+            git fetch origin develop
+            git checkout develop
+          }
         shell: powershell
 
       - name: Restore dependencies
