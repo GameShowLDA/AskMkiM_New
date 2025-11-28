@@ -48,7 +48,7 @@ namespace MainWindowProgram.ViewModels
     }
 
     [RelayCommand]
-    private async Task RunWithStopPointsAsync()
+    private async Task RunStopPointsModeAsync()
     {
       await AppConfiguration.Execution.ExecutionConfig.SetBreakpointsMode(true);
       await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(false);

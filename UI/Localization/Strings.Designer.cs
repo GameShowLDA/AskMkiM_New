@@ -19,7 +19,7 @@ namespace UI.Localization {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -192,6 +192,15 @@ namespace UI.Localization {
         internal static string menu_execution_run_stepByStepMode {
             get {
                 return ResourceManager.GetString("menu.execution.run.stepByStepMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запуск (Режим точек остановки).
+        /// </summary>
+        internal static string menu_execution_run_stopPointsMode {
+            get {
+                return ResourceManager.GetString("menu.execution.run.stopPointsMode", resourceCulture);
             }
         }
         
