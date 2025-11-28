@@ -1,40 +1,43 @@
 name: Build .NET
 
 on:
-  push:
+  pull_request:
     branches:
-      - develop
+      - "develop"
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ["windows", "dotnet"]
+    runs-on: [ "windows", "dotnet" ]
 
     steps:
       - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-        - name: Manual checkout (safe for Gitea)
+      - name: Manual checkout (safe for Gitea)
         run: |
-            git init repo
-            cd repo
-        
-            echo "Cloning from: http://192.168.1.91:3000/game_show_lda/AskMkiM.git"
-            git remote add origin "http://192.168.1.91:3000/game_show_lda/AskMkiM.git"
-            git fetch origin develop
-            git checkout FETCH_HEAD
-        shell: powershell
+          git init repo
+          cd repo
 
+          echo "Cloning from: http://192.168.1.91:3000/game_show_lda/AskMkiM.git"
+          git remote add origin http://192.168.1.91:3000/game_show_lda/AskMkiM.git
+
+          echo "Fetching base branch: develop"
+          git fetch origin develop
+
+          echo "Fetching PR head: refs/pull/${{ gitea.pull_request.number }}/head"
+          git fetch origin "refs/pull/${{ gitea.pull_request.number }}/head:pr"
+
+          echo "Checking out PR branch"
+          git checkout pr
+        shell: powershell
 
       - name: Restore dependencies
-        run: dotnet restore repo\\AskMkiM.sln
-        shell: powershell
+        run: dotnet restore repo\AskMkiM.sln
 
       - name: Build
-        run: dotnet build repo\\AskMkiM.sln --configuration Release
-        shell: powershell
+        run: dotnet build repo\AskMkiM.sln --configuration Release
 
       - name: Test
-        run: dotnet test repo\\AskMkiM.sln --no-build
-        shell: powershell
+        run: dotnet test repo\AskMkiM.sln --no-build
