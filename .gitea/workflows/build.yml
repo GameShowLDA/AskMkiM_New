@@ -8,14 +8,14 @@ on:
 
 jobs:
   build:
-    runs-on: [ "windows", "dotnet" ]
+    runs-on: ["windows", "dotnet"]
 
     steps:
       - name: Allow PowerShell scripts
         run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
         shell: powershell
 
-            - name: Checkout repository manually (Gitea PR safe)
+      - name: Checkout repository manually (Gitea PR Safe)
         run: |
           git init repo
           cd repo
@@ -23,22 +23,14 @@ jobs:
           echo "Cloning from: ${{ gitea.repository.clone_url }}"
           git remote add origin "${{ gitea.repository.clone_url }}"
 
-          echo "Fetching ref: ${{ gitea.ref }}"
+          echo "Fetching BASE (target) branch: ${{ gitea.base_ref }}"
+          git fetch origin "${{ gitea.base_ref }}"
 
-          # 1. Fetch обычного ref (ветки)
-          git fetch origin "${{ gitea.ref }}" || true
+          echo "Fetching HEAD (source) branch: ${{ gitea.head_ref }}"
+          git fetch origin "${{ gitea.head_ref }}"
 
-          # 2. Fetch PR refs (формат Gitea)
-          git fetch origin "refs/pulls/*:refs/remotes/origin/pulls/*" || true
-          git fetch origin "refs/pull/*:refs/remotes/origin/pull/*" || true
-          git fetch origin "refs/merge-requests/*:refs/remotes/origin/mr/*" || true
-
-          # 3. Попытка checkout всех известных форматов
-          git checkout FETCH_HEAD 2>nul || ^
-          git checkout "origin/pulls/${{ gitea.pull_request.number }}/head" 2>nul || ^
-          git checkout "origin/pull/${{ gitea.pull_request.number }}/head" 2>nul || ^
-          git checkout "origin/mr/${{ gitea.pull_request.number }}/head"
-
+          echo "Checkout HEAD of PR: ${{ gitea.head_ref }}"
+          git checkout "${{ gitea.head_ref }}"
         shell: powershell
 
       - name: Restore dependencies
