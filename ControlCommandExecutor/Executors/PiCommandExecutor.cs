@@ -228,7 +228,7 @@ namespace ControlCommandExecutor.Executors
           throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
         }
 
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.CurrentLimits.SetHighCurrentLimitAsync(80, userMessageService)).Success, userMessageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.CurrentLimits.SetHighCurrentLimitAsync(20, userMessageService)).Success, userMessageService))
         {
           throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
         }

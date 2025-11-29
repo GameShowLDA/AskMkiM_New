@@ -63,7 +63,7 @@
     /// <summary>
     /// Преобразует значение сопротивления в Омы (СИ).
     /// </summary>
-    private static double ConvertToOhms(double value, string unit)
+    internal static double ConvertToOhms(double value, string unit)
     {
       unit = unit.ToLowerInvariant();
       return unit switch
@@ -72,6 +72,22 @@
         "ком" => value * 1_000,
         "мом" => value * 1_000_000,
         "гом" => value * 1_000_000_000,
+        _ => value
+      };
+    }
+
+    /// <summary>
+    /// Преобразует значение сопротивления в Омы (СИ).
+    /// </summary>
+    internal static double ConvertToMOhms(double value, string unit)
+    {
+      unit = unit.ToLowerInvariant();
+      return unit switch
+      {
+        "ом" => value / 1_000_000,
+        "ком" => value / 1_000,
+        "мом" => value,
+        "гом" => value * 1_000,
         _ => value
       };
     }
