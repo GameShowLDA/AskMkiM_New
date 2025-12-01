@@ -46,6 +46,7 @@ namespace UI.Controls.Runner
     private CommandExecutionManager? _executionManager;
 
     private TextEditorUI _leftEditor;
+    public TextEditorUI? LeftEditor => _leftEditor;
     public List<BaseCommandModel> TranslationModels
     {
       get

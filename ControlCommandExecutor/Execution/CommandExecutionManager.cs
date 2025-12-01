@@ -182,46 +182,54 @@ namespace ControlCommandExecutor.Execution
     /// </summary>
     public async Task ExecuteAllAsync(CancellationToken cancellationToken = default)
     {
-      for (int i = 0; i < CommandsToExecute.Count; i++)
-      {
-        cancellationToken.ThrowIfCancellationRequested();
+        int i = 0;
 
-        var command = CommandsToExecute[i];
-        var headerLine = command.FormattedStartLineNumber;
-
-        LoggerUtility.LogInformation($"[CEM] cmd {command.CommandNumber} headerLine = {headerLine}");
-
-        if (_headerBreakpoints.Contains(headerLine))
+        while (i < CommandsToExecute.Count)
         {
-          HighlightLineInEditor(headerLine);
-          await WaitOnBreakpointAsync(cancellationToken);
-        }
+            cancellationToken.ThrowIfCancellationRequested();
 
-        var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath)
-        {
-          JumpToCommandNumber = (number) =>
-          {
-            int newIndex = CommandsToExecute.FindIndex(cmd => cmd.CommandNumber == number);
-            if (newIndex >= 0)
+            var command = CommandsToExecute[i];
+
+            // --- обработка breakpoint'ов только по заголовкам ---
+            if (_headerBreakpoints.Count > 0)
             {
-              // -1, потому что в конце цикла i++.
-              i = newIndex - 1;
-            }
-          }
-        };
+                int line = command.FormattedStartLineNumber;  // ← номер строки заголовка команды
+                LoggerUtility.LogInformation($"[CEM] cmd {command.CommandNumber} line = {line}");
 
-        if (_executors.TryGetValue(command.Mnemonic, out var executor))
-        {
-          await executor.ExecuteAsync(context, _protocolModel);
+                if (line > 0 && _headerBreakpoints.Contains(line))
+                {
+                    HighlightLineInEditor(line);                    // подсветка строки в редакторе
+                    await WaitOnBreakpointAsync(cancellationToken); // ждём ContinueFromBreakpoint()
+                }
+            }
+            // ----------------------------------------------------
+
+            var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath)
+            {
+                JumpToCommandNumber = (number) =>
+                {
+                    int newIndex = CommandsToExecute.FindIndex(cmd => cmd.CommandNumber == number);
+                    if (newIndex >= 0)
+                    {
+                        i = newIndex - 1; // -1, потому что ниже будет i++
+                    }
+                }
+            };
+
+            if (_executors.TryGetValue(command.Mnemonic, out var executor))
+            {
+                await executor.ExecuteAsync(context, _protocolModel);
+            }
+            else
+            {
+                await _console.ShowMessageAsync(new ShowMessageModel(
+                "Неизвестная команда",
+                message: command.Mnemonic,
+                type: ShowMessageModel.MessageType.Error));
+            }
+
+            i++;
         }
-        else
-        {
-          await _console.ShowMessageAsync(new ShowMessageModel(
-            "Неизвестная команда",
-            message: command.Mnemonic,
-            type: ShowMessageModel.MessageType.Error));
-        }
-      }
     }
 
     /// <summary>

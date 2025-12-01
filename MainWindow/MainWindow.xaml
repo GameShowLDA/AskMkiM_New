@@ -143,7 +143,7 @@
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_Run}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="Run" Name="Run" Command="{Binding Translation.RunCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_RunStepByStepMode}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="RunStepByStepMode" Name="RunStepByStepMode" Command="{Binding Translation.RunStepByStepModeCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator"/>
                     <!-- Эксперемент -->
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_RunStopPointsMode}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="RunStopPointsMode" Name="RunStopPointsMode" Command="{Binding Translation.RunStopPointsModeCommand}"/>
+                    <!--<MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_RunStopPointsMode}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="RunStopPointsMode" Name="RunStopPointsMode" Command="{Binding Translation.RunStopPointsModeCommand}"/>-->
 
                 </MenuItem>
 
