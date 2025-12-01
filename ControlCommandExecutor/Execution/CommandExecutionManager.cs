@@ -1,19 +1,16 @@
 ﻿using ControlCommandAnalyser.Model;
-using ControlCommandExecutor.Executors;
 using ControlCommandExecutor.Executors.Interface;
 using DTO.Base.Models;
 using DTO.Service;
 using Errors.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
+using Utilities;
 using Utilities.TextEditor;
-using static Utilities.LoggerUtility;
 
 namespace ControlCommandExecutor.Execution
 {
@@ -24,10 +21,29 @@ namespace ControlCommandExecutor.Execution
   {
     private readonly Dictionary<string, ICommandExecutor> _executors = new();
     private readonly IUserMessageService _console;
-    private readonly ITextEditorAdapter translationControl;
+    private readonly ITextEditorAdapter _translationControl;
+    private readonly ProtocolModel _protocolModel = new();
     private readonly string? _opkFilePath;
 
-    private ProtocolModel protocolModel = new ProtocolModel();
+    /// <summary>
+    /// Команды программы контроля.
+    /// </summary>
+    public List<BaseCommandModel> CommandsToExecute { get; set; } = new();
+
+    /// <summary>
+    /// Сырой список точек останова (как пришёл из редактора).
+    /// </summary>
+    private readonly IReadOnlyCollection<int> _rawBreakpoints;
+
+    /// <summary>
+    /// Набор строк-заголовков команд (FormattedStartLineNumber), на которых реально должны останавливаться.
+    /// </summary>
+    private readonly HashSet<int> _headerBreakpoints;
+
+    /// <summary>
+    /// TCS для ожидания продолжения выполнения после остановки на breakpoint.
+    /// </summary>
+    private TaskCompletionSource<bool>? _breakpointTcs;
 
     /// <summary>
     /// Событие, которое вызывается при добавлении ошибки.
@@ -39,17 +55,6 @@ namespace ControlCommandExecutor.Execution
     /// </summary>
     public event Action? ClearError;
 
-    /// <summary>
-    /// Команды программы контроля.
-    /// </summary>
-    public List<BaseCommandModel> CommandsToExecute { get; set; } = new();
-
-    /// <summary>Набор строк (в ПРАВОМ редакторе), на которых установлены точки останова.</summary>
-    private readonly IReadOnlyCollection<int> _breakpoints;
-
-    /// <summary>TCS для ожидания продолжения выполнения после остановки на breakpoint.</summary>
-    private TaskCompletionSource<bool>? _breakpointTcs;
-
     public void ClearErrorsMethod() => ClearError?.Invoke();
 
     public void AddErrorMethod(ErrorItem errorItem) => AddError?.Invoke(errorItem);
@@ -57,6 +62,13 @@ namespace ControlCommandExecutor.Execution
     /// <summary>
     /// Создаёт менеджер выполнения команд.
     /// </summary>
+    /// <param name="console">Сервис вывода сообщений.</param>
+    /// <param name="textEditor">Адаптер текстового редактора (правый, с трансляцией).</param>
+    /// <param name="controlProgram">Список команд программы контроля.</param>
+    /// <param name="opkFilePath">Путь к исходному OPK-файлу.</param>
+    /// <param name="breakpoints">
+    /// Строки, на которых пользователь поставил точки останова (по форматированному тексту).
+    /// </param>
     public CommandExecutionManager(
       IUserMessageService console,
       ITextEditorAdapter textEditor,
@@ -65,168 +77,134 @@ namespace ControlCommandExecutor.Execution
       IReadOnlyCollection<int>? breakpoints = null)
     {
       _console = console;
-      translationControl = textEditor;
+      _translationControl = textEditor;
       CommandsToExecute = controlProgram;
       _opkFilePath = opkFilePath;
-      _breakpoints = breakpoints ?? Array.Empty<int>();
 
-      LogInformation($"[CEM] ctor Breakpoints: {string.Join(", ", _breakpoints)}");
+      _rawBreakpoints = breakpoints ?? Array.Empty<int>();
+
+      _headerBreakpoints = BuildHeaderBreakpoints(CommandsToExecute, _rawBreakpoints);
+
+      LoggerUtility.LogInformation($"[CEM] ctor raw breakpoints      : {string.Join(", ", _rawBreakpoints)}");
+      LoggerUtility.LogInformation($"[CEM] ctor header breakpoints   : {string.Join(", ", _headerBreakpoints)}");
 
       RegisterExecutors();
     }
 
     /// <summary>
-    /// Подсветить и прокрутить к строке в редакторе, если адаптер это умеет.
-    /// Имеем дело с форматированным текстом (правый редактор).
+    /// Строим множество точек останова по заголовкам команд.
+    /// Любая точка внутри тела команды → её FormattedStartLineNumber.
+    /// </summary>
+    private static HashSet<int> BuildHeaderBreakpoints(
+      List<BaseCommandModel> commands,
+      IReadOnlyCollection<int> rawBreakpoints)
+    {
+      var result = new HashSet<int>();
+
+      if (commands == null || commands.Count == 0 || rawBreakpoints == null || rawBreakpoints.Count == 0)
+        return result;
+
+      var ordered = commands
+        .Where(c => c != null && c.FormattedStartLineNumber > 0)
+        .OrderBy(c => c.FormattedStartLineNumber)
+        .ToList();
+
+      if (ordered.Count == 0)
+        return result;
+
+      foreach (var bp in rawBreakpoints)
+      {
+        var cmd = ordered.LastOrDefault(c => c.FormattedStartLineNumber <= bp);
+        if (cmd != null)
+        {
+          result.Add(cmd.FormattedStartLineNumber);
+          LoggerUtility.LogInformation(
+            $"[CEM] breakpoint line {bp} → cmd {cmd.CommandNumber} (header {cmd.FormattedStartLineNumber})");
+        }
+        else
+        {
+          LoggerUtility.LogWarning($"[CEM] breakpoint line {bp} не попал ни в одну команду");
+        }
+      }
+
+      return result;
+    }
+
+    /// <summary>
+    /// Подсветить и прокрутить к строке в редакторе.
     /// </summary>
     private void HighlightLineInEditor(int line)
     {
-      if (line <= 0 || translationControl == null)
+      if (line <= 0 || _translationControl == null)
         return;
 
-      void Inner()
+      // Берём диспетчер приложения
+      var dispatcher = Application.Current?.Dispatcher;
+
+      // Если по каким-то причинам диспетчера нет – выходим
+      if (dispatcher == null)
+        return;
+
+      void DoHighlight()
       {
-        var type = translationControl.GetType();
+        var type = _translationControl.GetType();
 
         try
         {
           var setActive = type.GetMethod("SetActiveLine", new[] { typeof(int) });
-          setActive?.Invoke(translationControl, new object[] { line });
+          setActive?.Invoke(_translationControl, new object[] { line });
         }
-        catch { }
+        catch { /* игнорируем, чтобы не ронять исполнение */ }
 
         try
         {
           var scroll = type.GetMethod("ScrollToLine", new[] { typeof(int) });
-          scroll?.Invoke(translationControl, new object[] { line });
+          scroll?.Invoke(_translationControl, new object[] { line });
         }
-        catch { }
+        catch { /* игнорируем */ }
       }
 
-      // Пытаемся использовать Dispatcher конкретного контрола
-      if (translationControl is DispatcherObject dObj)
+      if (dispatcher.CheckAccess())
       {
-        if (dObj.Dispatcher.CheckAccess())
-        {
-          Inner();
-        }
-        else
-        {
-          dObj.Dispatcher.BeginInvoke((Action)Inner);
-        }
+        // Уже в UI-потоке
+        DoHighlight();
       }
       else
       {
-        // Fallback — через глобальный Application.Dispatcher
-        var appDisp = Application.Current?.Dispatcher;
-        if (appDisp != null && !appDisp.CheckAccess())
-        {
-          appDisp.BeginInvoke((Action)Inner);
-        }
-        else
-        {
-          Inner();
-        }
+        // Уводим на UI-поток, НЕ блокируя текущий
+        dispatcher.BeginInvoke((Action)DoHighlight);
       }
     }
-
-    /// <summary>
-    /// Для команды с индексом commandIndex находим, есть ли breakpoint
-    /// в её диапазоне строк форматированного текста.
-    /// Диапазон: [FormattedStartLineNumber(current) ; FormattedStartLineNumber(next) - 1).
-    /// Возвращает строку breakpoint'а или null, если для этой команды нет точек.
-    /// </summary>
-    private IEnumerable<int> GetBreakpointHitsForCommand(int commandIndex)
-    {
-      if (_breakpoints == null || _breakpoints.Count == 0)
-        yield break;
-
-      if (commandIndex < 0 || commandIndex >= CommandsToExecute.Count)
-        yield break;
-
-      var current = CommandsToExecute[commandIndex];
-      int start = current.FormattedStartLineNumber;
-
-      if (start <= 0)
-      {
-        LogDebug($"[CEM] Cmd {current.CommandNumber} has FormattedStartLineNumber = {start}, пропускаем breakpoints.");
-        yield break;
-      }
-
-      int endExclusive;
-
-      if (commandIndex + 1 < CommandsToExecute.Count)
-      {
-        var next = CommandsToExecute[commandIndex + 1];
-        endExclusive = next.FormattedStartLineNumber > 0
-          ? next.FormattedStartLineNumber
-          : int.MaxValue;
-      }
-      else
-      {
-        endExclusive = int.MaxValue;
-      }
-
-      var hits = _breakpoints
-        .Where(line => line >= start && line < endExclusive)
-        .OrderBy(line => line)
-        .ToList();
-
-      if (hits.Count == 0)
-        yield break;
-
-      LogInformation($"[CEM] Command {current.CommandNumber} [{start}; {endExclusive}) имеет breakpoints: {string.Join(", ", hits)}");
-
-      foreach (var h in hits)
-        yield return h;
-    }
-
-    /// <summary>
-    /// Проверяет, есть ли точка остановки на указанной строке форматированного текста,
-    /// и при наличии — подсветить строку и подождать продолжения.
-    /// Вызывать из executors для внутренних под-операций команд.
-    /// </summary>
-    public async Task HitBreakpointIfNeededAsync(int formattedLine, CancellationToken cancellationToken)
-    {
-      if (formattedLine <= 0 || _breakpoints == null || _breakpoints.Count == 0)
-        return;
-
-      if (!_breakpoints.Contains(formattedLine))
-        return;
-
-      LogInformation($"[CEM] Внутренний breakpoint на строке {formattedLine}");
-      HighlightLineInEditor(formattedLine);
-
-      await WaitOnBreakpointAsync(cancellationToken);
-    }
-
 
     /// <summary>
     /// Выполняет все команды по очереди, с поддержкой точек останова.
+    /// Остановки только на заголовках команд (FormattedStartLineNumber).
     /// </summary>
     public async Task ExecuteAllAsync(CancellationToken cancellationToken = default)
     {
-      int i = 0;
-      while (i < CommandsToExecute.Count)
+      for (int i = 0; i < CommandsToExecute.Count; i++)
       {
         cancellationToken.ThrowIfCancellationRequested();
 
         var command = CommandsToExecute[i];
+        var headerLine = command.FormattedStartLineNumber;
 
-        foreach (var hitLine in GetBreakpointHitsForCommand(i))
+        LoggerUtility.LogInformation($"[CEM] cmd {command.CommandNumber} headerLine = {headerLine}");
+
+        if (_headerBreakpoints.Contains(headerLine))
         {
-          LogInformation($"[CEM] Пауза на breakpoint: line {hitLine}, cmd {CommandsToExecute[i].CommandNumber}");
-          HighlightLineInEditor(hitLine);
+          HighlightLineInEditor(headerLine);
           await WaitOnBreakpointAsync(cancellationToken);
         }
 
-        var context = new CommandExecutionContext(this, command, _console, translationControl, _opkFilePath, cancellationToken)
+        var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath)
         {
           JumpToCommandNumber = (number) =>
           {
             int newIndex = CommandsToExecute.FindIndex(cmd => cmd.CommandNumber == number);
             if (newIndex >= 0)
             {
+              // -1, потому что в конце цикла i++.
               i = newIndex - 1;
             }
           }
@@ -234,7 +212,7 @@ namespace ControlCommandExecutor.Execution
 
         if (_executors.TryGetValue(command.Mnemonic, out var executor))
         {
-          await executor.ExecuteAsync(context, protocolModel);
+          await executor.ExecuteAsync(context, _protocolModel);
         }
         else
         {
@@ -243,12 +221,12 @@ namespace ControlCommandExecutor.Execution
             message: command.Mnemonic,
             type: ShowMessageModel.MessageType.Error));
         }
-
-        i++;
       }
     }
 
-    /// <summary>Ожидание продолжения после остановки на breakpoint.</summary>
+    /// <summary>
+    /// Ожидание продолжения после остановки на breakpoint.
+    /// </summary>
     private Task WaitOnBreakpointAsync(CancellationToken cancellationToken)
     {
       var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -262,40 +240,27 @@ namespace ControlCommandExecutor.Execution
         });
       }
 
-      // Автоматическое продолжение через 3 секунды
-      //_ = Task.Run(async () =>
-      //{
-      //  try
-      //  {
-      //    await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
-      //    tcs.TrySetResult(true); // если уже нажали "Продолжить" — тихо проигнорируется
-      //  }
-      //  catch (TaskCanceledException)
-      //  {
-      //    // игнорируем, если выполнение отменили раньше
-      //  }
-      //}, cancellationToken);
-
       return tcs.Task;
     }
 
-
-    /// <summary>Продолжить выполнение после breakpoint (вызывается из UI).</summary>
+    /// <summary>
+    /// Продолжить выполнение после остановки на breakpoint.
+    /// Вызывается из UI (F8, кнопка "Следующая точка" и т.п.).
+    /// </summary>
     public void ContinueFromBreakpoint()
     {
       _breakpointTcs?.TrySetResult(true);
     }
 
     /// <summary>
-    /// Выполнить одну команду по предоставленной модели
-    /// (без учёта breakpoints; "шаг" можно делать через ExecuteAllAsync на подсписке).
+    /// Выполняет одну команду по предоставленной модели (без учёта breakpoints).
     /// </summary>
     public async Task ExecuteOneAsync(BaseCommandModel command)
     {
       if (_executors.TryGetValue(command.Mnemonic, out var executor))
       {
-        var context = new CommandExecutionContext(this, command, _console, translationControl, _opkFilePath);
-        await executor.ExecuteAsync(context, protocolModel);
+        var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath);
+        await executor.ExecuteAsync(context, _protocolModel);
       }
       else
       {
@@ -324,7 +289,8 @@ namespace ControlCommandExecutor.Execution
     }
 
     /// <summary>
-    /// Пропускает команды до указанного номера и продолжает выполнение с неё (без учёта breakpoints).
+    /// Пропускает команды до указанного номера и продолжает выполнение с неё
+    /// (без учёта breakpoints).
     /// </summary>
     public async Task JumpToCommandAndExecuteAsync(string commandNumber)
     {
