@@ -10,6 +10,7 @@
         xmlns:DefaultGUI="clr-namespace:UI.Components;assembly=UI" 
         xmlns:TextEditorControl ="clr-namespace:UI.Controls.TextEditor;assembly=UI"
         xmlns:Controls ="clr-namespace:UI.Controls;assembly=UI"
+        xmlns:ToolTipHelper ="clr-namespace:UI.Components.MyToolTip;assembly=UI"
         xmlns:Components ="clr-namespace:UI.Components;assembly=UI"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 
@@ -62,9 +63,9 @@
             <Menu Name="mainMenu" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" Background="Transparent" 
                 Foreground="{DynamicResource MainTitleSolidColorBrush}" Grid.Column="0" BorderThickness="0">
 
-                <MenuItem Header="{Binding Source={StaticResource LS_Menu_File}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="File" Uid="1" Tag="menuHeader_1">
+                <MenuItem Header="{Binding Source={StaticResource LS_Menu_File}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="File" Uid="1" Tag="menuHeader_1" ToolTipHelper:ToolTipHelper.DescriptionKey="File">
 
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Archive}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenArchive" Name="ArchiveMenuItem" Command="{Binding File.OpenArchiveCommand}" utilities:HelpProvider.HelpKey="FuncArchive"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Archive}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenArchive" Name="ArchiveMenuItem" Command="{Binding File.OpenArchiveCommand}" utilities:HelpProvider.HelpKey="FuncArchive" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Archive"/>
 
                     <Separator Style="{DynamicResource SeparatorMenuStyle}" Visibility="Collapsed" x:Name="fileActionsSeparator"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Save}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFile" x:Name="saveMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileCommand}" utilities:HelpProvider.HelpKey="FuncSave"/>
@@ -74,8 +75,8 @@
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Search}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SearchFile" x:Name="searchMenuItem" Visibility="Collapsed" Command="{Binding File.SearchFileCommand}" utilities:HelpProvider.HelpKey="FuncSearch"/>
 
                     <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Open}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFile" Command="{Binding File.OpenFileCommand}" utilities:HelpProvider.HelpKey="FuncOpen"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Create}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CreateNewFile" Command="{Binding File.CreateNewFileCommand}" utilities:HelpProvider.HelpKey="FuncCreate"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Open}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFile" Command="{Binding File.OpenFileCommand}" utilities:HelpProvider.HelpKey="FuncOpen" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Open"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Create}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CreateNewFile" Command="{Binding File.CreateNewFileCommand}" utilities:HelpProvider.HelpKey="FuncCreate" ToolTipHelper:ToolTipHelper.DescriptionKey="File.New"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Compare}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CompareFile" x:Name="compareMenuItem" Command="{Binding File.CompareFileCommand}" utilities:HelpProvider.HelpKey="FuncCompare"/>
 
                     <Separator Style="{DynamicResource SeparatorMenuStyle}"/>

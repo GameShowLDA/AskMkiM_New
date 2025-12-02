@@ -122,6 +122,27 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ToolTip" x:Key="CleanToolTipStyle">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="HasDropShadow" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToolTip">
+                    <Border 
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
+                    Padding="0">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ToolTip" BasedOn="{StaticResource CleanToolTipStyle}"/>
+
+
     <Style x:Key="ConfigButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="50"/>
         <Setter Property="FontSize" Value="20"/>
