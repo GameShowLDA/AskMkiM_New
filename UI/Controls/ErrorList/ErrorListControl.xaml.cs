@@ -35,8 +35,8 @@ namespace UI.Controls.ErrorList
       DataContext = this;
       EventAggregator.Subscribe<SystemStateEvents.DebugRightsChanged>(e => DebugChanged(e.IsDebug));
       if (AppConfiguration.AdminConfig.GetDebugRights())
-      { 
-          DebugColumn.Visibility = Visibility.Visible;
+      {
+        DebugColumn.Visibility = Visibility.Visible;
       }
 
       // Регистрируем обработчик движения мыши
@@ -153,6 +153,18 @@ namespace UI.Controls.ErrorList
       UpdateButtons();
     }
 
+    public void ClearAll()
+    {
+      _allIssues.Clear();
+      Items.Clear();
+
+      _errorTotal = 0;
+      _warningTotal = 0;
+
+      UpdateButtons();
+    }
+
+
     /// <summary>
     /// Событие вызывается при двойном клике по строке с ошибкой или предупреждением.
     /// </summary>
@@ -194,7 +206,7 @@ namespace UI.Controls.ErrorList
 
       _warningsHidden = !(btn.IsChecked == true);
       ApplyFilter();
-      
+
       e.Handled = true;
     }
 
