@@ -173,6 +173,21 @@ namespace Errors.Translation
         Description = description
       };
 
+    /// <summary>
+    /// Ошибка: одна из границ сопротивления больше максимально измеряемой мультиметром границы сопротивления или ниже минимально измеряемой. 
+    /// </summary>
+    public static ErrorItem EquipmentOutOfRange(int startLineNumber, string command, string description,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pr_EquipmentOutOfRange,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = description
+      };
+
 
     /// <summary>
     /// Ошибка: верхняя граница сопротивления больше максимально допустимой границы сопротивления.

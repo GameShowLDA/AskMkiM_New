@@ -15,6 +15,7 @@ namespace ControlCommandAnalyser.Model.Pr
     TranslationKey.AlgorithmKey.Т,
    TranslationKey.AlgorithmKey.Г, TranslationKey.AlgorithmKey.Т1)]
   [MeasurementDevice(MeasurementDevice.Multimeter)]
+  [ResistanceRange(1.0, 100000.0, 10.0)]
   public class PrCommandModel : BaseCommandModel, IError, IHasScheme
   {
     public override string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
