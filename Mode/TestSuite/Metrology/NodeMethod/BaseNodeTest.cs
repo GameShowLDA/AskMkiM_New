@@ -155,33 +155,20 @@ namespace Mode.TestSuite.Metrology.NodeMethod
       if (oldPoint != null)
       {
         var moduleForOldPoint = relayModules.FirstOrDefault(module => module.NumberChassis == oldPoint.DeviceNumber && module.Number == oldPoint.ModuleNumber);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel($"Переподключение точки {oldPoint.DeviceNumber}.{oldPoint.ModuleNumber}.{oldPoint.PointNumber} с шины {AssignedBus} к шине {OppositeBus}"));
 
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          bool error = false;
-          error = ! await moduleForOldPoint.PointManager.DisconnectRelayAsync(AssignedBus, oldPoint.PointNumber, protocolUI);
-          if (!error)
-          {
-            error = ! await moduleForOldPoint.PointManager.ConnectRelayAsync(OppositeBus, oldPoint.PointNumber, protocolUI);
-          }
-          return error;
+
+          return await moduleForOldPoint.PointManager.ConnectingPointToNewBus(OppositeBus, oldPoint.PointNumber, protocolUI); 
         }, protocolUI);
       }
 
       if (newPoint != null)
       {
         var moduleForNewPoint = relayModules.FirstOrDefault(module => module.NumberChassis == newPoint.DeviceNumber && module.Number == newPoint.ModuleNumber);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel($"Переподключение точки {newPoint.DeviceNumber}.{newPoint.ModuleNumber}.{newPoint.PointNumber} с шины {OppositeBus} к шине {AssignedBus}"));
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          bool error = false;
-          error = ! await moduleForNewPoint.PointManager.DisconnectRelayAsync(OppositeBus, newPoint.PointNumber, protocolUI);
-          if (!error)
-          {
-            error = ! await moduleForNewPoint.PointManager.ConnectRelayAsync(AssignedBus, newPoint.PointNumber, protocolUI);
-          }
-          return error;
+          return await moduleForNewPoint.PointManager.ConnectingPointToNewBus(AssignedBus, newPoint.PointNumber, protocolUI);
         }, protocolUI);
       }
     }
@@ -238,6 +225,8 @@ namespace Mode.TestSuite.Metrology.NodeMethod
           {
             return (false, $"Не удалось подключить устройство {connectableDevice.Name}({connectableDevice.Number}) - {message} ");
           }
+
+          await connectableDevice.ConnectableManager.ResetAsync(messageService);
         }
       }
 

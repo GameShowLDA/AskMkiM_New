@@ -276,7 +276,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <inheritdoc />
     public async Task<bool> ConnectingPointToNewBus(BusPoint bus, int nubmerPoint, IUserMessageService? userMessageService = null)
     {
-      if (CheckPointConnected(nubmerPoint, bus, false))
+      if (CheckPointConnected(nubmerPoint, bus, true))
       {
         return true;
       }

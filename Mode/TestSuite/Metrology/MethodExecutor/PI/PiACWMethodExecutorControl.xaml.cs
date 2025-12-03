@@ -114,7 +114,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
           messageService.GetCancellationToken().ThrowIfCancellationRequested();
           var answer = await breakDown.AcwManger.Measure.MeasureAsync(dataModel.Param, userMessageService: messageService);
           var type = ShowMessageModel.MessageType.Success;
-          if (answer > dataModel.Param)
+          if (answer.value > dataModel.Param)
           {
             type = ShowMessageModel.MessageType.Error;
           }

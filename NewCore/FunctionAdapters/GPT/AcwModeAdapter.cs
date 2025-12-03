@@ -518,7 +518,7 @@ namespace NewCore.FunctionAdapters.GPT
         var result = await _acwMode.Time.SetRampTimeAsync(value);
 
         if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
-        { 
+        {
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка Ramp Time ACW",
@@ -600,7 +600,7 @@ namespace NewCore.FunctionAdapters.GPT
         var result = await _acwMode.FrequencyConfigurable.SetFrequencyAsync(frequency);
 
         if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
-        { 
+        {
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка частоты ACW",
@@ -682,7 +682,7 @@ namespace NewCore.FunctionAdapters.GPT
         var result = await _acwMode.Offset.SetOffsetAsync(value);
 
         if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
-        { 
+        {
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка смещения ACW",
@@ -764,7 +764,7 @@ namespace NewCore.FunctionAdapters.GPT
         var result = await _acwMode.ArcCurrent.SetArcCurrentAsync(value);
 
         if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
-        { 
+        {
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
           _device,
           "Установка дугового тока ACW",
@@ -837,11 +837,11 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется при ошибке выполнения измерения.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, IUserMessageService? userMessageService = null)
+      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, bool waitFullTime = false, IUserMessageService? userMessageService = null)
       {
         try
         {
-          double result = await _acwMode.Measure.MeasureAsync(param, rangeFrom, rangeTo);
+          var (result, unit) = await _acwMode.Measure.MeasureAsync(param, rangeFrom, rangeTo);
 
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
             _device,
@@ -851,7 +851,7 @@ namespace NewCore.FunctionAdapters.GPT
             2,
             userMessageService);
 
-          return result;
+          return (result, unit);
         }
         catch (Exception ex)
         {

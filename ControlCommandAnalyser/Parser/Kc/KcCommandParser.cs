@@ -79,30 +79,7 @@ namespace ControlCommandAnalyser.Parser.Kc
 
       string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = null;
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
-
-      foreach (var (key, hasError) in result)
-      {
-        if (hasError)
-        {
-          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-        }
-        else
-        {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-        }
-      }
-
-      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-      foreach (var (key, hasError) in result)
-      {
-        remainder = Regex.Replace(
-        remainder,
-        $@"\b{Regex.Escape(key)}\s*,?",
-        "",
-        RegexOptions.IgnoreCase);
-      }
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRange(remainder);
       LoggerUtility.LogDebug($"После парсинга сопротивления: нижняя граница='{lowerLimitResistance}', верхняя граница='{higherLimitResistance}', единица='{unit}', remainder='{remainder}'");

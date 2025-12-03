@@ -80,30 +80,7 @@ namespace ControlCommandAnalyser.Parser.Ie
 
       string? lowerLimitCapacity = null, higherLimitCapacity = null, unit = null;
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
-
-      foreach (var (key, hasError) in result)
-      {
-        if (hasError)
-        {
-          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-        }
-        else
-        {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-        }
-      }
-
-      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-      foreach (var (key, hasError) in result)
-      {
-        remainder = Regex.Replace(
-        remainder,
-        $@"\b{Regex.Escape(key)}\s*,?",
-        "",
-        RegexOptions.IgnoreCase);
-      }
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
       (lowerLimitCapacity, higherLimitCapacity, unit, remainder) = CommonParameterParser.CapacityParser.ParseCapacityRange(remainder);
       LoggerUtility.LogDebug($"После парсинга электрической ёмкости: нижняя='{lowerLimitCapacity}', верхняя='{higherLimitCapacity}', единица='{unit}', remainder='{remainder}'");

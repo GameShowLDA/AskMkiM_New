@@ -109,31 +109,8 @@ namespace ControlCommandAnalyser.Parser.Pi
         // --- парсим ПИ только из remainderPi ---
         string? voltage = null, time = null, unit = null, unitTime = null;
 
-        var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainderPi, model);
-
-        foreach (var (key, hasError) in result)
-        {
-          if (hasError)
-          {
-            model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-          }
-          else
-          {
-            model.AlgorithmKey.Add(key);
-            LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-          }
-        }
-
-        // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-        foreach (var (key, hasError) in result)
-        {
-          remainderPi = Regex.Replace(
-          remainderPi,
-          $@"\b{Regex.Escape(key)}\s*,?",
-          "",
-          RegexOptions.IgnoreCase);
-        }
-
+        remainderPi = KeyParser.ParseKeys(numberLine, model, remainderPi);
+                
         // Парсим параметры
         (voltage, unit, remainderPi) = CommonParameterParser.VoltageParser.ParseVoltage(remainderPi);
         LoggerUtility.LogDebug($"После парсинга напряжения: voltage='{voltage}{unit}', remainder='{remainderPi}'");

@@ -718,11 +718,11 @@ namespace NewCore.FunctionAdapters.GPT
       /// Измеренное значение тока утечки в миллиамперах (мА).  
       /// В случае ошибки возвращается <c>-1</c>.
       /// </returns>
-      public async Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, IUserMessageService? userMessageService = null)
+      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, bool waitFullTime = false, IUserMessageService? userMessageService = null)
       {
         try
         {
-          double result = await _dcwMode.Measure.MeasureAsync(param);
+          var (result, unit) = await _dcwMode.Measure.MeasureAsync(param);
 
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
             _device,
@@ -732,7 +732,7 @@ namespace NewCore.FunctionAdapters.GPT
             2,
             userMessageService);
 
-          return result;
+          return (result, unit);
         }
         catch (Exception ex)
         {
@@ -744,7 +744,7 @@ namespace NewCore.FunctionAdapters.GPT
             2,
             userMessageService);
 
-          return -1;
+          return (-1, string.Empty);
         }
       }
 
