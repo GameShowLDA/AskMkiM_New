@@ -167,7 +167,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
         var moduleForNewPoint = relayModules.FirstOrDefault(module => module.NumberChassis == newPoint.DeviceNumber && module.Number == newPoint.ModuleNumber);
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          return await moduleForNewPoint.PointManager.ConnectingPointToNewBus(AssignedBus, newPoint.PointNumber, protocolUI)
+          return await moduleForNewPoint.PointManager.ConnectingPointToNewBus(AssignedBus, newPoint.PointNumber, protocolUI);
         }, protocolUI);
       }
     }
