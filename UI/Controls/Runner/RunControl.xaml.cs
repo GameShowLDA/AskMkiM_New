@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using UI.Controls.ProtocolNew;
 using UI.Controls.TextEditor;
+using Utilities;
 using WindowsInput;
 using static Utilities.LoggerUtility;
 
@@ -90,7 +91,23 @@ namespace UI.Controls.Runner
 
       Loaded += RunControl_Loaded;
       LeftBox.AddHandler(UIElement.PreviewGotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(LeftBox_PreviewGotKeyboardFocus), true);
+
+      KeyboardManager.OnBreakpointContinuePressed += KeyboardManager_OnBreakpointContinuePressed;
+      Unloaded += RunControl_Unloaded;
     }
+
+    private void KeyboardManager_OnBreakpointContinuePressed()
+    {
+      // Здесь мы просто пробрасываем "продолжить" в текущий ExecutionManager
+      LoggerUtility.LogInformation("[RunControl] F10 → ContinueFromBreakpoint");
+      _executionManager?.ContinueFromBreakpoint();
+    }
+
+    private void RunControl_Unloaded(object? sender, RoutedEventArgs e)
+    {
+      KeyboardManager.OnBreakpointContinuePressed -= KeyboardManager_OnBreakpointContinuePressed;
+    }
+
 
     private async void ErrorItemDoubleClicked(ErrorItem obj)
     {
@@ -116,7 +133,6 @@ namespace UI.Controls.Runner
     }
     private void LeftBox_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
     {
-      // Отменяем фокусировку и возвращаем в MainContent
       e.Handled = true;
       FocusMainContent();
     }
@@ -205,14 +221,13 @@ namespace UI.Controls.Runner
 
     private async Task StartTest(CancellationToken cancellationToken)
     {
-      // Берём редактор, в котором пользователь расставил точки
       TextEditorUI? editor = null;
 
       Application.Current.Dispatcher.Invoke(() =>
       {
         editor = LeftBox.Children.Count > 0
-          ? LeftBox.Children[0] as TextEditorUI
-          : _editor;
+            ? LeftBox.Children[0] as TextEditorUI
+            : _editor;
       });
 
       if (editor == null)
@@ -221,24 +236,26 @@ namespace UI.Controls.Runner
         return;
       }
 
-      // Лог для проверки, что брейкпоинты реально дошли до RunControl
       LogInformation($"[RunControl] Breakpoints: {string.Join(", ", Breakpoints)}");
 
-      // создаём менеджер с брейкпоинтами
       _executionManager = new CommandExecutionManager(
-        ProtocolUI,
-        editor,
-        ControlProgram,
-        OpkFilePath,
-        Breakpoints
+          ProtocolUI,
+          editor,
+          ControlProgram,
+          OpkFilePath,
+          Breakpoints
       );
 
       _executionManager.ClearError += ErrorClear;
       _executionManager.AddError += AddError;
 
-      // передаём туда cancellationToken
+      KeyboardManager.OnBreakpointContinuePressed -= KeyboardManager_OnBreakpointContinuePressed;
+      KeyboardManager.OnBreakpointContinuePressed += KeyboardManager_OnBreakpointContinuePressed;
+      LogInformation("[RunControl] Подписался на KeyboardManager.OnBreakpointContinuePressed");
+
       await _executionManager.ExecuteAllAsync(cancellationToken);
     }
+
 
     private void AddError(ErrorItem errorItem)
     {
@@ -288,7 +305,6 @@ namespace UI.Controls.Runner
       }
     }
 
-    // Пользователь начал тянуть сплиттер – не вмешиваемся
     private void BottomSplitter_OnDragStarted(object sender, DragStartedEventArgs e)
     {
       _userResizing = true;
@@ -296,13 +312,11 @@ namespace UI.Controls.Runner
       ErrorListBoxVertical.MaxHeight = double.PositiveInfinity;
     }
 
-    // Закончил тянуть – теперь снова можем автоподстраивать при изменении контента
     private void BottomSplitter_OnDragCompleted(object sender, DragCompletedEventArgs e)
     {
       _userResizing = false;
     }
 
-    // Панель ошибок изменила размер (добавились/убрались строки)
     private void ErrorListBoxVertical_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
       if (_userResizing)
@@ -313,7 +327,6 @@ namespace UI.Controls.Runner
       if (desired > MaxAutoHeight)
         desired = MaxAutoHeight;
 
-      // Автоматический режим — строка остаётся Auto, но мы ограничиваем контент
       BottomRow.Height = GridLength.Auto;
       ErrorListBoxVertical.MaxHeight = desired;
     }

@@ -46,6 +46,11 @@ namespace UI.Controls.ProtocolNew
     public static Action? OnNextBreakpointPressed;
 
     /// <summary>
+    /// Делегат, вызываемый при нажатии клавиши F10.
+    /// </summary>
+    public static Action? OnBreakpointContinuePressed;
+
+    /// <summary>
     /// Регистрирует глобальный обработчик нажатий клавиш.
     /// Используется для отслеживания F5, F10, F11 во всех окнах приложения.
     /// </summary>
@@ -75,25 +80,17 @@ namespace UI.Controls.ProtocolNew
         return;
 
       var key = args.Key == Key.System ? args.SystemKey : args.Key;
-      var modifiers = Keyboard.Modifiers;
 
-      if (key == Key.F8 && (modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+      LogInformation($"[KEYBOARD] Detected key: {key}");
+
+      if (key == Key.F10)
       {
-        LogInformation("[KEYBOARD] Ctrl+F8 -> Run with breakpoints");
-        OnRunWithBreakpointsPressed?.Invoke();
-        args.Handled = true;
-        return;
+        LogInformation("[KEYBOARD] F10 → OnBreakpointContinuePressed");
+        OnBreakpointContinuePressed?.Invoke();
       }
 
-      if (key == Key.F8 && modifiers == ModifierKeys.None)
-      {
-        LogInformation("[KEYBOARD] F8 -> Next breakpoint");
-        OnNextBreakpointPressed?.Invoke();
-        args.Handled = true;
+      if (_tcs == null)
         return;
-      }
-
-      if (_tcs == null) return;
 
       switch (key)
       {
