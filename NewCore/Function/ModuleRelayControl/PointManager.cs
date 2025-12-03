@@ -188,7 +188,17 @@ namespace NewCore.Function.ModuleRelayControl
         var parsed = BaseResponse.FromJson(response);
 
         if (parsed?.Answer == $"11.{firstPoint}.{lastPoint}.{(int)bus * 10 + 1}")
+        {
+          for (int number = firstPoint; number <= lastPoint; number++)
+          {
+            if (bus == BusPoint.A)
+              IsConnectedPointBusA[number] = true;
+            else
+              IsConnectedPointBusB[number] = true;
+          }
+
           return true;
+        }
 
         LogWarning($"Ответ на команду подключения диапазона точек {firstPoint}-{lastPoint} не получен или некорректен. Попытка {attempt}.", isDeviceLog: true);
         await Task.Delay(100);
@@ -227,6 +237,14 @@ namespace NewCore.Function.ModuleRelayControl
 
         if (parsed?.Answer == $"11.{firstPoint}.{lastPoint}.{(int)bus * 10 + 2}")
         {
+          for (int number = firstPoint; number <= lastPoint; number++)
+          {
+            if (bus == BusPoint.A)
+              IsConnectedPointBusA[number] = false;
+            else
+              IsConnectedPointBusB[number] = false;
+          }
+
           return true;
         }
 

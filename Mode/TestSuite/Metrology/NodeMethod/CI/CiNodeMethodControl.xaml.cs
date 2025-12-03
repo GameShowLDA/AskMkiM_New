@@ -108,7 +108,6 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
           var connectResult = await GetNextPoint(protocolUI);
           if (connectResult.Step)
           {
-            await protocolUI.ShowMessageAsync(new ShowMessageModel($"Подключение точки {connectResult.PointModel.PointNumber} к шине {AssignedBus}", type: ShowMessageModel.MessageType.Success));
             await protocolUI.ShowMessageAsync(new ShowMessageModel("Измерение сопротивления изоляции"));
 
             await UserActionHelper.RunWithUserRepeatAsync(async () =>
