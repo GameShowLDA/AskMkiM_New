@@ -43,7 +43,7 @@ namespace NewCore.Function.GPT.Managment
     }
 
     /// <inheritdoc />
-    public async Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, IUserMessageService? userMessageService = null)
+    public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, bool waitFullTime = false, IUserMessageService? userMessageService = null)
     {
       var time = await _getTestTime();
       var timeRamp = await _getRampTime();
@@ -56,6 +56,7 @@ namespace NewCore.Function.GPT.Managment
         param,
         rangeFrom,
         rangeTo,
+        waitFullTime,
         userMessageService);
     }
 

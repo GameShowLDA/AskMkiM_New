@@ -113,10 +113,10 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
             await UserActionHelper.RunWithUserRepeatAsync(async () =>
             {
               token.ThrowIfCancellationRequested();
-              var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, 1000, 60000, protocolUI);
+              var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, 1000, 60000, userMessageService: protocolUI);
               var type = ShowMessageModel.MessageType.Success;
 
-              if (answer < dataModel.Param)
+              if (answer.value < dataModel.Param)
               {
                 type = ShowMessageModel.MessageType.Error;
               }

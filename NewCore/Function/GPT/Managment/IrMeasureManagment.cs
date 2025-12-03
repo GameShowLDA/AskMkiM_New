@@ -1,9 +1,10 @@
-﻿using System.Text.RegularExpressions;
-using DTO.Device.Breakdown.Capabilities;
+﻿using DTO.Device.Breakdown.Capabilities;
 using DTO.Service;
 using NewCore.Device;
 using NewCore.Function.GPT.Command;
 using NewCore.Function.GPT.Helper;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using static NewCore.Function.GPT.Command.FunctionCommandManager;
 using static Utilities.LoggerUtility;
 
@@ -47,14 +48,15 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Выполняет измерение сопротивления изоляции.
     /// </summary>
-    public async Task<double> MeasureAsync(
+    public async Task<(double value, string unit)> MeasureAsync(
       double param = 0,
       double rangeFrom = -1,
       double rangeTo = -1,
+      bool waitFullTime = false,
       IUserMessageService? userMessageService = null)
     {
       if (await _getIsIdleMode())
-        return param;
+        return (param, string.Empty);
 
       await StopMeasure();
       await Task.Delay(_delayBeforeCall);
@@ -78,7 +80,7 @@ namespace NewCore.Function.GPT.Managment
       {
         tickCount++;
 
-        await Task.Delay(100);
+        await Task.Delay(300);
         response = await _gptModel.DeviceProtocol.QueryAsync(
           $"{GetCommandSyntax(FunctionCommand.MEASURE)} ?",
           timeout: 500,
@@ -168,7 +170,7 @@ namespace NewCore.Function.GPT.Managment
         raw = Regex.Replace(raw, @"[^0-9.,]", "").Replace('.', ',');
       }
 
-      return value * multiplier;
+      return (value * multiplier, string.Empty);
     }
 
     /// <inheritdoc />
@@ -203,15 +205,70 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Разбирает строку ответа прибора в модель <see cref="MeasurementData"/>.
     /// </summary>
+    /// <summary>
+    /// Разбирает строку ответа прибора в модель MeasurementData.
+    /// Ищет статус PASS / FAIL / TEST в любой части ответа.
+    /// </summary>
     private MeasurementData ParseMeasurement(string response)
     {
-      var parts = response.Split(',');
+      if (string.IsNullOrWhiteSpace(response))
+        return new MeasurementData { Status = "UNKNOWN", Resistance = 0 };
+
+      var parts = response.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                          .Select(p => p.Trim())
+                          .ToList();
+
+      string status = "UNKNOWN";
+
+      foreach (var p in parts)
+      {
+        var upper = p.ToUpperInvariant();
+
+        if (upper.Contains("PASS"))
+        {
+          status = "PASS";
+          break;
+        }
+        if (upper.Contains("FAIL"))
+        {
+          status = "FAIL";
+          break;
+        }
+        if (upper.Contains("TEST"))
+        {
+          status = "TEST";
+          break;
+        }
+      }
+
+      double resistance = 0;
+
+      foreach (var p in parts)
+      {
+        var match = Regex.Match(p, @"([-+]?\d+(\.\d+)?)([GMk]?)(ohm|OHM)", RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+          double value = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+          string unit = match.Groups[3].Value.ToUpperInvariant();
+
+          resistance = unit switch
+          {
+            "G" => value * 1_000_000,
+            "M" => value * 1_000,
+            _ => value
+          };
+
+          break;
+        }
+      }
+
       return new MeasurementData
       {
-        Status = parts.ElementAtOrDefault(0) ?? "",
-        Resistance = double.TryParse(parts.ElementAtOrDefault(3), out var res) ? res : 0
+        Status = status,
+        Resistance = resistance
       };
     }
+
 
     /// <summary>
     /// Модель для хранения результата измерения в режиме IR.

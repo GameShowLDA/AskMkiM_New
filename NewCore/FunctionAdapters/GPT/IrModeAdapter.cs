@@ -3,6 +3,7 @@ using DTO.Device.Breakdown.Mode;
 using DTO.Device.Breakdown.Model;
 using DTO.Service;
 using Errors.Device.Breakdown;
+using MigraDoc.DocumentObjectModel;
 using NewCore.Device;
 using NewCore.Function.GPT;
 using NewCore.Function.Helpers;
@@ -650,14 +651,15 @@ namespace NewCore.FunctionAdapters.GPT
       /// Результат измерения сопротивления изоляции в МОм.  
       /// В случае ошибки возвращает значение <c>-1</c>.
       /// </returns>
-      public async Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 600000, IUserMessageService? userMessageService = null)
+      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 600000, bool waitFullTime = false, IUserMessageService? userMessageService = null)
       {
         if (rangeTo == -1)
           rangeTo = 600000;
 
         try
         {
-          double result = await _irMode.Measure.MeasureAsync(param, rangeFrom, rangeTo);
+          var (result, unit) = await _irMode.Measure.MeasureAsync(param, rangeFrom, rangeTo);
+          result *= 1000;
 
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
             _device,
@@ -667,7 +669,8 @@ namespace NewCore.FunctionAdapters.GPT
             2,
             userMessageService);
 
-          return result;
+
+          return (result, unit);
         }
         catch (Exception ex)
         {
@@ -679,7 +682,7 @@ namespace NewCore.FunctionAdapters.GPT
             2,
             userMessageService);
 
-          return -1;
+          return (-1, string.Empty);
         }
       }
 

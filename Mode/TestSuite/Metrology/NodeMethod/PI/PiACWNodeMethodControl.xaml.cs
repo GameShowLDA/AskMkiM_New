@@ -133,7 +133,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.PI
               var type = ShowMessageModel.MessageType.Success;
 
 
-              if (answer >= dataModel.Param)
+              if (answer.value >= dataModel.Param)
               {
                 type = ShowMessageModel.MessageType.Error;
               }

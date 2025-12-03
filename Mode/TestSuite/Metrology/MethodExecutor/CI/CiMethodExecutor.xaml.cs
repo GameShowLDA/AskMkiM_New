@@ -107,9 +107,9 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
           var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
           await messageService.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
 
-          var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, messageService);
+          var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, userMessageService: messageService);
           var type = ShowMessageModel.MessageType.Success;
-          if (answer < dataModel.Param)
+          if (answer.value < dataModel.Param)
           {
             type = ShowMessageModel.MessageType.Error;
           }
