@@ -401,6 +401,10 @@ namespace Errors.Models
     /// <summary> В команде ПР верхняя граница сопротивления больше максимально допустимой границы сопротивления.  </summary>
     [ErrorCodeTag("PR0014")]
     Pr_ResistanceMaxLimitsConflict,
+
+    /// <summary> В команде ПР одна из границ сопротивления больше максимально измеряемой мультиметром границы сопротивления или ниже минимально измеряемой.  </summary>
+    [ErrorCodeTag("PR0015")]
+    Pr_EquipmentOutOfRange,
     #endregion
 
     #region Режим ЭТ
