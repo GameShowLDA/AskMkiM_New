@@ -160,10 +160,10 @@ namespace Mode.TestSuite.Metrology.NodeMethod
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
           bool error = false;
-          error = await moduleForOldPoint.PointManager.DisconnectRelayAsync(AssignedBus, oldPoint.PointNumber, protocolUI);
+          error = ! await moduleForOldPoint.PointManager.DisconnectRelayAsync(AssignedBus, oldPoint.PointNumber, protocolUI);
           if (!error)
           {
-            error = await moduleForOldPoint.PointManager.ConnectRelayAsync(OppositeBus, oldPoint.PointNumber, protocolUI);
+            error = ! await moduleForOldPoint.PointManager.ConnectRelayAsync(OppositeBus, oldPoint.PointNumber, protocolUI);
           }
           return error;
         }, protocolUI);
@@ -176,10 +176,10 @@ namespace Mode.TestSuite.Metrology.NodeMethod
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
           bool error = false;
-          error = await moduleForNewPoint.PointManager.DisconnectRelayAsync(OppositeBus, newPoint.PointNumber, protocolUI);
+          error = ! await moduleForNewPoint.PointManager.DisconnectRelayAsync(OppositeBus, newPoint.PointNumber, protocolUI);
           if (!error)
           {
-            error = await moduleForNewPoint.PointManager.ConnectRelayAsync(AssignedBus, newPoint.PointNumber, protocolUI);
+            error = ! await moduleForNewPoint.PointManager.ConnectRelayAsync(AssignedBus, newPoint.PointNumber, protocolUI);
           }
           return error;
         }, protocolUI);
