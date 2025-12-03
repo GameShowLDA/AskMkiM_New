@@ -45,6 +45,10 @@ namespace Errors.Models
     [WarningCodeTag("WARNGEN005")]
     Gen_DefaultResistaince,
 
+    /// <summary> Найден и удален дублирующийся ключ. </summary>
+    [WarningCodeTag("WARNGEN006")]
+    Gen_DuplicateKey,
+
     #endregion
 
     #region Режим УМ

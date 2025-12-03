@@ -163,7 +163,7 @@ namespace ControlCommandAnalyser.Parser.Si
         remainder = match.Groups[1].Value.Trim();
 
       // сначала извлекаем ключи
-      remainder = ExtractSiKeys(commandNumber, mnemonic, numberLine, model, body, remainder);
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
       remainder = ExtractSiParameters(commandNumber, mnemonic, numberLine, model, remainder, breakDown);
 
@@ -334,8 +334,11 @@ namespace ControlCommandAnalyser.Parser.Si
         }
         else
         {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
+          if (!model.AlgorithmKey.Contains(key))
+          {
+            model.AlgorithmKey.Add(key);
+            LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
+          }
         }
       }
 

@@ -265,7 +265,7 @@ namespace UI.Controls.ErrorList
 
     private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-      if (sender is DataGrid grid && grid.SelectedItem is ErrorItem selectedError)
+      if (sender is DataGrid grid && grid.SelectedItem is IDisplayIssue selectedError)
       {
         ItemDoubleClicked?.Invoke(selectedError);
       }
