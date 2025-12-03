@@ -71,6 +71,8 @@ namespace MainWindowProgram.Services
       var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
       var translationContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
 
+      if (editor is not null) editor.BreakpointsEnabled = false;
+
       if (editor == null && translationContainer != null)
       {
         await TryUpdateExistingTranslator(translationContainer);

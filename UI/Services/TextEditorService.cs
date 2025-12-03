@@ -77,7 +77,8 @@ namespace UI.Services
     {
       var editor = new TextEditorUI(fileType, textEditorModel)
       {
-        Text = fileContent
+        Text = fileContent,
+        BreakpointsEnabled = false
       };
       return editor;
     }

@@ -51,6 +51,11 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
   /// <summary>Событие вызывается при изменении точки останова.</summary>
   public event EventHandler<BreakpointChangedEventArgs>? BreakpointChanged;
 
+  /// <summary>
+  /// Разрешать ли клик по маргину (добавление/удаление точек останова).
+  /// </summary>
+  public bool IsClickEnabled { get; set; } = true;
+
   public ExecutionGlyphMargin(TextEditor textEditor)
   {
     _textEditor = textEditor ?? throw new ArgumentNullException(nameof(textEditor));
@@ -211,6 +216,8 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
 
   protected override void OnMouseDown(MouseButtonEventArgs e)
   {
+    if (!IsClickEnabled) return;
+
     base.OnMouseDown(e);
 
     if (e.ChangedButton != MouseButton.Left || TextView == null)

@@ -60,6 +60,22 @@ namespace UI.Controls.TextEditor
     /// </summary>
     private Color backgroudColor = (Color)ColorConverter.ConvertFromString("#b23a48");
 
+    /// <summary>
+    /// Разрешено ли пользователю ставить точки останова в этом редакторе.
+    /// </summary>
+    private bool _breakpointsEnabled = true;
+
+    public bool BreakpointsEnabled
+    {
+      get => _breakpointsEnabled;
+      set
+      {
+        _breakpointsEnabled = value;
+        if (_executionMargin != null)
+          _executionMargin.IsClickEnabled = value;
+      }
+    }
+
     #endregion
 
     #region Св-ва.
@@ -462,7 +478,10 @@ namespace UI.Controls.TextEditor
 
         if (_executionMargin == null)
         {
-          _executionMargin = new ExecutionGlyphMargin(textEditor);
+          _executionMargin = new ExecutionGlyphMargin(textEditor)
+          {
+            IsClickEnabled = _breakpointsEnabled
+          };
 
           _executionMargin.BreakpointChanged += (sender, args) =>
           {

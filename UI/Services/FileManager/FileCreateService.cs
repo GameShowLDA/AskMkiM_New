@@ -80,7 +80,8 @@ namespace UI.Services.FileManager
       var textEditorModel = new TextEditorModel(fileName);
       var textEditor = new TextEditorUI
       {
-        TextEditorModel = textEditorModel
+        TextEditorModel = textEditorModel,
+        BreakpointsEnabled = false
       };
       textEditor.TextArea.TextView.LineTransformers.Add(new BracesCommentColorizer());
       CancellationTokenSource redrawToken = null;
