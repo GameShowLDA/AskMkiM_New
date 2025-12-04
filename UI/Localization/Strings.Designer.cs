@@ -196,15 +196,6 @@ namespace UI.Localization {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Запуск (Режим точек остановки).
-        /// </summary>
-        internal static string menu_execution_run_stopPointsMode {
-            get {
-                return ResourceManager.GetString("menu.execution.run.stopPointsMode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Файл.
         /// </summary>
         internal static string menu_file {

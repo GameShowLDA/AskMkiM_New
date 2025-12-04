@@ -105,9 +105,7 @@ namespace UI.Services.FileManager
           }
         }
         catch (TaskCanceledException)
-        {
-          // просто игнорируем отменённую задержку
-        }
+        { }
       };
 
 

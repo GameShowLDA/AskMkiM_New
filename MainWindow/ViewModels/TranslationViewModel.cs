@@ -46,13 +46,5 @@ namespace MainWindowProgram.ViewModels
       await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(true);
       await _service.RunAsync();
     }
-
-    //[RelayCommand]
-    //private async Task RunStopPointsModeAsync()
-    //{
-    //  await AppConfiguration.Execution.ExecutionConfig.SetBreakpointsMode(true);
-    //  await AppConfiguration.Execution.ExecutionConfig.SetStepByStepMode(false);
-    //  await _service.RunWithBreakpointsAsync();
-    //}
   }
 }

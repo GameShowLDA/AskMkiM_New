@@ -336,7 +336,4 @@
   <data name="menu.execution.run.stepByStepMode" xml:space="preserve">
     <value>Run (Step by step mode)</value>
   </data>
-  <data name="menu.execution.run.stopPointsMode" xml:space="preserve">
-    <value>Run (Stop points mode)</value>
-  </data>
 </root>

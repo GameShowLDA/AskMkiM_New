@@ -206,8 +206,6 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
     }
   }
 
-  // ---------- Hit-test + мышь ----------
-
   /// <summary>
   /// Делаем марджин кликабельным, чтобы получать события мыши.
   /// </summary>

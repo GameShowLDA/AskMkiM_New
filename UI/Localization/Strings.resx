@@ -336,7 +336,4 @@
   <data name="menu.execution.run.stepByStepMode" xml:space="preserve">
     <value>Запуск (Пошаговый режим)</value>
   </data>
-  <data name="menu.execution.run.stopPointsMode" xml:space="preserve">
-    <value>Запуск (Режим точек остановки)</value>
-  </data>
 </root>

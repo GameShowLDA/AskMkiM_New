@@ -6,9 +6,9 @@ using EventCore.Adapters;
 using ICSharpCode.AvalonEdit;
 using Message;
 using System;
-using System.Collections.Generic;      // ★ для IReadOnlyCollection<int>
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;                     // ★ для FirstOrDefault
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -137,10 +137,8 @@ namespace MainWindowProgram.Services
         await Task.Delay(10);
       }
 
-      // --- Случай 1: уже открыт RunControl ---
       if (foundDockItem?.Content is RunControl run)
       {
-        // Берём редактор, к которому привязан исполнитель
         var editorFromRun = run.LeftEditor ?? _actualTextEditor;
 
         if (editorFromRun == null)
@@ -149,14 +147,12 @@ namespace MainWindowProgram.Services
           return;
         }
 
-        // Берём актуальные брейкпоинты из этого редактора
         var breakpoints = GetBreakpointsFromEditor(editorFromRun);
 
         await PrepareRun(runContainer, editorFromRun, run, breakpoints);
         return;
       }
 
-      // --- Случай 2: открыт TranslatorItem ---
       if (foundDockItem?.Content is TranslatorItem translator)
       {
         _actualTextEditor = translator.GetRightEditor();
@@ -175,13 +171,10 @@ namespace MainWindowProgram.Services
           return;
         }
 
-        // Берём брейкпоинты из правого редактора транслятора (внутренний язык)
         var breakpoints = GetBreakpointsFromEditor(_actualTextEditor);
 
-        // Закрываем вкладку транслятора
         await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
 
-        // Создаём RunControl и прокидываем туда модели
         RunControl runControl = new RunControl
         {
           TranslationModels = translator.TranslationModels
@@ -191,110 +184,8 @@ namespace MainWindowProgram.Services
         return;
       }
 
-      // Ничего подходящего не нашли
       return;
     }
-
-    /// <summary>
-    /// Запуск программы контроля с учётом точек останова, выставленных в редакторе.
-    /// Точки останова передаются в RunControl через свойство Breakpoints.
-    /// </summary>
-    //public async Task RunWithBreakpointsAsync()
-    //{
-    //  var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
-    //  var container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
-    //  var runContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Run);
-
-    //  // Если транслятор ещё не создан, создаём его
-    //  if (container == null && editor != null)
-    //  {
-    //    await BuildAsync();
-    //    editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
-    //    container = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
-    //  }
-
-    //  if (container == null && runContainer == null && editor == null)
-    //  {
-    //    MessageBoxCustom.Show(
-    //      "Не удалось запустить исполнитель программы контроля.",
-    //      "Ошибка запуска программы контроля",
-    //      image: MessageBoxImage.Error);
-    //    return;
-    //  }
-
-    //  if (container == null && runContainer != null)
-    //  {
-    //    container = runContainer;
-    //  }
-
-    //  var dockManager = container.GetDockControl();
-    //  if (dockManager == null) return;
-
-    //  DockItem? foundDockItem = null;
-
-    //  // Ждём, пока хотя бы один DockItem появится (максимум 500 мс)
-    //  for (int i = 0; i < 500; i++)
-    //  {
-    //    if (dockManager.DockItems.Count > 0)
-    //    {
-    //      foundDockItem = dockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
-    //      if (foundDockItem != null)
-    //        break;
-    //    }
-    //    await Task.Delay(10);
-    //  }
-
-    //  if (foundDockItem?.Content is not TranslatorItem translator)
-    //  {
-    //    // Уже открыта вкладка Run — просто перезапускаем, но с текущими брейкпоинтами
-    //    if (foundDockItem?.Content is RunControl run)
-    //    {
-    //      if (_actualTextEditor == null)
-    //      {
-    //        ShowEditorNotFoundError();
-    //        return;
-    //      }
-
-    //      var breakpoints = GetBreakpointsFromEditor(_actualTextEditor);
-    //      await PrepareRun(runContainer, _actualTextEditor, run, breakpoints);
-    //    }
-    //    else
-    //    {
-    //      return;
-    //    }
-    //  }
-    //  else
-    //  {
-    //    // Есть активный TranslatorItem: берём правый редактор (внутренний язык)
-    //    _actualTextEditor = translator.GetRightEditor();
-    //    if (_actualTextEditor == null)
-    //    {
-    //      ShowEditorNotFoundError();
-    //      return;
-    //    }
-
-    //    if (translator.ErrorCount > 0)
-    //    {
-    //      MessageBoxCustom.Show(
-    //        $"Возникли ошибки сборки ({translator.ErrorCount} ошибок). Устраните ошибки и повторите попытку.",
-    //        "Ошибка запуска программы контроля",
-    //        image: MessageBoxImage.Error);
-    //      return;
-    //    }
-
-    //    // Берём брейкпоинты из этого редактора
-    //    var breakpoints = GetBreakpointsFromEditor(_actualTextEditor);
-
-    //    await _multiWindow.DeleteTranslatorItem(translator, EditorType.Translator);
-
-    //    RunControl runControl = new RunControl
-    //    {
-    //      TranslationModels = translator.TranslationModels
-    //    };
-
-    //    await PrepareRun(runContainer, _actualTextEditor, runControl, breakpoints);
-    //  }
-    //}
 
     /// <summary>
     /// Подготовка и запуск RunControl.
@@ -304,7 +195,7 @@ namespace MainWindowProgram.Services
       TextEditorContainer runContainer,
       TextEditorUI editor,
       RunControl runControl,
-      IReadOnlyCollection<int>? breakpoints = null)      // ★ добавлен параметр
+      IReadOnlyCollection<int>? breakpoints = null)
     {
       if (editor == null)
       {
@@ -327,7 +218,6 @@ namespace MainWindowProgram.Services
         ? Path.GetFileName(editor.TextEditorModel.FilePath)
         : editor.TextEditorModel.FileName;
 
-      // ★ Передаём точки останова в RunControl (свойство нужно добавить в RunControl)
       if (breakpoints != null && breakpoints.Count > 0)
       {
         runControl.Breakpoints = breakpoints;
@@ -355,8 +245,6 @@ namespace MainWindowProgram.Services
 
       await runControl.Start(runControl.TranslationModels);
     }
-
-    // ======= Остальной код без изменений =======
 
     private async Task TryCreateNewTranslator(TextEditorUI editor)
     {

@@ -190,19 +190,17 @@ namespace ControlCommandExecutor.Execution
 
             var command = CommandsToExecute[i];
 
-            // --- обработка breakpoint'ов только по заголовкам ---
             if (_headerBreakpoints.Count > 0)
             {
-                int line = command.FormattedStartLineNumber;  // ← номер строки заголовка команды
+                int line = command.FormattedStartLineNumber;
                 LoggerUtility.LogInformation($"[CEM] cmd {command.CommandNumber} line = {line}");
 
                 if (line > 0 && _headerBreakpoints.Contains(line))
                 {
-                    HighlightLineInEditor(line);                    // подсветка строки в редакторе
-                    await WaitOnBreakpointAsync(cancellationToken); // ждём ContinueFromBreakpoint()
+                    HighlightLineInEditor(line);
+                    await WaitOnBreakpointAsync(cancellationToken);
                 }
             }
-            // ----------------------------------------------------
 
             var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath)
             {
@@ -211,7 +209,7 @@ namespace ControlCommandExecutor.Execution
                     int newIndex = CommandsToExecute.FindIndex(cmd => cmd.CommandNumber == number);
                     if (newIndex >= 0)
                     {
-                        i = newIndex - 1; // -1, потому что ниже будет i++
+                        i = newIndex - 1;
                     }
                 }
             };
