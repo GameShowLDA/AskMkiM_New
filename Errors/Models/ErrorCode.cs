@@ -249,6 +249,10 @@ namespace Errors.Models
     [ErrorCodeTag("SI010")]
     Si_ResistanceLimitsConflict,
 
+    /// <summary> Ошибка: предудыщая команда не имеет точек для измерения. </summary>
+    [ErrorCodeTag("SI011")]
+    Si_PreviousCommandHasNoPoints,
+
     #endregion
 
     #region Режим ПИ
@@ -274,20 +278,24 @@ namespace Errors.Models
     Pi_KeysConflict,
 
     /// <summary> Ошибка при проверке точки про методе полного узла. </summary>
-    [ErrorCodeTag("SI006")]
+    [ErrorCodeTag("PI006")]
     Pi_NodeExecutePointError,
 
     /// <summary> Ошибка при замкнутной цепи. </summary>
-    [ErrorCodeTag("SI007")]
+    [ErrorCodeTag("PI007")]
     Pi_ChainError,
 
     /// <summary> Ошибка при замкнутной паре. </summary>
-    [ErrorCodeTag("SI008")]
+    [ErrorCodeTag("PI008")]
     Pi_PairError,
 
     /// <summary> Ошибка при замкнутной паре. </summary>
-    [ErrorCodeTag("SI009")]
+    [ErrorCodeTag("PI009")]
     Pi_EmptyVoltage,
+
+    /// <summary> Ошибка: предудыщая команда не имеет точек для измерения. </summary>
+    [ErrorCodeTag("PI010")]
+    Pi_PreviousCommandHasNoPoints,
 
     #endregion
 
@@ -405,6 +413,11 @@ namespace Errors.Models
     /// <summary> В команде ПР одна из границ сопротивления больше максимально измеряемой мультиметром границы сопротивления или ниже минимально измеряемой.  </summary>
     [ErrorCodeTag("PR0015")]
     Pr_EquipmentOutOfRange,
+
+
+    /// <summary> Ошибка: предудыщая команда не имеет точек для измерения. </summary>
+    [ErrorCodeTag("PR0016")]
+    Pr_PreviousCommandHasNoPoints,
     #endregion
 
     #region Режим ЭТ

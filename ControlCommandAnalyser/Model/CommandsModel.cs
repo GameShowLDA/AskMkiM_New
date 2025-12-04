@@ -20,7 +20,15 @@ namespace ControlCommandAnalyser.Model
     /// <returns>Найденную команду или null.</returns>
     public static BaseCommandModel GetLastFromCheckCommands()
     {
-      return CommandModels.Where(comand => CheckCommandMnemonic.Contains(comand.Mnemonic)).ToList().Last();
+      var commands = CommandModels.Where(comand => CheckCommandMnemonic.Contains(comand.Mnemonic)).ToList();
+      if (commands.Count > 0)
+      {
+        return commands.Last();
+      }
+      else
+      {
+        return null;
+      }
     }
 
     public static BaseCommandModel GetLast()

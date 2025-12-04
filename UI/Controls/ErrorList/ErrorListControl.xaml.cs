@@ -105,7 +105,7 @@ namespace UI.Controls.ErrorList
       if (!_errorsHidden)
         Items.Add(error);
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ namespace UI.Controls.ErrorList
       if (!_warningsHidden)
         Items.Add(warning);
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     /// <summary>
@@ -134,7 +134,7 @@ namespace UI.Controls.ErrorList
           Items.Add(err);
       }
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     /// <summary>
@@ -150,7 +150,7 @@ namespace UI.Controls.ErrorList
           Items.Add(warn);
       }
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     public void ClearAll()
@@ -169,8 +169,6 @@ namespace UI.Controls.ErrorList
     /// Событие вызывается при двойном клике по строке с ошибкой или предупреждением.
     /// </summary>
     public event Action<IDisplayIssue>? ItemDoubleClicked;
-
-
 
     private void ApplyFilter()
     {
