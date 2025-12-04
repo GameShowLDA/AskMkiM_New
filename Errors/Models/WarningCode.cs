@@ -49,6 +49,10 @@ namespace Errors.Models
     [WarningCodeTag("WARNGEN006")]
     Gen_DuplicateKey,
 
+    /// <summary> Количество разобщенных цепей было меньше одной. Ключ ЗР был добавлен по умолчанию. </summary>
+    [WarningCodeTag("WARNGEN007")]
+    Gen_KeyZR,
+
     #endregion
 
     #region Режим УМ

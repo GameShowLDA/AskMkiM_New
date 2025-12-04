@@ -159,7 +159,7 @@ namespace ControlCommandAnalyser.Parser.Pr
         model.PointsSourse = pointsBlob;
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-        var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+        var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
         if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.ЗР.ToString())
           && pointErrors.FirstOrDefault(item => item.Code == Errors.Models.ErrorCode.Gen_InvalidNumberOfDisconnectedRanges) != null)
         {

@@ -236,7 +236,7 @@ namespace ControlCommandAnalyser.Parser.Kc
           model.PointsSourse = pointsBlob;
           LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
 
           // Поднимем ошибки парсера точек
           if (pointErrors?.Count > 0)

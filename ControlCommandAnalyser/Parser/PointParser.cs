@@ -4,6 +4,7 @@ using DTO.Base.Models;
 using DTO.Device.RelaySwitchModule.Model;
 using DTO.Enum;
 using Errors.Models;
+using Errors.Translation;
 using System.Text.RegularExpressions;
 using YamlDotNet.Core.Tokens;
 
@@ -22,7 +23,7 @@ namespace ControlCommandAnalyser.Parser
     ///   (пример 'Х51/51-*60') → каждая раскрытая точка = отдельная цепь.
     /// - Для КС: одиночная точка (один исходный токен БЕЗ '-') в части запрещена.
     /// </summary>
-    public static (SchemeModel?, List<ErrorItem>) ParsePoints(string expr, string mnemonic, RmCommandModel rmCommandModel)
+    public static (SchemeModel?, List<ErrorItem>) ParsePoints(string expr, BaseCommandModel model, RmCommandModel rmCommandModel)
     {
       if (rmCommandModel == null || rmCommandModel.PointsMap == null || rmCommandModel.PointsMap.Count == 0)
       {
@@ -121,7 +122,7 @@ namespace ControlCommandAnalyser.Parser
 
           // Проверка "одиночной точки" для КС: только если исходно был один токен без '-'
           bool isSingleOriginalToken = rawTokens.Count == 1 && !rawTokens[0].Contains('-');
-          if (string.Equals(mnemonic, "КС", StringComparison.OrdinalIgnoreCase)
+          if (string.Equals(model.Mnemonic, "КС", StringComparison.OrdinalIgnoreCase)
               && isSingleOriginalToken
               && expandedTokens.Count == 1)
           {
@@ -183,15 +184,12 @@ namespace ControlCommandAnalyser.Parser
         }
       }
       if (count < 2 && count != 0
-                && (mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PR).DisplayName
-                || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.CI).DisplayName
-                || mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PI).DisplayName))
+                && (model.Mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PR).DisplayName
+                || model.Mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.CI).DisplayName
+                || model.Mnemonic == Utilities.EnumExtensions.GetDisplayInfo(Measurement.MeasurementTypeCommand.PI).DisplayName))
       {
-        errors.Add(new ErrorItem
-        {
-            Description = $"Количество разобщенных цепей должно быть не меньше двух либо необходимо указать ключ ЗР.",
-            Code = ErrorCode.Gen_InvalidNumberOfDisconnectedRanges
-        });
+        model.AlgorithmKey.Add(TranslationKey.AlgorithmKey.ЗР.ToString());
+        model.Warnings.Add(GeneralWarnings.KeyZR(model.StartLineNumber, $"{model.CommandNumber} {model.Mnemonic}"));
       }
       return (new SchemeModel(chainModels), errors);
     }
