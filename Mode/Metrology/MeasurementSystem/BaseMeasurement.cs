@@ -223,7 +223,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <summary>
     /// Завершает измерение, размыкает реле и отключает прибор.
     /// </summary>
-    public virtual async Task FinalizeMeasurement(IMessageOutputService messageService)
+    public virtual async Task FinalizeMeasurement(IUserInteractionService messageService)
     {
       if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
       {
