@@ -223,5 +223,19 @@ namespace Errors.Translation
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = description
       };
+    /// <summary>
+    /// Ошибка: предыдущая коамнда не имеет точек для проверки.
+    /// </summary>
+    public static ErrorItem PreviousCommandHasNoPoints(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Si_PreviousCommandHasNoPoints,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"В команде, предшествующей команде {command} не указаны точки для измерения"
+      };
   }
 }

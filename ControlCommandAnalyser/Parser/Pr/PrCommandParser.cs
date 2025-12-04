@@ -188,7 +188,15 @@ namespace ControlCommandAnalyser.Parser.Pr
         if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
-          model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
+          var newScheme = CommandsModel.CheckKeyP(model, model.Scheme);
+          if (newScheme != null)
+          {
+            model.Scheme = newScheme;
+          }
+          else
+          {
+            model.Errors.Add(PrErrors.PreviousCommandHasNoPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          }
         }
         if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
@@ -198,7 +206,15 @@ namespace ControlCommandAnalyser.Parser.Pr
       else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
       {
         // находим цепи точек из предыдущей команды проверки
-        model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
+        var newScheme = CommandsModel.CheckKeyP(model, model.Scheme);
+        if (newScheme != null)
+        {
+          model.Scheme = newScheme;
+        }
+        else
+        {
+          model.Errors.Add(PrErrors.PreviousCommandHasNoPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        }
 
         if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
