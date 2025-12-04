@@ -194,14 +194,6 @@ namespace ControlCommandAnalyser.Parser.Ok
           }
           model.Comments = value.Trim();
         }
-
-        // Добавление в Parameters
-        //if (!model.Parameters.TryGetValue(key, out var list))
-        //{
-        //  list = new List<string>();
-        //  model.Parameters[key] = list;
-        //}
-        //list.Add(value);
       }
 
       return model;

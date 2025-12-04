@@ -12,19 +12,21 @@ namespace Errors.Translation
   {
     /// <inheritdoc />
 
-    public ErrorItem PairError(string command, string pointFirst, string pointLast,
+    public ErrorItem PairError(string command, string pointFirst, string pointLast, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
       {
         Command = command,
         Code = ErrorCode.Pr_PairError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Замкнутая пара точек: {pointFirst}, {pointLast}"
       };
 
     /// <inheritdoc />
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value,
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0)
@@ -33,6 +35,8 @@ namespace Errors.Translation
       {
         Command = command,
         Code = ErrorCode.Pr_PairError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         MeasureResult = value,
       };
@@ -54,7 +58,7 @@ namespace Errors.Translation
     }
 
     /// <inheritdoc />
-    public ErrorItem DisconnectChainError(string command, string chain, string measureResult,
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
@@ -62,24 +66,28 @@ namespace Errors.Translation
         Command = command,
         Code = ErrorCode.Pr_ChainError,
         Description = $"Разрыв в цепи {chain}",
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         MeasureResult = measureResult
       };
 
     /// <inheritdoc />
-    public ErrorItem ChainError(string command, string chain,
+    public ErrorItem ChainError(string command, string chain, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0) => new()
       {
         Command = command,
         Code = ErrorCode.Pr_ChainError,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Замкнутая цепь {chain}"
       };
 
     /// <inheritdoc />
-    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure,
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0)
@@ -88,6 +96,8 @@ namespace Errors.Translation
       {
         MeasureResult = resultMeasure,
         Command = command,
+        SourceLineNumber = sourceLineNumber,
+        FormattedLineNumber = formaterLineNumber,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Code = ErrorCode.Pr_NodeExecutePointError,
       };
@@ -163,6 +173,21 @@ namespace Errors.Translation
         Description = description
       };
 
+    /// <summary>
+    /// Ошибка: одна из границ сопротивления больше максимально измеряемой мультиметром границы сопротивления или ниже минимально измеряемой. 
+    /// </summary>
+    public static ErrorItem EquipmentOutOfRange(int startLineNumber, string command, string description,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pr_EquipmentOutOfRange,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = description
+      };
+
 
     /// <summary>
     /// Ошибка: верхняя граница сопротивления больше максимально допустимой границы сопротивления.
@@ -192,6 +217,20 @@ namespace Errors.Translation
         Code = ErrorCode.Pr_CannotParseParameters,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Не удалось распознать параметры: {parameters}"
+      };
+    /// <summary>
+    /// Ошибка: предыдущая коамнда не имеет точек для проверки.
+    /// </summary>
+    public static ErrorItem PreviousCommandHasNoPoints(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pr_PreviousCommandHasNoPoints,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"В команде, предшествующей команде {command} не указаны точки для измерения"
       };
   }
 }

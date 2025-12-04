@@ -52,16 +52,24 @@ namespace ControlCommandExecutor.BaseStrategies
 
         await context.MessageService.ShowMessageAsync(new ShowMessageModel($"Проверка {chainModels.ToString()}"), IsBlockStart: true);
 
-        await SwitichingFromBToA(chainModels, context.MessageService);
+        //await DisconnectFromBusBAsync(chainModels, context.MessageService);
+        //await ConnectToBusAAsync(chainModels, context.MessageService);
+
+        await SwitchFromBusBToAAsync(chainModels, context.MessageService);
+
         var answer = await context.PerformMeasurementAsync(context.Resistance, context.MessageService, context.MessageService.GetCancellationToken());
 
         if (!answer.Result)
         {
-          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.NodeExecutePointError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", PointModel.ConvertToPointStrings(chainModels.PointModels), ($"{answer.Value} МОм (>{context.Resistance} МОм)")));
+          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.NodeExecutePointError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", PointModel.ConvertToPointStrings(chainModels.PointModels), ($"{answer.Value} МОм (>{context.Resistance} МОм)"), context.CommandModel.StartLineNumber, context.CommandModel.FormattedStartLineNumber));
           ErrorsPoints.Add(chainModels);
         }
+       
+        //await DisconnectFromBusAAsync(chainModels, context.MessageService);
+        //await ConnectToBusBAsync(chainModels, context.MessageService);
 
-        await SwitichingFromAToB(chainModels, context.MessageService);
+        await SwitchFromBusAToBAsync(chainModels, context.MessageService);
+
       }
 
       if (ErrorsPoints.Count > 0)
@@ -84,7 +92,7 @@ namespace ControlCommandExecutor.BaseStrategies
         {
           var chainStr = await ControlCommandAnalyser.PointFormater.GetFormatDisconnectPoint(chain);
 
-          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr));
+          context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.ChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, context.CommandModel.StartLineNumber, context.CommandModel.FormattedStartLineNumber));
 
           var err = new ShowMessageModel($"{chainStr}", message: "Обнаружено замыкание", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
           ErrorMessage.Add(err);
@@ -303,7 +311,16 @@ namespace ControlCommandExecutor.BaseStrategies
       }
     }
 
-    private static async Task SwitichingFromAToB(ChainModel chain, IUserMessageService messageService)
+    /// <summary>
+    /// Отключает указанную точку от шины B через соответствующий модуль коммутации.
+    /// В случае неудачи предлагает пользователю повторить попытку.
+    /// </summary>
+    /// <param name="point">Точка, которую необходимо отключить от шины A.</param>
+    /// <param name="messageService">Сервис для отображения сообщений и взаимодействия с пользователем.</param>
+    /// <exception cref="RelayControlException">
+    /// Выбрасывается при невозможности отключить точку после всех попыток.
+    /// </exception>
+    private static async Task SwitchFromBusAToBAsync(ChainModel chain, IUserMessageService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -315,7 +332,16 @@ namespace ControlCommandExecutor.BaseStrategies
       }
     }
 
-    private static async Task SwitichingFromBToA(ChainModel chain, IUserMessageService messageService)
+    /// <summary>
+    /// Отключает указанную точку от шины B через соответствующий модуль коммутации.
+    /// В случае неудачи предлагает пользователю повторить попытку.
+    /// </summary>
+    /// <param name="point">Точка, которую необходимо отключить от шины A.</param>
+    /// <param name="messageService">Сервис для отображения сообщений и взаимодействия с пользователем.</param>
+    /// <exception cref="RelayControlException">
+    /// Выбрасывается при невозможности отключить точку после всех попыток.
+    /// </exception>
+    private static async Task SwitchFromBusBToAAsync(ChainModel chain, IUserMessageService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -326,5 +352,6 @@ namespace ControlCommandExecutor.BaseStrategies
         }
       }
     }
+
   }
 }

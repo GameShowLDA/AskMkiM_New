@@ -431,6 +431,52 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style x:Key="VsFilterButtonStyle" TargetType="ToggleButton">
+        <Setter Property="Padding" Value="8,2"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource LightPrimarySolidColorBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="MinWidth" Value="130"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="2"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+
+                        
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border"
+                                Property="BorderBrush"
+                                Value="{DynamicResource ActiveForegroundSolidColorBrush}"/>
+                        </Trigger>
+
+
+                        <!-- Checked (активно) -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="border"
+                                Property="Background"
+                                Value="{DynamicResource LightPrimarySolidColorBrush}"/>                          
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <Style x:Key="CustomList" TargetType="TreeViewItem">
         <Setter Property="Margin" Value="2"/>

@@ -17,7 +17,7 @@ namespace Errors.Translation
     /// <param name="pointFirst">Первая точка.</param>
     /// <param name="pointLast">Вторая точка.</param>
     /// <returns></returns>
-    public ErrorItem PairError(string command, string pointFirst, string pointLast,
+    public ErrorItem PairError(string command, string pointFirst, string pointLast, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0);
@@ -29,7 +29,7 @@ namespace Errors.Translation
     /// <param name="pointFirst">Первая точка.</param>
     /// <param name="pointLast">Вторая точка.</param>
     /// <returns></returns>
-    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value,
+    public ErrorItem ChainPairError(string command, List<string> pointFirst, List<string> pointLast, string value, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0);
@@ -42,7 +42,7 @@ namespace Errors.Translation
     /// <param name="countStep">Кол-во разрядов.</param>
     /// <param name="resultMeasure">Результат измерения.</param>
     /// <returns></returns>
-    public ErrorItem ChainError(string command, string chain,
+    public ErrorItem ChainError(string command, string chain, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0);
@@ -55,7 +55,7 @@ namespace Errors.Translation
     /// <param name="countStep">Кол-во разрядов.</param>
     /// <param name="resultMeasure">Результат измерения.</param>
     /// <returns></returns>
-    public ErrorItem DisconnectChainError(string command, string chain, string measureResult,
+    public ErrorItem DisconnectChainError(string command, string chain, string measureResult, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0);
@@ -68,7 +68,7 @@ namespace Errors.Translation
     /// <param name="countStep">Кол-во разрядов.</param>
     /// <param name="resultMeasure">Результат измерения.</param>
     /// <returns></returns>
-    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure,
+    public ErrorItem NodeExecutePointError(string command, List<string> point, string resultMeasure, int sourceLineNumber, int formaterLineNumber,
       [CallerMemberName] string callerName = "",
       [CallerFilePath] string callerFile = "",
       [CallerLineNumber] int callerLine = 0);

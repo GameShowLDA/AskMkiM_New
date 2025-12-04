@@ -183,7 +183,7 @@ namespace ControlCommandExecutor.Executors
 
       var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
-        var answer = await breadDown.IrManger.Measure.MeasureAsync(value, userMessageService: messageService);
+        var answer = (await breadDown.IrManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
@@ -204,7 +204,7 @@ namespace ControlCommandExecutor.Executors
     private static async Task<(bool, double)> NodeFullPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
-      double answer = -1;
+      (double Value , string Unit) answer = (-1, string.Empty);
       var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
         messageService.GetCancellationToken().ThrowIfCancellationRequested();
@@ -213,15 +213,15 @@ namespace ControlCommandExecutor.Executors
 
         if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
         {
-          answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, messageService);
+          answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, userMessageService: messageService);
         }
         else
         {
-          answer = await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? new Random().Next((int)value / 2, (int)value * 2) : value;
+          answer.Value = await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? new Random().Next((int)value / 2, (int)value * 2) : value;
         }
 
         var type = ShowMessageModel.MessageType.Success;
-        if (answer < value)
+        if (answer.Value < value)
         {
           type = ShowMessageModel.MessageType.Error;
         }
@@ -229,7 +229,7 @@ namespace ControlCommandExecutor.Executors
         return type == ShowMessageModel.MessageType.Success ? true : false;
       }, messageService);
 
-      return (result, answer);
+      return (result, answer.Value);
     }
   }
 }

@@ -120,7 +120,7 @@ namespace ControlCommandExecutor.BaseStrategies
               var chain = new ChainModel(item);
               var chainStr = await context.CommandModel.BuildDislpayInfo.BuildErrorChainStringAsync(chain);
 
-              context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.DisconnectChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, $"{result.Value.ToString()} Ом"));
+              context.CommandManager.AddErrorMethod(context.CommandModel.PointErrors.DisconnectChainError($"{context.CommandModel.CommandNumber} {context.CommandModel.Mnemonic}", chainStr, $"{result.Value.ToString()} Ом", context.CommandModel.StartLineNumber, context.CommandModel.FormattedStartLineNumber));
             }
 
             await DisconnectFromBusAAsync(point, context.MessageService);

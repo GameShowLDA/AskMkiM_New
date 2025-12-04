@@ -80,30 +80,7 @@ namespace ControlCommandAnalyser.Parser.Ie
 
       string? lowerLimitCapacity = null, higherLimitCapacity = null, unit = null;
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
-
-      foreach (var (key, hasError) in result)
-      {
-        if (hasError)
-        {
-          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-        }
-        else
-        {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-        }
-      }
-
-      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-      foreach (var (key, hasError) in result)
-      {
-        remainder = Regex.Replace(
-        remainder,
-        $@"\b{Regex.Escape(key)}\s*,?",
-        "",
-        RegexOptions.IgnoreCase);
-      }
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
       (lowerLimitCapacity, higherLimitCapacity, unit, remainder) = CommonParameterParser.CapacityParser.ParseCapacityRange(remainder);
       LoggerUtility.LogDebug($"После парсинга электрической ёмкости: нижняя='{lowerLimitCapacity}', верхняя='{higherLimitCapacity}', единица='{unit}', remainder='{remainder}'");
@@ -214,16 +191,24 @@ namespace ControlCommandAnalyser.Parser.Ie
         // 9️⃣ Установка значений (только если всё прошло проверки)
         if (hasErrors == false)
         {
+          model.CapacityUnit = unit ?? string.Empty;
           // нижняя всегда должна быть → если есть — устанавливаем
           model.LowerLimitCapacity = lower.Value;
           model.LowerLimitCapacitySource = $"{lower.Value} {unit}";
 
           // верхняя: если есть — используем, если нет — ставим дефолт
-          double finalHigher = higher ?? maxCapacity;
+          double finalHigher = -1;
+          if (higher == null)
+          {
+            finalHigher = maxCapacity;
+            model.Warnings.Add(GeneralWarnings.DefaultCapacityHighLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{finalHigher} {model.CapacityUnit}"));
+          }
+          else
+          {
+            finalHigher = higher.Value;
+          }
           model.HigherLimitCapacity = finalHigher;
           model.HigherLimitCapacitySource = $"{finalHigher} {unit}";
-
-          model.CapacityUnit = unit ?? string.Empty;
         }
 
         if (HasInvalidParameterOrder(body, model.AlgorithmKey, lowerLimitCapacity ?? higherLimitCapacity, out string err))
@@ -249,7 +234,7 @@ namespace ControlCommandAnalyser.Parser.Ie
           model.PointsSourse = pointsBlob;
           LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
 
           // Поднимем ошибки парсера точек
           if (pointErrors?.Count > 0)

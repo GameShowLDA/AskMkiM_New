@@ -87,7 +87,7 @@ namespace UI.Controls.Runner
       ProtocolUI = new ProtocolUI(true);
       ProtocolUI.ErrorListBoxVerticalVisibility = Visibility.Collapsed;
       MainContent.Content = ProtocolUI;
-      ErrorListBoxVertical.ErrorItemDoubleClicked += ErrorItemDoubleClicked;
+      ErrorListBoxVertical.ItemDoubleClicked += ErrorItemDoubleClicked;
 
       Loaded += RunControl_Loaded;
       LeftBox.AddHandler(UIElement.PreviewGotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(LeftBox_PreviewGotKeyboardFocus), true);
@@ -156,7 +156,7 @@ namespace UI.Controls.Runner
     {
       foreach (ErrorItem errorItem in errorItems)
       {
-        ErrorListBoxVertical.Errors.Add(errorItem);
+        ErrorListBoxVertical.Items.Add(errorItem);
         ErrorCount++;
       }
 
@@ -261,7 +261,7 @@ namespace UI.Controls.Runner
     {
       Application.Current.Dispatcher?.Invoke(() =>
       {
-        ErrorListBoxVertical.Errors.Add(errorItem);
+        ErrorListBoxVertical.Items.Add(errorItem);
         ErrorCount++;
 
         if (ErrorCount > 0)
@@ -275,7 +275,7 @@ namespace UI.Controls.Runner
     {
       Application.Current.Dispatcher?.Invoke(() =>
       {
-        ErrorListBoxVertical.Errors.Clear();
+        ErrorListBoxVertical.Items.Clear();
         ErrorCount = 0;
       });
     }

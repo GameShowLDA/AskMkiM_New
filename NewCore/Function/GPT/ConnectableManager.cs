@@ -41,38 +41,6 @@ public class ConnectableManager : IConnectable
   public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
   {
     return await InitializeAsync(messageService);
-
-    _gptModel.Mode = BreakdownTypeMode.None;
-    if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
-    {
-      return (true, string.Empty);
-    }
-
-    using (await OperationLock.LockAsync())
-    {
-      var isValid = CheckData();
-      if (!isValid.Connect)
-        return isValid;
-
-      try
-      {
-        if (!_gptModel.COMPort.IsOpen)
-        {
-          _gptModel.COMPort.Open();
-          LogInformation($"[{_gptModel.Name}] COM-порт {_gptModel.COMPort.PortName} открыт.", isDeviceLog: true);
-        }
-        else
-        {
-          LogInformation($"[{_gptModel.Name}] COM-порт {_gptModel.COMPort.PortName} уже был открыт.", isDeviceLog: true);
-        }
-
-      }
-      catch (Exception ex)
-      {
-        LogException($"Ошибка подключения к устройству {_gptModel?.Name}", ex, isDeviceLog: true);
-        return (false, $"Ошибка подключения: {ex.Message}");
-      }
-    }
   }
 
   /// <summary>

@@ -228,7 +228,7 @@ namespace ControlCommandExecutor.Executors
           throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
         }
 
-        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.CurrentLimits.SetHighCurrentLimitAsync(80, userMessageService)).Success, userMessageService))
+        if (!await UserActionHelper.GetRunWithUserRepeatAsync(async () => (await breakDown.DcwManger.CurrentLimits.SetHighCurrentLimitAsync(20, userMessageService)).Success, userMessageService))
         {
           throw IrExceptionFactory.SetVoltageFailed(name, numberChassis, number);
         }
@@ -263,7 +263,7 @@ namespace ControlCommandExecutor.Executors
       {
         if (type == VoltageEnum.Type.ACW)
         {
-          var answer = await breadDown.AcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
+          var answer = (await breadDown.AcwManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
           if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
           {
@@ -273,7 +273,7 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          var answer = await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
+          var answer = (await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
           await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
           return (result, answer.ToString());
@@ -302,7 +302,7 @@ namespace ControlCommandExecutor.Executors
         if (typeVoltage == VoltageEnum.Type.ACW)
         {
           answer = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ?
-                   await breadDown.AcwManger.Measure.MeasureAsync(10, userMessageService: messageService) :
+                   (await breadDown.AcwManger.Measure.MeasureAsync(10, userMessageService: messageService)).value :
                    !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? 10 : new Random().Next(80, 150);
 
           var type = ShowMessageModel.MessageType.Success;
@@ -317,7 +317,7 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
+          answer = (await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
           var type = ShowMessageModel.MessageType.Success;
           if (answer >= value)
           {

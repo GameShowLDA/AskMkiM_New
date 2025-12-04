@@ -478,11 +478,18 @@ namespace UI.Controls.ProtocolNew
             await ProtocolSelfCheck.FinalizeAsync(stop);
           }
         }
+        catch (OperationCanceledException ex)
+        {
+
+        }
         catch (Exception ex)
         {
           LogException($"Ошибка при запуске \"{name}\"", ex);
           await ProtocolSelfCheck.AppendEmptyLineAsync();
-          await ProtocolSelfCheck.ShowMessageAsync(new ShowMessageModel("Системная ошибка программы АСК-МКИ-М", headerColor:ShowMessageModel.ErrorMessage.TitleColor, message: ex.Message) { IndentLevel = 1 });
+          await ProtocolSelfCheck.ShowMessageAsync(new ShowMessageModel("Системная ошибка программы АСК-МКИ-М", headerColor: ShowMessageModel.ErrorMessage.TitleColor, message: ex.Message) { IndentLevel = 1 });
+        }
+        finally
+        {
           await SetIsLocked(false);
           _stopwatch.Stop();
           await ProtocolSelfCheck.FinalizeAsync(stop);

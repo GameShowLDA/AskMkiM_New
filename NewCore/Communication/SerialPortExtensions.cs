@@ -65,19 +65,20 @@ namespace NewCore.Communication
           var str = $"Попытка {attempt}/{maxAttempts}: порт {port.PortName} занят ({ex.Message}).";
           LogWarning($"{header} {str}", isDeviceLog: true);
 
-          try
+          if (userMessageService != null)
           {
-            string who = WhoUsesCom(port.PortName);
-            LogInformation($"{header} Кто держит {port.PortName}:\n{who}", isDeviceLog: true);
-          }
-          catch (Exception innerEx)
-          {
-            LogWarning($"{header} Не удалось вызвать handle.exe: {innerEx.Message}", isDeviceLog: true);
+            await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
           }
 
           if (attempt >= maxAttempts)
           {
             str = $"COM-порт {port.PortName} не удалось открыть после {maxAttempts} попыток.";
+
+            if (userMessageService != null)
+            {
+              await userMessageService.ShowMessageAsync(new ShowMessageModel(header, message: str, type: ShowMessageModel.MessageType.Error) { IndentLevel = 2 });
+            }
+
             LogException($"{header} {str}", ex, isDeviceLog: true);
             throw;
           }
@@ -118,8 +119,6 @@ namespace NewCore.Communication
           await Task.Delay(retryDelay);
         }
       }
-
-
     }
 
     public static string WhoUsesCom(string comPort)

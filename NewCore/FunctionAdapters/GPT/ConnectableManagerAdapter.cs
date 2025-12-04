@@ -26,7 +26,7 @@ namespace NewCore.FunctionAdapters.GPT
 
     public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
     {
-      var (result, answer) = await _manager.ConnectAsync();
+      var (result, answer) = await _manager.ConnectAsync(messageService);
 
       if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
       {
