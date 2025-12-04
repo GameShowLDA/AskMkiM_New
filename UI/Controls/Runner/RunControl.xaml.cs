@@ -109,7 +109,7 @@ namespace UI.Controls.Runner
     }
 
 
-    private async void ErrorItemDoubleClicked(ErrorItem obj)
+    private async void ErrorItemDoubleClicked(IDisplayIssue obj)
     {
       var protocolUI = MainContent.Content as ProtocolUI;
       if (protocolUI != null)
