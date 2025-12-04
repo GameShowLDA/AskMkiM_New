@@ -158,6 +158,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
 
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
+
           return await moduleForOldPoint.PointManager.ConnectingPointToNewBus(OppositeBus, oldPoint.PointNumber, protocolUI); 
         }, protocolUI);
       }
