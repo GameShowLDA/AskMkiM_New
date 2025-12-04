@@ -136,7 +136,7 @@ namespace Mode.SelfControl.NewModule.ModuleVoltageCurrentSource
     /// <summary>
     /// Инициализирует источник напряжения и тока.
     /// </summary>
-    private async Task InitializeVoltageCurrentSourceAsync(IUserMessageService messageService)
+    private async Task InitializeVoltageCurrentSourceAsync(IUserInteractionService messageService)
     {
       LogInformation("Инициализация источника напряжения и тока");
 
@@ -209,7 +209,7 @@ namespace Mode.SelfControl.NewModule.ModuleVoltageCurrentSource
     /// <param name="voltage">Ожидаемое напряжение.</param>
     /// <param name="delay">Задержка перед измерением.</param>
     /// <param name="token">Токен отмены.</param>
-    private async Task MeasureAndCompareVoltage(double voltage, int delay, CancellationToken token, IUserMessageService userMessageService)
+    private async Task MeasureAndCompareVoltage(double voltage, int delay, CancellationToken token, IUserInteractionService userMessageService)
     {
       double tolerance = 0.0001;
       double firstNorm = voltage - (0.01 * voltage + 0.1);

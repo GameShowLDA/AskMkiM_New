@@ -49,7 +49,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
     /// Подключает все устройства, поддерживающие интерфейс <see cref="IDevice"/>.
     /// </summary>
     /// <returns>Результат подключения.</returns>
-    public async Task<(bool Connect, string Message)> ConnectAllAsync(IUserMessageService messageService)
+    public async Task<(bool Connect, string Message)> ConnectAllAsync(IUserInteractionService messageService)
     {
       foreach (var device in Devices)
       {

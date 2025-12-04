@@ -11,12 +11,12 @@ namespace DTO.Device.Chassis.Capabilities
     /// Отключает питание шасси.
     /// </summary>
     /// <returns>Асинхронная задача.</returns>
-    Task StopPowerAsync(IUserMessageService? userMessageService = null);
+    Task StopPowerAsync(IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Включает питание шасси.
     /// </summary>
     /// <returns>Асинхронная задача.</returns>
-    Task StartPowerAsync(IUserMessageService? userMessageService = null);
+    Task StartPowerAsync(IUserInteractionService? userMessageService = null);
   }
 }

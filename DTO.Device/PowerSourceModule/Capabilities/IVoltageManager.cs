@@ -13,7 +13,7 @@ namespace DTO.Device.PowerSourceModule.Capabilities
     /// </summary>
     /// <param name="voltageSources">Тип источника напряжения.</param>
     /// <returns>Задача, представляющая асинхронную операцию.</returns>
-    Task SetSourceVoltageAsync(VoltageSources voltageSources, IUserMessageService? messageService = null);
+    Task SetSourceVoltageAsync(VoltageSources voltageSources, IUserInteractionService? messageService = null);
 
     /// <summary>
     /// Устанавливает уровень напряжения.
@@ -21,6 +21,6 @@ namespace DTO.Device.PowerSourceModule.Capabilities
     /// <param name="integerPart">Целая часть напряжения.</param>
     /// <param name="decimalPart">Дробная часть напряжения.</param>
     /// <returns>Задача, представляющая асинхронную операцию.</returns>
-    Task SetVoltageLevelAsync(int integerPart, int decimalPart, IUserMessageService? messageService = null);
+    Task SetVoltageLevelAsync(int integerPart, int decimalPart, IUserInteractionService? messageService = null);
   }
 }

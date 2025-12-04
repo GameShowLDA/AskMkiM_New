@@ -11,7 +11,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
   /// </summary>
   static internal class SelfTestConnectionHelper
   {
-    static internal async Task<bool> SettingsMeter(IFastMeter meter, IUserMessageService userMessageService)
+    static internal async Task<bool> SettingsMeter(IFastMeter meter, IUserInteractionService userMessageService)
     {
       var connect = false;
       connect = (await meter.ConnectableManager.ConnectAsync(userMessageService)).Connect;
@@ -26,7 +26,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
       }
       return connect;
     }
-    static internal async Task<bool> CheckConnectionsAsync(ISwitchingDevice device, IFastMeter meter, IUserMessageService userMessageService)
+    static internal async Task<bool> CheckConnectionsAsync(ISwitchingDevice device, IFastMeter meter, IUserInteractionService userMessageService)
     {
       var result1 = await device.ConnectableManager.InitializeAsync(userMessageService);
       var result2 = await meter.ConnectableManager.InitializeAsync(userMessageService);

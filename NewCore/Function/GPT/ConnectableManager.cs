@@ -38,7 +38,7 @@ public class ConnectableManager : IConnectable
   /// </summary>
   /// <param name="messageService">Опциональный сервис вывода сообщений пользователю.</param>
   /// <returns>Кортеж: <c>true</c>, если подключение выполнено успешно; строка с текстом ошибки или пустая строка.</returns>
-  public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+  public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
   {
     return await InitializeAsync(messageService);
   }
@@ -46,7 +46,7 @@ public class ConnectableManager : IConnectable
   /// <summary>
   /// Асинхронно отключается от устройства GPT79904, освобождает COM-порт и уничтожает модель.
   /// </summary>
-  public async Task<bool> DisconnectAsync(IUserMessageService _ = null)
+  public async Task<bool> DisconnectAsync(IUserInteractionService _ = null)
   {
     _gptModel.Mode = BreakdownTypeMode.None;
     if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
@@ -167,7 +167,7 @@ public class ConnectableManager : IConnectable
   /// Асинхронно инициализирует устройство GPT79904.
   /// Выполняет проверку COM-порта и опрос команды *IDN?.
   /// </summary>
-  public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+  public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
   {
     if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
     {
@@ -220,7 +220,7 @@ public class ConnectableManager : IConnectable
   /// <summary>
   /// Асинхронно выполняет сброс устройства GPT79904 (*RST, *CLS).
   /// </summary>
-  public async Task<bool> ResetAsync(IUserMessageService messageService = null)
+  public async Task<bool> ResetAsync(IUserInteractionService messageService = null)
   {
     using (await OperationLock.LockAsync())
     {

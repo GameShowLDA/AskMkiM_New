@@ -20,7 +20,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <param name="points">Список точек для проверки.</param>
     /// <param name="messageService">Сервис отображения сообщений.</param>
     /// <returns>Задача, представляющая выполнение проверки.</returns>
-    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, NodeAccumulationChecker.PerformMeasurementAsync performMeasurementAsync, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserMessageService messageService, double resistance = 0)
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, NodeAccumulationChecker.PerformMeasurementAsync performMeasurementAsync, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserInteractionService messageService, double resistance = 0)
     {
       List<ShowMessageModel> errorsMessgae = new List<ShowMessageModel>();
 
@@ -89,7 +89,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности подключения точки после всех попыток.
     /// </exception>
-    private static async Task ConnectToBusBAsync(ChainModel points, IUserMessageService messageService)
+    private static async Task ConnectToBusBAsync(ChainModel points, IUserInteractionService messageService)
     {
       foreach (var point in points.PointModels)
       {
@@ -110,7 +110,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности подключения точки после всех попыток.
     /// </exception>
-    private static async Task ConnectToBusAAsync(ChainModel points, IUserMessageService messageService)
+    private static async Task ConnectToBusAAsync(ChainModel points, IUserInteractionService messageService)
     {
       foreach (var point in points.PointModels)
       {
@@ -131,7 +131,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task DisconnectFromBusAAsync(ChainModel points, IUserMessageService messageService)
+    private static async Task DisconnectFromBusAAsync(ChainModel points, IUserInteractionService messageService)
     {
       foreach (var point in points.PointModels)
       {

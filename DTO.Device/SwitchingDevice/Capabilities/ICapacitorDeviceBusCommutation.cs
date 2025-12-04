@@ -12,13 +12,13 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// </summary>
     /// <param name="number">Номер конденсатора.</param>
     /// <returns>Возвращает результат подключения.</returns>
-    Task<bool> ConnectCapacitor(int number, IUserMessageService? userMessageService = null);
+    Task<bool> ConnectCapacitor(int number, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Отключение конденсаторов.
     /// </summary>
     /// <param name="number">Номер конденсатора.</param>
     /// <returns>Возвращает результат отключения.</returns>
-    Task<bool> DisconnectCapacitor(int number, IUserMessageService? userMessageService = null);
+    Task<bool> DisconnectCapacitor(int number, IUserInteractionService? userMessageService = null);
   }
 }

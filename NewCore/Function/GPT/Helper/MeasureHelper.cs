@@ -24,7 +24,7 @@ namespace NewCore.Function.GPT.Helper
       double rangeFrom = -1,
       double rangeTo = -1,
       bool waitFullTime = false,
-      IUserMessageService? userMessageService = null)
+      IUserInteractionService? userMessageService = null)
     {
       if (time == 60)
       {

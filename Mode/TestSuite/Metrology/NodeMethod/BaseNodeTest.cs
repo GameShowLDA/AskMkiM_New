@@ -203,7 +203,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// <summary>
     /// Завершает тест, выполняя очистку и отключение оборудования.
     /// </summary>
-    public virtual async Task FinalizeAsync(IUserMessageService messageService)
+    public virtual async Task FinalizeAsync(IUserInteractionService messageService)
     {
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
     }
@@ -212,7 +212,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// Проверяет и подключает все необходимые устройства перед выполнением теста.
     /// </summary>
     /// <returns>Задача, представляющая операцию подключения.</returns>
-    public virtual async Task<(bool Connect, string Message)> ConnectDevicesAsync(IUserMessageService messageService)
+    public virtual async Task<(bool Connect, string Message)> ConnectDevicesAsync(IUserInteractionService messageService)
     {
       await messageService.ShowMessageAsync(new ShowMessageModel("Инициализация оборудования", type: ShowMessageModel.MessageType.Info));
 
@@ -237,7 +237,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// Настраивает измерительное устройство (мультиметр или ППУ).
     /// </summary>
     /// <param name="dataModel">Модель данных, содержащая дополнительные значения для устройств.</param>
-    public abstract Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null);
+    public abstract Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null);
 
     public void ResetPoints()
     {

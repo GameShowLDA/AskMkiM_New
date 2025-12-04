@@ -29,7 +29,7 @@ namespace NewCore.Function.Keysight3466new
     /// Устанавливает прибор в режим прозвонки (Continuity Test).
     /// </summary>
     /// <exception cref="InvalidOperationException">Выбрасывается, если прибор не подключен.</exception>
-    public async Task<bool> SetContinuityModeAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> SetContinuityModeAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -48,7 +48,7 @@ namespace NewCore.Function.Keysight3466new
     /// <c>true</c>, если обнаружено соединение (низкое сопротивление), иначе <c>false</c>.
     /// </returns>
     /// <exception cref="InvalidOperationException">Выбрасывается, если прибор не подключен.</exception>
-    public async Task<bool> CheckContinuityAsync(bool expectedOutcome, IUserMessageService? userMessageService = null)
+    public async Task<bool> CheckContinuityAsync(bool expectedOutcome, IUserInteractionService? userMessageService = null)
     {
       if (!_device.IsConnected)
       {
@@ -66,7 +66,7 @@ namespace NewCore.Function.Keysight3466new
     /// <c>true</c>, если обнаружено соединение (низкое сопротивление), иначе <c>false</c>.
     /// </returns>
     /// <exception cref="InvalidOperationException">Выбрасывается, если прибор не подключен.</exception>
-    public async Task<double> CheckContinuityAsync(double expectedOutcome, IUserMessageService? userMessageService = null)
+    public async Task<double> CheckContinuityAsync(double expectedOutcome, IUserInteractionService? userMessageService = null)
     {
       if (!_device.IsConnected)
       {

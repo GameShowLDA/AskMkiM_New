@@ -12,7 +12,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// Проверка формирования дискрет напряжения.
     /// </summary>
     /// <param name="token">Токен для отмены операции.</param>
-    static internal async Task GenerateDiscreteVoltageCheck(CancellationToken cancellationToken, IUserMessageService messageService, IFastMeter fastMeter, IPowerSourceModule powerSource)
+    static internal async Task GenerateDiscreteVoltageCheck(CancellationToken cancellationToken, IUserInteractionService messageService, IFastMeter fastMeter, IPowerSourceModule powerSource)
     {
       await messageService.ShowMessageAsync(new ShowMessageModel("Начало проверки формирования дискрет напряжения"));
 
@@ -30,7 +30,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="step">Шаг напряжения.</param>
     /// <param name="delay">Задержка между измерениями.</param>
     /// <param name="token">Токен для отмены операции.</param>
-    static private async Task CheckVoltageLevelsAsync(CancellationToken cancellationToken, IUserMessageService messageService, double startVoltage, double endVoltage, double step, int delay, IFastMeter fastMeter, IPowerSourceModule powerSource)
+    static private async Task CheckVoltageLevelsAsync(CancellationToken cancellationToken, IUserInteractionService messageService, double startVoltage, double endVoltage, double step, int delay, IFastMeter fastMeter, IPowerSourceModule powerSource)
     {
       await messageService.ShowMessageAsync(new ShowMessageModel($"Проверка уровней напряжения от {startVoltage} до {endVoltage} с шагом {step}"));
       for (double voltage = startVoltage; voltage <= endVoltage; voltage += step)
@@ -47,7 +47,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// Устанавливает напряжение и отображает сообщение.
     /// </summary>
     /// <param name="voltage">Устанавливаемое напряжение.</param>
-    static private async Task SetVoltageAndShowMessage(IUserMessageService messageService, double voltage, IPowerSourceModule powerSource)
+    static private async Task SetVoltageAndShowMessage(IUserInteractionService messageService, double voltage, IPowerSourceModule powerSource)
     {
       int a = (int)voltage;
       int b = (int)((voltage - a) * 10);
@@ -60,7 +60,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="voltage">Ожидаемое напряжение.</param>
     /// <param name="delay">Задержка перед измерением.</param>
     /// <param name="token">Токен отмены.</param>
-    static private async Task MeasureAndCompareVoltage(IUserMessageService messageService, double voltage, int delay, IFastMeter fastMeter)
+    static private async Task MeasureAndCompareVoltage(IUserInteractionService messageService, double voltage, int delay, IFastMeter fastMeter)
     {
       double firstNorm = Math.Round(voltage - (0.01 * voltage + 0.1), 3);
       double lastNorm = Math.Round(voltage + (0.01 * voltage + 0.1), 3);
@@ -85,7 +85,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="delay">Задержка перед измерением.</param>
     /// <param name="token">Токен отмены.</param>
     /// <returns>Результат измерения.</returns>
-    static private async Task<double> GetMeasurementResult(IUserMessageService messageService, double voltage, int delay, IFastMeter meter)
+    static private async Task<double> GetMeasurementResult(IUserInteractionService messageService, double voltage, int delay, IFastMeter meter)
     {
       await Task.Delay(delay);
       double result = await meter.DcVoltageManager.MeasureDCVoltageAsync(voltage, messageService);

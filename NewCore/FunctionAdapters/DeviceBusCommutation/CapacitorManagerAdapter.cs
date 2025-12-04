@@ -34,7 +34,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectCapacitor(int number, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectCapacitor(int number, IUserInteractionService? userMessageService = null)
     {
       IsConnectCapacitor.TryGetValue(number, out bool connect);
       if (connect)
@@ -58,7 +58,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectCapacitor(int number, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectCapacitor(int number, IUserInteractionService? userMessageService = null)
     {
       IsConnectCapacitor.TryGetValue(number, out bool connect);
       if (!connect)

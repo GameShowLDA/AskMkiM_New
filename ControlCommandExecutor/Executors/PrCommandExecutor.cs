@@ -169,7 +169,7 @@ namespace ControlCommandExecutor.Executors
     }
 
 
-    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
+    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserInteractionService userMessageService)
     {
       foreach (var module in relaySwitchModules)
       {
@@ -184,7 +184,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserMessageService userMessageService)
+    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserInteractionService userMessageService)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectMultimeter(SwitchingBusNew.AB1, userMessageService), userMessageService))
       {
@@ -192,7 +192,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingMeter(IFastMeter meter, IUserMessageService userMessageService)
+    private async Task SettingMeter(IFastMeter meter, IUserInteractionService userMessageService)
     {
       string name = meter.Name;
       int numberChassis = meter.NumberChassis;
@@ -221,7 +221,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double resistance, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
 
@@ -268,7 +268,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, double)> NodeFullPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private async Task<(bool, double)> NodeFullPerformMeasurementAsync(double resistance, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = -1;
@@ -313,7 +313,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, double)> ConnectedPointCheckerMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken)
+    private async Task<(bool, double)> ConnectedPointCheckerMeasurementAsync(double resistance, IUserInteractionService messageService, CancellationToken cancellationToken)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = -1;

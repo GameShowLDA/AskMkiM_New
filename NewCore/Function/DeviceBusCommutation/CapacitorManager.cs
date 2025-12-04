@@ -28,7 +28,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// </summary>
     /// <param name="number">Номер конденсатора.</param>
     /// <returns>Задача (Task), представляющая асинхронную операцию.</returns>
-    public async Task<bool> ConnectCapacitor(int number, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectCapacitor(int number, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -45,7 +45,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// </summary>
     /// <param name="number">Номер конденсатора.</param>
     /// <returns>Задача (Task), представляющая асинхронную операцию.</returns>
-    public async Task<bool> DisconnectCapacitor(int number, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectCapacitor(int number, IUserInteractionService? userMessageService = null)
     {
       var showMessageModel = DeviceMessageBuilder.GetDefaultSettings(_deviceBusCommutation);
 

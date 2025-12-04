@@ -29,7 +29,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectMeterAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectMeterAsync(IUserInteractionService? userMessageService = null)
     {
       if (IsConnectMeter)
         return true;
@@ -57,7 +57,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectMeterAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectMeterAsync(IUserInteractionService? userMessageService = null)
     {
       if (IsConnectMeter)
         return false;
@@ -85,7 +85,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> GetMeterResponseAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> GetMeterResponseAsync(IUserInteractionService? userMessageService = null)
     {
       return await _meterManager.GetMeterResponseAsync();
     }

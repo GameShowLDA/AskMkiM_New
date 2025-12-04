@@ -27,7 +27,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// Асинхронная операция, возвращающая <c>true</c>, если измерение прошло успешно,
     /// или <c>false</c>, если обнаружена ошибка.
     /// </returns>
-    internal delegate Task<(bool Result, double Value)> PerformMeasurementAsync(double value, IUserMessageService userMessageService, CancellationToken cancellationToken);
+    internal delegate Task<(bool Result, double Value)> PerformMeasurementAsync(double value, IUserInteractionService userMessageService, CancellationToken cancellationToken);
 
     /// <summary>
     /// Асинхронно выполняет проверку соединённых точек в схеме.
@@ -161,7 +161,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности подключения точки после всех попыток.
     /// </exception>
-    private static async Task ConnectToBusBAsync(PointModel point, IUserMessageService messageService)
+    private static async Task ConnectToBusBAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
@@ -179,7 +179,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности подключения точки после всех попыток.
     /// </exception>
-    private static async Task ConnectToBusAAsync(PointModel point, IUserMessageService messageService)
+    private static async Task ConnectToBusAAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
@@ -198,7 +198,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task DisconnectFromBusAAsync(PointModel point, IUserMessageService messageService)
+    private static async Task DisconnectFromBusAAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
@@ -216,7 +216,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task DisconnectFromBusBAsync(PointModel point, IUserMessageService messageService)
+    private static async Task DisconnectFromBusBAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))

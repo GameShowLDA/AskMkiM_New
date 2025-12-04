@@ -122,7 +122,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <param name="point2">Вторая точка (в формате A.B.C).</param>
     /// <param name="mode">Метрологический режим, для которого выполняется алгоритм.</param>
     /// <param name="messageService">Пользовательский элемент для вывода в протокол.</param>
-    public virtual async Task ConnectToEquipment(PointModel point1, PointModel point2, MeasurementTypeCommand mode, IUserMessageService messageService)
+    public virtual async Task ConnectToEquipment(PointModel point1, PointModel point2, MeasurementTypeCommand mode, IUserInteractionService messageService)
     {
       try
       {
@@ -204,7 +204,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// </summary>
     /// <param name="metrologicalModeRole">Метрологический режим.</param>
     /// <param name="dataModel">Модель данных, содержащая дополнительные значения для устройств.</param>
-    public virtual async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
+    public virtual async Task ConfigureMeter(IUserInteractionService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
     {
       if (await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
       {
@@ -223,7 +223,7 @@ namespace Mode.Metrology.MeasurementSystem
     /// <summary>
     /// Завершает измерение, размыкает реле и отключает прибор.
     /// </summary>
-    public virtual async Task FinalizeMeasurement(IUserMessageService messageService)
+    public virtual async Task FinalizeMeasurement(IMessageOutputService messageService)
     {
       if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
       {
@@ -274,7 +274,7 @@ namespace Mode.Metrology.MeasurementSystem
       throw MetrologyValidationErrors.DeviceByRoleNotFound(role, index, typeof(T));
     }
 
-    public virtual async Task PrintResult(IUserMessageService messageService, DTO.Enum.Measurement.MeasurementTypeCommand command)
+    public virtual async Task PrintResult(IMessageOutputService messageService, DTO.Enum.Measurement.MeasurementTypeCommand command)
     {
       if (Measurements.Count < 2)
         return;

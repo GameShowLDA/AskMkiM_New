@@ -89,7 +89,7 @@ namespace Mode.Metrology.KC
       public KcMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -118,7 +118,7 @@ namespace Mode.Metrology.KC
         return true;
       }
 
-      public override async Task FinalizeMeasurement(IUserMessageService messageService)
+      public override async Task FinalizeMeasurement(IUserInteractionService messageService)
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.KC);

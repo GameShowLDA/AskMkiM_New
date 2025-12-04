@@ -1,4 +1,5 @@
 ﻿using DTO.Base.Models;
+using DTO.Enum;
 using DTO.Service;
 using EventCore.Adapters;
 using EventCore.Events;
@@ -151,9 +152,9 @@ namespace UI.Controls.ProtocolNew
     /// </summary>
     /// <param name="stopDelegate">Делегат для завершения задачи.</param>
     /// <returns>Задача, представляющая асинхронную операцию завершения процесса.</returns>
-    internal async Task StopAsync(StopDelegate stopDelegate, TaskCompletionSource<IUserMessageService.UserAction> _userActionTcs)
+    internal async Task StopAsync(StopDelegate stopDelegate, TaskCompletionSource<UserAction> _userActionTcs)
     {
-      _userActionTcs?.TrySetResult(IUserMessageService.UserAction.Abort);
+      _userActionTcs?.TrySetResult(UserAction.Abort);
       await FinalizeAsync(stopDelegate);
     }
 
@@ -187,7 +188,7 @@ namespace UI.Controls.ProtocolNew
     /// <summary>
     /// Ставит выполнение метода на паузу.
     /// </summary>
-    internal async Task PauseAsync(CancellationToken cancellationToken, IUserMessageService userMessageService)
+    internal async Task PauseAsync(CancellationToken cancellationToken, IUserInteractionService userMessageService)
     {
       if (!IsPaused)
       {
@@ -204,7 +205,7 @@ namespace UI.Controls.ProtocolNew
     /// Возобновляет выполнение метода после паузы.
     /// </summary>
     /// <param name="stepMode">Флаг, указывающий, нужно ли возобновить в пошаговом режиме.</param>
-    internal void Resume(bool stepMode, IUserMessageService userMessageService, TaskCompletionSource<IUserMessageService.UserAction> _userActionTcs)
+    internal void Resume(bool stepMode, IUserInteractionService userMessageService, TaskCompletionSource<UserAction> _userActionTcs)
     {
       LogInformation("Срабатывание возобновления при самоконтроле");
       if (IsPaused && PauseCompletionSource != null && !PauseCompletionSource.Task.IsCompleted)
@@ -213,7 +214,7 @@ namespace UI.Controls.ProtocolNew
       }
 
       IsPaused = false;
-      _userActionTcs?.TrySetResult(IUserMessageService.UserAction.Continue);
+      _userActionTcs?.TrySetResult(UserAction.Continue);
     }
 
     /// <summary>
@@ -296,13 +297,13 @@ namespace UI.Controls.ProtocolNew
     }
 
     /// <summary>
-    /// Выполняет повтор действия, зарегистрированного в <see cref="IUserMessageService"/>, при нажатии на кнопку "Повторить".
+    /// Выполняет повтор действия, зарегистрированного в <see cref="IUserInteractionService"/>, при нажатии на кнопку "Повторить".
     /// Если повторное действие не задано, ничего не происходит.
     /// </summary>
     /// <returns>Задача, представляющая выполнение действия повтора.</returns>
-    internal async Task ReturnMeasureEvent(IUserMessageService _userMessageService, TaskCompletionSource<IUserMessageService.UserAction> _userActionTcs)
+    internal async Task ReturnMeasureEvent(IUserInteractionService _userMessageService, TaskCompletionSource<UserAction> _userActionTcs)
     {
-      _userActionTcs?.TrySetResult(IUserMessageService.UserAction.Retry);
+      _userActionTcs?.TrySetResult(UserAction.Retry);
     }
 
     #endregion
@@ -321,7 +322,7 @@ namespace UI.Controls.ProtocolNew
     /// <param name="protocolSelfCheck">Объект интерфейса для вывода сообщений.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     /// <returns>Задача ожидания выхода из паузы или отмены.</returns>
-    public async Task WaitWhilePausedAsync(CancellationToken cancellationToken, ProtocolUI protocolSelfCheck = null)
+    public async Task WaitWhilePausedAsync(CancellationToken cancellationToken, IMessageOutputService protocolSelfCheck = null)
     {
       if (IsPaused && PauseCompletionSource != null && !PauseCompletionSource.Task.IsCompleted)
       {

@@ -12,18 +12,18 @@ namespace DTO.Device.RelaySwitchModule.Capabilities
     /// Включает измеритель модуля МКР.
     /// </summary>
     /// <returns>Возвращает true, если команда отправлена успешно.</returns>
-    Task<bool> ConnectMeterAsync(IUserMessageService? userMessageService = null);
+    Task<bool> ConnectMeterAsync(IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Отключает измеритель модуля МКР.
     /// </summary>
     /// <returns>Возвращает true, если команда отправлена успешно.</returns>
-    Task<bool> DisconnectMeterAsync(IUserMessageService? userMessageService = null);
+    Task<bool> DisconnectMeterAsync(IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает ответ от измерителя о замыкании шин или точек.
     /// </summary>
     /// <returns>True, если есть замыкание, false, если нет.</returns>
-    Task<bool> GetMeterResponseAsync(IUserMessageService? userMessageService = null);
+    Task<bool> GetMeterResponseAsync(IUserInteractionService? userMessageService = null);
   }
 }

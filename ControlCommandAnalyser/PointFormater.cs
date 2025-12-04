@@ -92,7 +92,7 @@ namespace ControlCommandAnalyser
       return result;
     }
 
-    public static async Task MessageResult(List<ShowMessageModel> showMessageModels, IUserMessageService messageService)
+    public static async Task MessageResult(List<ShowMessageModel> showMessageModels, IMessageOutputService messageService)
     {
       if (showMessageModels.Count > 0)
       {

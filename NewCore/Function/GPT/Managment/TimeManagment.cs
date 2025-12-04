@@ -52,7 +52,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает время теста.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetTestTimeAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetTestTimeAsync(double value, IUserInteractionService? userMessageService = null)
     {
       return await CongifHelper.SetParameterAsync(
           getter: async () => _getTestTime(),
@@ -74,7 +74,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает время нарастания напряжения.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetRampTimeAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetRampTimeAsync(double value, IUserInteractionService? userMessageService = null)
     {
       return await CongifHelper.SetParameterAsync(
           getter: async () => _getRampTime(),

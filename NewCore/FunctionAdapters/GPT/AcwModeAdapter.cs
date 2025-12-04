@@ -164,7 +164,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка режима завершилась с ошибкой.  
       /// Сообщение исключения содержит подробное описание причины сбоя.
       /// </exception>
-      public async Task<(bool Success, string Message)> SetModeAsync(IUserMessageService? userMessageService = null)
+      public async Task<(bool Success, string Message)> SetModeAsync(IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.Mode.SetModeAsync();
 
@@ -252,7 +252,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// При успешной установке выводится сообщение через <see cref="DeviceMessageBuilder"/>.
       /// В случае ошибки метод возвращает кортеж с описанием ошибки без выбрасывания исключения.
       /// </remarks>
-      public async Task<(bool Success, string Message)> SetVoltageAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool Success, string Message)> SetVoltageAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.Voltage.SetVoltageAsync(value);
 
@@ -350,7 +350,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка верхнего предела тока завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetHighCurrentLimitAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetHighCurrentLimitAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.CurrentLimits.SetHighCurrentLimitAsync(value);
 
@@ -390,7 +390,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка нижнего предела тока завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetLowCurrentLimitAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetLowCurrentLimitAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.CurrentLimits.SetLowCurrentLimitAsync(value);
 
@@ -464,7 +464,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка времени теста завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetTestTimeAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetTestTimeAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.Time.SetTestTimeAsync(value);
 
@@ -513,7 +513,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка времени нарастания завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetRampTimeAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetRampTimeAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.Time.SetRampTimeAsync(value);
 
@@ -595,7 +595,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка частоты завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetFrequencyAsync(int frequency, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetFrequencyAsync(int frequency, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.FrequencyConfigurable.SetFrequencyAsync(frequency);
 
@@ -677,7 +677,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка смещения завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetOffsetAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetOffsetAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.Offset.SetOffsetAsync(value);
 
@@ -759,7 +759,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка дугового тока завершилась с ошибкой.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(bool, string)> SetArcCurrentAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetArcCurrentAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _acwMode.ArcCurrent.SetArcCurrentAsync(value);
 
@@ -837,7 +837,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется при ошибке выполнения измерения.  
       /// Сообщение исключения содержит текст ошибки, полученный от устройства.
       /// </exception>
-      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, bool waitFullTime = false, IUserMessageService? userMessageService = null)
+      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, bool waitFullTime = false, IUserInteractionService? userMessageService = null)
       {
         try
         {
@@ -884,7 +884,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Если передан, используется для уведомления о ходе и результате подачи напряжения.
       /// </param>
       /// <returns>Задача, представляющая завершение операции подачи напряжения.</returns>
-      public async Task ApplyVoltageAsync(IUserMessageService userMessageService = null)
+      public async Task ApplyVoltageAsync(IUserInteractionService userMessageService = null)
       {
         await _acwMode.Measure.ApplyVoltageAsync(userMessageService);
       }

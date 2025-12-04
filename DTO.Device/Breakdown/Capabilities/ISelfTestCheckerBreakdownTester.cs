@@ -13,7 +13,7 @@ namespace DTO.Device.Breakdown.Capabilities
     /// <param name="selectedType">Выбранное значение перечисления.</param>
     /// <param name="device">Устройство коммутации шин (необязательно).</param>
     /// <param name="meter">Измеритель (необязательно).</param>
-    Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserMessageService? userMessageService = null, IBreakdownTester breakdownTester = null, ISwitchingDevice device = null, IFastMeter meter = null);
+    Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserInteractionService? userMessageService = null, IBreakdownTester breakdownTester = null, ISwitchingDevice device = null, IFastMeter meter = null);
 
     /// <summary>
     /// Возвращает тип перечисления, используемый как тип проверки.

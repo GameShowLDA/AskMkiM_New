@@ -10,16 +10,16 @@ namespace DTO.Device.FastMeter.Capabilities
     /// <summary>
     /// Устанавливает режим прозвонки.
     /// </summary>
-    Task<bool> SetContinuityModeAsync(IUserMessageService? userMessageService = null);
+    Task<bool> SetContinuityModeAsync(IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Проверяет наличие проводимости.
     /// </summary>
-    Task<bool> CheckContinuityAsync(bool expectedOutcome, IUserMessageService? userMessageService = null);
+    Task<bool> CheckContinuityAsync(bool expectedOutcome, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Проверяет наличие проводимости.
     /// </summary>
-    Task<double> CheckContinuityAsync(double expectedOutcome, IUserMessageService? userMessageService = null);
+    Task<double> CheckContinuityAsync(double expectedOutcome, IUserInteractionService? userMessageService = null);
   }
 }

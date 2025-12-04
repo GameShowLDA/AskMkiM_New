@@ -42,7 +42,7 @@ namespace NewCore.Function.GPT.SelfCheck
       DCW = 2,
     }
 
-    public async Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserMessageService? userMessageService = null, IBreakdownTester breakdownTester = null, ISwitchingDevice device = null, IFastMeter meter = null)
+    public async Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserInteractionService? userMessageService = null, IBreakdownTester breakdownTester = null, ISwitchingDevice device = null, IFastMeter meter = null)
     {
       switch (selectedType)
       {
@@ -73,7 +73,7 @@ namespace NewCore.Function.GPT.SelfCheck
       IBreakdownTester breakdownTester,
       ISwitchingDevice device,
       IFastMeter meter,
-      IUserMessageService? userMessageService = null)
+      IUserInteractionService? userMessageService = null)
     {
       try
       {
@@ -141,7 +141,7 @@ namespace NewCore.Function.GPT.SelfCheck
       IBreakdownTester breakdownTester,
       ISwitchingDevice device,
       IFastMeter meter,
-      IUserMessageService? userMessageService = null)
+      IUserInteractionService? userMessageService = null)
     {
       string name = breakdownTester.Name;
       int numberChassis = breakdownTester.NumberChassis;
@@ -199,7 +199,7 @@ namespace NewCore.Function.GPT.SelfCheck
       return typeof(TypeConnector);
     }
 
-    private async Task InitDevices(IUserMessageService userMessageService, ISwitchingDevice switchingDevice, IFastMeter meter, IBreakdownTester breakdownTester)
+    private async Task InitDevices(IUserInteractionService userMessageService, ISwitchingDevice switchingDevice, IFastMeter meter, IBreakdownTester breakdownTester)
     {
       string name = breakdownTester.Name;
       int numberChassis = breakdownTester.NumberChassis;

@@ -52,7 +52,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <param name="bus">Шина, к которой подключается реле.</param>
     /// <param name="number">Номер точки (реле).</param>
     /// <returns>Возвращает <c>true</c>, если команда успешно отправлена.</returns>
-    public async Task<bool> ConnectRelayAsync(BusPoint bus, int number, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectRelayAsync(BusPoint bus, int number, IUserInteractionService? userMessageService = null)
     {
       if (CheckPointConnected(number, bus, true))
       {
@@ -109,7 +109,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <param name="bus">Шина, от которой отключается реле.</param>
     /// <param name="number">Номер точки (реле).</param>
     /// <returns>Возвращает <c>true</c>, если команда успешно отправлена.</returns>
-    public async Task<bool> DisconnectRelayAsync(BusPoint bus, int number, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectRelayAsync(BusPoint bus, int number, IUserInteractionService? userMessageService = null)
     {
       if (CheckPointConnected(number, bus, false))
       {
@@ -167,7 +167,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <param name="firstPoint">Первая точка в диапазоне.</param>
     /// <param name="lastPoint">Последняя точка в диапазоне.</param>
     /// <returns>Возвращает <c>true</c>, если команда выполнена успешно.</returns>
-    public async Task<bool> ConnectRelayGroupAsync(BusPoint bus, int firstPoint, int lastPoint, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectRelayGroupAsync(BusPoint bus, int firstPoint, int lastPoint, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
         return true;
@@ -215,7 +215,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <param name="firstPoint">Первая точка в диапазоне.</param>
     /// <param name="lastPoint">Последняя точка в диапазоне.</param>
     /// <returns>Возвращает <c>true</c>, если команда выполнена успешно.</returns>
-    public async Task<bool> DisconnectRelayGroupAsync(BusPoint bus, int firstPoint, int lastPoint, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectRelayGroupAsync(BusPoint bus, int firstPoint, int lastPoint, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
         return true;
@@ -261,7 +261,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// </summary>
     /// <param name="numberPoint">Номер проверяемой точки.</param>
     /// <returns>Строка с ответом от устройства.</returns>
-    public async Task<string> CheckPoint(int numberPoint, IUserMessageService? userMessageService = null)
+    public async Task<string> CheckPoint(int numberPoint, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -274,7 +274,7 @@ namespace NewCore.Function.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectingPointToNewBus(BusPoint bus, int nubmerPoint, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectingPointToNewBus(BusPoint bus, int nubmerPoint, IUserInteractionService? userMessageService = null)
     {
       if (CheckPointConnected(nubmerPoint, bus, true))
       {
@@ -315,7 +315,7 @@ namespace NewCore.Function.ModuleRelayControl
       return result;
     }
 
-    public async Task<bool> DisconnectingAllPoint(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectingAllPoint(IUserInteractionService? userMessageService = null)
     {
       bool success = true;
 

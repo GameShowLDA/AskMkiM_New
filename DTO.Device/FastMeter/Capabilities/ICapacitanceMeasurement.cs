@@ -10,12 +10,12 @@ namespace DTO.Device.FastMeter.Capabilities
     /// <summary>
     /// Устанавливает режим измерения ёмкости.
     /// </summary>
-    Task<bool> SetCapacitanceModeAsync(IUserMessageService? userMessageService = null);
+    Task<bool> SetCapacitanceModeAsync(IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Выполняет измерение ёмкости.
     /// </summary>
     /// <param name="param">Ожиданемео знчение.</param>
-    Task<double> MeasureCapacitanceAsync(double param = 0, IUserMessageService? userMessageService = null);
+    Task<double> MeasureCapacitanceAsync(double param = 0, IUserInteractionService? userMessageService = null);
   }
 }

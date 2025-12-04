@@ -52,7 +52,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="points">Список всех точек подключения для анализа.</param>
     /// <param name="userMessageService">Сервис отображения сообщений пользователю.</param>
     /// <exception cref="Exception">Выбрасывается при наличии ошибок в конфигурации оборудования.</exception>
-    public static async Task AnalyzePoints(List<PointModel> points, Dictionary<string, string> keyValuePairs, IUserMessageService userMessageService)
+    public static async Task AnalyzePoints(List<PointModel> points, Dictionary<string, string> keyValuePairs, IUserInteractionService userMessageService)
     {
       PointsMap = keyValuePairs;
       AnalyzedPoints = null;
@@ -93,7 +93,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="points">Список точек подключения.</param>
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
     /// <returns>Список валидных номеров шасси или <c>null</c>, если найдены ошибки.</returns>
-    private static async Task<List<int>?> CheckChassisManagersAsync(List<PointModel> points, IUserMessageService messageService)
+    private static async Task<List<int>?> CheckChassisManagersAsync(List<PointModel> points, IUserInteractionService messageService)
     {
       var validNumbers = new List<int>();
       var allNumbers = GetUniqueDeviceNumbers(points);
@@ -124,7 +124,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="validChassis">Список валидных номеров шасси.</param>
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
     /// <returns>Список валидных модулей или <c>null</c> при ошибках.</returns>
-    private static async Task<List<IRelaySwitchModule>?> CheckRelayModulesAsync(List<PointModel> points, List<int> validChassis, IUserMessageService messageService)
+    private static async Task<List<IRelaySwitchModule>?> CheckRelayModulesAsync(List<PointModel> points, List<int> validChassis, IUserInteractionService messageService)
     {
       bool error = false;
       var result = new List<IRelaySwitchModule>();
@@ -184,7 +184,7 @@ namespace ControlCommandExecutor.Execution
     /// <returns>
     /// <c>true</c>, если устройство найдено и сохранено; <c>false</c> — если ни одно устройство не найдено.
     /// </returns>
-    private static async Task<bool> CheckSwitchingDeviceAsync(List<int> validChassisNumbers, IUserMessageService messageService)
+    private static async Task<bool> CheckSwitchingDeviceAsync(List<int> validChassisNumbers, IUserInteractionService messageService)
     {
       ValidSwitchingDevice = null;
 
@@ -211,7 +211,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="modules">Список валидных модулей.</param>
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
     /// <exception cref="Exception">Если инициализация любого модуля завершилась неудачей.</exception>
-    private static async Task InitializeModulesAsync(List<IRelaySwitchModule> modules, ISwitchingDevice switchingDevice, IUserMessageService messageService)
+    private static async Task InitializeModulesAsync(List<IRelaySwitchModule> modules, ISwitchingDevice switchingDevice, IUserInteractionService messageService)
     {
       bool initialize = false;
       foreach (var module in modules)
@@ -317,7 +317,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
     /// <returns>Экземпляр <see cref="IBreakdownTester"/>.</returns>
     /// <exception cref="Exception">Если устройство не найдено или <see cref="ValidRelayModules"/> ещё не проинициализировано.</exception>
-    public static async Task<IBreakdownTester> GetBreakdownTesterOrThrow(IUserMessageService messageService = null)
+    public static async Task<IBreakdownTester> GetBreakdownTesterOrThrow(IUserInteractionService messageService = null)
     {
       if (ValidBreakdownTester != null)
         return ValidBreakdownTester;
@@ -357,7 +357,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
     /// <returns>Экземпляр <see cref="IFastMeter"/>.</returns>
     /// <exception cref="Exception">Если устройство не найдено или <see cref="ValidRelayModules"/> ещё не проинициализировано.</exception>
-    public static IFastMeter GetFastMeterOrThrow(IUserMessageService messageService)
+    public static IFastMeter GetFastMeterOrThrow(IUserInteractionService messageService)
     {
       if (ValidFastMeter != null)
         return ValidFastMeter;
@@ -397,7 +397,7 @@ namespace ControlCommandExecutor.Execution
     /// <param name="messageService">Сервис отображения сообщений.</param>
     /// <returns>Задача, представляющая завершение проверки.</returns>
     /// <exception cref="Exception">Если хотя бы одна точка не найдена.</exception>
-    public static async Task ValidatePointsExistInAnalyzedPointsAsync(List<PointModel> points, IUserMessageService messageService)
+    public static async Task ValidatePointsExistInAnalyzedPointsAsync(List<PointModel> points, IUserInteractionService messageService)
     {
       if (AnalyzedPoints == null)
         throw new Exception("Список точек не инициализирован. Необходимо вызвать AnalyzePoints.");

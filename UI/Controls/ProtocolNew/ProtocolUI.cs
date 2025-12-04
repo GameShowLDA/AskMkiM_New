@@ -1,5 +1,6 @@
 ﻿using AppConfiguration.Protocol;
 using DTO.Base.Models;
+using DTO.Enum;
 using DTO.Service;
 using DTO.Settings.SettingsModels;
 using Errors.Models;
@@ -21,7 +22,7 @@ using static Utilities.DelegateManager;
 namespace UI.Controls.ProtocolNew
 {
   /// <inheritdoc />
-  public partial class ProtocolUI : IUserMessageService
+  public partial class ProtocolUI : IUserInteractionService, IMessageOutputService
   {
     #region Поля.
 
@@ -55,7 +56,7 @@ namespace UI.Controls.ProtocolNew
 
     bool _checkPower = true;
 
-    private TaskCompletionSource<IUserMessageService.UserAction> _userActionTcs;
+    private TaskCompletionSource<UserAction> _userActionTcs;
 
     public ErrorManager Errors;
 
@@ -506,15 +507,15 @@ namespace UI.Controls.ProtocolNew
     /// Если в конфигурации установлено свойство <c>IsStopOnErrorEnabled</c>,  
     /// интерфейс переходит в режим паузы — скрываются все кнопки и отображаются кнопки управления паузой.  
     /// После выбора действия пользователем результат возвращается как значение перечисления 
-    /// <see cref="IUserMessageService.UserAction"/>.
+    /// <see cref="IUserInteractionService.UserAction"/>.
     /// </remarks>
     /// <returns>
     /// Задача, представляющая ожидаемое действие пользователя.  
-    /// Если режим остановки на ошибке отключён, возвращается <see cref="IUserMessageService.UserAction.None"/>.
+    /// Если режим остановки на ошибке отключён, возвращается <see cref="IUserInteractionService.UserAction.None"/>.
     /// </returns>
-    public async Task<IUserMessageService.UserAction> WaitUserActionAsync(bool loop = false)
+    public async Task<UserAction> WaitUserActionAsync(bool loop = false)
     {
-      _userActionTcs = new TaskCompletionSource<IUserMessageService.UserAction>();
+      _userActionTcs = new TaskCompletionSource<UserAction>();
 
       if (await AppConfiguration.Execution.ExecutionConfig.GetIsStopOnErrorEnabled() || loop)
       {
@@ -525,7 +526,7 @@ namespace UI.Controls.ProtocolNew
         return await _userActionTcs.Task;
       }
 
-      return IUserMessageService.UserAction.None;
+      return UserAction.None;
     }
 
     public void AddError(ErrorItem errorItem)

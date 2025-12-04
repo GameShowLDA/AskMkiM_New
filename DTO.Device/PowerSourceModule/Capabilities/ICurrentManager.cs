@@ -12,13 +12,13 @@ namespace DTO.Device.PowerSourceModule.Capabilities
     /// <param name="integerPart">Целая часть значения тока.</param>
     /// <param name="decimalPart">Дробная часть значения тока.</param>
     /// <returns>Асинхронная задача.</returns>
-    Task SetCurrentLevelAsync(int integerPart, int decimalPart, IUserMessageService? messageService = null);
+    Task SetCurrentLevelAsync(int integerPart, int decimalPart, IUserInteractionService? messageService = null);
 
     /// <summary>
     /// Устанавливает ограничение выдаваемого тока для модуля источника напряжения и тока (МИНТ).
     /// </summary>
     /// <param name="current">Ограничение тока в мА.</param>
     /// <returns>Булево значение, указывающее успешность операции.</returns>
-    Task<bool> LimitationOfTheOutputCurrent(int current, IUserMessageService? messageService = null);
+    Task<bool> LimitationOfTheOutputCurrent(int current, IUserInteractionService? messageService = null);
   }
 }

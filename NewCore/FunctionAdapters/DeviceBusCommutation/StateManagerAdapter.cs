@@ -30,19 +30,19 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     public event Action IsReset;
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService userMessageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService userMessageService = null)
     {
       return await InitializeAsync(userMessageService);
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAsync(IUserMessageService userMessageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService userMessageService = null)
     {
       return await ResetAsync(userMessageService);
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService userMessageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService userMessageService = null)
     {
       (bool connect, string answer) = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
@@ -73,7 +73,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ResetAsync(IUserMessageService userMessageService = null)
+    public async Task<bool> ResetAsync(IUserInteractionService userMessageService = null)
     {
       var result = await _stateManager.DisconnectAsync();
       

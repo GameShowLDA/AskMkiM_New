@@ -29,7 +29,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// </summary>
     /// <param name="bus">Шина, которую необходимо подключить.</param>
     /// <returns>Булево значение, указывающее успешность операции.</returns>
-    public async Task<bool> ConnectBusToPositiveAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBusToPositiveAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       if (!BusParameters.TryGetValue(bus, out Tuple<int, int> partialCommand))
       {
@@ -53,7 +53,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// </summary>
     /// <param name="bus">Шина, которую необходимо подключить.</param>
     /// <returns>Булево значение, указывающее успешность операции.</returns>
-    public async Task<bool> ConnectBusToNegativeAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBusToNegativeAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       if (!BusParameters.TryGetValue(bus, out Tuple<int, int> partialCommand))
       {
@@ -77,7 +77,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// </summary>
     /// <param name="bus">Шина, которую необходимо отключить.</param>
     /// <returns>Булево значение, указывающее успешность операции.</returns>
-    public async Task<bool> DisconnectBusToPositiveAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBusToPositiveAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       if (!BusParameters.TryGetValue(bus, out Tuple<int, int> partialCommand))
       {
@@ -101,7 +101,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// </summary>
     /// <param name="bus">Шина, которую необходимо отключить.</param>
     /// <returns>Булево значение, указывающее успешность операции.</returns>
-    public async Task<bool> DisconnectBusToNegativeAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBusToNegativeAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       if (!BusParameters.TryGetValue(bus, out Tuple<int, int> partialCommand))
       {

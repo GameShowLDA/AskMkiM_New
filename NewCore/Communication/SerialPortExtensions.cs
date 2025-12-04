@@ -20,7 +20,7 @@ namespace NewCore.Communication
     public static async Task<IDisposable> UsePort(
         this SerialPort port,
         string deviceName = null,
-        IUserMessageService userMessageService = null)
+        IUserInteractionService userMessageService = null)
     {
       if (port == null)
         throw new ArgumentNullException(nameof(port));

@@ -44,7 +44,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает значение тока дуги (Arc Current).
     /// </summary>
-    public async Task<(bool Success, string Message)> SetArcCurrentAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetArcCurrentAsync(double value, IUserInteractionService? userMessageService = null)
     {
       return await CongifHelper.SetParameterAsync(
           getter: async () => _getArcCurrent(),

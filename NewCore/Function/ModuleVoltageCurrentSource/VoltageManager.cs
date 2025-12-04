@@ -26,7 +26,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// </summary>
     /// <param name="voltageSources">Источник напряжения (например, 12В или 5В).</param>
     /// <returns>Асинхронная задача, представляющая операцию установки источника напряжения.</returns>
-    public async Task SetSourceVoltageAsync(VoltageSources voltageSources, IUserMessageService? messageService = null)
+    public async Task SetSourceVoltageAsync(VoltageSources voltageSources, IUserInteractionService? messageService = null)
     {
       LogInformation($"Устанавливаем источник питания {(voltageSources == VoltageSources.Supply12V ? "12В" : "5В")}", isDeviceLog: true);
 
@@ -45,7 +45,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// <param name="integerPart">Целая часть напряжения.</param>
     /// <param name="decimalPart">Дробная часть напряжения.</param>
     /// <returns>Асинхронная задача, представляющая операцию установки напряжения.</returns>
-    public async Task SetVoltageLevelAsync(int integerPart, int decimalPart, IUserMessageService? messageService = null)
+    public async Task SetVoltageLevelAsync(int integerPart, int decimalPart, IUserInteractionService? messageService = null)
     {
       LogInformation($"Устанавливаем напряжение {integerPart}.{decimalPart} В ({new DeviceCommand(3, integerPart, decimalPart).ToString()})", isDeviceLog: true);
 
