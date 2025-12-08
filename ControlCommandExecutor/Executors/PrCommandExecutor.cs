@@ -105,7 +105,7 @@ namespace ControlCommandExecutor.Executors
       methodExecutionContext.MessageService = context.Console;
       methodExecutionContext.Resistance = resistance;
       methodExecutionContext.LowerLimit = command.LowerLimitResistance.Value;
-      methodExecutionContext.HigherLimit = command.HigherLimitResistance.Value;
+      methodExecutionContext.HigherLimit = command.HigherLimitResistance != null ? command.HigherLimitResistance.Value : -1;
       methodExecutionContext.Unit = "Ом";
       methodExecutionContext.UnitMnemonic = "R";
 
@@ -240,7 +240,7 @@ namespace ControlCommandExecutor.Executors
             answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance);
           }
           else
-          { 
+          {
             answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
           }
         }
@@ -281,7 +281,7 @@ namespace ControlCommandExecutor.Executors
         else
         {
           if (continuityManager)
-          { 
+          {
             answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
           }
           else
@@ -289,11 +289,12 @@ namespace ControlCommandExecutor.Executors
             answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
           }
         }
-        var result = answer >= firstValue && answer <= secondValue;
+
+        bool result = secondValue != -1 ? answer >= firstValue && answer <= secondValue : answer >= firstValue;
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
         {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
 
         if (!result)

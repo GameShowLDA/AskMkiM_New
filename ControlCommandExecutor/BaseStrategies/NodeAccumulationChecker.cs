@@ -21,7 +21,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <param name="value">Ожидаемое значение.</param>
     /// <param name="userMessageService">Элемент управления для вывода сообщений.</param>
     /// <param name="cancellationToken">Токен отмены.</param>
-    internal delegate Task<(bool Result, string Value)> PerformMeasurementAsync(double value, IUserInteractionService userMessageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW);
+    internal delegate Task<(bool Result, string Value)> PerformMeasurementAsync(double value, IUserInteractionService userMessageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.DCW);
     static private int step = 0;
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <param name="points">Список точек для проверки.</param>
     /// <param name="messageService">Сервис отображения сообщений.</param>
     /// <returns>Задача, представляющая выполнение проверки.</returns>
-    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, CommandExecutionManager manager, BaseCommandModel baseCommandModel, PerformMeasurementAsync performMeasurementAsync, IUserInteractionService messageService, CancellationToken cancellationToken, double resistance = 0)
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, CommandExecutionManager manager, BaseCommandModel baseCommandModel, PerformMeasurementAsync performMeasurementAsync, IUserInteractionService messageService, CancellationToken cancellationToken, double resistance = 0, VoltageEnum.Type type = VoltageEnum.Type.DCW)
     {
       List<ShowMessageModel> ErrorMessage = new List<ShowMessageModel>();
       var pointsList = schemeModel.GetPointsDisconnected();
@@ -59,7 +59,7 @@ namespace ControlCommandExecutor.BaseStrategies
           await ConnectToBusAAsync(point, messageService);
         }
 
-        var measured = await performMeasurementAsync(resistance, messageService, cancellationToken);
+        var measured = await performMeasurementAsync(resistance, messageService, cancellationToken, type);
         if (!measured.Result)
         {
           step = 0;
