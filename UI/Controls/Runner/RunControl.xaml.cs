@@ -3,6 +3,8 @@ using ControlCommandAnalyser.Model.Ok;
 using ControlCommandExecutor.Execution;
 using Errors.Models;
 using EventCore.Adapters;
+using EventCore.Events;
+using EventCore.Services;
 using Message;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,6 +25,13 @@ namespace UI.Controls.Runner
   /// </summary>
   public partial class RunControl : UserControl
   {
+
+    /// <summary>
+    /// Флаг, указывающий, находится ли интерфейс в заблокированном состоянии.
+    /// Используется для предотвращения повторного применения изменений.
+    /// </summary>
+    private static bool isLocked = false;
+
     List<BaseCommandModel> ControlProgram = null;
 
     private bool _userResizing = false;
@@ -80,9 +89,32 @@ namespace UI.Controls.Runner
       ProtocolUI.ErrorListBoxVerticalVisibility = Visibility.Collapsed;
       MainContent.Content = ProtocolUI;
       ErrorListBoxVertical.ItemDoubleClicked += ErrorItemDoubleClicked;
+      EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => OnLockedChanged(e.IsLocked));
+
 
       Loaded += RunControl_Loaded;
       LeftBox.AddHandler(UIElement.PreviewGotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(LeftBox_PreviewGotKeyboardFocus), true);
+    }
+    /// <summary>
+    /// Обрабатывает событие изменения состояния блокировки интерфейса.
+    /// Скрывает или отображает верхнюю панель окна в зависимости от нового значения.
+    /// </summary>
+    /// <param name="newValue">Новое состояние блокировки: <c>true</c> — интерфейс заблокирован; <c>false</c> — разблокирован.</param>
+    private void OnLockedChanged(bool newValue)
+    {
+      Application.Current.Dispatcher.Invoke(() =>
+      {
+        if (newValue)
+        {
+          BackToFileButton.Visibility = Visibility.Collapsed;
+          isLocked = true;
+        }
+        else
+        {
+          BackToFileButton.Visibility = Visibility.Visible;
+          isLocked = false;
+        }
+      });
     }
 
     private async void ErrorItemDoubleClicked(IDisplayIssue obj)
@@ -228,20 +260,23 @@ namespace UI.Controls.Runner
 
     private void ArrowButton_Click(object sender, RoutedEventArgs e)
     {
-      var test = this.LeftBox.Children[0];
-      if (test != null && test is TextEditorUI textEditor)
+      if (BackToFileButton.Visibility == Visibility.Visible)
       {
-        if (textEditor.TextEditorModel != null
-          && !string.IsNullOrEmpty(textEditor.TextEditorModel.FilePath)
-          && File.Exists(textEditor.TextEditorModel.FilePath))
+        var test = this.LeftBox.Children[0];
+        if (test != null && test is TextEditorUI textEditor)
         {
-          FileInteractionEventAdapter.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
-          EditorEventAdapter.RaiseCloseRunItem(this);
+          if (textEditor.TextEditorModel != null
+            && !string.IsNullOrEmpty(textEditor.TextEditorModel.FilePath)
+            && File.Exists(textEditor.TextEditorModel.FilePath))
+          {
+            FileInteractionEventAdapter.RaiseOpenFileInEditorAgain(textEditor.TextEditorModel.FilePath);
+            EditorEventAdapter.RaiseCloseRunItem(this);
+          }
         }
-      }
-      else
-      {
-        MessageBoxCustom.Show("Ошибка обнаружения исходного файла", "Ошибка открытия файла", MessageBoxButton.OK, MessageBoxImage.Warning);
+        else
+        {
+          MessageBoxCustom.Show("Ошибка обнаружения исходного файла", "Ошибка открытия файла", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
       }
     }
 
