@@ -40,7 +40,8 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <Icons:ArrowButton ButtonBackground="Transparent" 
+                        <Icons:ArrowButton x:Name="BackToFileButton"
+                                           ButtonBackground="Transparent" 
                                            Cursor="Hand" Height="15" Width="15" 
                                            RenderTransformOrigin="0.5,0.5" Click="ArrowButton_Click" 
                                            Margin="5,0" 
