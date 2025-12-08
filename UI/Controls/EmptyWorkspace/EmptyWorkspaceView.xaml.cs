@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using EventCore.Adapters;
+using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using EventCore.Adapters;
 
 namespace UI.Controls.EmptyWorkspace
 {
@@ -28,14 +29,29 @@ namespace UI.Controls.EmptyWorkspace
       }
     }
 
+    private string _buildDate;
+    public string BuildDate
+    {
+      get => _buildDate;
+      set
+      {
+        if (_buildDate != value)
+        {
+          _buildDate = value;
+          PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BuildDate)));
+        }
+      }
+    }
+
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public EmptyWorkspaceView()
     {
       InitializeComponent();
 
-      // стартовые значения
       CurrentDateTime = DateTime.Now;
+      BuildDate = GetBuildDate();
 
       // тикаем каждую секунду
       _timer = new DispatcherTimer(DispatcherPriority.Background)
@@ -65,6 +81,24 @@ namespace UI.Controls.EmptyWorkspace
     {
       SessionEventAdapter.RaiseOpenSession();
       GreetingBar.Visibility = Visibility.Collapsed;
+    }
+
+    private string GetBuildDate()
+    {
+      try
+      {
+        var asm = System.Reflection.Assembly.GetEntryAssembly();
+
+        var attr = asm.GetCustomAttributes(typeof(System.Reflection.AssemblyMetadataAttribute), false)
+                      .Cast<AssemblyMetadataAttribute>()
+                      .FirstOrDefault(a => a.Key == "BuildDate");
+
+        return attr?.Value ?? "Неизвестно";
+      }
+      catch
+      {
+        return "Ошибка";
+      }
     }
   }
 }
