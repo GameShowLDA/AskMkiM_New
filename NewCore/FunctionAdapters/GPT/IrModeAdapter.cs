@@ -653,13 +653,14 @@ namespace NewCore.FunctionAdapters.GPT
       /// </returns>
       public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 600000, bool waitFullTime = false, IUserInteractionService? userMessageService = null)
       {
-        if (rangeTo == -1)
-          rangeTo = 600000;
+        if (rangeTo == -1) rangeTo = 600000;
 
         try
         {
           var (result, unit) = await _irMode.Measure.MeasureAsync(param, rangeFrom, rangeTo);
-          result *= 1000;
+
+          var unitEnum = Utilities.Converter.ResistanceConverter.ParseUnit(unit, "мом");
+          result = Utilities.Converter.ResistanceConverter.ToMegaOhms(result, unitEnum);
 
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
             _device,

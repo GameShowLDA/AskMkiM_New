@@ -110,7 +110,7 @@ namespace ControlCommandExecutor.Executors
       else if (command.AlgorithmKey.Contains("Т1"))
       {
         BaseStrategies.NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await BaseStrategies.PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, 80);
+        var errMes = await BaseStrategies.PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, 80, command.VoltageType);
         errorMessage.AddRange(errMes);
       }
       else
@@ -255,7 +255,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private static async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double value, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private static async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double value, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.DCW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
 
@@ -289,7 +289,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private static async Task<(bool, double)> NodeFullPerformMeasurementAsync(double value, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW)
+    private static async Task<(bool, double)> NodeFullPerformMeasurementAsync(double value, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.DCW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
       double answer = -1;
