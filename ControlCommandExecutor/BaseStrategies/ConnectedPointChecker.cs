@@ -141,7 +141,16 @@ namespace ControlCommandExecutor.BaseStrategies
           var chain = new ChainModel(item);
           var chainStr = await context.CommandModel.BuildDislpayInfo.BuildErrorChainStringAsync(chain);
 
-          var error = new ShowMessageModel($"{chainStr} ({context.LowerLimit} - {context.HigherLimit} {context.Unit})", message: $"{context.UnitMnemonic}изм = {errorChain.GetValueOrDefault(item)} {context.Unit}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          ShowMessageModel error = null;
+
+          if (context.HigherLimit > 0)
+          {
+            error = new ShowMessageModel($"{chainStr} ({context.LowerLimit} - {context.HigherLimit} {context.Unit})", message: $"{context.UnitMnemonic}изм = {errorChain.GetValueOrDefault(item)} {context.Unit}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          }
+          else
+          {
+            error = new ShowMessageModel($"{chainStr} ({context.LowerLimit} - ∞ {context.Unit})", message: $"{context.UnitMnemonic}изм = {errorChain.GetValueOrDefault(item)} {context.Unit}", type: ShowMessageModel.MessageType.Error) { IndentLevel = 3 };
+          }
 
           await context.MessageService.ShowMessageAsync(error);
           errorsMessage.Add(error);
@@ -164,7 +173,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task ConnectToBusBAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService, deviceTask: true))
       {
         throw RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
@@ -182,7 +191,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task ConnectToBusAAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.ConnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService, deviceTask: true))
       {
         throw RelayExceptionFactory.ConnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
@@ -201,7 +210,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task DisconnectFromBusAAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.A, point.PointNumber, messageService), messageService, deviceTask: true))
       {
         throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }
@@ -219,7 +228,7 @@ namespace ControlCommandExecutor.BaseStrategies
     private static async Task DisconnectFromBusBAsync(PointModel point, IUserInteractionService messageService)
     {
       var module = EquipmentService.GetModuleByPoint(point);
-      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService))
+      if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => module.PointManager.DisconnectRelayAsync(bus: BusPoint.B, point.PointNumber, messageService), messageService, deviceTask: true))
       {
         throw RelayExceptionFactory.DisconnectPointFailed(point.PointNumber.ToString(), module.Name, module.NumberChassis, module.Number);
       }

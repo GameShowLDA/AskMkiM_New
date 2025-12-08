@@ -513,11 +513,11 @@ namespace UI.Controls.ProtocolNew
     /// Задача, представляющая ожидаемое действие пользователя.  
     /// Если режим остановки на ошибке отключён, возвращается <see cref="IUserInteractionService.UserAction.None"/>.
     /// </returns>
-    public async Task<UserAction> WaitUserActionAsync(bool loop = false)
+    public async Task<UserAction> WaitUserActionAsync(bool loop = false, bool deviceTask = false)
     {
       _userActionTcs = new TaskCompletionSource<UserAction>();
 
-      if (await AppConfiguration.Execution.ExecutionConfig.GetIsStopOnErrorEnabled() || loop)
+      if (await AppConfiguration.Execution.ExecutionConfig.GetIsStopOnErrorEnabled() || loop || deviceTask)
       {
 
         SetNonVisibleAllButton();

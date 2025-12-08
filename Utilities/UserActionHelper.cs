@@ -1,6 +1,5 @@
 ﻿using DTO.Enum;
 using DTO.Service;
-using static DTO.Service.IUserInteractionService;
 
 namespace Utilities
 {
@@ -20,9 +19,10 @@ namespace Utilities
     public static async Task RunWithUserRepeatAsync(
         Func<Task<bool>> operation,
         IUserInteractionService messageService,
-        bool loop = false)
+        bool loop = false,
+        bool deviceTask = false)
     {
-      await RunCoreAsync(operation, messageService, loop);
+      await RunCoreAsync(operation, messageService, loop, deviceTask);
     }
 
     /// <summary>
@@ -35,9 +35,10 @@ namespace Utilities
     public static async Task<bool> GetRunWithUserRepeatAsync(
         Func<Task<bool>> operation,
         IUserInteractionService messageService,
-        bool loop = false)
+        bool loop = false,
+        bool deviceTask = false)
     {
-      var result = await RunCoreAsync(operation, messageService, loop);
+      var result = await RunCoreAsync(operation, messageService, loop, deviceTask);
       return result.Success;
     }
 
@@ -51,7 +52,8 @@ namespace Utilities
     public static async Task<(bool Connect, string Answer)> GetRunWithUserRepeatAsync(
         Func<Task<(bool Connect, string Answer)>> operation,
         IUserInteractionService messageService,
-        bool loop = false)
+        bool loop = false,
+        bool deviceTask = false)
     {
       bool error = loop;
       bool next = !loop;
@@ -73,7 +75,7 @@ namespace Utilities
         if (messageService == null)
           break;
 
-        var action = await messageService.WaitUserActionAsync(loop);
+        var action = await messageService.WaitUserActionAsync(loop, deviceTask);
         ApplyButtonMode(messageService, onlyExit: true);
 
         if (action == UserAction.None)
@@ -103,7 +105,7 @@ namespace Utilities
     private static async Task<(bool Success, string Message)> RunCoreAsync(
         Func<Task<bool>> operation,
         IUserInteractionService messageService,
-        bool loop)
+        bool loop, bool deviceTask)
     {
       bool error = loop;
       bool next = !loop;
@@ -123,7 +125,7 @@ namespace Utilities
           next = false;
         }
 
-        var action = await messageService.WaitUserActionAsync(loop);
+        var action = await messageService.WaitUserActionAsync(loop, deviceTask);
         ApplyButtonMode(messageService, onlyExit: true);
 
         if (action == UserAction.None)

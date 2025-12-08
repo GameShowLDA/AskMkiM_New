@@ -22,7 +22,7 @@ namespace DTO.Service
     /// Асинхронно ожидает выбора пользователя (повторить, продолжить, завершить) после сообщения.
     /// </summary>
     /// <returns>Выбранное пользователем действие.</returns>
-    Task<UserAction> WaitUserActionAsync(bool loop = false);
+    Task<UserAction> WaitUserActionAsync(bool loop = false, bool deviceTask = false);
 
     public CancellationToken GetCancellationToken();
 

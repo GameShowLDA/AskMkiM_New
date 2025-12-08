@@ -17,9 +17,8 @@
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<PublishSingleFile>true</PublishSingleFile>
 		<PublishTrimmed>false</PublishTrimmed>
-
 	</PropertyGroup>
-
+	
 	<PropertyGroup>
 		<GenerateApplicationDefinition>false</GenerateApplicationDefinition>
 	</PropertyGroup>
