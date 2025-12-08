@@ -9,6 +9,17 @@ namespace UI.Controls.TextEditor
   /// </summary>
   public partial class TextEditorContainer : UserControl, ITextAdapter
   {
+    private List<int> _allowLineToBreakPoins = null;
+    public List<int> AllowLineToBreakPoints
+    {
+      get { return _allowLineToBreakPoins; }
+      set 
+      { 
+        if (value is null) throw new System.ArgumentNullException(nameof(AllowLineToBreakPoints), "AllowLineToBreakPoints cannot be null.");
+        _allowLineToBreakPoins = value; 
+      }
+    }
+
     public TextEditorContainer()
     {
       InitializeComponent();

@@ -6,6 +6,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Rendering;
 using System.IO;
+using System.Net.WebSockets;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -66,16 +67,10 @@ namespace UI.Controls.TextEditor
     /// </summary>
     private bool _breakpointsEnabled = true;
 
-    public bool BreakpointsEnabled
-    {
-      get => _breakpointsEnabled;
-      set
-      {
-        _breakpointsEnabled = value;
-        if (_executionMargin != null)
-          _executionMargin.IsClickEnabled = value;
-      }
-    }
+    /// <summary>
+    /// Строки, где разрешено устанавливать точки останова.
+    /// </summary>
+    private int[] _allowBreakpointsOnLine = null;
 
     #endregion
 
@@ -196,6 +191,35 @@ namespace UI.Controls.TextEditor
     /// Событие вызывается при изменении набора точек остановки.
     /// </summary>
     public event EventHandler<BreakpointChangedEventArgs> BreakpointChanged;
+
+    /// <summary>
+    /// Отвечает блокировку установки точек остановки пользователем.
+    /// </summary>
+    public bool BreakpointsEnabled
+    {
+      get => _breakpointsEnabled;
+      set
+      {
+        _breakpointsEnabled = value;
+        if (_executionMargin != null)
+          _executionMargin.IsClickEnabled = value;
+      }
+    }
+
+    /// <summary>
+    /// Возвращает или задает набор номеров строк, в которых разрешены точки останова.
+    /// </summary>
+    /// <remarks> Установка этого свойства обновляет допустимую точку останова в соответствующем поле выполнения, если оно определено. </remarks>
+    public int[] AllowBreakpointsOnLine
+    {
+      get => _allowBreakpointsOnLine;
+      set
+      {
+        _allowBreakpointsOnLine = value;
+        if (_executionMargin != null)
+          _executionMargin.AllowLineToBreakPoints = value;
+      }
+    }
 
     #endregion
 

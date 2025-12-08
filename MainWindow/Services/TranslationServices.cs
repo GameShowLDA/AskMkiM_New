@@ -1,4 +1,5 @@
 ﻿using ControlCommandAnalyser;
+using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Ok;
 using DTO.Base.Interface;
 using DTO.Base.Models;
@@ -71,8 +72,6 @@ namespace MainWindowProgram.Services
       var editor = await _multiWindow.GetActiveTextEditor(EditorType.TextEditor);
       var translationContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
 
-      if (editor is not null) editor.BreakpointsEnabled = false;
-
       if (editor == null && translationContainer != null)
       {
         await TryUpdateExistingTranslator(translationContainer);
@@ -84,6 +83,38 @@ namespace MainWindowProgram.Services
       else
       {
         ShowEditorNotFoundError();
+        return;
+      }
+
+      translationContainer = await _multiWindow.GetActiveTextEditorContainer(EditorType.Translator);
+      if (translationContainer == null)
+        return;
+
+      var dockManager = translationContainer.GetDockControl();
+      if (dockManager == null)
+        return;
+
+      var foundDockItem = dockManager.DockItems
+        .FirstOrDefault(item => item.IsActiveItem == true);
+
+      if (foundDockItem?.Content is not TranslatorItem translator)
+        return;
+
+      var leftEditor = translator.GetLeftEditor();
+      var rightEditor = translator.GetRightEditor(); 
+
+
+      if (leftEditor != null)
+      {
+        leftEditor.BreakpointsEnabled = false;
+      }
+
+      if (rightEditor != null)
+      {
+        rightEditor.BreakpointsEnabled = true;
+        var commandList = ExtractCommandModelsFromContainer(rightEditor);
+        var allowLine = commandList.Select(x => x.FormattedStartLineNumber).ToArray();
+        rightEditor.AllowBreakpointsOnLine = allowLine;
       }
     }
 
@@ -313,7 +344,7 @@ namespace MainWindowProgram.Services
 
           try
           {
-            await Task.Delay(80, token); // ждём, пока пользователь закончит ввод
+            await Task.Delay(80, token);
             if (!token.IsCancellationRequested)
             {
               Application.Current.Dispatcher.Invoke(() =>
@@ -353,6 +384,49 @@ namespace MainWindowProgram.Services
         EditorEventAdapter.RaiseTextEditorActivated(editor);
         await _multiWindow.OpenFileInEditor(editor.TextEditorModel.FilePath);
       }
+    }
+
+    /// <summary>
+    /// Извлекает список BaseCommandModel из контейнера транслятора.
+    /// </summary>
+    private List<BaseCommandModel> ExtractCommandModelsFromContainer(TextEditorContainer container)
+    {
+      var dockManager = container.GetDockControl();
+      if (dockManager == null)
+        return new List<BaseCommandModel>();
+
+      var foundDockItem = dockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
+      if (foundDockItem?.Content is TranslatorItem translator)
+      {
+        return translator.TranslationModels;
+      }
+
+      return new List<BaseCommandModel>();
+    }
+
+    /// <summary>
+    /// Извлекает список BaseCommandModel, имея ссылку на конкретный TextEditorUI.
+    /// Метод ищет внешний TranslatorItem в логическом дереве и возвращает его TranslationModels.
+    /// </summary>
+    private List<BaseCommandModel> ExtractCommandModelsFromContainer(TextEditorUI editor)
+    {
+      if (editor == null)
+        return new List<BaseCommandModel>();
+
+      // Идём вверх по логическому дереву и ищем TranslatorItem
+      DependencyObject parent = editor;
+      while (parent != null)
+      {
+        if (parent is TranslatorItem translator)
+        {
+          return translator.TranslationModels ?? new List<BaseCommandModel>();
+        }
+
+        parent = LogicalTreeHelper.GetParent(parent);
+      }
+
+      // Если не нашли через логическое дерево — возвращаем пустой список
+      return new List<BaseCommandModel>();
     }
   }
 }

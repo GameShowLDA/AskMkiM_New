@@ -35,6 +35,7 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
 {
   private readonly TextEditor _textEditor;
   private readonly HashSet<int> _breakpoints = new();
+  private int[] _allowLineToBreakPoints = Array.Empty<int>();
 
   /// <summary>Кисть для маркера активной строки.</summary>
   public Brush ActiveLineBrush { get; set; } = Brushes.LimeGreen;
@@ -55,6 +56,16 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
   /// Разрешать ли клик по маргину (добавление/удаление точек останова).
   /// </summary>
   public bool IsClickEnabled { get; set; } = true;
+
+  /// <summary>
+  /// Разрешённые строки для постановки брейкпоинтов.
+  /// Если пусто, брейкпоинты можно ставить на любую строку.
+  /// </summary>
+  public int[] AllowLineToBreakPoints
+  {
+    get => _allowLineToBreakPoints;
+    set => _allowLineToBreakPoints = value ?? Array.Empty<int>();
+  }
 
   public ExecutionGlyphMargin(TextEditor textEditor)
   {
@@ -121,12 +132,29 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
   }
 
   /// <summary>
+  /// Проверяет, разрешена ли постановка точки остановки на данной строке.
+  /// </summary>
+  public bool IsBreakpointAllowed(int lineNumber)
+  {
+    if (_allowLineToBreakPoints.Length == 0)
+      return true; // Если список пуст, разрешены все строки
+
+    return _allowLineToBreakPoints.Contains(lineNumber);
+  }
+
+  /// <summary>
   /// Переключить точку останова на строке.
   /// </summary>
   public void ToggleBreakpoint(int lineNumber)
   {
     RunOnUi(() =>
     {
+      // Проверяем разрешенность перед переключением
+      if (!IsBreakpointAllowed(lineNumber))
+      {
+        return; // Точка остановки не разрешён на этой строке
+      }
+
       bool isSet;
       if (_breakpoints.Contains(lineNumber))
       {
@@ -214,7 +242,8 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
 
   protected override void OnMouseDown(MouseButtonEventArgs e)
   {
-    if (!IsClickEnabled) return;
+    if (!IsClickEnabled)
+      return;
 
     base.OnMouseDown(e);
 
@@ -237,6 +266,14 @@ public sealed class ExecutionGlyphMargin : AbstractMargin
       if (y >= top && y <= bottom)
       {
         int lineNumber = visualLine.FirstDocumentLine.LineNumber;
+
+        // Проверяем, можно ли ставить точку остановки на этой строке
+        if (!IsBreakpointAllowed(lineNumber))
+        {
+          e.Handled = true;
+          break;
+        }
+
         ToggleBreakpoint(lineNumber);
         e.Handled = true;
         break;
