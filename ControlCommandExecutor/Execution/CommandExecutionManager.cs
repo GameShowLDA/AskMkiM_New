@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Utilities;
 using Utilities.TextEditor;
+using EventCore.Adapters;
 
 namespace ControlCommandExecutor.Execution
 {
@@ -58,6 +59,12 @@ namespace ControlCommandExecutor.Execution
     public void ClearErrorsMethod() => ClearError?.Invoke();
 
     public void AddErrorMethod(ErrorItem errorItem) => AddError?.Invoke(errorItem);
+
+    /// <summary>
+    /// Уже включали пошаговый режим из-за breakpoint'а?
+    /// Чтобы не слать событие много раз.
+    /// </summary>
+    private bool _stepModeFromBreakpoint = false;
 
     /// <summary>
     /// Создаёт менеджер выполнения команд.
@@ -182,52 +189,56 @@ namespace ControlCommandExecutor.Execution
     /// </summary>
     public async Task ExecuteAllAsync(CancellationToken cancellationToken = default)
     {
-        int i = 0;
+      int i = 0;
+      while (i < CommandsToExecute.Count)
+      {
+        cancellationToken.ThrowIfCancellationRequested();
 
-        while (i < CommandsToExecute.Count)
+        var command = CommandsToExecute[i];
+
+        if (_headerBreakpoints.Count > 0)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+          int line = command.FormattedStartLineNumber;
+          LoggerUtility.LogInformation($"[CEM] cmd {command.CommandNumber} line = {line}");
 
-            var command = CommandsToExecute[i];
-
-            if (_headerBreakpoints.Count > 0)
+          if (line > 0 && _headerBreakpoints.Contains(line))
+          {
+            if (!_stepModeFromBreakpoint)
             {
-                int line = command.FormattedStartLineNumber;
-                LoggerUtility.LogInformation($"[CEM] cmd {command.CommandNumber} line = {line}");
-
-                if (line > 0 && _headerBreakpoints.Contains(line))
-                {
-                    HighlightLineInEditor(line);
-                    await WaitOnBreakpointAsync(cancellationToken);
-                }
+              _stepModeFromBreakpoint = true;
+              ExecutionEventAdapter.RaiseStepByStepModeChanged(true);
             }
-
-            var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath)
-            {
-                JumpToCommandNumber = (number) =>
-                {
-                    int newIndex = CommandsToExecute.FindIndex(cmd => cmd.CommandNumber == number);
-                    if (newIndex >= 0)
-                    {
-                        i = newIndex - 1;
-                    }
-                }
-            };
-
-            if (_executors.TryGetValue(command.Mnemonic, out var executor))
-            {
-                await executor.ExecuteAsync(context, _protocolModel);
-            }
-            else
-            {
-                await _console.ShowMessageAsync(new ShowMessageModel(
-                "Неизвестная команда",
-                message: command.Mnemonic,
-                type: ShowMessageModel.MessageType.Error));
-            }
-
-            i++;
+            HighlightLineInEditor(line);
+            await WaitOnBreakpointAsync(cancellationToken);
+          }
         }
+
+        var context = new CommandExecutionContext(this, command, _console, _translationControl, _opkFilePath)
+        {
+          JumpToCommandNumber = (number) =>
+          {
+            int newIndex = CommandsToExecute.FindIndex(cmd => cmd.CommandNumber == number);
+            if (newIndex >= 0)
+            {
+              i = newIndex - 1;
+            }
+          }
+        };
+
+        if (_executors.TryGetValue(command.Mnemonic, out var executor))
+        {
+          await executor.ExecuteAsync(context, _protocolModel);
+        }
+        else
+        {
+          await _console.ShowMessageAsync(new ShowMessageModel(
+            "Неизвестная команда",
+            message: command.Mnemonic,
+            type: ShowMessageModel.MessageType.Error));
+        }
+
+        i++;
+      }
     }
 
     /// <summary>

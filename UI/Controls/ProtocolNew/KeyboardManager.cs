@@ -83,43 +83,52 @@ namespace UI.Controls.ProtocolNew
 
       LogInformation($"[KEYBOARD] Detected key: {key}");
 
-      if (key == Key.F10)
-      {
-        LogInformation("[KEYBOARD] F10 → OnBreakpointContinuePressed");
-        OnBreakpointContinuePressed?.Invoke();
-      }
-
-      if (_tcs == null)
-        return;
-
       switch (key)
       {
         case Key.F10:
           StepControlManager.IsStepInto = false;
-          _tcs.TrySetResult(true);
-          args.Handled = true;
-          MessageEventAdapter.RaiseInfoMessage("Нажата клавиша: F10", true);
-          Application.Current.Dispatcher.InvokeAsync(() =>
+          if (OnBreakpointContinuePressed != null)
           {
-            var win = Application.Current.MainWindow;
-            win?.Focus();
-            Keyboard.Focus(win);
-          });
-          break;
+            LogInformation("[KEYBOARD] F10 → OnBreakpointContinuePressed");
+            OnBreakpointContinuePressed.Invoke();
+          }
 
-        case Key.F11:
-          StepControlManager.IsStepInto = true;
-          _tcs.TrySetResult(true);
-          MessageEventAdapter.RaiseInfoMessage("Нажата клавиша: F11", true);
-          break;
-
-        case Key.F5:
-          StepControlManager.DisableStepMode();
-          LogInformation("[KEYBOARD] Step mode DISABLED via F5");
           if (_tcs != null && !_tcs.Task.IsCompleted)
           {
             _tcs.TrySetResult(true);
           }
+
+          args.Handled = true;
+          MessageEventAdapter.RaiseInfoMessage("Нажата клавиша: F10", true);
+          break;
+
+        case Key.F11:
+          StepControlManager.IsStepInto = true;
+
+          if (_tcs != null && !_tcs.Task.IsCompleted)
+          {
+            _tcs.TrySetResult(true);
+          }
+
+          args.Handled = true;
+          MessageEventAdapter.RaiseInfoMessage("Нажата клавиша: F11", true);
+          break;
+
+        case Key.F5:
+          if (OnBreakpointContinuePressed != null)
+          {
+            LogInformation("[KEYBOARD] F5 → OnBreakpointContinuePressed (как F10)");
+            OnBreakpointContinuePressed.Invoke();
+          }
+
+          StepControlManager.DisableStepMode();
+          LogInformation("[KEYBOARD] Step mode DISABLED via F5");
+
+          if (_tcs != null && !_tcs.Task.IsCompleted)
+          {
+            _tcs.TrySetResult(true);
+          }
+
           args.Handled = true;
           MessageEventAdapter.RaiseInfoMessage("Нажата клавиша: F5", true);
           break;
