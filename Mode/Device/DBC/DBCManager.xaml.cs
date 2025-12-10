@@ -50,27 +50,27 @@ namespace Mode.Device.DBC
     {
       if (sender is Button clickedButton)
       {
-        if (int.TryParse(clickedButton.Content.ToString().Split('_')[1], out int parseNumber))
-        {
-          if (clickedButton.Background == Brushes.Red)
-          {
-            var result = await dbc.RelayManager.ConnectRelay(parseNumber, Protocol);
-            await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Подключение {(result ? "НОРМА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
-            if (result)
-            {
-              clickedButton.Background = Brushes.Green;
-            }
-          }
-          else
-          {
-            var result = await dbc.RelayManager.DisconnectRelay(parseNumber, Protocol);
-            await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Отключение {(result ? "НОРМА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
-            if (result)
-            {
-              clickedButton.Background = Brushes.Red;
-            }
-          }
-        }
+        // if (int.TryParse(clickedButton.Content.ToString().Split('_')[1], out int parseNumber))
+        // {
+        //   if (clickedButton.Background == Brushes.Red)
+        //   {
+        //     var result = await dbc.RelayManager.ConnectRelay(parseNumber, Protocol);
+        //     await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Подключение {(result ? "НОРМА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
+        //     if (result)
+        //     {
+        //       clickedButton.Background = Brushes.Green;
+        //     }
+        //   }
+        //   else
+        //   {
+        //     var result = await dbc.RelayManager.DisconnectRelay(parseNumber, Protocol);
+        //     await Protocol.ShowMessageAsync(new ShowMessageModel($"Реле {parseNumber}", message: $"Отключение {(result ? "НОРМА" : "БРАК")}", type: result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error));
+        //     if (result)
+        //     {
+        //       clickedButton.Background = Brushes.Red;
+        //     }
+        //   }
+        // }
       }
     }
 
@@ -134,12 +134,12 @@ namespace Mode.Device.DBC
 
     private async void Disconnect_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-      await dbc.ConnectableManager.DisconnectAsync(Protocol);
-      Connect.Visibility = Visibility.Visible;
-      ManagerChassisSelectionControl.Visibility = Visibility.Visible;
-      Disconnect.Visibility = Visibility.Collapsed;
-      Reset.Visibility = Visibility.Collapsed;
-      buttonPanel.IsEnabled = false;
+      // await dbc.ConnectableManager.DisconnectAsync(Protocol);
+      // Connect.Visibility = Visibility.Visible;
+      // ManagerChassisSelectionControl.Visibility = Visibility.Visible;
+      // Disconnect.Visibility = Visibility.Collapsed;
+      // Reset.Visibility = Visibility.Collapsed;
+      // buttonPanel.IsEnabled = false;
     }
 
     private async void Reset_PreviewMouseDown(object sender, MouseButtonEventArgs e)

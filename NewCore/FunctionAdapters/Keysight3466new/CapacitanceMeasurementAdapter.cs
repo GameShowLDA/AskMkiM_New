@@ -25,7 +25,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> SetCapacitanceModeAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> SetCapacitanceModeAsync(IUserInteractionService? userMessageService = null)
     {
       try
       {
@@ -46,7 +46,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<double> MeasureCapacitanceAsync(double param = 0, IUserMessageService? userMessageService = null)
+    public async Task<double> MeasureCapacitanceAsync(double param = 0, IUserInteractionService? userMessageService = null)
     {
       try
       {

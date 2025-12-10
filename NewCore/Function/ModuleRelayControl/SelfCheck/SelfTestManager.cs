@@ -30,7 +30,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
     }
 
     /// <inheritdoc />
-    public async Task StartSelfCheck(CancellationToken cancellationToken, System.Enum typeConnector, IUserMessageService? userMessageService = null, ISwitchingDevice device = null)
+    public async Task StartSelfCheck(CancellationToken cancellationToken, System.Enum typeConnector, IUserInteractionService? userMessageService = null, ISwitchingDevice device = null)
     {
       switch (typeConnector)
       {
@@ -56,7 +56,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
     /// и формируется сообщение с результатом проверки.
     /// </summary>
     /// <param name="token">Токен отмены операции.</param>
-    private async Task PerformClosureCycle(CancellationToken token, IRelaySwitchModule relaySwitchModule, IUserMessageService? userMessageService = null)
+    private async Task PerformClosureCycle(CancellationToken token, IRelaySwitchModule relaySwitchModule, IUserInteractionService? userMessageService = null)
     {
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка устройств"));
       if (!(await _moduleRelay.ConnectableManager.InitializeAsync(userMessageService)).Connect)
@@ -74,7 +74,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       }
     }
 
-    private async Task CheckBusesConnection(CancellationToken token, IRelaySwitchModule relaySwitchModule, ISwitchingDevice switchingDevice, IUserMessageService? userMessageService = null)
+    private async Task CheckBusesConnection(CancellationToken token, IRelaySwitchModule relaySwitchModule, ISwitchingDevice switchingDevice, IUserInteractionService? userMessageService = null)
     {
       await userMessageService.ShowMessageAsync(new ShowMessageModel("Настройка устройств"));
       if (!(await switchingDevice.ConnectableManager.InitializeAsync(userMessageService)).Connect || !(await _moduleRelay.ConnectableManager.InitializeAsync(userMessageService)).Connect)
@@ -98,7 +98,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       }
     }
 
-    public async Task<(bool, string)> TryGetCheckBusConntcrion(int number, IUserMessageService? userMessageService = null)
+    public async Task<(bool, string)> TryGetCheckBusConntcrion(int number, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -123,7 +123,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       }
     }
 
-    private async Task<bool> CheckPoint(CancellationToken token, IRelaySwitchModule relaySwitchModule, int point, IUserMessageService? userMessageService = null)
+    private async Task<bool> CheckPoint(CancellationToken token, IRelaySwitchModule relaySwitchModule, int point, IUserInteractionService? userMessageService = null)
     {
       token.ThrowIfCancellationRequested();
 
@@ -214,7 +214,7 @@ namespace NewCore.Function.ModuleRelayControl.SelfCheck
       return true;
     }
 
-    private async Task<bool> CheckBus(CancellationToken token, IRelaySwitchModule relaySwitchModule, int busNumber, IUserMessageService? userMessageService = null)
+    private async Task<bool> CheckBus(CancellationToken token, IRelaySwitchModule relaySwitchModule, int busNumber, IUserInteractionService? userMessageService = null)
     {
       (bool, string) answer = !await GetIsIdleModeEnabled() ? await TryGetCheckBusConntcrion(busNumber) : (true, string.Empty);
 

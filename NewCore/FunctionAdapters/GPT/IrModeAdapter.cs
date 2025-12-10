@@ -154,7 +154,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется при неудачной установке режима IR.  
       /// Сообщение исключения содержит подробное описание ошибки.
       /// </exception>
-      public async Task<(bool, string)> SetModeAsync(IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetModeAsync(IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.Mode.SetModeAsync();
         if (!result.Success || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetConnectionInfoVisibilityAsync())
@@ -238,7 +238,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется при неудачной установке напряжения.  
       /// Сообщение исключения содержит имя, номер шасси и номер устройства, вызвавшего ошибку.
       /// </exception>
-      public async Task<(bool, string)> SetVoltageAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetVoltageAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.Voltage.SetVoltageAsync(value);
 
@@ -331,7 +331,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// <exception cref="IrException">
       /// Генерируется, если установка верхнего предела сопротивления завершилась с ошибкой.
       /// </exception>
-      public async Task<(bool, string)> SetHighResistanceLimitAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetHighResistanceLimitAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.ResistanceLimits.SetHighResistanceLimitAsync(value);
 
@@ -376,7 +376,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// <exception cref="IrException">
       /// Генерируется, если установка нижнего предела сопротивления завершилась с ошибкой.
       /// </exception>
-      public async Task<(bool, string)> SetLowResistanceLimitAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetLowResistanceLimitAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.ResistanceLimits.SetLowResistanceLimitAsync(value);
 
@@ -455,7 +455,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка времени измерения завершилась с ошибкой.  
       /// Сообщение исключения содержит подробное описание ошибки.
       /// </exception>
-      public async Task<(bool, string)> SetTestTimeAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetTestTimeAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.Time.SetTestTimeAsync(value);
 
@@ -500,7 +500,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// <exception cref="IrException">
       /// Генерируется, если установка времени нарастания завершилась с ошибкой.
       /// </exception>
-      public async Task<(bool Success, string Message)> SetRampTimeAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool Success, string Message)> SetRampTimeAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.Time.SetRampTimeAsync(value);
 
@@ -578,7 +578,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// Генерируется, если установка смещения завершилась с ошибкой.  
       /// Сообщение исключения содержит имя, номер шасси и номер устройства.
       /// </exception>
-      public async Task<(bool, string)> SetOffsetAsync(double value, IUserMessageService? userMessageService = null)
+      public async Task<(bool, string)> SetOffsetAsync(double value, IUserInteractionService? userMessageService = null)
       {
         var result = await _irMode.Offset.SetOffsetAsync(value);
 
@@ -651,15 +651,16 @@ namespace NewCore.FunctionAdapters.GPT
       /// Результат измерения сопротивления изоляции в МОм.  
       /// В случае ошибки возвращает значение <c>-1</c>.
       /// </returns>
-      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 600000, bool waitFullTime = false, IUserMessageService? userMessageService = null)
+      public async Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = 600000, bool waitFullTime = false, IUserInteractionService? userMessageService = null)
       {
-        if (rangeTo == -1)
-          rangeTo = 600000;
+        if (rangeTo == -1) rangeTo = 600000;
 
         try
         {
           var (result, unit) = await _irMode.Measure.MeasureAsync(param, rangeFrom, rangeTo);
-          result *= 1000;
+
+          var unitEnum = Utilities.Converter.ResistanceConverter.ParseUnit(unit, "мом");
+          result = Utilities.Converter.ResistanceConverter.ToMegaOhms(result, unitEnum);
 
           await DeviceMessageBuilder.ShowConnectionMessageAsync(
             _device,
@@ -696,7 +697,7 @@ namespace NewCore.FunctionAdapters.GPT
       /// <exception cref="NotImplementedException">
       /// Генерируется, если вызов метода не реализован.
       /// </exception>
-      public Task ApplyVoltageAsync(IUserMessageService? userMessageService = null)
+      public Task ApplyVoltageAsync(IUserInteractionService? userMessageService = null)
       {
         throw new NotImplementedException();
       }

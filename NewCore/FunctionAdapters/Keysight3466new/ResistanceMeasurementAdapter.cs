@@ -23,14 +23,14 @@ namespace NewCore.FunctionAdapters.Keysight3466new
       _resistanceMeasurement = new ResistanceMeasurement(device);
     }
     /// <inheritdoc />
-    public async Task<double> MeasureResistanceAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, IUserMessageService? userMessageService = null)
+    public async Task<double> MeasureResistanceAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, IUserInteractionService? userMessageService = null)
     {
       var resistance = await _resistanceMeasurement.MeasureResistanceAsync(param, rangeFrom, rangeTo);
       return resistance;
     }
 
     /// <inheritdoc />
-    public async Task<bool> SetResistanceModeAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> SetResistanceModeAsync(IUserInteractionService? userMessageService = null)
     {
       var result = await _resistanceMeasurement.SetResistanceModeAsync();
 

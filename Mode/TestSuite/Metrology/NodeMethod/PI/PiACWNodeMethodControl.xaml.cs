@@ -81,7 +81,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.PI
       public PiNodeMethod() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null)
       {
         var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
         string name = breakDown.Name;
@@ -150,7 +150,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.PI
         }
       }
 
-      public override async Task FinalizeAsync(IUserMessageService messageService)
+      public override async Task FinalizeAsync(IUserInteractionService messageService)
       {
         await base.FinalizeAsync(messageService);
         ResetPoints();

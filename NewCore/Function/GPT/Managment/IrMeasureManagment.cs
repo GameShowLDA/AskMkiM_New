@@ -53,7 +53,7 @@ namespace NewCore.Function.GPT.Managment
       double rangeFrom = -1,
       double rangeTo = -1,
       bool waitFullTime = false,
-      IUserMessageService? userMessageService = null)
+      IUserInteractionService? userMessageService = null)
     {
       if (await _getIsIdleMode())
         return (param, string.Empty);
@@ -180,7 +180,7 @@ namespace NewCore.Function.GPT.Managment
     }
 
     /// <inheritdoc />
-    public async Task ApplyVoltageAsync(IUserMessageService? userMessageService = null)
+    public async Task ApplyVoltageAsync(IUserInteractionService? userMessageService = null)
     {
       LogInformation($"Начало {nameof(ApplyVoltageAsync)}", isDeviceLog: true);
       try

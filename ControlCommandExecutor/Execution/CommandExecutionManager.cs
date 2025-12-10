@@ -21,9 +21,14 @@ namespace ControlCommandExecutor.Execution
   public class CommandExecutionManager
   {
     private readonly Dictionary<string, ICommandExecutor> _executors = new();
-    private readonly IUserMessageService _console;
-    private readonly ITextEditorAdapter _translationControl;
-    private readonly ProtocolModel _protocolModel = new();
+    private readonly IUserInteractionService _console;
+    private readonly ITextEditorAdapter translationControl;
+    private ProtocolModel protocolModel = new ProtocolModel();
+    /// <summary>
+    /// Событие, которое вызывается при изменении состояния блокировки.
+    /// </summary>
+    public event Action<ErrorItem> AddError;
+    public event Action ClearError;
     private readonly string? _opkFilePath;
 
     /// <summary>

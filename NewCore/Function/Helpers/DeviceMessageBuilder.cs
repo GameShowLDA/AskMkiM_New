@@ -47,7 +47,7 @@ namespace NewCore.Function.Helpers
     /// </summary>
     /// <param name="showMessageModel">Модель сообщения для отображения.</param>
     /// <param name="result">Результат выполнения операции: <c>true</c> — успех, <c>false</c> — ошибка.</param>
-    public static async Task ShowDeviceMessage(IUserMessageService userMessageService, ShowMessageModel showMessageModel, bool result)
+    public static async Task ShowDeviceMessage(IUserInteractionService userMessageService, ShowMessageModel showMessageModel, bool result)
     {
       if (userMessageService != null)
       {
@@ -69,7 +69,7 @@ namespace NewCore.Function.Helpers
     /// <param name="result">Результат операции: <c>true</c> — успешно, <c>false</c> — ошибка.</param>
     /// <param name="indentLevel">Уровень отступа, используемый при отображении сообщения (визуальная иерархия).</param>
     /// <returns>Задача асинхронного показа сообщения.</returns>
-    public static async Task ShowConnectionMessageAsync(IAttachableDevice device, string headerSuffix, bool result, int indentLevel, IUserMessageService? userMessageService = null)
+    public static async Task ShowConnectionMessageAsync(IAttachableDevice device, string headerSuffix, bool result, int indentLevel, IUserInteractionService? userMessageService = null)
     {
       if (userMessageService == null)
       {
@@ -102,7 +102,7 @@ namespace NewCore.Function.Helpers
     /// <param name="result">Результат операции (true — успех, false — ошибка).</param>
     /// <param name="indentLevel">Уровень отступа, используемый при отображении сообщения (визуальная иерархия).</param>
     /// <returns>Задача выполнения показа сообщения.</returns>
-    public static async Task ShowConnectionMessageAsync(IAttachableDevice device, string headerSuffix, string baseMessage, bool result, int indentLevel, IUserMessageService? userMessageService = null)
+    public static async Task ShowConnectionMessageAsync(IAttachableDevice device, string headerSuffix, string baseMessage, bool result, int indentLevel, IUserInteractionService? userMessageService = null)
     {
       if (userMessageService == null)
       {

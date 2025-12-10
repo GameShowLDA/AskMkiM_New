@@ -25,7 +25,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectResistor(string number, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectResistor(string number, IUserInteractionService? userMessageService = null)
     {
       var result = await _resistorManager.ConnectResistor(number);
 
@@ -38,7 +38,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectResistor(string number, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectResistor(string number, IUserInteractionService? userMessageService = null)
     {
       var result = await _resistorManager.DisconnectResistor(number);
 

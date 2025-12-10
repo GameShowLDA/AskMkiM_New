@@ -15,7 +15,7 @@ namespace DTO.Device.RelaySwitchModule.Capabilities
     /// <param name="relaySwitchModule">Модуль коммутации реле.</param>
     /// <param name="device">Устройство коммутации шин.</param>
     /// <param name="meter">Измеритель.</param>
-    Task StartSelfCheck(CancellationToken cancellationToken, System.Enum typeConnector, IUserMessageService? userMessageService = null, ISwitchingDevice device = null);
+    Task StartSelfCheck(CancellationToken cancellationToken, System.Enum typeConnector, IUserInteractionService? userMessageService = null, ISwitchingDevice device = null);
 
 
     /// <summary>
@@ -28,6 +28,6 @@ namespace DTO.Device.RelaySwitchModule.Capabilities
     /// </summary>
     /// <param name="numbet"></param>
     /// <returns></returns>
-    Task<(bool, string)> TryGetCheckBusConntcrion(int number, IUserMessageService? userMessageService = null);
+    Task<(bool, string)> TryGetCheckBusConntcrion(int number, IUserInteractionService? userMessageService = null);
   }
 }

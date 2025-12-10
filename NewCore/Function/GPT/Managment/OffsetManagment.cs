@@ -44,7 +44,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает значение Offset.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetOffsetAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetOffsetAsync(double value, IUserInteractionService? userMessageService = null)
     {
       return await CongifHelper.SetParameterAsync(
           getter: async () => _getOffset(),

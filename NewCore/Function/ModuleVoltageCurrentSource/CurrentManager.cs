@@ -29,7 +29,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// <param name="integerPart">Целая часть значения тока.</param>
     /// <param name="decimalPart">Дробная часть значения тока.</param>
     /// <returns>Асинхронная задача.</returns>
-    public async Task SetCurrentLevelAsync(int integerPart, int decimalPart, IUserMessageService? messageService = null)
+    public async Task SetCurrentLevelAsync(int integerPart, int decimalPart, IUserInteractionService? messageService = null)
     {
       LogInformation($"МИНТ: Установка тока {integerPart}.{decimalPart} мА ({new DeviceCommand(4, integerPart, decimalPart)})", isDeviceLog: true);
 
@@ -46,7 +46,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     /// </summary>
     /// <param name="current">Ограничение тока в мА.</param>
     /// <returns>Булево значение, указывающее успешность операции.</returns>
-    public async Task<bool> LimitationOfTheOutputCurrent(int current, IUserMessageService? messageService = null)
+    public async Task<bool> LimitationOfTheOutputCurrent(int current, IUserInteractionService? messageService = null)
     {
       LogInformation($"МИНТ: Установка ограничения тока в {current} мА ({new DeviceCommand(10, current)})", isDeviceLog: true);
 

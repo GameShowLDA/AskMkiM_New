@@ -8,17 +8,17 @@ namespace AppConfiguration.Services
   /// </summary>
   public static class UserMessageServiceProvider
   {
-    private static IUserMessageService? _instance;
+    private static IMessageOutputService? _instance;
 
     /// <summary>
     /// Событие, вызываемое при смене активного экземпляра IMessageService.
     /// </summary>
-    public static event Action<IUserMessageService?>? InstanceChanged;
+    public static event Action<IMessageOutputService?>? InstanceChanged;
 
     /// <summary>
     /// Текущая реализация интерфейса отображения сообщений.
     /// </summary>
-    public static IUserMessageService? Instance
+    public static IMessageOutputService? Instance
     {
       get => _instance;
       set

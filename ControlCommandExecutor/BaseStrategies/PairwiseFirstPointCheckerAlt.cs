@@ -19,7 +19,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <param name="points">Список точек для проверки.</param>
     /// <param name="messageService">Сервис отображения сообщений.</param>
     /// <returns>Задача, представляющая выполнение проверки.</returns>
-    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserMessageService messageService, double resistance = 0, double cabelResistance = 0)
+    static public async Task<List<ShowMessageModel>> CheckSequenceAsync(SchemeModel schemeModel, CommandExecutionManager manager, BaseCommandModel baseCommandModel, IUserInteractionService messageService, double resistance = 0, double cabelResistance = 0)
     {
       List<ShowMessageModel> errorsMessgae = new List<ShowMessageModel>();
 
@@ -185,7 +185,7 @@ namespace ControlCommandExecutor.BaseStrategies
       return errorsMessgae;
     }
 
-    static private async Task ConnectToBusAAndBAsync(IUserMessageService userMessageService, PointModel pointModel)
+    static private async Task ConnectToBusAAndBAsync(IUserInteractionService userMessageService, PointModel pointModel)
     {
       await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Подключение точки {pointModel.ToString()} к шинам А и В"), IsBlockStart: true);
       var relayModule = EquipmentService.GetModuleByPoint(pointModel);
@@ -197,7 +197,7 @@ namespace ControlCommandExecutor.BaseStrategies
         throw RelayExceptionFactory.ConnectPointFailed(pointModel.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
     }
 
-    static private async Task DisconnectToBusBAsync(IUserMessageService userMessageService, PointModel pointModel)
+    static private async Task DisconnectToBusBAsync(IUserInteractionService userMessageService, PointModel pointModel)
     {
       await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Отключение точки {pointModel.ToString()} от шины В"), IsBlockStart: true);
       var relayModule = EquipmentService.GetModuleByPoint(pointModel);
@@ -206,7 +206,7 @@ namespace ControlCommandExecutor.BaseStrategies
         throw RelayExceptionFactory.DisconnectPointFailed(pointModel.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
     }
 
-    static private async Task DisconnectToBusAAsync(IUserMessageService userMessageService, PointModel pointModel)
+    static private async Task DisconnectToBusAAsync(IUserInteractionService userMessageService, PointModel pointModel)
     {
       await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Отключение точки {pointModel.ToString()} от шины A"), IsBlockStart: true);
       var relayModule = EquipmentService.GetModuleByPoint(pointModel);
@@ -215,7 +215,7 @@ namespace ControlCommandExecutor.BaseStrategies
         throw RelayExceptionFactory.DisconnectPointFailed(pointModel.PointNumber.ToString(), relayModule.Name, relayModule.NumberChassis, relayModule.Number);
     }
 
-    static private async Task<double> GetResistanceAsync(IUserMessageService userMessageService, double param)
+    static private async Task<double> GetResistanceAsync(IUserInteractionService userMessageService, double param)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(userMessageService);
       await userMessageService.ShowMessageAsync(new ShowMessageModel(header: $"Измерение сопротивления"), IsBlockStart: true);
@@ -223,7 +223,7 @@ namespace ControlCommandExecutor.BaseStrategies
       return result;
     }
 
-    static private async Task DisconnectAllPoints(IUserMessageService userMessageService, List<PointModel> points)
+    static private async Task DisconnectAllPoints(IUserInteractionService userMessageService, List<PointModel> points)
     {
       var modules = EquipmentService.GetUniqueModulesByPoints(points);
       foreach (var module in modules)

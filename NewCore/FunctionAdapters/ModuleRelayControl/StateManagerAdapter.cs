@@ -30,19 +30,19 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     public event Action IsReset;
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
     {
       return await InitializeAsync(messageService);
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAsync(IUserMessageService messageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService messageService = null)
     {
       return await ResetAsync(messageService);
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
     {
       var (result, answer) = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
@@ -74,7 +74,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> ResetAsync(IUserMessageService messageService = null)
+    public async Task<bool> ResetAsync(IUserInteractionService messageService = null)
     {
       var result = await _stateManager.DisconnectAsync();
 

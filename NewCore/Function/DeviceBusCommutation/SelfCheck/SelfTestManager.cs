@@ -23,7 +23,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     public SelfTestManager(Device.DeviceBusCommutation deviceBusCommutation) => _deviceBusCommutation = deviceBusCommutation;
 
     /// <inheritdoc />
-    public async Task<bool> ExecuteSelfTestAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int busContact, int action, IUserMessageService? userMessageService = null) => await SelfTestProcessManager.ExecuteSelfTestAsync(cancellationToken, _deviceBusCommutation, testType, busContact, action);
+    public async Task<bool> ExecuteSelfTestAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int busContact, int action, IUserInteractionService? userMessageService = null) => await SelfTestProcessManager.ExecuteSelfTestAsync(cancellationToken, _deviceBusCommutation, testType, busContact, action);
     /// <summary>
     /// Проверяет корректность переданных параметров.
     /// </summary>
@@ -44,13 +44,13 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     #region Полученние данных.
 
     /// <inheritdoc />
-    public List<int>? GetValidBusContacts(SwitchingDeviceTypeConnector testType, IUserMessageService? userMessageService = null) => SelfTestMetadataProvider.GetValidBusContacts(testType);
+    public List<int>? GetValidBusContacts(SwitchingDeviceTypeConnector testType, IUserInteractionService? userMessageService = null) => SelfTestMetadataProvider.GetValidBusContacts(testType);
 
     /// <inheritdoc />
-    public string GetCircuitName(SwitchingDeviceTypeConnector testType, int busContact, IUserMessageService? userMessageService = null) => SelfTestMetadataProvider.GetCircuitName(testType, busContact);
+    public string GetCircuitName(SwitchingDeviceTypeConnector testType, int busContact, IUserInteractionService? userMessageService = null) => SelfTestMetadataProvider.GetCircuitName(testType, busContact);
 
     /// <inheritdoc />
-    public async Task<int> GetRelayCountAsync(SwitchingDeviceTypeConnector testType, int busContact, IUserMessageService? userMessageService = null) => await SelfTestMetadataProvider.GetRelayCountAsync(_deviceBusCommutation, testType, busContact);
+    public async Task<int> GetRelayCountAsync(SwitchingDeviceTypeConnector testType, int busContact, IUserInteractionService? userMessageService = null) => await SelfTestMetadataProvider.GetRelayCountAsync(_deviceBusCommutation, testType, busContact);
 
     /// <inheritdoc />
     public IEnumerable<object> GetSupportedTestTypes() => SelfTestMetadataProvider.GetSupportedTestTypes();
@@ -61,10 +61,10 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     #endregion
 
     /// <inheritdoc />
-    public Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserMessageService? userMessageService = null, ISwitchingDevice device = null, IFastMeter meter = null) => SelfTestProcessManager.StartSelfCheck(cancellationToken, userMessageService, selectedType, device, meter);
+    public Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserInteractionService? userMessageService = null, ISwitchingDevice device = null, IFastMeter meter = null) => SelfTestProcessManager.StartSelfCheck(cancellationToken, userMessageService, selectedType, device, meter);
 
     /// <inheritdoc />
-    public async Task<bool> ControlRelayAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int relayNumber, int busContact, int action, IUserMessageService? userMessageService = null) => await SelfTestProcessManager.ControlRelayAsync(cancellationToken, _deviceBusCommutation, testType, relayNumber, busContact, action);
+    public async Task<bool> ControlRelayAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int relayNumber, int busContact, int action, IUserInteractionService? userMessageService = null) => await SelfTestProcessManager.ControlRelayAsync(cancellationToken, _deviceBusCommutation, testType, relayNumber, busContact, action);
 
 
   }

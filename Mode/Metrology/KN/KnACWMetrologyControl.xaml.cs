@@ -84,7 +84,7 @@ namespace Mode.Metrology.KN
       public KnMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var fastMeter = Devices.TryGetValue(metrologicalModeRole, out var meter) ? meter.OfType<IFastMeter>().FirstOrDefault() : null;
@@ -117,14 +117,14 @@ namespace Mode.Metrology.KN
         return true;
       }
 
-      public override async Task FinalizeMeasurement(IUserMessageService messageService)
+      public override async Task FinalizeMeasurement(IUserInteractionService messageService)
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.KN_ACW);
         Measurements.Clear();
       }
 
-      private async Task<double> MeasuredFastMeter(IFastMeter fastMeter, IUserMessageService userMessageService, double param)
+      private async Task<double> MeasuredFastMeter(IFastMeter fastMeter, IUserInteractionService userMessageService, double param)
       {
         var result = await fastMeter.AcVoltageManager.MeasureACVoltageAsync(param);
         return result;

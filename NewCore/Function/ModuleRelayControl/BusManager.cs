@@ -28,7 +28,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <param name="bus">Замыкаемая шина.</param>
     /// <param name="lowVoltage">true - низковольтная шина, false - высоковольтная.</param>
     /// <returns>Результат замыкания шины.</returns>
-    public async Task<bool> ConnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserInteractionService? userMessageService = null)
     {
       if (!TryGetBusNumber(bus, out int numberBus) || !TryGetBusType(bus, out int typeBus))
       {
@@ -71,7 +71,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <param name="bus">Замыкаемая шина.</param>
     /// <param name="lowVoltage">true - низковольтная шина, false - высоковольтная.</param>
     /// <returns>Результат замыкания шины.</returns>
-    public async Task<bool> DisconnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserInteractionService? userMessageService = null)
     {
       if (!TryGetBusNumber(bus, out int numberBus) || !TryGetBusType(bus, out int typeBus))
       {

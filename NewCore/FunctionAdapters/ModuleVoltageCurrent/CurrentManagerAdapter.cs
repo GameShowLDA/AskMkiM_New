@@ -21,7 +21,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       _currentManager = new CurrentManager(module);
     }
 
-    public async Task SetCurrentLevelAsync(int integerPart, int decimalPart, IUserMessageService? messageService = null)
+    public async Task SetCurrentLevelAsync(int integerPart, int decimalPart, IUserInteractionService? messageService = null)
     {
       string value = $"{integerPart}.{decimalPart:D3}";
       try
@@ -36,7 +36,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       }
     }
 
-    public async Task<bool> LimitationOfTheOutputCurrent(int current, IUserMessageService? messageService = null)
+    public async Task<bool> LimitationOfTheOutputCurrent(int current, IUserInteractionService? messageService = null)
     {
       bool result = await _currentManager.LimitationOfTheOutputCurrent(current);
 

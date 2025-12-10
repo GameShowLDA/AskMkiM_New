@@ -43,14 +43,14 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
     /// Настраивает измерительное устройство (мультиметр или ППУ).
     /// </summary>
     /// <param name="dataModel">Модель данных, содержащая параметры измерений.</param>
-    public abstract Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null);
+    public abstract Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null);
 
     /// <summary>
     /// Выполняет измерение.
     /// </summary>
     /// <param name="messageService">Интерфейс протокола для вывода сообщений.</param>
     /// <param name="dataModel">Модель данных, содержащая параметры измерений.</param>
-    public abstract Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel);
+    public abstract Task PerformMeasurement(IUserInteractionService messageService, DataModel dataModel);
 
     /// <summary>
     /// Подключает все устройства и инициализирует компоненты.
@@ -59,7 +59,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
     /// <param name="point2">Конечная точка диапазона.</param>
     /// <param name="messageService">Интерфейс протокола для вывода сообщений.</param>
     /// <returns>Результат подключения.</returns>
-    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, IUserMessageService messageService)
+    public virtual async Task<(bool Connect, string Message)> ConnectToEquipment(PointModel point1, PointModel point2, IUserInteractionService messageService)
     {
       try
       {
@@ -128,7 +128,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor
     /// <summary>
     /// Выполняет общий сброс оборудования.
     /// </summary>
-    public virtual async Task FinalizeAsync(IUserMessageService messageService)
+    public virtual async Task FinalizeAsync(IUserInteractionService messageService)
     {
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
     }

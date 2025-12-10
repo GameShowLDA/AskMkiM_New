@@ -13,13 +13,13 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// </summary>
     /// <param name="number">Номер резистора.</param>
     /// <returns>Задача, содержащая результат операции (true, если успешно).</returns>
-    Task<bool> ConnectResistor(string number, IUserMessageService? userMessageService = null);
+    Task<bool> ConnectResistor(string number, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Отключает резистор с указанным номером.
     /// </summary>
     /// <param name="number">Номер резистора.</param>
     /// <returns>Задача, содержащая результат операции (true, если успешно).</returns>
-    Task<bool> DisconnectResistor(string number, IUserMessageService? userMessageService = null);
+    Task<bool> DisconnectResistor(string number, IUserInteractionService? userMessageService = null);
   }
 }

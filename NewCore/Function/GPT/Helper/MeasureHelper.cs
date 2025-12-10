@@ -24,7 +24,7 @@ namespace NewCore.Function.GPT.Helper
       double rangeFrom = -1,
       double rangeTo = -1,
       bool waitFullTime = false,
-      IUserMessageService? userMessageService = null)
+      IUserInteractionService? userMessageService = null)
     {
       if (time == 60)
       {
@@ -36,7 +36,7 @@ namespace NewCore.Function.GPT.Helper
       if (await GetIsIdleModeEnabled())
       {
         LogInformation($"{nameof(MeasureAsync)}: Устройство в Idle Mode. Возвращаем param.", isDeviceLog: true);
-        return (param, ""); // единицы нет
+        return (param, "");
       }
 
       if (waitFullTime)
@@ -134,9 +134,17 @@ namespace NewCore.Function.GPT.Helper
       var source = parts[3].Trim();
       LogInformation($"Парсинг измерения: {source}", isDeviceLog: true);
 
+      // 1) Старый регекс (без пробела между числом и единицей)
       var match = Regex.Match(source, @"(?<value>\d+(\.\d+)?)(?<unit>[A-Za-z]+)");
+
       if (!match.Success)
-        throw new FormatException("Не удалось выделить число и единицу измерения.");
+      {
+        // 2) Новая версия (разрешаем пробелы)
+        match = Regex.Match(source, @"(?<value>\d+(?:\.\d+)?)[\s]*(?<unit>[A-Za-z]+)");
+      }
+
+      if (!match.Success)
+        throw new FormatException($"Не удалось выделить число и единицу измерения из '{source}'.");
 
       double value = double.Parse(match.Groups["value"].Value, CultureInfo.InvariantCulture);
       string unit = match.Groups["unit"].Value;

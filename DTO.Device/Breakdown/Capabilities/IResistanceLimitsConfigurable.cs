@@ -12,7 +12,7 @@ namespace DTO.Device.Breakdown.Capabilities
     /// </summary>
     /// <param name="value">Значение верхнего предела в ГОм.</param>
     /// <param name="userMessageService">Необязательный сервис сообщений пользователю.</param>
-    Task<(bool Success, string Message)> SetHighResistanceLimitAsync(double value, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetHighResistanceLimitAsync(double value, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Считывает верхний предел сопротивления (в ГОм).
@@ -24,7 +24,7 @@ namespace DTO.Device.Breakdown.Capabilities
     /// </summary>
     /// <param name="value">Значение нижнего предела в МОм.</param>
     /// <param name="userMessageService">Необязательный сервис сообщений пользователю.</param>
-    Task<(bool Success, string Message)> SetLowResistanceLimitAsync(double value, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetLowResistanceLimitAsync(double value, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Считывает нижний предел сопротивления (в МОм).

@@ -21,37 +21,37 @@ namespace NewCore.FunctionAdapters.GPT
       _systemSettings = new SystemSettings(device);
     }
 
-    public async Task SetLcdContrastAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task SetLcdContrastAsync(double value, IUserInteractionService? userMessageService = null)
     {
       await _systemSettings.SetLcdContrastAsync(value);
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка контрастности дисплея", $"{value}", true, 1, userMessageService);
     }
 
-    public async Task SetLcdBrightnessAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task SetLcdBrightnessAsync(double value, IUserInteractionService? userMessageService = null)
     {
       await _systemSettings.SetLcdBrightnessAsync(value);
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка яркости дисплея", $"{value}", true, 1, userMessageService);
     }
 
-    public async Task SetBuzzerPrimarySound(bool state, IUserMessageService? userMessageService = null)
+    public async Task SetBuzzerPrimarySound(bool state, IUserInteractionService? userMessageService = null)
     {
       await _systemSettings.SetBuzzerPrimarySound(state);
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка звука успешного теста", state ? "ON" : "OFF", true, 1, userMessageService);
     }
 
-    public async Task SetBuzzerFeedbackSound(bool state, IUserMessageService? userMessageService = null)
+    public async Task SetBuzzerFeedbackSound(bool state, IUserInteractionService? userMessageService = null)
     {
       await _systemSettings.SetBuzzerFeedbackSound(state);
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка звука ошибочного теста", state ? "ON" : "OFF", true, 1, userMessageService);
     }
 
-    public async Task SetBuzzerPrimaryTime(double duration, IUserMessageService? userMessageService = null)
+    public async Task SetBuzzerPrimaryTime(double duration, IUserInteractionService? userMessageService = null)
     {
       await _systemSettings.SetBuzzerPrimaryTime(duration);
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка длительности успешного сигнала", $"{duration} сек", true, 1, userMessageService);
     }
 
-    public async Task SetBuzzerFeedbackTime(double duration, IUserMessageService? userMessageService = null)
+    public async Task SetBuzzerFeedbackTime(double duration, IUserInteractionService? userMessageService = null)
     {
       await _systemSettings.SetBuzzerFeedbackTime(duration);
       await DeviceMessageBuilder.ShowConnectionMessageAsync(_device, "Установка длительности ошибочного сигнала", $"{duration} сек", true, 1, userMessageService);

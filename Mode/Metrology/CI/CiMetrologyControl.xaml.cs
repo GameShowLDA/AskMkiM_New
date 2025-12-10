@@ -91,7 +91,7 @@ namespace Mode.Metrology.CI
       public CiMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, MeasurementTypeCommand metrologicalModeRole, DataModel dataModel = null)
       {
         await base.ConfigureMeter(messageService, metrologicalModeRole, dataModel);
         var breakDown = Devices.TryGetValue(MeasurementTypeCommand.CI, out var meter) ? meter.OfType<IBreakdownTester>().FirstOrDefault() : null;
@@ -130,7 +130,7 @@ namespace Mode.Metrology.CI
         return true;
       }
 
-      public override async Task FinalizeMeasurement(IUserMessageService messageService)
+      public override async Task FinalizeMeasurement(IUserInteractionService messageService)
       {
         await base.FinalizeMeasurement(messageService);
         await PrintResult(messageService, MeasurementTypeCommand.CI);

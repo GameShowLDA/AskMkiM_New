@@ -23,7 +23,7 @@ namespace NewCore.Function.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> SetACVoltageModeAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> SetACVoltageModeAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -41,7 +41,7 @@ namespace NewCore.Function.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<double> MeasureACVoltageAsync(double param = 0, IUserMessageService? userMessageService = null)
+    public async Task<double> MeasureACVoltageAsync(double param = 0, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {

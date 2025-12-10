@@ -26,10 +26,10 @@ namespace NewCore.Function.DeviceBusCommutation
     #region Мультиметр.
 
     /// <inheritdoc />
-    public async Task<bool> ConnectMultimeter(SwitchingBusNew bus, IUserMessageService? userMessageService = null) => await SetMultimeterState(true, bus);
+    public async Task<bool> ConnectMultimeter(SwitchingBusNew bus, IUserInteractionService? userMessageService = null) => await SetMultimeterState(true, bus);
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectMultimeter(SwitchingBusNew bus, IUserMessageService? userMessageService = null) => await SetMultimeterState(false, bus);
+    public async Task<bool> DisconnectMultimeter(SwitchingBusNew bus, IUserInteractionService? userMessageService = null) => await SetMultimeterState(false, bus);
 
     /// <summary>
     /// Устанавливает состояние мультиметра (подключение или отключение).
@@ -37,7 +37,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <param name="connect">Флаг состояния: <c>true</c> – подключить, <c>false</c> – отключить.</param>
     /// <param name="bus">Шина, к которой подключается мультиметр.</param>
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
-    private async Task<bool> SetMultimeterState(bool connect, SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    private async Task<bool> SetMultimeterState(bool connect, SwitchingBusNew bus, IUserInteractionService? userMessageService = null)
     {
       int numberConnector = (int)SwitchingDeviceTypeConnector.Multimeter;
       if (TryGetBusNumber(bus, out int busNumber) && (busNumber >= 1 || busNumber <= 4))
@@ -62,10 +62,10 @@ namespace NewCore.Function.DeviceBusCommutation
     #region АЦП
 
     /// <inheritdoc />
-    public async Task<bool> ConnectADC(SwitchingBusNew bus, bool reversePolarity = false, IUserMessageService? userMessageService = null) => await SetADCState(false, bus, reversePolarity);
+    public async Task<bool> ConnectADC(SwitchingBusNew bus, bool reversePolarity = false, IUserInteractionService? userMessageService = null) => await SetADCState(false, bus, reversePolarity);
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectADC(SwitchingBusNew bus, bool reversePolarity = false, IUserMessageService? userMessageService = null) => await SetADCState(false, bus, reversePolarity);
+    public async Task<bool> DisconnectADC(SwitchingBusNew bus, bool reversePolarity = false, IUserInteractionService? userMessageService = null) => await SetADCState(false, bus, reversePolarity);
 
     /// <summary>
     /// Устанавливает состояние АЦП (подключение или отключение).
@@ -74,7 +74,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <param name="bus">Шина, к которой подключается мультиметр.</param>
     /// <param name="reversePolarity">Флаг полюса: <c>true</c> – с переполюсовкой, <c>false</c> – без переполюсовки. </param>
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
-    private async Task<bool> SetADCState(bool connect, SwitchingBusNew bus, bool reversePolarity, IUserMessageService? userMessageService = null)
+    private async Task<bool> SetADCState(bool connect, SwitchingBusNew bus, bool reversePolarity, IUserInteractionService? userMessageService = null)
     {
       int numberConnector = (int)SwitchingDeviceTypeConnector.ADC;
       if (reversePolarity)
@@ -104,10 +104,10 @@ namespace NewCore.Function.DeviceBusCommutation
     #region ПИНТ
 
     /// <inheritdoc />
-    public async Task<bool> ConnectPINT(SwitchingBusNew bus, IUserMessageService? userMessageService = null) => await SetPINTState(true, bus);
+    public async Task<bool> ConnectPINT(SwitchingBusNew bus, IUserInteractionService? userMessageService = null) => await SetPINTState(true, bus);
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectPINT(SwitchingBusNew bus, IUserMessageService? userMessageService = null) => await SetPINTState(true, bus);
+    public async Task<bool> DisconnectPINT(SwitchingBusNew bus, IUserInteractionService? userMessageService = null) => await SetPINTState(true, bus);
 
     /// <summary>
     /// Устанавливает состояние ПИНТ (подключение или отключение).
@@ -115,7 +115,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <param name="connect">Флаг состояния: <c>true</c> – подключить, <c>false</c> – отключить.</param>
     /// <param name="bus">Шина, к которой подключается мультиметр.</param>
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
-    private async Task<bool> SetPINTState(bool connect, SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    private async Task<bool> SetPINTState(bool connect, SwitchingBusNew bus, IUserInteractionService? userMessageService = null)
     {
       int numberConnector = (int)SwitchingDeviceTypeConnector.PINT;
       if (TryGetBusNumber(bus, out int busNumber) && (busNumber < 2 || busNumber > 3))
@@ -140,17 +140,17 @@ namespace NewCore.Function.DeviceBusCommutation
     #region Пробойка.
 
     /// <inheritdoc />
-    public async Task<bool> ConnectBreakdownTester(IUserMessageService? userMessageService = null) => await SetBreakdownTesterState(true);
+    public async Task<bool> ConnectBreakdownTester(IUserInteractionService? userMessageService = null) => await SetBreakdownTesterState(true);
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectBreakdownTester(IUserMessageService? userMessageService = null) => await SetBreakdownTesterState(false);
+    public async Task<bool> DisconnectBreakdownTester(IUserInteractionService? userMessageService = null) => await SetBreakdownTesterState(false);
 
     /// <summary>
     /// Устанавливает состояние мультиметра (подключение или отключение).
     /// </summary>
     /// <param name="connect">Флаг состояния: <c>true</c> – подключить, <c>false</c> – отключить.</param>
     /// <returns>Возвращает <c>true</c>, если операция выполнена успешно, иначе <c>false</c>.</returns>
-    private async Task<bool> SetBreakdownTesterState(bool connect, IUserMessageService? userMessageService = null)
+    private async Task<bool> SetBreakdownTesterState(bool connect, IUserInteractionService? userMessageService = null)
     {
       int numberConnector = (int)SwitchingDeviceTypeConnector.BreakdownTester;
 
@@ -169,13 +169,13 @@ namespace NewCore.Function.DeviceBusCommutation
     #region Шины.
 
     /// <inheritdoc />
-    public async Task<bool> ConnectAllBuses(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectAllBuses(IUserInteractionService? userMessageService = null)
     {
       return await SetAllBusesStatus(true);
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAllBuses(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectAllBuses(IUserInteractionService? userMessageService = null)
     {
       return await SetAllBusesStatus(false);
     }
@@ -185,7 +185,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// </summary>
     /// <param name="connect"></param>
     /// <returns></returns>
-    private async Task<bool> SetAllBusesStatus(bool connect, IUserMessageService? userMessageService = null)
+    private async Task<bool> SetAllBusesStatus(bool connect, IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -205,7 +205,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// <param name="bus">Тип шины.</param>
     /// <param name="busNumber">Выходной параметр, содержащий номер шины.</param>
     /// <returns><c>true</c>, если номер успешно получен; иначе <c>false</c>.</returns>
-    private bool TryGetBusNumber(SwitchingBusNew bus, out int busNumber, IUserMessageService? userMessageService = null)
+    private bool TryGetBusNumber(SwitchingBusNew bus, out int busNumber, IUserInteractionService? userMessageService = null)
     {
       string busName = bus.ToString();
       busNumber = -1;
@@ -220,7 +220,7 @@ namespace NewCore.Function.DeviceBusCommutation
       return false;
     }
 
-    public async Task<bool> GetSuccesCurrentMode(SwitchingDeviceTypeConnector mode, IUserMessageService? userMessageService = null)
+    public async Task<bool> GetSuccesCurrentMode(SwitchingDeviceTypeConnector mode, IUserInteractionService? userMessageService = null)
     {
       var command = new DeviceCommand(51);
       var answer = await _deviceBusCommutation.DeviceProtocol.QueryAsync(command.ToString(), timeout: 1000);
@@ -229,7 +229,7 @@ namespace NewCore.Function.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectBreakdownTesterAndMultimeter(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBreakdownTesterAndMultimeter(IUserInteractionService? userMessageService = null)
     {
       var command = new DeviceCommand(5, 7, 0, 1);
       var answer = await _deviceBusCommutation.DeviceProtocol.QueryAsync(command.ToString(), timeout: 1000);
@@ -238,7 +238,7 @@ namespace NewCore.Function.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectBreakdownTesterAndMultimeter(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBreakdownTesterAndMultimeter(IUserInteractionService? userMessageService = null)
     {
       var command = new DeviceCommand(5, 7, 0, 2);
       var answer = await _deviceBusCommutation.DeviceProtocol.QueryAsync(command.ToString(), timeout: 1000);

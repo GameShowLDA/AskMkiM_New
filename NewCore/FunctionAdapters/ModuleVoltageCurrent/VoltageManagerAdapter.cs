@@ -22,7 +22,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       _voltageManager = new VoltageManager(device);
     }
 
-    public async Task SetSourceVoltageAsync(VoltageSources voltageSources, IUserMessageService? messageService = null)
+    public async Task SetSourceVoltageAsync(VoltageSources voltageSources, IUserInteractionService? messageService = null)
     {
       string label = voltageSources == VoltageSources.Supply12V ? "12 В" : "5 В";
 
@@ -39,7 +39,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
       }
     }
 
-    public async Task SetVoltageLevelAsync(int integerPart, int decimalPart, IUserMessageService? messageService = null)
+    public async Task SetVoltageLevelAsync(int integerPart, int decimalPart, IUserInteractionService? messageService = null)
     {
       string value = $"{integerPart}.{decimalPart}";
 

@@ -13,7 +13,7 @@ namespace ControlCommandExecutor.BaseStrategies
 {
   internal static class NodeFullChecker
   {
-    internal delegate Task<(bool Result, double Value)> PerformMeasurementAsync(double value, IUserMessageService userMessageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW);
+    internal delegate Task<(bool Result, double Value)> PerformMeasurementAsync(double value, IUserInteractionService userMessageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW);
 
     static private List<ChainModel> ErrorsPoints = new List<ChainModel>();
 
@@ -116,7 +116,7 @@ namespace ControlCommandExecutor.BaseStrategies
       var right = points.Skip(middle).ToList();
       return (left, right);
     }
-    private static async Task DisconnectAllFromBusBAsync(List<ChainModel> points, IUserMessageService messageService)
+    private static async Task DisconnectAllFromBusBAsync(List<ChainModel> points, IUserInteractionService messageService)
     {
       foreach (var point in points)
       {
@@ -135,7 +135,7 @@ namespace ControlCommandExecutor.BaseStrategies
       PerformMeasurementAsync performMeasurementAsync,
         List<ChainModel> faultyPoints,
         double resistance,
-        IUserMessageService messageService)
+        IUserInteractionService messageService)
     {
       var chains = new List<List<ChainModel>>();
       var visited = new HashSet<ChainModel>();
@@ -168,7 +168,7 @@ namespace ControlCommandExecutor.BaseStrategies
         ChainModel start,
         List<ChainModel> allPoints,
         double resistance,
-        IUserMessageService messageService,
+        IUserInteractionService messageService,
         HashSet<ChainModel> visited)
     {
       var queue = new Queue<ChainModel>();
@@ -202,7 +202,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <summary>
     /// Проверяет, замкнуты ли две точки между собой.
     /// </summary>
-    private static async Task<bool> IsShortCircuitedAsync(PerformMeasurementAsync performMeasurementAsync, ChainModel a, ChainModel b, double resistance, IUserMessageService messageService)
+    private static async Task<bool> IsShortCircuitedAsync(PerformMeasurementAsync performMeasurementAsync, ChainModel a, ChainModel b, double resistance, IUserInteractionService messageService)
     {
       var allPoints = ErrorsPoints;
       await DisconnectAllFromBusAAsync(allPoints, messageService);
@@ -219,7 +219,7 @@ namespace ControlCommandExecutor.BaseStrategies
       return result;
     }
 
-    private static async Task DisconnectAllFromBusAAsync(List<ChainModel> points, IUserMessageService messageService)
+    private static async Task DisconnectAllFromBusAAsync(List<ChainModel> points, IUserInteractionService messageService)
     {
       foreach (var point in points)
       {
@@ -236,7 +236,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности подключения точки после всех попыток.
     /// </exception>
-    private static async Task ConnectToBusAAsync(ChainModel chain, IUserMessageService messageService)
+    private static async Task ConnectToBusAAsync(ChainModel chain, IUserInteractionService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -257,7 +257,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности подключения точки после всех попыток.
     /// </exception>
-    private static async Task ConnectToBusBAsync(ChainModel chain, IUserMessageService messageService)
+    private static async Task ConnectToBusBAsync(ChainModel chain, IUserInteractionService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -278,7 +278,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task DisconnectFromBusAAsync(ChainModel chain, IUserMessageService messageService)
+    private static async Task DisconnectFromBusAAsync(ChainModel chain, IUserInteractionService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -299,7 +299,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task DisconnectFromBusBAsync(ChainModel chain, IUserMessageService messageService)
+    private static async Task DisconnectFromBusBAsync(ChainModel chain, IUserInteractionService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -320,7 +320,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task SwitchFromBusAToBAsync(ChainModel chain, IUserMessageService messageService)
+    private static async Task SwitchFromBusAToBAsync(ChainModel chain, IUserInteractionService messageService)
     {
       foreach (var point in chain.PointModels)
       {
@@ -341,7 +341,7 @@ namespace ControlCommandExecutor.BaseStrategies
     /// <exception cref="RelayControlException">
     /// Выбрасывается при невозможности отключить точку после всех попыток.
     /// </exception>
-    private static async Task SwitchFromBusBToAAsync(ChainModel chain, IUserMessageService messageService)
+    private static async Task SwitchFromBusBToAAsync(ChainModel chain, IUserInteractionService messageService)
     {
       foreach (var point in chain.PointModels)
       {

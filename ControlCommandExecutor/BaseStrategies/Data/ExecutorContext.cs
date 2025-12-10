@@ -29,7 +29,7 @@ namespace ControlCommandExecutor.BaseStrategies.Data
     /// Сервис пользовательских сообщений, используемый для отображения
     /// информационных сообщений, предупреждений и ошибок в процессе выполнения измерения.
     /// </summary>
-    internal IUserMessageService MessageService { get; set; }
+    internal IUserInteractionService MessageService { get; set; }
 
     /// <summary>
     /// Номинальное значение сопротивления, используемое при выполнении измерения

@@ -52,7 +52,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает верхний предел тока.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetHighCurrentLimitAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetHighCurrentLimitAsync(double value, IUserInteractionService? userMessageService = null)
     {
       return await CongifHelper.SetParameterAsync(
           getter: async () => _getHighLimit(),
@@ -74,7 +74,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает нижний предел тока.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetLowCurrentLimitAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetLowCurrentLimitAsync(double value, IUserInteractionService? userMessageService = null)
     {
       return await CongifHelper.SetParameterAsync(
           getter: async () => _getLowLimit(),

@@ -40,7 +40,7 @@ namespace NewCore.Function.GPT.Managment
     }
 
     /// <inheritdoc />
-    public async Task<(bool Success, string Message)> SetVoltageAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetVoltageAsync(double value, IUserInteractionService? userMessageService = null)
     {
       double kvValue = value / 1000;
 

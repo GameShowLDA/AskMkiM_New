@@ -29,7 +29,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
     {
       var (connect, answer) = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
@@ -47,7 +47,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
     {
       var (connect, answer) = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
@@ -65,7 +65,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAsync(IUserMessageService messageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService messageService = null)
     {
       var connect = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
@@ -83,7 +83,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> ResetAsync(IUserMessageService messageService = null)
+    public async Task<bool> ResetAsync(IUserInteractionService messageService = null)
     {
       var connect = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {

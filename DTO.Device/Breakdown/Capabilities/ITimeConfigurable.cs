@@ -21,7 +21,7 @@ namespace DTO.Device.Breakdown.Capabilities
     ///   <item><description><c>string Message</c> — сообщение об ошибке, если установка не удалась.</description></item>
     /// </list>
     /// </returns>
-    Task<(bool Success, string Message)> SetTestTimeAsync(double value, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetTestTimeAsync(double value, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает текущее установленное время теста с устройства.
@@ -50,7 +50,7 @@ namespace DTO.Device.Breakdown.Capabilities
     ///   <item><description><c>string Message</c> — сообщение об ошибке, если установка не удалась.</description></item>
     /// </list>
     /// </returns>
-    Task<(bool Success, string Message)> SetRampTimeAsync(double value, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetRampTimeAsync(double value, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает текущее установленное время нарастания напряжения (Ramp Time).

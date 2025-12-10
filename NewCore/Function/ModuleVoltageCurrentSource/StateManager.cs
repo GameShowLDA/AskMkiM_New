@@ -24,7 +24,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     public StateManager(IPowerSourceModule moduleVoltageCurrentSource) => _moduleVoltageCurrentSource = moduleVoltageCurrentSource;
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -67,7 +67,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> ResetAsync(IUserMessageService messageService = null)
+    public async Task<bool> ResetAsync(IUserInteractionService messageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -82,13 +82,13 @@ namespace NewCore.Function.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
     {
       return await InitializeAsync();
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAsync(IUserMessageService messageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService messageService = null)
     {
       await _moduleVoltageCurrentSource.DeviceProtocol.OperationLock.WaitAsync();
       return await ResetAsync();
