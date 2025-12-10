@@ -34,7 +34,7 @@ namespace ControlCommandExecutor.Execution
 
     public CancellationToken CancellationToken { get; }
 
-    public CommandExecutionContext(CommandExecutionManager commandExecutionManager, BaseCommandModel command, IUserMessageService console, ITextEditorAdapter editorAdapter, string opkFileName, CancellationToken cancellationToken = default)
+    public CommandExecutionContext(CommandExecutionManager commandExecutionManager, BaseCommandModel command, IUserInteractionService console, ITextEditorAdapter editorAdapter, string opkFileName, CancellationToken cancellationToken = default)
     {
       Command = command;
       Console = console;

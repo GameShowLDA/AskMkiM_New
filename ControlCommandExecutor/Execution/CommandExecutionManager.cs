@@ -24,12 +24,9 @@ namespace ControlCommandExecutor.Execution
     private readonly IUserInteractionService _console;
     private readonly ITextEditorAdapter translationControl;
     private ProtocolModel protocolModel = new ProtocolModel();
-    /// <summary>
-    /// Событие, которое вызывается при изменении состояния блокировки.
-    /// </summary>
-    public event Action<ErrorItem> AddError;
-    public event Action ClearError;
     private readonly string? _opkFilePath;
+    private readonly ITextEditorAdapter _translationControl;
+    private readonly ProtocolModel _protocolModel = new();
 
     /// <summary>
     /// Команды программы контроля.
@@ -82,7 +79,7 @@ namespace ControlCommandExecutor.Execution
     /// Строки, на которых пользователь поставил точки останова (по форматированному тексту).
     /// </param>
     public CommandExecutionManager(
-      IUserMessageService console,
+      IUserInteractionService console,
       ITextEditorAdapter textEditor,
       List<BaseCommandModel> controlProgram,
       string? opkFilePath,
