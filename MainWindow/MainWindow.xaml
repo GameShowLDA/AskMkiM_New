@@ -68,81 +68,81 @@
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Archive}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenArchive" Name="ArchiveMenuItem" Command="{Binding File.OpenArchiveCommand}" utilities:HelpProvider.HelpKey="FuncArchive" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Archive"/>
 
                     <Separator Style="{DynamicResource SeparatorMenuStyle}" Visibility="Collapsed" x:Name="fileActionsSeparator"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Save}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFile" x:Name="saveMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileCommand}" utilities:HelpProvider.HelpKey="FuncSave"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_SaveAs}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFileAs" x:Name="saveAsMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileAsCommand}" utilities:HelpProvider.HelpKey="FuncSaveAs"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_OpenFolder}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFolder" x:Name="openFolderMenuItem" Visibility="Collapsed" Command="{Binding File.OpenFolderCommand}" utilities:HelpProvider.HelpKey="FuncOpenFolderInExplorer"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Print}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="PrintFile" x:Name="printMenuItem" Visibility="Collapsed" Command="{Binding File.PrintFileCommand}" utilities:HelpProvider.HelpKey="FuncPrint"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Search}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SearchFile" x:Name="searchMenuItem" Visibility="Collapsed" Command="{Binding File.SearchFileCommand}" utilities:HelpProvider.HelpKey="FuncSearch"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Save}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFile" x:Name="saveMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileCommand}" utilities:HelpProvider.HelpKey="FuncSave" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Save"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_SaveAs}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SaveFileAs" x:Name="saveAsMenuItem" Visibility="Collapsed" Command="{Binding File.SaveFileAsCommand}" utilities:HelpProvider.HelpKey="FuncSaveAs" ToolTipHelper:ToolTipHelper.DescriptionKey="File.SaveAs"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_OpenFolder}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFolder" x:Name="openFolderMenuItem" Visibility="Collapsed" Command="{Binding File.OpenFolderCommand}" utilities:HelpProvider.HelpKey="FuncOpenFolderInExplorer" ToolTipHelper:ToolTipHelper.DescriptionKey="File.OpenFolder"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Print}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="PrintFile" x:Name="printMenuItem" Visibility="Collapsed" Command="{Binding File.PrintFileCommand}" utilities:HelpProvider.HelpKey="FuncPrint" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Print"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Search}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="SearchFile" x:Name="searchMenuItem" Visibility="Collapsed" Command="{Binding File.SearchFileCommand}" utilities:HelpProvider.HelpKey="FuncSearch" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Search"/>
 
                     <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Open}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="OpenFile" Command="{Binding File.OpenFileCommand}" utilities:HelpProvider.HelpKey="FuncOpen" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Open"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Create}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CreateNewFile" Command="{Binding File.CreateNewFileCommand}" utilities:HelpProvider.HelpKey="FuncCreate" ToolTipHelper:ToolTipHelper.DescriptionKey="File.New"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Compare}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CompareFile" x:Name="compareMenuItem" Command="{Binding File.CompareFileCommand}" utilities:HelpProvider.HelpKey="FuncCompare"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Compare}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="CompareFile" x:Name="compareMenuItem" Command="{Binding File.CompareFileCommand}" utilities:HelpProvider.HelpKey="FuncCompare" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Compare"/>
 
                     <Separator Style="{DynamicResource SeparatorMenuStyle}"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Exit}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="ExitApplication" Command="{Binding File.ExitApplicationCommand}" utilities:HelpProvider.HelpKey="FuncExit"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Exit}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="ExitApplication" Command="{Binding File.ExitApplicationCommand}" utilities:HelpProvider.HelpKey="FuncExit" ToolTipHelper:ToolTipHelper.DescriptionKey="File.Exit"/>
 
                 </MenuItem>
 
-                <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="menuHeader_2" >
+                <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="menuHeader_2" ToolTipHelper:ToolTipHelper.DescriptionKey="Test">
 
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology}, Path=Value}"  Name="Metrology" Style="{DynamicResource SideMenuItemStyle}">
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology}, Path=Value}"  Name="Metrology" Style="{DynamicResource SideMenuItemStyle}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology">
 
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KS}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeKSMenuItem" Command="{Binding Metrology.KCCommand}" utilities:HelpProvider.HelpKey="UtilityModeKC"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_IE}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeIEMenuItem" Command="{Binding Metrology.IECommand}" utilities:HelpProvider.HelpKey="UtilityModeIE"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_CI}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeCIMenuItem" Command="{Binding Metrology.CICommand}" utilities:HelpProvider.HelpKey="UtilityModeSI"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PR}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePrMenuItem" Command="{Binding Metrology.PRCommand}" utilities:HelpProvider.HelpKey="UtilityModePR"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_EHT}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeEhtMenuItem" Command="{Binding Metrology.EHTCommand}" utilities:HelpProvider.HelpKey="UtilityModeEHT"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KS}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeKSMenuItem" Command="{Binding Metrology.KCCommand}" utilities:HelpProvider.HelpKey="UtilityModeKC" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.KC"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_IE}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeIEMenuItem" Command="{Binding Metrology.IECommand}" utilities:HelpProvider.HelpKey="UtilityModeIE" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.IE"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_CI}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeCIMenuItem" Command="{Binding Metrology.CICommand}" utilities:HelpProvider.HelpKey="UtilityModeSI" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.CI"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PR}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePrMenuItem" Command="{Binding Metrology.PRCommand}" utilities:HelpProvider.HelpKey="UtilityModePR" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.PR"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_EHT}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeEhtMenuItem" Command="{Binding Metrology.EHTCommand}" utilities:HelpProvider.HelpKey="UtilityModeEHT" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.EHT"/>
 
                         <!--<MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PRT}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePrMenuItemT" Command="{Binding Metrology.PR_TCommand}" utilities:HelpProvider.HelpKey="UtilityModePR"/>-->
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PIDCW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePIDCWMenuItem" Command="{Binding Metrology.PIDCWCommand}" utilities:HelpProvider.HelpKey="UtilityModePI"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PIACW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePIACWMenuItem" Command="{Binding Metrology.PIACWCommand}" utilities:HelpProvider.HelpKey="UtilityModePI"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KNDCW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeKNDCWMenuItem" Command="{Binding Metrology.KNDCWCommand}" utilities:HelpProvider.HelpKey="UtilityModeKN"/>
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KNACW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeKNACWMenuItem" Command="{Binding Metrology.KNACWCommand}" utilities:HelpProvider.HelpKey="UtilityModeKN"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PIDCW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePIDCWMenuItem" Command="{Binding Metrology.PIDCWCommand}" utilities:HelpProvider.HelpKey="UtilityModePI" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.PIDCW"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_PIACW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModePIACWMenuItem" Command="{Binding Metrology.PIACWCommand}" utilities:HelpProvider.HelpKey="UtilityModePI" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.PIACW"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KNDCW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeKNDCWMenuItem" Command="{Binding Metrology.KNDCWCommand}" utilities:HelpProvider.HelpKey="UtilityModeKN" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.KNDCW"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Metrology_KNACW}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="ModeKNACWMenuItem" Command="{Binding Metrology.KNACWCommand}" utilities:HelpProvider.HelpKey="UtilityModeKN" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.Metrology.KNACW"/>
 
                     </MenuItem>
 
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_SelfControl}, Path=Value}" Name="SelfControl" Tag="menuHeader_3" Style="{StaticResource SideMenuItemStyle}">
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_SelfControl}, Path=Value}" Name="SelfControl" Tag="menuHeader_3" Style="{StaticResource SideMenuItemStyle}" utilities:HelpProvider.HelpKey="UtilityModeKN" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.SelfControl">
 
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_SelfControl_Module}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="SelfControlMenuItem" Command="{Binding SelfTest.SelfTestModuleCommand}"/>
-                        <MenuItem Header="Система" Style="{DynamicResource StyleMenuItem}" Name="SelfControlAllMenuItem" Command="{Binding SelfTest.SelfTestSystemCommand}"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_SelfControl_Module}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="SelfControlMenuItem" Command="{Binding SelfTest.SelfTestModuleCommand}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.SelfControl.Module"/>
+                        <MenuItem Header="Система" Style="{DynamicResource StyleMenuItem}" Name="SelfControlAllMenuItem" Command="{Binding SelfTest.SelfTestSystemCommand}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.SelfControl.System"/>
 
                     </MenuItem>
 
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests}, Path=Value}"  Name="TestControl" Tag="menuHeader_4" Style="{StaticResource SideMenuItemStyle}">
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests}, Path=Value}"  Name="TestControl" Tag="menuHeader_4" Style="{StaticResource SideMenuItemStyle}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl">
 
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_CI}, Path=Value}"  Style="{StaticResource SideMenuItemStyle}" >
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_CI}, Path=Value}"  Style="{StaticResource SideMenuItemStyle}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.CI">
 
-                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_CI_Node}, Path=Value}" Style="{DynamicResource StyleMenuItem}"  Name="NodeMethodMenuItemCI" Command="{Binding Test.CiNodeMethodCommand}" utilities:HelpProvider.HelpKey="TestSINodeMethod"/>
-                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_CI_Group}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="MethodExecutorMenuItemCI" Command="{Binding Test.CiMethodExecutorCommand}" utilities:HelpProvider.HelpKey="TestSIGroupMethod"/>
-
-                        </MenuItem>
-
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIDCW}, Path=Value}" Style="{StaticResource SideMenuItemStyle}">
-
-                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIDCW_Node}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="NodeMethodMenuItemPiDCW" Command="{Binding Test.PiDCWNodeMethodCommand}" utilities:HelpProvider.HelpKey="TestPINodeMethod"/>
-                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIDCW_Group}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Command="{Binding Test.PiDCWMethodExecutorCommand}" utilities:HelpProvider.HelpKey="TestPIGroupMethod"/>
+                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_CI_Node}, Path=Value}" Style="{DynamicResource StyleMenuItem}"  Name="NodeMethodMenuItemCI" Command="{Binding Test.CiNodeMethodCommand}" utilities:HelpProvider.HelpKey="TestSINodeMethod" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.CI.Node"/>
+                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_CI_Group}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="MethodExecutorMenuItemCI" Command="{Binding Test.CiMethodExecutorCommand}" utilities:HelpProvider.HelpKey="TestSIGroupMethod" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.CI.Group"/>
 
                         </MenuItem>
 
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIACW}, Path=Value}" Style="{StaticResource SideMenuItemStyle}">
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIDCW}, Path=Value}" Style="{StaticResource SideMenuItemStyle}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.PIDCW">
 
-                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIACW_Node}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="NodeMethodMenuItemPiACW" Command="{Binding Test.PiACWNodeMethodCommand}" utilities:HelpProvider.HelpKey="TestPINodeMethod"/>
-                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIACW_Group}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="MethodExecutorMenuItemPiACW" Command="{Binding Test.PiACWMethodExecutorCommand}" utilities:HelpProvider.HelpKey="TestPIGroupMethod"/>
+                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIDCW_Node}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="NodeMethodMenuItemPiDCW" Command="{Binding Test.PiDCWNodeMethodCommand}" utilities:HelpProvider.HelpKey="TestPINodeMethod" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.PIDCW.Node"/>
+                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIDCW_Group}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Command="{Binding Test.PiDCWMethodExecutorCommand}" utilities:HelpProvider.HelpKey="TestPIGroupMethod" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.PIDCW.Group"/>
 
                         </MenuItem>
 
-                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_Cross_MKR}, Path=Value}" Style="{DynamicResource StyleMenuItem}"  Name="CrossTestMkrMenuItem" Command="{Binding Test.CrossTestMkrExecutorCommand}" utilities:HelpProvider.HelpKey="CrossTestMkr"/>
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIACW}, Path=Value}" Style="{StaticResource SideMenuItemStyle}" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.PIACW">
+
+                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIACW_Node}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="NodeMethodMenuItemPiACW" Command="{Binding Test.PiACWNodeMethodCommand}" utilities:HelpProvider.HelpKey="TestPINodeMethod" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.PIACW.Node"/>
+                            <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_PIACW_Group}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="MethodExecutorMenuItemPiACW" Command="{Binding Test.PiACWMethodExecutorCommand}" utilities:HelpProvider.HelpKey="TestPIGroupMethod" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.PIACW.Group"/>
+
+                        </MenuItem>
+
+                        <MenuItem Header="{Binding Source={StaticResource LS_Menu_Test_Tests_Cross_MKR}, Path=Value}" Style="{DynamicResource StyleMenuItem}"  Name="CrossTestMkrMenuItem" Command="{Binding Test.CrossTestMkrExecutorCommand}" utilities:HelpProvider.HelpKey="CrossTestMkr" ToolTipHelper:ToolTipHelper.DescriptionKey="Test.TestControl.CrossTest"/>
 
                     </MenuItem>
 
                 </MenuItem>
 
-                <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="menuHeader_3" Name="Translation">
+                <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="menuHeader_3" Name="Translation" ToolTipHelper:ToolTipHelper.DescriptionKey="Execution">
 
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_Build}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="Build" Name="Build" Command="{Binding Translation.BuildCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_Run}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="Run" Name="Run" Command="{Binding Translation.RunCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator"/>
-                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_RunStepByStepMode}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="RunStepByStepMode" Name="RunStepByStepMode" Command="{Binding Translation.RunStepByStepModeCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_Build}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="Build" Name="Build" Command="{Binding Translation.BuildCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator" ToolTipHelper:ToolTipHelper.DescriptionKey="Execution.Build"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_Run}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="Run" Name="Run" Command="{Binding Translation.RunCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator" ToolTipHelper:ToolTipHelper.DescriptionKey="Execution.Run"/>
+                    <MenuItem Header="{Binding Source={StaticResource LS_Menu_Execution_RunStepByStepMode}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Tag="RunStepByStepMode" Name="RunStepByStepMode" Command="{Binding Translation.RunStepByStepModeCommand}" utilities:HelpProvider.HelpKey="DescriptionWorkTranslator" ToolTipHelper:ToolTipHelper.DescriptionKey="Execution.RunStepByStepMode"/>
 
                 </MenuItem>
 
