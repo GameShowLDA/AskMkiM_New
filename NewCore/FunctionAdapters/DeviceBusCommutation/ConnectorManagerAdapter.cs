@@ -60,7 +60,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectBreakdownTester(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBreakdownTester(IUserInteractionService? userMessageService = null)
     {
       if (IsBreadownConnect)
         return true;
@@ -85,7 +85,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectBreakdownTester(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBreakdownTester(IUserInteractionService? userMessageService = null)
     {
       if (!IsBreadownConnect)
         return true;
@@ -110,7 +110,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectMultimeter(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectMultimeter(SwitchingBusNew bus, IUserInteractionService? userMessageService = null)
     {
       var description = $"мультиметра к шине [{bus}]";
 
@@ -143,7 +143,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
 
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectMultimeter(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectMultimeter(SwitchingBusNew bus, IUserInteractionService? userMessageService = null)
     {
       if (deviceBusStatus.TryGetValue((DeviceType.Multimeter, bus), out var isConnected) && !isConnected)
         return true;
@@ -163,7 +163,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectPINT(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectPINT(SwitchingBusNew bus, IUserInteractionService? userMessageService = null)
     {
       var description = $"ПИНТ к шине [{bus}]";
 
@@ -194,7 +194,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectPINT(SwitchingBusNew bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectPINT(SwitchingBusNew bus, IUserInteractionService? userMessageService = null)
     {
       if (deviceBusStatus.TryGetValue((DeviceType.Multimeter, bus), out var isConnected) && !isConnected)
         return true;
@@ -214,7 +214,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectAllBuses(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectAllBuses(IUserInteractionService? userMessageService = null)
     {
       var description = $"(AB1, AB2, AB3, AB4)";
       var result = await _connectorManager.ConnectAllBuses();
@@ -231,7 +231,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAllBuses(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectAllBuses(IUserInteractionService? userMessageService = null)
     {
       var description = $"(AB1, AB2, AB3, AB4)";
       var result = await _connectorManager.DisconnectAllBuses();
@@ -247,13 +247,13 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       return result;
     }
 
-    public async Task<bool> GetSuccesCurrentMode(SwitchingDeviceTypeConnector mode, IUserMessageService? userMessageService = null)
+    public async Task<bool> GetSuccesCurrentMode(SwitchingDeviceTypeConnector mode, IUserInteractionService? userMessageService = null)
     {
       var result = await _connectorManager.GetSuccesCurrentMode(mode);
       return result;
     }
 
-    public async Task<bool> ConnectBreakdownTesterAndMultimeter(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBreakdownTesterAndMultimeter(IUserInteractionService? userMessageService = null)
     {
       if (IsBreakdownTesterAndMultimeter)
         return true;
@@ -266,7 +266,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
       return result;
     }
 
-    public async Task<bool> DisconnectBreakdownTesterAndMultimeter(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBreakdownTesterAndMultimeter(IUserInteractionService? userMessageService = null)
     {
       if (!IsBreakdownTesterAndMultimeter)
         return true;

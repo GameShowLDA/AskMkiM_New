@@ -26,7 +26,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     public event Action IsReset;
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
     {
       var (success, message) = await _stateManager.ConnectAsync();
 
@@ -42,7 +42,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAsync(IUserMessageService messageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService messageService = null)
     {
       bool success = await _stateManager.DisconnectAsync();
 
@@ -58,7 +58,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
     {
       var (success, message) = await _stateManager.InitializeAsync();
 
@@ -74,7 +74,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> ResetAsync(IUserMessageService messageService = null)
+    public async Task<bool> ResetAsync(IUserInteractionService messageService = null)
     {
       bool success = await _stateManager.ResetAsync();
 

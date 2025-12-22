@@ -26,7 +26,7 @@ namespace DTO.Device.Breakdown.Capabilities
     /// <returns>
     /// Числовое значение результата измерения (единицы зависят от конкретного режима устройства).
     /// </returns>
-    Task<double> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, IUserMessageService? userMessageService = null);
+    Task<(double value, string unit)> MeasureAsync(double param = 0, double rangeFrom = -1, double rangeTo = -1, bool waitFullTime = false, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Останавливает запущенный тест.
@@ -36,6 +36,6 @@ namespace DTO.Device.Breakdown.Capabilities
     /// <summary>
     /// Применяет напряжение без немедленного выполнения измерения.
     /// </summary>
-    Task ApplyVoltageAsync(IUserMessageService? userMessageService = null);
+    Task ApplyVoltageAsync(IUserInteractionService? userMessageService = null);
   }
 }

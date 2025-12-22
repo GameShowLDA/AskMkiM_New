@@ -286,7 +286,7 @@ namespace UI.Localization {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Поиск.
+        ///   Ищет локализованную строку, похожую на Поиск и замена.
         /// </summary>
         internal static string menu_file_search {
             get {

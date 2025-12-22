@@ -49,7 +49,7 @@ namespace NewCore.Function.GPT.Data
     /// Устанавливает частоту испытаний (50 или 60 Гц).
     /// Выполняет повторную попытку при необходимости.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetFrequencyAsync(int frequency, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetFrequencyAsync(int frequency, IUserInteractionService? userMessageService = null)
     {
       if (frequency != 50 && frequency != 60)
         return (false, "Частота должна быть 50 или 60 Гц.");

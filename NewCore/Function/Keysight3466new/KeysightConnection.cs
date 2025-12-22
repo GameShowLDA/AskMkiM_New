@@ -36,7 +36,7 @@ namespace NewCore.Function.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -56,7 +56,7 @@ namespace NewCore.Function.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -98,7 +98,7 @@ namespace NewCore.Function.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectAsync(IUserMessageService messageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService messageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -127,7 +127,7 @@ namespace NewCore.Function.Keysight3466new
     }
 
     /// <inheritdoc />
-    public Task<bool> ResetAsync(IUserMessageService messageService = null)
+    public Task<bool> ResetAsync(IUserInteractionService messageService = null)
     {
       return Task.FromResult(true);
     }

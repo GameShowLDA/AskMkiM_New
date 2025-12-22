@@ -39,7 +39,7 @@ namespace NewCore.Function.GPT.Managment
     }
 
     /// <inheritdoc />
-    public async Task<(bool Success, string Message)> SetHighResistanceLimitAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetHighResistanceLimitAsync(double value, IUserInteractionService? userMessageService = null)
     {
       if (await _getIsIdleMode())
         return (true, string.Empty);
@@ -71,7 +71,7 @@ namespace NewCore.Function.GPT.Managment
     }
 
     /// <inheritdoc />
-    public async Task<(bool Success, string Message)> SetLowResistanceLimitAsync(double value, IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetLowResistanceLimitAsync(double value, IUserInteractionService? userMessageService = null)
     {
       if (await _getIsIdleMode())
         return (true, string.Empty);

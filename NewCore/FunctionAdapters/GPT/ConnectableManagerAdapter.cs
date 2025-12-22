@@ -24,9 +24,9 @@ namespace NewCore.FunctionAdapters.GPT
     }
 
 
-    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> ConnectAsync(IUserInteractionService messageService = null)
     {
-      var (result, answer) = await _manager.ConnectAsync();
+      var (result, answer) = await _manager.ConnectAsync(messageService);
 
       if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
       {
@@ -41,7 +41,7 @@ namespace NewCore.FunctionAdapters.GPT
       return (result, answer);
     }
 
-    public async Task<bool> DisconnectAsync(IUserMessageService messageService = null)
+    public async Task<bool> DisconnectAsync(IUserInteractionService messageService = null)
     {
       var result = await _manager.DisconnectAsync();
 
@@ -60,7 +60,7 @@ namespace NewCore.FunctionAdapters.GPT
       return result;
     }
 
-    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserMessageService messageService = null)
+    public async Task<(bool Connect, string Answer)> InitializeAsync(IUserInteractionService messageService = null)
     {
       var (result, answer) = await _manager.InitializeAsync(messageService);
 
@@ -75,7 +75,7 @@ namespace NewCore.FunctionAdapters.GPT
       return (result, answer);
     }
 
-    public async Task<bool> ResetAsync(IUserMessageService messageService = null)
+    public async Task<bool> ResetAsync(IUserInteractionService messageService = null)
     {
       var result = await _manager.ResetAsync();
 

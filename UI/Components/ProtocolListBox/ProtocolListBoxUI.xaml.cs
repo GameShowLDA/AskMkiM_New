@@ -1,4 +1,5 @@
 ﻿using DTO.Base.Models;
+using DTO.Enum;
 using DTO.Service;
 using Errors.Models;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ namespace UI.Components.ProtocolListBox
   /// <summary>
   /// Логика взаимодействия для ProtocolListBoxUI.xaml
   /// </summary>
-  public partial class ProtocolListBoxUI : UserControl, IUserMessageService
+  public partial class ProtocolListBoxUI : UserControl, IMessageOutputService
   {
     public ObservableCollection<ShowMessageModel> Messages { get; } = new();
     public string Header { get; set; }
@@ -158,47 +159,6 @@ namespace UI.Components.ProtocolListBox
         return $"{indent}{header}{m.Message} | {m.Time}";
       })));
     }
-
-    public Task<bool> AwaitAdminDecisionAsync(string message)
-    {
-      throw new NotImplementedException();
-    }
-
-    public Task<bool> WaitAdminButtonAsync()
-    {
-      throw new NotImplementedException();
-    }
-
-    public void RegisterRetryAction(Func<Task> retryAction)
-    {
-      return;
-    }
-
-    public async Task TryInvokeRetryAsync()
-    {
-      return;
-    }
-
-    public void ClearRetryAction()
-    {
-      return;
-    }
-
-    public Task<IUserMessageService.UserAction> WaitUserActionAsync(bool loop = false)
-    {
-      return null;
-    }
-
-    public CancellationToken GetCancellationToken()
-    {
-      throw new NotImplementedException();
-    }
-
-    public void AddError(ErrorItem errorItem)
-    {
-      return;
-    }
-
     public int GetLastLineNumber()
     {
       if (Messages.Count > 0)
@@ -208,7 +168,7 @@ namespace UI.Components.ProtocolListBox
       else
       {
         return -1;
-      }
+      } 
     }
 
     public async Task MoveToLineAsync(int lineNumber)

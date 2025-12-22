@@ -23,7 +23,7 @@ namespace NewCore.Function.ManagerChassis
     public PowerManager(IChassisManager managerChassis) => _chassisModel = managerChassis;
 
     /// <inheritdoc />
-    public async Task StartPowerAsync(IUserMessageService? userMessageService = null)
+    public async Task StartPowerAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -35,7 +35,7 @@ namespace NewCore.Function.ManagerChassis
     }
 
     /// <inheritdoc />
-    public async Task StopPowerAsync(IUserMessageService? userMessageService = null)
+    public async Task StopPowerAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {

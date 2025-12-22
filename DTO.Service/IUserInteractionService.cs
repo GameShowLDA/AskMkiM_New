@@ -1,0 +1,31 @@
+﻿using DTO.Base.Models;
+using DTO.Enum;
+using Errors.Models;
+using System.Runtime.CompilerServices;
+
+namespace DTO.Service
+{
+  /// <summary>
+  /// Интерфейс для отображения сообщений пользователю и управления действиями, доступными при ошибках.
+  /// </summary>
+  public interface IUserInteractionService : IMessageOutputService
+  {
+    public IButtonService ButtonService { get; set; }
+
+    /// <summary>
+    /// Ожидает подтверждение действия пользователем (например, нажатием кнопки администратора).
+    /// </summary>
+    /// <returns>True, если пользователь подтвердил действие; иначе — false.</returns>
+    Task<bool> WaitAdminButtonAsync();
+
+    /// <summary>
+    /// Асинхронно ожидает выбора пользователя (повторить, продолжить, завершить) после сообщения.
+    /// </summary>
+    /// <returns>Выбранное пользователем действие.</returns>
+    Task<UserAction> WaitUserActionAsync(bool loop = false, bool deviceTask = false);
+
+    public CancellationToken GetCancellationToken();
+
+    void AddError(ErrorItem errorItem);
+  }
+}

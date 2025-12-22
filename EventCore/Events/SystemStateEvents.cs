@@ -1,4 +1,5 @@
 ﻿using EventCore.Interfaces;
+using System.Reflection.Metadata;
 
 namespace EventCore.Events
 {
@@ -85,6 +86,26 @@ namespace EventCore.Events
       public DebugRightsChanged(bool isAdmin)
       {
         IsDebug = isAdmin;
+      }
+    }
+
+    /// <summary>
+    /// Событие, обозначающее изменение состояния прав администратора.
+    /// </summary>
+    public class ControlProgramActiveChanged : IEvent
+    {
+      /// <summary>
+      /// Указывает, активен ли документ, который можно выполнить.
+      /// </summary>
+      public bool IsControlProgramActive { get; }
+
+      /// <summary>
+      /// Создаёт новое событие изменения изменения видимости кнопки "Выполнить".
+      /// </summary>
+      /// <param name="isControlProgramActive">Новое кнокпи "Выполнить": true — кнокпка активна; false — кнопка скрыта.</param>
+      public ControlProgramActiveChanged(bool isControlProgramActive)
+      {
+        IsControlProgramActive = isControlProgramActive;
       }
     }
   }

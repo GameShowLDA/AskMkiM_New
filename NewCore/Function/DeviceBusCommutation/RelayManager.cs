@@ -27,7 +27,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// </summary>
     /// <param name="numberRelay">Номер реле, которое необходимо замкнуть.</param>
     /// <returns>Результат проверки и выполнения команды.</returns>
-    public async Task<bool> ConnectRelay(int numberRelay, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectRelay(int numberRelay, IUserInteractionService? userMessageService = null)
     {
       if (numberRelay < 0)
       {
@@ -50,7 +50,7 @@ namespace NewCore.Function.DeviceBusCommutation
     /// </summary>
     /// <param name="numberRelay">Номер реле, которое необходимо замкнуть.</param>
     /// <returns>Результат проверки и выполнения команды.</returns>
-    public async Task<bool> DisconnectRelay(int numberRelay, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectRelay(int numberRelay, IUserInteractionService? userMessageService = null)
     {
       if (numberRelay < 0)
       {

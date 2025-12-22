@@ -93,5 +93,27 @@ namespace Errors.Translation
       Code = WarningCode.Gen_DefaultResistainceHighLimit,
       Description = $"В команде {command} значение верхней границы элктрической емкости установлено по умолчанию:{сapacity}."
     };
+
+    /// <summary>
+    /// Предупреждение: значение верхней границы элктрической емкости установлено по умолчанию.
+    /// </summary>
+    public static WarningItem DuplicateKey(int startLineNumber, string command, string key) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = WarningCode.Gen_DuplicateKey,
+      Description = $"В команде {command} найден дублирующийся ключ:{key}."
+    };
+
+    /// <summary>
+    /// Предупреждение: значение верхней границы элктрической емкости установлено по умолчанию.
+    /// </summary>
+    public static WarningItem KeyZR(int startLineNumber, string command) => new()
+    {
+      SourceLineNumber = startLineNumber,
+      Command = command,
+      Code = WarningCode.Gen_KeyZR,
+      Description = $"В команде {command} количество разобщенных цепей было меньше одной. Ключ ЗР был добавлен по умолчанию.",
+    };
   }
 }

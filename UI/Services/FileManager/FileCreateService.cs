@@ -1,4 +1,5 @@
 ﻿using DTO.Base.Models;
+using EventCore.Adapters;
 using System.Windows;
 using UI.Components.ArchiveManager.ArchiveFiles;
 using UI.Components.SearchControls;

@@ -29,7 +29,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <remarks>
     /// Этот метод формирует и отправляет команду на включение измерителя модуля МКР по указанному IP-адресу.
     /// </remarks>
-    public async Task<bool> ConnectMeterAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectMeterAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -48,7 +48,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <remarks>
     /// Этот метод формирует и отправляет команду на отключение измерителя модуля МКР по указанному IP-адресу.
     /// </remarks>
-    public async Task<bool> DisconnectMeterAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectMeterAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {
@@ -67,7 +67,7 @@ namespace NewCore.Function.ModuleRelayControl
     /// <remarks>
     /// Этот метод отправляет команду на проверку состояния измерителя и анализирует его ответ.
     /// </remarks>
-    public async Task<bool> GetMeterResponseAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> GetMeterResponseAsync(IUserInteractionService? userMessageService = null)
     {
       if (await GetIsIdleModeEnabled())
       {

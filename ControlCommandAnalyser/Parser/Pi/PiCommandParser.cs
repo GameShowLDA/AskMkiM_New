@@ -1,13 +1,14 @@
-﻿using Errors.Translation;
-using ControlCommandAnalyser.Model;
+﻿using ControlCommandAnalyser.Model;
 using ControlCommandAnalyser.Model.Chains;
 using ControlCommandAnalyser.Parser.HelperParserParametr;
 using ControlCommandAnalyser.Parser.Si; // Для LoggerUtility
 using DTO.Device.Breakdown;
 using DTO.Enum;
+using Errors.Translation;
 using System.Text.RegularExpressions;
 using Utilities;
 using Utilities.Extensions;
+using static DTO.Enum.ThemeEnums;
 
 namespace ControlCommandAnalyser.Parser.Pi
 {
@@ -109,30 +110,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         // --- парсим ПИ только из remainderPi ---
         string? voltage = null, time = null, unit = null, unitTime = null;
 
-        var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainderPi, model);
-
-        foreach (var (key, hasError) in result)
-        {
-          if (hasError)
-          {
-            model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-          }
-          else
-          {
-            model.AlgorithmKey.Add(key);
-            LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-          }
-        }
-
-        // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-        foreach (var (key, hasError) in result)
-        {
-          remainderPi = Regex.Replace(
-          remainderPi,
-          $@"\b{Regex.Escape(key)}\s*,?",
-          "",
-          RegexOptions.IgnoreCase);
-        }
+        remainderPi = KeyParser.ParseKeys(numberLine, model, remainderPi);
 
         // Парсим параметры
         (voltage, unit, remainderPi) = CommonParameterParser.VoltageParser.ParseVoltage(remainderPi);
@@ -199,7 +177,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         }
 
         model.Time = string.IsNullOrEmpty(time) || time == null ? 1 : CommonParameterParser.ParseToDouble(time);
-        if(string.IsNullOrEmpty(time) || time == null)
+        if (string.IsNullOrEmpty(time) || time == null)
         {
           model.TimeSource = "1c";
           model.Warnings.Add(GeneralWarnings.DefaultTime(model.StartLineNumber, $"{commandNumber} {mnemonic}", model.TimeSource));
@@ -234,7 +212,7 @@ namespace ControlCommandAnalyser.Parser.Pi
           model.PointsSourse = pointsBlob;
           LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
 
           // Поднимем ошибки парсера точек
           if (pointErrors?.Count > 0)
@@ -269,8 +247,16 @@ namespace ControlCommandAnalyser.Parser.Pi
             || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
           {
             // находим цепи точек из предыдущей команды проверки
-            model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme, model.SiCommand);
-            model.SiCommand.Scheme = model.Scheme;
+            var newScheme = CommandsModel.CheckKeyP(model, model.Scheme, model.SiCommand);
+            if (newScheme != null)
+            {
+              model.Scheme = newScheme;
+              model.SiCommand.Scheme = model.Scheme;
+            }
+            else
+            {
+              model.Errors.Add(PiErrors.PreviousCommandHasNoPoints(numberLine, $"{commandNumber} {mnemonic}"));
+            }
           }
           else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
             || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
@@ -283,8 +269,16 @@ namespace ControlCommandAnalyser.Parser.Pi
           || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
-          model.Scheme = CommandsModel.CheckKeyP(model.SiCommand, model.Scheme);
-          model.SiCommand.Scheme = model.Scheme;
+          var newScheme = CommandsModel.CheckKeyP(model, model.Scheme, model.SiCommand);
+          if (newScheme != null)
+          {
+            model.Scheme = newScheme;
+            model.SiCommand.Scheme = model.Scheme;
+          }
+          else
+          {
+            model.Errors.Add(PiErrors.PreviousCommandHasNoPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          }
         }
         else if (model.SiCommand.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString())
           || model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
@@ -296,7 +290,7 @@ namespace ControlCommandAnalyser.Parser.Pi
         {
           // Во всём теле команды не нашли пары '*...*' → считаем, что точек нет
           LoggerUtility.LogWarning($"Во всём теле команды не найден блок точек '*...*' (строка {numberLine}): {commandNumber} {mnemonic}");
-          model.Errors.Add(IeErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          model.Errors.Add(PiErrors.EmptyPoints(numberLine, $"{commandNumber} {mnemonic}"));
         }
 
         CheckUnparsedParameters(commandNumber, mnemonic, numberLine, model, remainderPi);

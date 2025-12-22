@@ -9,7 +9,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
 {
   internal static class SwitchingSelfControl
   {
-    static internal async Task CheckSwitching(CancellationToken cancellationToken, IUserMessageService messageService, IFastMeter fastMeter, IPowerSourceModule powerSourceModule, ISwitchingDevice switchingDevice)
+    static internal async Task CheckSwitching(CancellationToken cancellationToken, IUserInteractionService messageService, IFastMeter fastMeter, IPowerSourceModule powerSourceModule, ISwitchingDevice switchingDevice)
     {
 
       await messageService.ShowMessageAsync(new ShowMessageModel("Начало проверки коммутации"));
@@ -69,7 +69,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
       await powerSourceModule.ConnectableManager.ResetAsync(messageService);
     }
 
-    static private async Task CheckBus(IUserMessageService messageService, SwitchingBus switchingBus, ISwitchingDevice switchingDevice, IPowerSourceModule powerSource, IFastMeter fastMeter)
+    static private async Task CheckBus(IUserInteractionService messageService, SwitchingBus switchingBus, ISwitchingDevice switchingDevice, IPowerSourceModule powerSource, IFastMeter fastMeter)
     {
       var busSwitch = GetAbPair(switchingBus);
       if (busSwitch == null)

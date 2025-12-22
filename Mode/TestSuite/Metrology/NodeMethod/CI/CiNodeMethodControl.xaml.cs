@@ -74,7 +74,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
       public CiNodeMethod() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null)
       {
         var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
         string name = breakDown.Name;
@@ -108,16 +108,15 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
           var connectResult = await GetNextPoint(protocolUI);
           if (connectResult.Step)
           {
-            await protocolUI.ShowMessageAsync(new ShowMessageModel($"Подключение точки {connectResult.PointModel.PointNumber} к шине {AssignedBus}", type: ShowMessageModel.MessageType.Success));
             await protocolUI.ShowMessageAsync(new ShowMessageModel("Измерение сопротивления изоляции"));
 
             await UserActionHelper.RunWithUserRepeatAsync(async () =>
             {
               token.ThrowIfCancellationRequested();
-              var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, 1000, 60000, protocolUI);
+              var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, 1000, 60000, userMessageService: protocolUI);
               var type = ShowMessageModel.MessageType.Success;
 
-              if (answer < dataModel.Param)
+              if (answer.value < dataModel.Param)
               {
                 type = ShowMessageModel.MessageType.Error;
               }
@@ -135,7 +134,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod.CI
         }
       }
 
-      public override async Task FinalizeAsync(IUserMessageService messageService)
+      public override async Task FinalizeAsync(IUserInteractionService messageService)
       {
         await base.FinalizeAsync(messageService);
       }

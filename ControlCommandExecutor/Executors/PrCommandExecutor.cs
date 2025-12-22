@@ -28,7 +28,7 @@ namespace ControlCommandExecutor.Executors
     public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
     static private PointModel _basePoint;
     private double firstValue = 0;
-    private double secondValue = 100000;
+    private double secondValue = -1;
     private bool continuityManager = true;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
@@ -105,7 +105,7 @@ namespace ControlCommandExecutor.Executors
       methodExecutionContext.MessageService = context.Console;
       methodExecutionContext.Resistance = resistance;
       methodExecutionContext.LowerLimit = command.LowerLimitResistance.Value;
-      methodExecutionContext.HigherLimit = command.HigherLimitResistance.Value;
+      methodExecutionContext.HigherLimit = command.HigherLimitResistance != null ? command.HigherLimitResistance.Value : -1;
       methodExecutionContext.Unit = "Ом";
       methodExecutionContext.UnitMnemonic = "R";
 
@@ -169,7 +169,7 @@ namespace ControlCommandExecutor.Executors
     }
 
 
-    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
+    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserInteractionService userMessageService)
     {
       foreach (var module in relaySwitchModules)
       {
@@ -184,7 +184,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserMessageService userMessageService)
+    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserInteractionService userMessageService)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectMultimeter(SwitchingBusNew.AB1, userMessageService), userMessageService))
       {
@@ -192,7 +192,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingMeter(IFastMeter meter, IUserMessageService userMessageService)
+    private async Task SettingMeter(IFastMeter meter, IUserInteractionService userMessageService)
     {
       string name = meter.Name;
       int numberChassis = meter.NumberChassis;
@@ -221,7 +221,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double resistance, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
 
@@ -240,7 +240,7 @@ namespace ControlCommandExecutor.Executors
             answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance);
           }
           else
-          { 
+          {
             answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
           }
         }
@@ -268,7 +268,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, double)> NodeFullPerformMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private async Task<(bool, double)> NodeFullPerformMeasurementAsync(double resistance, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = -1;
@@ -281,7 +281,7 @@ namespace ControlCommandExecutor.Executors
         else
         {
           if (continuityManager)
-          { 
+          {
             answer = await fastMeter.ContinuityManager.CheckContinuityAsync(resistance, messageService);
           }
           else
@@ -289,11 +289,12 @@ namespace ControlCommandExecutor.Executors
             answer = await fastMeter.ResistanceManager.MeasureResistanceAsync(resistance);
           }
         }
-        var result = answer >= firstValue && answer <= secondValue;
+
+        bool result = secondValue != -1 ? answer >= firstValue && answer <= secondValue : answer >= firstValue;
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
         {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (answer >= firstValue && answer <= secondValue ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
 
         if (!result)
@@ -313,7 +314,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private async Task<(bool, double)> ConnectedPointCheckerMeasurementAsync(double resistance, IUserMessageService messageService, CancellationToken cancellationToken)
+    private async Task<(bool, double)> ConnectedPointCheckerMeasurementAsync(double resistance, IUserInteractionService messageService, CancellationToken cancellationToken)
     {
       var fastMeter = EquipmentService.GetFastMeterOrThrow(messageService);
       double answer = -1;

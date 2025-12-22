@@ -77,7 +77,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
       public TestMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null)
       {
         var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
         var name = breakDown.Name;
@@ -98,7 +98,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
       }
 
       /// <inheritdoc />
-      public override async Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel)
+      public override async Task PerformMeasurement(IUserInteractionService messageService, DataModel dataModel)
       {
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
@@ -107,9 +107,9 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
           var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
           await messageService.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
 
-          var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, messageService);
+          var answer = await breakDown.IrManger.Measure.MeasureAsync(dataModel.Param, dataModel.Param, 60000, userMessageService: messageService);
           var type = ShowMessageModel.MessageType.Success;
-          if (answer < dataModel.Param)
+          if (answer.value < dataModel.Param)
           {
             type = ShowMessageModel.MessageType.Error;
           }
@@ -119,7 +119,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.CI
         }, messageService);
       }
 
-      public override async Task FinalizeAsync(IUserMessageService messageService)
+      public override async Task FinalizeAsync(IUserInteractionService messageService)
       {
         await base.FinalizeAsync(messageService);
       }

@@ -37,7 +37,7 @@ namespace NewCore.Function.GPT.Managment
     /// <summary>
     /// Устанавливает режим прибора и выполняет считывание конфигурации при успехе.
     /// </summary>
-    public async Task<(bool Success, string Message)> SetModeAsync(IUserMessageService? userMessageService = null)
+    public async Task<(bool Success, string Message)> SetModeAsync(IUserInteractionService? userMessageService = null)
     {
       var result = await ModeHelper.SetModeAsync(_gptModel, _mode, _delay);
 

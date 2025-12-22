@@ -83,16 +83,16 @@ namespace ControlCommandAnalyser
 
       for (int i = 0; i < count; i++)
       {
-        var point = chainModels.PointModels[i].Mnemonic;
+        var point = chainModels.PointModels[i];
 
         var machineAddress = await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMachineAddressVisibilityAsync() ? $" [{point.ToString()}]" : string.Empty;
-        result += $"*{point}{machineAddress}*";
+        result += $"*{point.Mnemonic}{machineAddress}*";
       }
 
       return result;
     }
 
-    public static async Task MessageResult(List<ShowMessageModel> showMessageModels, IUserMessageService messageService)
+    public static async Task MessageResult(List<ShowMessageModel> showMessageModels, IMessageOutputService messageService)
     {
       if (showMessageModels.Count > 0)
       {

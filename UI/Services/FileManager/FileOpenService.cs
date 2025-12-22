@@ -1,5 +1,8 @@
-﻿using DTO.Base.Models;
+﻿using AppConfiguration;
+using DTO.Base.Models;
 using EventCore.Adapters;
+using EventCore.Events;
+using EventCore.Services;
 using Message;
 using System;
 using System.Collections.Generic;
@@ -10,7 +13,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using UI.Components.ArchiveManager.ArchiveFiles;
 using UI.Components.SearchControls;
+using UI.Controls;
+using UI.Controls.Runner;
 using UI.Controls.TextEditor;
+using UI.Windows.WpfDocking.Windows.Docking;
 using Utilities.Services;
 using static DTO.Enum.FileEnums;
 using static Utilities.LoggerUtility;
@@ -102,6 +108,7 @@ namespace UI.Services.FileManager
       if (existingItem == null)
         return false;
 
+      existingItem.IsActiveDocument = true;
       _fileManager.DockItemService.ShowDockItem(container, existingItem);
       _fileManager.ControlManagerService.ShowEditorContainer(container, EditorType.TextEditor);
       return true;

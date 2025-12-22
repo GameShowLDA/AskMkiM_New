@@ -77,7 +77,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
       public PiACWMethodExecutorMeasurement() : base() { }
 
       /// <inheritdoc />
-      public override async Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null)
+      public override async Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null)
       {
         var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
         var name = breakDown.Name;
@@ -104,7 +104,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
       }
 
       /// <inheritdoc />
-      public override async Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel)
+      public override async Task PerformMeasurement(IUserInteractionService messageService, DataModel dataModel)
       {
         var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
 
@@ -114,7 +114,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
           messageService.GetCancellationToken().ThrowIfCancellationRequested();
           var answer = await breakDown.AcwManger.Measure.MeasureAsync(dataModel.Param, userMessageService: messageService);
           var type = ShowMessageModel.MessageType.Success;
-          if (answer > dataModel.Param)
+          if (answer.value > dataModel.Param)
           {
             type = ShowMessageModel.MessageType.Error;
           }
@@ -125,7 +125,7 @@ namespace Mode.TestSuite.Metrology.MethodExecutor.PI
         }, messageService);
       }
 
-      public override async Task FinalizeAsync(IUserMessageService messageService)
+      public override async Task FinalizeAsync(IUserInteractionService messageService)
       {
         await base.FinalizeAsync(messageService);
       }

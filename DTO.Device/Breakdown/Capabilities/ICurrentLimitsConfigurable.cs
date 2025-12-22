@@ -24,7 +24,7 @@ namespace DTO.Device.Breakdown.Capabilities
     ///   <item><description><c>string Message</c> — сообщение об ошибке, если установка не удалась.</description></item>
     /// </list>
     /// </returns>
-    Task<(bool Success, string Message)> SetHighCurrentLimitAsync(double value, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetHighCurrentLimitAsync(double value, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает текущее установленное значение верхнего предела тока.
@@ -53,7 +53,7 @@ namespace DTO.Device.Breakdown.Capabilities
     ///   <item><description><c>string Message</c> — сообщение об ошибке, если установка не удалась.</description></item>
     /// </list>
     /// </returns>
-    Task<(bool Success, string Message)> SetLowCurrentLimitAsync(double value, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetLowCurrentLimitAsync(double value, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает текущее установленное значение нижнего предела тока.

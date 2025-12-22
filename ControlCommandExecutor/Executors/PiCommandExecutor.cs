@@ -110,13 +110,13 @@ namespace ControlCommandExecutor.Executors
       else if (command.AlgorithmKey.Contains("Т1"))
       {
         BaseStrategies.NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await BaseStrategies.PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, 80);
+        var errMes = await BaseStrategies.PairwiseFirstPointChecker.CheckSequenceAsync(command.Scheme, measure, context.CommandExecutionManager, command, context.Console, 80, command.VoltageType);
         errorMessage.AddRange(errMes);
       }
       else
       {
         BaseStrategies.NodeAccumulationChecker.PerformMeasurementAsync measure = NodeAccumulationPerformMeasurementAsync;
-        var errMes = await BaseStrategies.NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), 80);
+        var errMes = await BaseStrategies.NodeAccumulationChecker.CheckSequenceAsync(command.Scheme, context.CommandExecutionManager, command, measure, context.Console, context.Console.GetCancellationToken(), 80, command.VoltageType);
         errorMessage.AddRange(errMes);
       }
 
@@ -143,7 +143,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
+    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserInteractionService userMessageService)
     {
       foreach (var module in relaySwitchModules)
       {
@@ -158,7 +158,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserMessageService userMessageService)
+    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserInteractionService userMessageService)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectBreakdownTester(userMessageService), userMessageService))
       {
@@ -166,7 +166,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingBreakdown(IBreakdownTester breakDown, IUserMessageService userMessageService, double time, double voltage, VoltageEnum.Type voltageType)
+    private async Task SettingBreakdown(IBreakdownTester breakDown, IUserInteractionService userMessageService, double time, double voltage, VoltageEnum.Type voltageType)
     {
       string name = breakDown.Name;
       int numberChassis = breakDown.NumberChassis;
@@ -255,7 +255,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private static async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.ACW)
+    private static async Task<(bool, string)> NodeAccumulationPerformMeasurementAsync(double value, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type type = VoltageEnum.Type.DCW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
 
@@ -263,7 +263,7 @@ namespace ControlCommandExecutor.Executors
       {
         if (type == VoltageEnum.Type.ACW)
         {
-          var answer = await breadDown.AcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
+          var answer = (await breadDown.AcwManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
           if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
           {
@@ -273,7 +273,7 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          var answer = await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
+          var answer = (await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
           var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer < value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
           await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения прочности изоляции", message: $"{answer} мА", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
           return (result, answer.ToString());
@@ -289,7 +289,7 @@ namespace ControlCommandExecutor.Executors
     /// Предполагается, что коммутация завершена заранее.
     /// </summary>
     /// <returns>Задача, представляющая измерение.</returns>
-    private static async Task<(bool, double)> NodeFullPerformMeasurementAsync(double value, IUserMessageService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.ACW)
+    private static async Task<(bool, double)> NodeFullPerformMeasurementAsync(double value, IUserInteractionService messageService, CancellationToken cancellationToken, VoltageEnum.Type typeVoltage = VoltageEnum.Type.DCW)
     {
       var breadDown = await EquipmentService.GetBreakdownTesterOrThrow(messageService);
       double answer = -1;
@@ -302,7 +302,7 @@ namespace ControlCommandExecutor.Executors
         if (typeVoltage == VoltageEnum.Type.ACW)
         {
           answer = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ?
-                   await breadDown.AcwManger.Measure.MeasureAsync(10, userMessageService: messageService) :
+                   (await breadDown.AcwManger.Measure.MeasureAsync(10, userMessageService: messageService)).value :
                    !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled() ? 10 : new Random().Next(80, 150);
 
           var type = ShowMessageModel.MessageType.Success;
@@ -317,7 +317,7 @@ namespace ControlCommandExecutor.Executors
         }
         else
         {
-          answer = await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService);
+          answer = (await breadDown.DcwManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
           var type = ShowMessageModel.MessageType.Success;
           if (answer >= value)
           {

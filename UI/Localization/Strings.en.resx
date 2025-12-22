@@ -166,7 +166,7 @@
     <value>Save As</value>
   </data>
   <data name="menu.file.search" xml:space="preserve">
-    <value>Search</value>
+    <value>Search and replace</value>
   </data>
   <data name="menu.settings" xml:space="preserve">
     <value>Settings</value>

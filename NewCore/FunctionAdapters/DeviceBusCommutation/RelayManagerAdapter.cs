@@ -25,7 +25,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectRelay(int numberRelay, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectRelay(int numberRelay, IUserInteractionService? userMessageService = null)
     {
       var result = await _relayManager.ConnectRelay(numberRelay);
 
@@ -38,7 +38,7 @@ namespace NewCore.FunctionAdapters.DeviceBusCommutation
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectRelay(int numberRelay, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectRelay(int numberRelay, IUserInteractionService? userMessageService = null)
     {
       var result = await _relayManager.DisconnectRelay(numberRelay);
 

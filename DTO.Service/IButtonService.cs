@@ -35,5 +35,4 @@
     /// </summary>
     void ShowButtonsOnPause();
   }
-
 }

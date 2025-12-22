@@ -56,6 +56,7 @@ namespace MainWindowProgram.Events
     {
       EventAggregator.Subscribe<SystemStateEvents.LockedChanged>(e => OnLockedChanged(e.IsLocked));
       EventAggregator.Subscribe<SystemStateEvents.AdminRightsChanged>(e => OnAdminRightsChanged(e.IsAdmin));
+      EventAggregator.Subscribe<SystemStateEvents.ControlProgramActiveChanged>(e => OnControlProgramActiveRightsChanged(e.IsControlProgramActive));
 
       ExecutionConfig.IdleModeChange += OnIdleModeChange;
 
@@ -63,6 +64,7 @@ namespace MainWindowProgram.Events
       DebugCommand.DebugModeChanged += DebugModeChanged;
       AdminCommand.PauseInStopChanged += AdminCommand_PauseInStopChanged;
       AdminCommand.PowerChanged += AdminCommand_PowerChanged;
+
       _usbMonitorService.UsbMonitorService.AdminRightsChanged += OnAdminRightsChangedHandler;
       _mainWindow.PreviewKeyDown += OnKeyDown;
 
@@ -185,6 +187,29 @@ namespace MainWindowProgram.Events
         {
           _mainWindow.Admin.Visibility = Visibility.Collapsed;
         }
+      });
+    }
+
+    /// <summary>
+    /// Обрабатывает какой файл открыт.
+    /// </summary>
+    /// <param name="isControlProgramActive">Флаг необходимости отображения кнопки выполнения: <c>true</c> — отображать; <c>false</c> — не отображать.</param>
+    private void OnControlProgramActiveRightsChanged(bool isControlProgramActive)
+    {
+      Application.Current.Dispatcher.Invoke(() =>
+      {
+        var visibility = isControlProgramActive ? Visibility.Visible : Visibility.Collapsed;
+        var enabled = isControlProgramActive;
+
+        _mainWindow.Translation.Visibility = visibility;
+        _mainWindow.Translation.IsEnabled = enabled;
+        _mainWindow.Build.Visibility = visibility;
+        _mainWindow.Build.IsEnabled = enabled;
+        _mainWindow.Run.Visibility = visibility;
+        _mainWindow.Run.IsEnabled = enabled;
+        _mainWindow.RunStepByStepMode.Visibility = visibility;
+        _mainWindow.RunStepByStepMode.IsEnabled = enabled;
+
       });
     }
 

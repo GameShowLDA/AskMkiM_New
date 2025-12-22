@@ -79,31 +79,9 @@ namespace ControlCommandAnalyser.Parser.Eht
       string? lowerLimitResistance = null, higherLimitResistance = null, unit = null,
         time = string.Empty, unitTime = string.Empty,
         cabelLimitResistance = null, cabelUnit = null;
+      
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
-
-      foreach (var (key, hasError) in result)
-      {
-        if (hasError)
-        {
-          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-        }
-        else
-        {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-        }
-      }
-
-      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-      foreach (var (key, hasError) in result)
-      {
-        remainder = Regex.Replace(
-        remainder,
-        $@"\b{Regex.Escape(key)}\s*,?",
-        "",
-        RegexOptions.IgnoreCase);
-      }
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRangeWithR(remainder);
       LoggerUtility.LogDebug($"После парсинга напряжения: нижняя граница сопртивления='{lowerLimitResistance}',верхняя граница сопртивления='{higherLimitResistance}', единица измерения = '{unit}' remainder='{remainder}'");
 
@@ -126,15 +104,19 @@ namespace ControlCommandAnalyser.Parser.Eht
       // --- 1️⃣ Парсим входные значения, если они заданы ---
       double? lower = !string.IsNullOrWhiteSpace(lowerLimitResistance)
           ? CommonParameterParser.ParseToDouble(lowerLimitResistance)
-          : null;
+          : 0;
 
       double? higher = !string.IsNullOrWhiteSpace(higherLimitResistance)
           ? CommonParameterParser.ParseToDouble(higherLimitResistance)
-          : null;
+          : 1;
 
       double? cabelLimit = !string.IsNullOrWhiteSpace(cabelLimitResistance)
           ? CommonParameterParser.ParseToDouble(cabelLimitResistance)
           : null;
+      if (string.IsNullOrEmpty(unit))
+      {
+        unit = defaultUnit;
+      }
 
       if (lower.HasValue && higher.HasValue)
       {
@@ -183,7 +165,7 @@ namespace ControlCommandAnalyser.Parser.Eht
         if (lower == null)
         {
           lowerFinal = defaultLower;
-          model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unitFinal}"));
+          //model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unitFinal}"));
         }
         else
         {
@@ -256,7 +238,7 @@ namespace ControlCommandAnalyser.Parser.Eht
         model.PointsSourse = pointsBlob;
         LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-        var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+        var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
 
         // Поднимем ошибки парсера точек
         if (pointErrors?.Count > 0)
@@ -315,5 +297,7 @@ namespace ControlCommandAnalyser.Parser.Eht
 
       return model;
     }
+
+    
   }
 }

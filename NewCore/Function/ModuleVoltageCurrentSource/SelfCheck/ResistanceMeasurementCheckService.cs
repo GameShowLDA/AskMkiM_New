@@ -40,7 +40,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// <param name="relayModule">Модуль коммутации (реле, резисторы и т.д.).</param>
     static internal async Task PerformResistanceCheckAsync(
         CancellationToken cancellationToken,
-        IUserMessageService messageService,
+        IUserInteractionService messageService,
         IFastMeter fastMeter,
         IPowerSourceModule powerSource,
         ISwitchingDevice relayModule)
@@ -104,7 +104,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// Подключает шунтирующие шины A1 и B1 к положительной и отрицательной полярности соответственно.
     /// </summary>
     /// <param name="powerSourceModule">Модуль источника питания и тока.</param>
-    static private async Task ConnectShuntAndPowerAsync(IPowerSourceModule powerSourceModule, IUserMessageService messageService)
+    static private async Task ConnectShuntAndPowerAsync(IPowerSourceModule powerSourceModule, IUserInteractionService messageService)
     {
       await powerSourceModule.BusManager.ConnectBusToPositiveAsync(SwitchingBus.A1, messageService);
       await powerSourceModule.BusManager.ConnectBusToNegativeAsync(SwitchingBus.B1, messageService);
@@ -115,7 +115,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// </summary>
     /// <param name="relayModule">Модуль коммутации (реле, резисторы и т.д.).</param>
     /// <param name="messageService">Сервис отображения сообщений пользователю.</param>
-    static private async Task ConnectBlockingRelaysAsync(ISwitchingDevice relayModule, IUserMessageService messageService)
+    static private async Task ConnectBlockingRelaysAsync(ISwitchingDevice relayModule, IUserInteractionService messageService)
     {
       await messageService.ShowMessageAsync(new ShowMessageModel("Подключение блокировочных реле на УКШ."));
       var relays = relayModule.SelfTestManager.GetValidBusContacts(SwitchingDeviceTypeConnector.BlockingRelay, messageService);
@@ -141,7 +141,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// </summary>
     /// <param name="relayModule">Модуль коммутации (реле, резисторы и т.д.).</param>
     /// <param name="resistorNumber">Номер резистора для подключения.</param>
-    static private async Task ConnectResistorByNumberAsync(ISwitchingDevice relayModule, int resistorNumber, IUserMessageService messageService)
+    static private async Task ConnectResistorByNumberAsync(ISwitchingDevice relayModule, int resistorNumber, IUserInteractionService messageService)
     {
       await relayModule.ResistorManager.ConnectResistor(resistorNumber.ToString(), messageService);
     }
@@ -151,7 +151,7 @@ namespace NewCore.Function.ModuleVoltageCurrentSource.SelfCheck
     /// </summary>
     /// <param name="relayModule">Модуль коммутации (реле, резисторы и т.д.).</param>
     /// <param name="resistorNumber">Номер резистора для отключения.</param>
-    static private async Task DisconnectResistorByNumberAsync(ISwitchingDevice relayModule, int resistorNumber, IUserMessageService messageService)
+    static private async Task DisconnectResistorByNumberAsync(ISwitchingDevice relayModule, int resistorNumber, IUserInteractionService messageService)
     {
       await relayModule.ResistorManager.DisconnectResistor(resistorNumber.ToString(), messageService);
     }

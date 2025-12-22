@@ -35,8 +35,8 @@ namespace UI.Controls.ErrorList
       DataContext = this;
       EventAggregator.Subscribe<SystemStateEvents.DebugRightsChanged>(e => DebugChanged(e.IsDebug));
       if (AppConfiguration.AdminConfig.GetDebugRights())
-      { 
-          DebugColumn.Visibility = Visibility.Visible;
+      {
+        DebugColumn.Visibility = Visibility.Visible;
       }
 
       // Регистрируем обработчик движения мыши
@@ -105,7 +105,7 @@ namespace UI.Controls.ErrorList
       if (!_errorsHidden)
         Items.Add(error);
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ namespace UI.Controls.ErrorList
       if (!_warningsHidden)
         Items.Add(warning);
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     /// <summary>
@@ -134,7 +134,7 @@ namespace UI.Controls.ErrorList
           Items.Add(err);
       }
 
-      UpdateButtons();
+      ApplyInitialButtonState();
     }
 
     /// <summary>
@@ -150,15 +150,25 @@ namespace UI.Controls.ErrorList
           Items.Add(warn);
       }
 
+      ApplyInitialButtonState();
+    }
+
+    public void ClearAll()
+    {
+      _allIssues.Clear();
+      Items.Clear();
+
+      _errorTotal = 0;
+      _warningTotal = 0;
+
       UpdateButtons();
     }
+
 
     /// <summary>
     /// Событие вызывается при двойном клике по строке с ошибкой или предупреждением.
     /// </summary>
     public event Action<IDisplayIssue>? ItemDoubleClicked;
-
-
 
     private void ApplyFilter()
     {
@@ -194,7 +204,7 @@ namespace UI.Controls.ErrorList
 
       _warningsHidden = !(btn.IsChecked == true);
       ApplyFilter();
-      
+
       e.Handled = true;
     }
 
@@ -253,7 +263,7 @@ namespace UI.Controls.ErrorList
 
     private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-      if (sender is DataGrid grid && grid.SelectedItem is ErrorItem selectedError)
+      if (sender is DataGrid grid && grid.SelectedItem is IDisplayIssue selectedError)
       {
         ItemDoubleClicked?.Invoke(selectedError);
       }

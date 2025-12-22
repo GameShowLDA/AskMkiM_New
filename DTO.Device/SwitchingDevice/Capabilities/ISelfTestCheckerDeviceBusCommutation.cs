@@ -17,7 +17,7 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// <param name="selectedType">Выбранное значение перечисления.</param>
     /// <param name="device">Устройство коммутации шин (необязательно).</param>
     /// <param name="meter">Измеритель (необязательно).</param>
-    Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserMessageService? userMessageService = null, ISwitchingDevice device = null, IFastMeter meter = null);
+    Task StartSelfCheck(CancellationToken cancellationToken, System.Enum selectedType, IUserInteractionService? userMessageService = null, ISwitchingDevice device = null, IFastMeter meter = null);
 
     /// <summary>
     /// Выполняет проверку цепи самоконтроля.
@@ -26,14 +26,14 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// <param name="busContact">Выбор шины и контакта.</param>
     /// <param name="action">Действие (1 - замкнуть, 2 - разомкнуть).</param>
     /// <returns><c>true</c>, если команда успешно отправлена, иначе <c>false</c>.</returns>
-    Task<bool> ExecuteSelfTestAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int busContact, int action, IUserMessageService? userMessageService = null);
+    Task<bool> ExecuteSelfTestAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int busContact, int action, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает список допустимых контактов для указанного типа теста.
     /// </summary>
     /// <param name="testType">Тип проверки.</param>
     /// <returns>Список номеров контактов или <c>null</c>, если данные отсутствуют.</returns>
-    List<int>? GetValidBusContacts(SwitchingDeviceTypeConnector testType, IUserMessageService? userMessageService = null);
+    List<int>? GetValidBusContacts(SwitchingDeviceTypeConnector testType, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает название цепи по её типу.
@@ -41,7 +41,7 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// <param name="testType">Тип проверки.</param>
     /// <param name="busContact">Выбор шины и контакта.</param>
     /// <returns>Возвращает название цепочки по её типу.</returns>
-    string GetCircuitName(SwitchingDeviceTypeConnector testType, int busContact, IUserMessageService? userMessageService = null);
+    string GetCircuitName(SwitchingDeviceTypeConnector testType, int busContact, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает количество реле в проверяемой цепи.
@@ -49,7 +49,7 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// <param name="testType">Тип проверки.</param>
     /// <param name="busContact">Выбор шины и контакта.</param>
     /// <returns>Количество реле.</returns>
-    Task<int> GetRelayCountAsync(SwitchingDeviceTypeConnector testType, int busContact, IUserMessageService? userMessageService = null);
+    Task<int> GetRelayCountAsync(SwitchingDeviceTypeConnector testType, int busContact, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Управляет реле в цепи самоконтроля.
@@ -59,7 +59,7 @@ namespace DTO.Device.SwitchingDevice.Capabilities
     /// <param name="busContact">Выбор шины и контакта.</param>
     /// <param name="action">Действие (1 - замкнуть, 2 - разомкнуть).</param>
     /// <returns><c>true</c>, если команда успешно отправлена, иначе <c>false</c>.</returns>
-    Task<bool> ControlRelayAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int relayNumber, int busContact, int action, IUserMessageService? userMessageService = null);
+    Task<bool> ControlRelayAsync(CancellationToken cancellationToken, SwitchingDeviceTypeConnector testType, int relayNumber, int busContact, int action, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Возвращает список поддерживаемых значений перечисления.

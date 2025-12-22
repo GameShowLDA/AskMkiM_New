@@ -155,33 +155,19 @@ namespace Mode.TestSuite.Metrology.NodeMethod
       if (oldPoint != null)
       {
         var moduleForOldPoint = relayModules.FirstOrDefault(module => module.NumberChassis == oldPoint.DeviceNumber && module.Number == oldPoint.ModuleNumber);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel($"Переподключение точки {oldPoint.DeviceNumber}.{oldPoint.ModuleNumber}.{oldPoint.PointNumber} с шины {AssignedBus} к шине {OppositeBus}"));
 
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          bool error = false;
-          error = await moduleForOldPoint.PointManager.DisconnectRelayAsync(AssignedBus, oldPoint.PointNumber, protocolUI);
-          if (!error)
-          {
-            error = await moduleForOldPoint.PointManager.ConnectRelayAsync(OppositeBus, oldPoint.PointNumber, protocolUI);
-          }
-          return error;
+          return await moduleForOldPoint.PointManager.ConnectingPointToNewBus(OppositeBus, oldPoint.PointNumber, protocolUI); 
         }, protocolUI);
       }
 
       if (newPoint != null)
       {
         var moduleForNewPoint = relayModules.FirstOrDefault(module => module.NumberChassis == newPoint.DeviceNumber && module.Number == newPoint.ModuleNumber);
-        await protocolUI.ShowMessageAsync(new ShowMessageModel($"Переподключение точки {newPoint.DeviceNumber}.{newPoint.ModuleNumber}.{newPoint.PointNumber} с шины {OppositeBus} к шине {AssignedBus}"));
         await UserActionHelper.RunWithUserRepeatAsync(async () =>
         {
-          bool error = false;
-          error = await moduleForNewPoint.PointManager.DisconnectRelayAsync(OppositeBus, newPoint.PointNumber, protocolUI);
-          if (!error)
-          {
-            error = await moduleForNewPoint.PointManager.ConnectRelayAsync(AssignedBus, newPoint.PointNumber, protocolUI);
-          }
-          return error;
+          return await moduleForNewPoint.PointManager.ConnectingPointToNewBus(AssignedBus, newPoint.PointNumber, protocolUI);
         }, protocolUI);
       }
     }
@@ -216,7 +202,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// <summary>
     /// Завершает тест, выполняя очистку и отключение оборудования.
     /// </summary>
-    public virtual async Task FinalizeAsync(IUserMessageService messageService)
+    public virtual async Task FinalizeAsync(IUserInteractionService messageService)
     {
       await NewCore.Communication.DeviceCommandSender.ResetAllSystem();
     }
@@ -225,7 +211,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// Проверяет и подключает все необходимые устройства перед выполнением теста.
     /// </summary>
     /// <returns>Задача, представляющая операцию подключения.</returns>
-    public virtual async Task<(bool Connect, string Message)> ConnectDevicesAsync(IUserMessageService messageService)
+    public virtual async Task<(bool Connect, string Message)> ConnectDevicesAsync(IUserInteractionService messageService)
     {
       await messageService.ShowMessageAsync(new ShowMessageModel("Инициализация оборудования", type: ShowMessageModel.MessageType.Info));
 
@@ -238,6 +224,8 @@ namespace Mode.TestSuite.Metrology.NodeMethod
           {
             return (false, $"Не удалось подключить устройство {connectableDevice.Name}({connectableDevice.Number}) - {message} ");
           }
+
+          await connectableDevice.ConnectableManager.ResetAsync(messageService);
         }
       }
 
@@ -248,7 +236,7 @@ namespace Mode.TestSuite.Metrology.NodeMethod
     /// Настраивает измерительное устройство (мультиметр или ППУ).
     /// </summary>
     /// <param name="dataModel">Модель данных, содержащая дополнительные значения для устройств.</param>
-    public abstract Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null);
+    public abstract Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null);
 
     public void ResetPoints()
     {

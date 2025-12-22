@@ -86,7 +86,7 @@ namespace UI.Controls.GPT.Mode
     {
       try
       {
-        double result = await GPTPunchControl.ModelGPT.DcwManger.Measure.MeasureAsync();
+        double result = (await GPTPunchControl.ModelGPT.DcwManger.Measure.MeasureAsync()).value;
         TestResultText.Text = $"Результат теста: {result:F3} мА";
       }
       catch (Exception ex)

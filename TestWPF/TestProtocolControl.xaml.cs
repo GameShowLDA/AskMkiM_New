@@ -57,7 +57,7 @@ namespace TestWPF
     public TestMeasurement() : base() { }
 
     /// <inheritdoc />
-    public override async Task ConfigureMeter(IUserMessageService messageService, DataModel dataModel = null)
+    public override async Task ConfigureMeter(IUserInteractionService messageService, DataModel dataModel = null)
     {
       var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
       await breakDown.ConnectableManager.ConnectAsync(messageService);
@@ -67,7 +67,7 @@ namespace TestWPF
     }
 
     /// <inheritdoc />
-    public override async Task PerformMeasurement(IUserMessageService messageService, DataModel dataModel)
+    public override async Task PerformMeasurement(IUserInteractionService messageService, DataModel dataModel)
     {
       //var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();
       await messageService.ShowMessageAsync(new ShowMessageModel("\tИзмерение сопротивления изоляции"));
@@ -84,7 +84,7 @@ namespace TestWPF
       await messageService.ShowMessageAsync(new ShowMessageModel($"\t\tРезультат измерения разряда {HighestBitCount}({GetBitString()})", message: $"{answer.ToString()} МОм", type: type));
     }
 
-    public override async Task FinalizeAsync(IUserMessageService messageService)
+    public override async Task FinalizeAsync(IUserInteractionService messageService)
     {
       await base.FinalizeAsync(messageService);
       var breakDown = Devices.OfType<IBreakdownTester>().FirstOrDefault();

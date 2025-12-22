@@ -23,7 +23,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectBusToPositiveAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBusToPositiveAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       bool result = await _busManager.ConnectBusToPositiveAsync(bus);
 
@@ -39,7 +39,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectBusToNegativeAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBusToNegativeAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       bool result = await _busManager.ConnectBusToNegativeAsync(bus);
 
@@ -55,7 +55,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectBusToPositiveAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBusToPositiveAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       bool result = await _busManager.DisconnectBusToPositiveAsync(bus);
 
@@ -71,7 +71,7 @@ namespace NewCore.FunctionAdapters.ModuleVoltageCurrentSource
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectBusToNegativeAsync(SwitchingBus bus, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBusToNegativeAsync(SwitchingBus bus, IUserInteractionService? userMessageService = null)
     {
       bool result = await _busManager.DisconnectBusToNegativeAsync(bus);
 

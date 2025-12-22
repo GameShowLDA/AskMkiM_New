@@ -25,7 +25,7 @@ namespace DTO.Device.Breakdown.Capabilities
     ///   <item><description><c>string Message</c> — сообщение об ошибке, если установка не удалась.</description></item>
     /// </list>
     /// </returns>
-    Task<(bool Success, string Message)> SetFrequencyAsync(int frequency, IUserMessageService? userMessageService = null);
+    Task<(bool Success, string Message)> SetFrequencyAsync(int frequency, IUserInteractionService? userMessageService = null);
 
     /// <summary>
     /// Получает установленное значение частоты испытаний с устройства.

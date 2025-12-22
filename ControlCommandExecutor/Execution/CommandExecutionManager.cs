@@ -15,7 +15,7 @@ namespace ControlCommandExecutor.Execution
   public class CommandExecutionManager
   {
     private readonly Dictionary<string, ICommandExecutor> _executors = new();
-    private readonly IUserMessageService _console;
+    private readonly IUserInteractionService _console;
     private readonly ITextEditorAdapter translationControl;
     private ProtocolModel protocolModel = new ProtocolModel();
     /// <summary>
@@ -41,7 +41,7 @@ namespace ControlCommandExecutor.Execution
 
     public List<BaseCommandModel> CommandsToExecute { get; set; } = new();
 
-    public CommandExecutionManager(IUserMessageService console, ITextEditorAdapter textEditor, List<BaseCommandModel> ControlProgram, string? opkFilePath)
+    public CommandExecutionManager(IUserInteractionService console, ITextEditorAdapter textEditor, List<BaseCommandModel> ControlProgram, string? opkFilePath)
     {
       _console = console;
       CommandsToExecute = ControlProgram;

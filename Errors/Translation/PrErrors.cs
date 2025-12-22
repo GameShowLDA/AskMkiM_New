@@ -173,6 +173,21 @@ namespace Errors.Translation
         Description = description
       };
 
+    /// <summary>
+    /// Ошибка: одна из границ сопротивления больше максимально измеряемой мультиметром границы сопротивления или ниже минимально измеряемой. 
+    /// </summary>
+    public static ErrorItem EquipmentOutOfRange(int startLineNumber, string command, string description,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pr_EquipmentOutOfRange,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = description
+      };
+
 
     /// <summary>
     /// Ошибка: верхняя граница сопротивления больше максимально допустимой границы сопротивления.
@@ -202,6 +217,20 @@ namespace Errors.Translation
         Code = ErrorCode.Pr_CannotParseParameters,
         DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
         Description = $"Не удалось распознать параметры: {parameters}"
+      };
+    /// <summary>
+    /// Ошибка: предыдущая коамнда не имеет точек для проверки.
+    /// </summary>
+    public static ErrorItem PreviousCommandHasNoPoints(int startLineNumber, string command,
+      [CallerMemberName] string callerName = "",
+      [CallerFilePath] string callerFile = "",
+      [CallerLineNumber] int callerLine = 0) => new()
+      {
+        SourceLineNumber = startLineNumber,
+        Command = command,
+        Code = ErrorCode.Pr_PreviousCommandHasNoPoints,
+        DebugInfo = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})",
+        Description = $"В команде, предшествующей команде {command} не указаны точки для измерения"
       };
   }
 }

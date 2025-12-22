@@ -22,7 +22,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// <param name="busContact">Номер контакта шины, подлежащий замыканию.</param>
     /// <param name="circuitName">Название цепи для отображения в сообщениях.</param>
     /// <returns>True, если замыкание выполнено успешно; иначе false.</returns>
-    internal static async Task<bool> TryCloseCircuitWithRetryAsync(CancellationToken cancellation, IUserMessageService messageService, ISelfTestCheckerDeviceBusCommutation selfTestChecker, SwitchingDeviceTypeConnector testType, int busContact, string circuitName)
+    internal static async Task<bool> TryCloseCircuitWithRetryAsync(CancellationToken cancellation, IUserInteractionService messageService, ISelfTestCheckerDeviceBusCommutation selfTestChecker, SwitchingDeviceTypeConnector testType, int busContact, string circuitName)
     {
       cancellation.ThrowIfCancellationRequested();
 
@@ -47,7 +47,7 @@ namespace NewCore.Function.DeviceBusCommutation.SelfCheck
     /// <returns>True, если проверка показала отсутствие цепи (нормально разомкнутое реле); иначе false.</returns>
     internal static async Task<bool> CheckRelayStateAsync(
         CancellationToken cancellation,
-        IUserMessageService messageService,
+        IUserInteractionService messageService,
         IFastMeter meter,
         int relay)
     {

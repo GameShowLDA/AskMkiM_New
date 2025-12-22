@@ -79,30 +79,7 @@ namespace ControlCommandAnalyser.Parser.Kc
 
       string? lowerLimitResistance = null, higherLimitResistance = null, unit = null, time = null;
 
-      var result = AlgorithmKeyParser.ExtractKeysWithTrailingCommaCheck(remainder, model);
-
-      foreach (var (key, hasError) in result)
-      {
-        if (hasError)
-        {
-          model.Errors.Add(GeneralErrors.WrongKey(numberLine, mnemonic, $"{commandNumber} {mnemonic}", key));
-        }
-        else
-        {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
-        }
-      }
-
-      // удаляем найденные ключи ТОЛЬКО из ПИ-остатка
-      foreach (var (key, hasError) in result)
-      {
-        remainder = Regex.Replace(
-        remainder,
-        $@"\b{Regex.Escape(key)}\s*,?",
-        "",
-        RegexOptions.IgnoreCase);
-      }
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
       (lowerLimitResistance, higherLimitResistance, unit, remainder) = CommonParameterParser.ResistanceParser.ParseResistanceRange(remainder);
       LoggerUtility.LogDebug($"После парсинга сопротивления: нижняя граница='{lowerLimitResistance}', верхняя граница='{higherLimitResistance}', единица='{unit}', remainder='{remainder}'");
@@ -259,7 +236,7 @@ namespace ControlCommandAnalyser.Parser.Kc
           model.PointsSourse = pointsBlob;
           LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+          var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
 
           // Поднимем ошибки парсера точек
           if (pointErrors?.Count > 0)

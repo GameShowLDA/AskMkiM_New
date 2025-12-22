@@ -76,7 +76,15 @@ namespace ControlCommandAnalyser.Parser.Si
         else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
         {
           // находим цепи точек из предыдущей команды проверки
-          model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
+          var newScheme = CommandsModel.CheckKeyP(model, model.Scheme);
+          if (newScheme != null)
+          {
+            model.Scheme = newScheme;
+          }
+          else
+          {
+            model.Errors.Add(SiErrors.PreviousCommandHasNoPoints(numberLine, $"{commandNumber} {mnemonic}"));
+          }
         }
         else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
         {
@@ -112,7 +120,7 @@ namespace ControlCommandAnalyser.Parser.Si
       model.PointsSourse = pointsBlob;
       LoggerUtility.LogDebug($"Парсинг точек из общего блока: '{pointsBlob}'");
 
-      var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, mnemonic, rmCommandModel);
+      var (scheme, pointErrors) = PointParser.ParsePoints(pointsBlob, model, rmCommandModel);
 
       // Поднимем ошибки парсера точек
       if (pointErrors?.Count > 0)
@@ -145,7 +153,15 @@ namespace ControlCommandAnalyser.Parser.Si
       if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.П.ToString()))
       {
         // находим цепи точек из предыдущей команды проверки
-        model.Scheme = CommandsModel.CheckKeyP(model, model.Scheme);
+        var newScheme = CommandsModel.CheckKeyP(model, model.Scheme);
+        if (newScheme != null)
+        {
+          model.Scheme = newScheme;
+        }
+        else
+        {
+          model.Errors.Add(SiErrors.PreviousCommandHasNoPoints(numberLine, $"{commandNumber} {mnemonic}"));
+        }
       }
       else if (model.AlgorithmKey.Contains(TranslationKey.AlgorithmKey.С.ToString()))
       {
@@ -163,7 +179,7 @@ namespace ControlCommandAnalyser.Parser.Si
         remainder = match.Groups[1].Value.Trim();
 
       // сначала извлекаем ключи
-      remainder = ExtractSiKeys(commandNumber, mnemonic, numberLine, model, body, remainder);
+      remainder = KeyParser.ParseKeys(numberLine, model, remainder);
 
       remainder = ExtractSiParameters(commandNumber, mnemonic, numberLine, model, remainder, breakDown);
 
@@ -334,8 +350,11 @@ namespace ControlCommandAnalyser.Parser.Si
         }
         else
         {
-          model.AlgorithmKey.Add(key);
-          LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
+          if (!model.AlgorithmKey.Contains(key))
+          {
+            model.AlgorithmKey.Add(key);
+            LoggerUtility.LogDebug($"Найден ключ алгоритма: {key}");
+          }
         }
       }
 

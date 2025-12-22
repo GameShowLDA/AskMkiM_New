@@ -33,13 +33,17 @@ namespace ControlCommandAnalyser.Parser.Cu
 
       // Определяем наличие ключа "Д"
       var firstLine = lines[0].Trim();
-      model.IsDocument = Regex.IsMatch(firstLine, @"^\s*Д\s+", RegexOptions.IgnoreCase);
-
+      model.IsDocument = Regex.IsMatch(
+                         firstLine,
+                         @"\bЦУ\s+Д(?!\S)",
+                         RegexOptions.IgnoreCase
+                         );
       // Для извлечения текста используем оригинальную первую строку
       var textLines = new List<string>();
 
       // Паттерн: всё после номера и "ЦУ" (и "Д" если есть)
-      var pattern = @"^\s*\d+\s+ЦУ(?:\s+Д)?\s*(.*)$";
+      var pattern = @"^\s*\d+\s+ЦУ(?:\s+Д(?!\S))?\s*(.*)$";
+
       var match = Regex.Match(firstLine, pattern, RegexOptions.IgnoreCase);
       if (match.Success)
         textLines.Add(match.Groups[1].Value.Trim());

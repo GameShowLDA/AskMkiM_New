@@ -138,9 +138,9 @@
                VerticalAlignment="Bottom"
                Margin="0,0,14,10"
                FontFamily="{DynamicResource WinstonLight}"
-               FontSize="12"
+               FontSize="18"
                Opacity="0.45"
-               Foreground="{DynamicResource ForegrounfBrushes45}"
-               Text="{Binding AppVersion, FallbackValue=Версия 1.0.0 • Сборка 20.08.2025}"/>
+               Foreground="{DynamicResource ForegroundSolidColorBrush}"
+               Text="{Binding AppVersion, FallbackValue=Версия 1.0.0 (demo) • Сборка 08.12.2025}"/>
     </Grid>
 </UserControl>

@@ -25,7 +25,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> SetContinuityModeAsync(IUserMessageService? userMessageService = null)
+    public async Task<bool> SetContinuityModeAsync(IUserInteractionService? userMessageService = null)
     {
       try
       {
@@ -46,7 +46,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
     }
 
     /// <inheritdoc />
-    public async Task<bool> CheckContinuityAsync(bool expectedOutcome, IUserMessageService? userMessageService = null)
+    public async Task<bool> CheckContinuityAsync(bool expectedOutcome, IUserInteractionService? userMessageService = null)
     {
       if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
       {
@@ -67,7 +67,7 @@ namespace NewCore.FunctionAdapters.Keysight3466new
       }
     }
 
-    public async Task<double> CheckContinuityAsync(double expectedOutcome, IUserMessageService? userMessageService = null)
+    public async Task<double> CheckContinuityAsync(double expectedOutcome, IUserInteractionService? userMessageService = null)
     {
       if (await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
       {

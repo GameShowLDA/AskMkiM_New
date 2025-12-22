@@ -29,6 +29,7 @@ namespace UI.Controls
       {
         translationModels = value;
         ErrorClear();
+        ErrorListBoxVertical.ClearAll();
 
         foreach (var model in value)
         {
@@ -66,7 +67,6 @@ namespace UI.Controls
 
     private void ErrorClear()
     {
-      ErrorListBoxVertical.Items.Clear();
       ErrorCount = 0;
       WarningCount = 0;
     }

@@ -92,7 +92,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserMessageService userMessageService)
+    private async Task SettingModuleRelayControl(List<IRelaySwitchModule> relaySwitchModules, IUserInteractionService userMessageService)
     {
       foreach (var module in relaySwitchModules)
       {
@@ -107,7 +107,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserMessageService userMessageService)
+    private async Task SettingsDeviceBusCommutatuion(ISwitchingDevice dbc, IUserInteractionService userMessageService)
     {
       if (!await UserActionHelper.GetRunWithUserRepeatAsync(() => dbc.ConnectorManager.ConnectMultimeter(SwitchingBusNew.AB1, userMessageService), userMessageService))
       {
@@ -115,7 +115,7 @@ namespace ControlCommandExecutor.Executors
       }
     }
 
-    private async Task SettingFastMeter(IFastMeter meter, IUserMessageService userMessageService, bool fast = false)
+    private async Task SettingFastMeter(IFastMeter meter, IUserInteractionService userMessageService, bool fast = false)
     {
       string name = meter.Name;
       int numberChassis = meter.NumberChassis;

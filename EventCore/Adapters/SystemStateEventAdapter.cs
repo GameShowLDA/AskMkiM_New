@@ -1,5 +1,6 @@
 ﻿using EventCore.Events;
 using EventCore.Services;
+using static EventCore.Events.SystemStateEvents;
 
 namespace EventCore.Adapters
 {
@@ -37,6 +38,18 @@ namespace EventCore.Adapters
     /// </example>
     public static void RaiseLockedChanged(bool isLocked) =>
       EventAggregator.Publish(new SystemStateEvents.LockedChanged(isLocked));
+
+    /// <summary>
+    /// Генерирует событие изменения состояния активности программы контроля.
+    /// </summary>
+    /// <param name="isLocked">Новое состояние ПК: true — ПК активна на экране; false — ПК не активна на экране.</param>
+    /// <example>
+    /// <code>
+    /// SystemStateEventAdapter.RaiseLockedChanged(false);
+    /// </code>
+    /// </example>
+    public static void RaiseControlProgramActiveChanged(bool isControlProgramActive) =>
+      EventAggregator.Publish(new SystemStateEvents.ControlProgramActiveChanged(isControlProgramActive));
 
     /// <summary>
     /// Генерирует событие изменения прав администратора.

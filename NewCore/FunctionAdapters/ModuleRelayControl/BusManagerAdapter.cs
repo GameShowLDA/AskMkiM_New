@@ -39,7 +39,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> ConnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserMessageService? userMessageService = null)
+    public async Task<bool> ConnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserInteractionService? userMessageService = null)
     {
       switchingBuses.TryGetValue(bus, out bool connected);
       if (connected)
@@ -70,7 +70,7 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
     }
 
     /// <inheritdoc />
-    public async Task<bool> DisconnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserMessageService? userMessageService = null)
+    public async Task<bool> DisconnectBusAsync(SwitchingBus bus, bool lowVoltage, IUserInteractionService? userMessageService = null)
     {
       switchingBuses.TryGetValue(bus, out bool connected);
       if (!connected)

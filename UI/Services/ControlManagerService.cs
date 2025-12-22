@@ -1,4 +1,5 @@
 ﻿using DTO.Base.Models;
+using EventCore.Adapters;
 using UI.Components;
 using UI.Components.Invoke;
 using UI.Components.MultiEditorMethods;
