@@ -166,7 +166,7 @@
     <value>Сохранить как</value>
   </data>
   <data name="menu.file.search" xml:space="preserve">
-    <value>Поиск</value>
+    <value>Поиск и замена</value>
   </data>
   <data name="menu.settings" xml:space="preserve">
     <value>Настройки</value>

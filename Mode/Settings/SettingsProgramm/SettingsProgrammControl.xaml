@@ -106,7 +106,7 @@
 
 
                                 <TextBlock 
-                                    Text="Конфигурация" 
+                                    Text="Конфигурация АСК" 
                                     Padding="10,10"
                                     Style="{DynamicResource SettingsTitleStyle}"
                                     VerticalAlignment="Center"  
