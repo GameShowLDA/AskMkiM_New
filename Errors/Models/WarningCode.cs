@@ -26,31 +26,31 @@ namespace Errors.Models
     #region Общие ошибки
 
     /// <summary> Время выполнения установлено по умолчанию. </summary>
-    [WarningCodeTag("WARNGEN001")]
+    [WarningCodeTag("WRN001")]
     Gen_DefaultTime,
 
     /// <summary> Напряжение установлено по умолчанию. </summary>
-    [WarningCodeTag("WARNGEN002")]
+    [WarningCodeTag("WRN002")]
     Gen_DefaultVoltage,
 
     /// <summary> Нижняя граница сопротивления установлена по умолчанию. </summary>
-    [WarningCodeTag("WARNGEN003")]
+    [WarningCodeTag("WRN003")]
     Gen_DefaultResistainceLowLimit,
 
     /// <summary> Верхняя граница сопротивления установлена по умолчанию. </summary>
-    [WarningCodeTag("WARNGEN004")]
+    [WarningCodeTag("WRN004")]
     Gen_DefaultResistainceHighLimit,
 
     /// <summary> Сопротивление установлено по умолчанию. </summary>
-    [WarningCodeTag("WARNGEN005")]
+    [WarningCodeTag("WRN005")]
     Gen_DefaultResistaince,
 
     /// <summary> Найден и удален дублирующийся ключ. </summary>
-    [WarningCodeTag("WARNGEN006")]
+    [WarningCodeTag("WRN006")]
     Gen_DuplicateKey,
 
     /// <summary> Количество разобщенных цепей было меньше одной. Ключ ЗР был добавлен по умолчанию. </summary>
-    [WarningCodeTag("WARNGEN007")]
+    [WarningCodeTag("WRN007")]
     Gen_KeyZR,
 
     #endregion
@@ -62,7 +62,7 @@ namespace Errors.Models
     #region Режим ОК
 
     /// <summary> Не удалось корректно разобрать первую строку команды ОК. </summary>
-    [WarningCodeTag("WARNOK001")]
+    [WarningCodeTag("WRNOK001")]
     Ok_CannotParseFirstLine,
 
     #endregion
@@ -70,7 +70,7 @@ namespace Errors.Models
     #region Режим РМ
 
     /// <summary> Не удалось корректно разобрать выражение в команде РМ. </summary>
-    [WarningCodeTag("WARNRM001")]
+    [WarningCodeTag("WRNRM001")]
     Rm_CannotParseExpression,
 
     #endregion
@@ -78,7 +78,7 @@ namespace Errors.Models
     #region Режим СИ
 
     /// <summary> Не удалось корректно разобрать выражение в команде СИ. </summary>
-    [WarningCodeTag("WARNSI001")]
+    [WarningCodeTag("WRNSI001")]
     Si_CannotParseExpression,
 
     #endregion
@@ -86,7 +86,7 @@ namespace Errors.Models
     #region Режим ПИ
 
     /// <summary> Не удалось корректно разобрать выражение в команде ПИ. </summary>
-    [WarningCodeTag("WARNPI001")]
+    [WarningCodeTag("WRNPI001")]
     Pi_CannotParseExpression,
 
     #endregion
@@ -94,7 +94,7 @@ namespace Errors.Models
     #region Режим КС
 
     /// <summary> Не указаны границы сопротивления для команды КС. </summary>
-    [WarningCodeTag("WARNKS001")]
+    [WarningCodeTag("WRNKS001")]
     Ks_EmptyResistance,
 
     #endregion
@@ -102,7 +102,7 @@ namespace Errors.Models
     #region Режим ИЕ
 
     /// <summary> Не указаны границы емкости для команды ИЕ. </summary>
-    [WarningCodeTag("WARNIE001")]
+    [WarningCodeTag("WRNIE001")]
     Ie_EmptyLowerCapacity,
 
     #endregion
@@ -110,7 +110,7 @@ namespace Errors.Models
     #region Режим ПР
 
     /// <summary> Ошибка при проверке точки про методе полного узла в команде ПР. </summary>
-    [WarningCodeTag("WARNPR006")]
+    [WarningCodeTag("WRNPR006")]
     Pr_NodeExecutePointError,
 
     #endregion
@@ -118,7 +118,7 @@ namespace Errors.Models
     #region Режим ЭТ
 
     /// <summary> В команде ПР не удалось распознать параметры. </summary>
-    [WarningCodeTag("WARNEHT001")]
+    [WarningCodeTag("WRNEHT001")]
     Eht_CannotParseParameters,
 
     #endregion
@@ -126,7 +126,7 @@ namespace Errors.Models
     #region Ключи команд
 
     /// <summary> Использованный ключ не разрешён для данной команды. </summary>
-    [WarningCodeTag("WARNKEY001")]
+    [WarningCodeTag("WRNKEY001")]
     Key_NotAllowedForCommand,
 
     #endregion
@@ -140,7 +140,7 @@ namespace Errors.Models
     /// <summary>
     /// Ошибка: не найдено шасси с указанным номером.
     /// </summary>
-    [WarningCodeTag("WARNMKR001")]
+    [WarningCodeTag("WRNMKR001")]
     Equipment_ChassisNotFound,
 
     #endregion
