@@ -8,7 +8,8 @@
     <SolidColorBrush x:Key="ForegrounfBrushes35" Color="#f3f0f9" Opacity="0.35"/>
     <SolidColorBrush x:Key="ForegrounfBrushes45" Color="#f3f0f9" Opacity="0.45"/>
     <SolidColorBrush x:Key="ForegrounfBrushes85" Color="#f3f0f9" Opacity="0.85"/>
-    
+
+    <SolidColorBrush x:Key="MenuBackgroundBrushes" Color="#232932"/>
     <SolidColorBrush x:Key="BackgroundBrushes" Color="#303843"/>
     <SolidColorBrush x:Key="ActiveColorBrushes" Color="#1ca3e9"/>
     <SolidColorBrush x:Key="SettingsMainBackground" Color="#3a4655"/>
@@ -42,7 +43,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Padding" Value="5,10,10,10"/>
-        <Setter Property="Background" Value="{DynamicResource BackgroundBrushes}"/>
+        <Setter Property="Background" Value="{DynamicResource MenuBackgroundBrushes}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="{DynamicResource ForegrounfBrushes}"/>
         <Setter Property="FontFamily" Value="Segoe UI"/>
@@ -83,7 +84,7 @@
                                        Foreground="{DynamicResource ForegrounfBrushes}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"
-                                       Margin="10,0,0,0"/>
+                                       Margin="10,0,10,0"/>
                         </DockPanel>
 
                         <!-- Подменю -->
