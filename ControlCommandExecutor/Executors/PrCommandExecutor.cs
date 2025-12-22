@@ -28,7 +28,7 @@ namespace ControlCommandExecutor.Executors
     public string Mnemonic => Utilities.EnumExtensions.GetDisplayInfo(DTO.Enum.Measurement.MeasurementTypeCommand.PR).DisplayName;
     static private PointModel _basePoint;
     private double firstValue = 0;
-    private double secondValue = 100000;
+    private double secondValue = -1;
     private bool continuityManager = true;
 
     public async Task ExecuteAsync(CommandExecutionContext context, ProtocolModel protocolModel)
