@@ -24,7 +24,7 @@ namespace ControlCommandAnalyser.Formatter
         }
 
         foreach (var pair in rm.PointsMap)
-          yield return $"\t{pair.Key} => {pair.Value}";
+          yield return $"\t{pair.Key} = {pair.Value}";
 
         yield return string.Empty;
       }
