@@ -25,7 +25,7 @@ namespace ControlCommandExecutor.Executors
         // Вопрос — вызываем с кнопками Yes/No/Esc (или Ok/Cancel если Run/Esc)
         var result = MessageBoxCustom.Show(
             cu.MessageText,
-            "Вопрос",
+            "Запрос оператору",
             MessageBoxButton.YesNo, MessageBoxImage.Question
         );
         CommandExecutionState.LastCuResult = result;
