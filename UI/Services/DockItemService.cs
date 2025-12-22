@@ -1,6 +1,8 @@
-﻿using DTO.Base.Models;
+﻿using AppConfiguration;
+using DTO.Base.Models;
 using EventCore.Adapters;
 using EventCore.Events;
+using EventCore.Services;
 using Message;
 using System;
 using System.Collections.Generic;
@@ -77,8 +79,14 @@ namespace UI.Services
             try
             {
               LogInformation("DockControl загрузился. Показываем вкладку.");
-              capturedDockItem.Show(dockControl, DockPosition.Document);
               LogInformation("DockItem отображён после загрузки.");
+              var isControlProgramActive = false;
+              if (dockItem.Title.Contains(".pk") || dockItem.Title.Contains(".opk") || dockItem.Content is RunControl || dockItem.Content is TranslatorItem)
+              {
+                isControlProgramActive = true;
+              }
+              SystemStateManager.SetIsControlProgramActive(isControlProgramActive).ConfigureAwait(true);
+              capturedDockItem.Show(dockControl, DockPosition.Document);
             }
             catch (Exception ex)
             {
@@ -88,6 +96,12 @@ namespace UI.Services
         }
         else
         {
+          var isControlProgramActive = false;
+          if (dockItem.Title.Contains(".pk") || dockItem.Title.Contains(".opk") || dockItem.Content is RunControl || dockItem.Content is TranslatorItem)
+          {
+            isControlProgramActive = true;
+          }
+          SystemStateManager.SetIsControlProgramActive(isControlProgramActive).ConfigureAwait(true);
           dockItem.Show(dockControl, DockPosition.Document);
           LogInformation("DockItem отображён немедленно.");
         }
@@ -176,8 +190,8 @@ namespace UI.Services
         Content = textEditor
       };
 
-      EventCore.Services.EventAggregator.Unsubscribe<FileInteractionEvents.OpenOpk>(e => _fileManager.ArchiveService.OpenOpkFile(e.Control, e.FileName));
-      EventCore.Services.EventAggregator.Subscribe<FileInteractionEvents.OpenOpk>(e => _fileManager.ArchiveService.OpenOpkFile(e.Control, e.FileName));
+      EventAggregator.Unsubscribe<FileInteractionEvents.OpenOpk>(e => _fileManager.ArchiveService.OpenOpkFile(e.Control, e.FileName));
+      EventAggregator.Subscribe<FileInteractionEvents.OpenOpk>(e => _fileManager.ArchiveService.OpenOpkFile(e.Control, e.FileName));
 
       if (dockItem.Content is TextEditorUI && editorType == EditorType.Archive || dockItem.Content is RunControl && editorType == EditorType.Run)
       {
@@ -223,10 +237,10 @@ namespace UI.Services
         {
           _fileManager.ContainerService.RemoveEditorContainer(translatorContainer, editorType);
         }
+        SystemStateManager.SetIsControlProgramActive(false).ConfigureAwait(true);
       };
       return editorType;
     }
-
 
     /// <summary>
     /// Настраивает DockItem, который требует сохранения состояния (например, файл, открытый в редакторе).
@@ -252,6 +266,7 @@ namespace UI.Services
           }
 
           EditorEventAdapter.RaiseTextEditorContainerClosing(true, nameFile);
+          SystemStateManager.SetIsControlProgramActive(false).ConfigureAwait(true);
         }
       };
     }

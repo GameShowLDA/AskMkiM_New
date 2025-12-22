@@ -1,4 +1,5 @@
-﻿using DTO.Base.Models;
+﻿using AppConfiguration;
+using DTO.Base.Models;
 using EventCore.Adapters;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -49,6 +50,7 @@ namespace UI.Components.MultiEditorMethods
         {
           editorType = SetEditorType(tabButton);
           CloseControl(tabButton, control, editorType);
+
           return;
         }
         else if (control is RunControl)
@@ -305,13 +307,36 @@ namespace UI.Components.MultiEditorMethods
           _pendingHighlights.Remove(fileName);
         }
         EditorEventAdapter.RaiseTextEditorActivated(control);
-
       }
 
       bool isTextEditorContainer = control is TextEditorContainer;
 
       EditorEventAdapter.RaiseTextEditorActive(isTextEditorContainer);
       EditorEventAdapter.RaiseActiveEditorChanged(isTextEditorContainer);
+
+      var isControlProgramActive = false;
+      if (openPage.Text == EditorType.Run.ToString() || openPage.Text == EditorType.Translator.ToString() || openPage.Text == EditorType.TextEditor.ToString())
+      {
+        isControlProgramActive = true;
+      }
+
+      if (control is TextEditorContainer container)
+      {
+        var foundDockItem = container.DockManager.DockItems.FirstOrDefault(item => item.IsActiveItem == true);
+        if (foundDockItem != null)
+        {
+          foundDockItem.Focus();
+          if (foundDockItem.Title.Contains(".pk") || foundDockItem.Title.Contains(".opk"))
+          {
+            isControlProgramActive = true;
+          }
+          else
+          {
+            isControlProgramActive = false;
+          }
+        }
+      }
+      SystemStateManager.SetIsControlProgramActive(isControlProgramActive).ConfigureAwait(true);
     }
 
     /// <summary>
@@ -498,7 +523,7 @@ namespace UI.Components.MultiEditorMethods
         if (control.Text == child.Text)
         {
           child.Background = (Brush)Application.Current.Resources["ActiveBorderSolidColorBrush"];
-          if (control.Text == "Текстовый редактор")
+          if (control.Text == EditorType.TextEditor.ToString())
           {
             EditorEventAdapter.RaiseTranslatorActive(true);
           }

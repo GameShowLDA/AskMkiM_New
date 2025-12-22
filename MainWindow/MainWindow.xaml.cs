@@ -1,11 +1,14 @@
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
+using EventCore.Adapters;
+using EventCore.Events;
+using EventCore.Services;
 using MainWindowProgram.Engine;
 using MainWindowProgram.HotkeyBindings;
 using MainWindowProgram.Services;
 using MainWindowProgram.ViewModels;
 using Message;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using UI.Controls.Search;
 using static Utilities.LoggerUtility;
 
@@ -91,7 +94,7 @@ namespace MainWindowProgram
 
       new CommandLineParser(_usbServices).ProcessCommandLineArgs();
       ApplicationInitializer applicationInitializer = new ApplicationInitializer(messageHandler = new(_infoBlock));
-
+      SystemStateEventAdapter.RaiseControlProgramActiveChanged(false);
       try
       {
         applicationInitializer.SubscribeToMessageEvents();

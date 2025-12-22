@@ -1,8 +1,13 @@
-﻿using System.ComponentModel;
+﻿using AppConfiguration;
+using DTO.Base.Interface;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using System.Windows.Threading;
+using UI.Controls;
+using UI.Controls.Runner;
+using UI.Controls.TextEditor;
 
 namespace UI.Windows.WpfDocking.Windows.Docking
 {
@@ -350,6 +355,20 @@ namespace UI.Windows.WpfDocking.Windows.Docking
           if (value != null)
             value.IsActiveDocument = true;
           _activeDocumentChanged = true;
+        }
+        var activeItem = _dockControl.DockItems.FirstOrDefault(item => item.IsActiveDocument == true);
+        if (activeItem != null)
+        {
+          var isControlProgramActive = false;
+          if (activeItem.Title.Contains(".pk") || activeItem.Title.Contains(".opk") || activeItem.Content is RunControl || activeItem.Content is TranslatorItem)
+          {
+            isControlProgramActive = true;
+          }
+          SystemStateManager.SetIsControlProgramActive(isControlProgramActive).ConfigureAwait(true);
+        }
+        else
+        {
+          SystemStateManager.SetIsControlProgramActive(false).ConfigureAwait(true);
         }
       }
     }

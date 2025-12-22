@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AppConfiguration;
+using System.Diagnostics;
 using System.Windows;
 
 namespace UI.Windows.WpfDocking.Windows.Docking

@@ -27,6 +27,8 @@ namespace AppConfiguration
     /// </summary>
     internal static bool IsLocked { get; private set; }
 
+    internal static bool IsControlProgramActive { get; private set; }
+
     #endregion
 
     #region Constructor.
@@ -70,6 +72,19 @@ namespace AppConfiguration
       });
     }
 
+    /// <summary>
+    /// Включает или отключает блокировку интерфейса и публикует соответствующее событие.
+    /// </summary>
+    /// <param name="enable">true — заблокировать; false — разблокировать.</param>
+    public static async Task SetIsControlProgramActive(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        IsControlProgramActive = enable;
+        SystemStateEventAdapter.RaiseControlProgramActiveChanged(enable);
+      });
+    }
+
     #endregion
 
     #region Get.
@@ -91,6 +106,15 @@ namespace AppConfiguration
     /// </returns>
     public static async Task<bool> GetIsLocked() =>
       await Task.Run(() => IsLocked);
+
+    /// <summary>
+    /// Асинхронно возвращает текущий статус блокировки интерфейса.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/>, если интерфейс заблокирован; <see langword="false"/> — если разблокирован.
+    /// </returns>
+    public static async Task<bool> GetIsControlProgramActive() =>
+      await Task.Run(() => IsControlProgramActive);
 
     #endregion
   }
