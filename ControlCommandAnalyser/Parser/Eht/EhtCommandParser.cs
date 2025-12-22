@@ -104,15 +104,19 @@ namespace ControlCommandAnalyser.Parser.Eht
       // --- 1️⃣ Парсим входные значения, если они заданы ---
       double? lower = !string.IsNullOrWhiteSpace(lowerLimitResistance)
           ? CommonParameterParser.ParseToDouble(lowerLimitResistance)
-          : null;
+          : 0;
 
       double? higher = !string.IsNullOrWhiteSpace(higherLimitResistance)
           ? CommonParameterParser.ParseToDouble(higherLimitResistance)
-          : null;
+          : 1;
 
       double? cabelLimit = !string.IsNullOrWhiteSpace(cabelLimitResistance)
           ? CommonParameterParser.ParseToDouble(cabelLimitResistance)
           : null;
+      if (string.IsNullOrEmpty(unit))
+      {
+        unit = defaultUnit;
+      }
 
       if (lower.HasValue && higher.HasValue)
       {
@@ -161,7 +165,7 @@ namespace ControlCommandAnalyser.Parser.Eht
         if (lower == null)
         {
           lowerFinal = defaultLower;
-          model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unitFinal}"));
+          //model.Warnings.Add(GeneralWarnings.DefaultResistainceLowLimit(model.StartLineNumber, $"{commandNumber} {mnemonic}", $"{lowerFinal} {unitFinal}"));
         }
         else
         {
