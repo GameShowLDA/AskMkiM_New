@@ -146,9 +146,9 @@
 
                 </MenuItem>
 
-                <MenuItem Command="{Binding Settings.SettingsCommand}" Header="{Binding Source={StaticResource LS_Menu_Settings}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="Settings" Tag="menuHeader_4"/>
+                <MenuItem Command="{Binding Settings.SettingsCommand}" Header="{Binding Source={StaticResource LS_Menu_Settings}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="Settings" Tag="menuHeader_4" ToolTipHelper:ToolTipHelper.DescriptionKey="Setting"/>
 
-                <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpText">
+                <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpText" ToolTipHelper:ToolTipHelper.DescriptionKey="Help">
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_GeneralInformation}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextGeneralInformation" Command="{Binding Settings.HelpOpenGeneralInformationCommand}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_LanguageControlPrograms}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextLanguageControlPrograms" Command="{Binding Settings.HelpOpenLanguageControlProgramsCommand}"/>
                     <MenuItem Header="{Binding Source={StaticResource LS_Menu_Help_ProgramComposition}, Path=Value}" Style="{DynamicResource StyleMenuItem}" Name="HelpTextProgramComposition" Command="{Binding Settings.HelpOpenProgramCompositionCommand}"/>
