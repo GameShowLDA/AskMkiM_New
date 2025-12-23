@@ -13,14 +13,16 @@ namespace MainWindowProgram.Services
     /// Сервис для управления многооконным пользовательским интерфейсом.
     /// </summary>
     private readonly MultiWindowService _multiWindow;
+    private readonly WarningsSettingsService _warningsSettings;
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="SettingsService"/>.
     /// </summary>
     /// <param name="multiWindow">Сервис управления многооконным интерфейсом.</param>
-    public SettingsService(MultiWindowService multiWindow)
+    public SettingsService(MultiWindowService multiWindow, WarningsSettingsService warningsSettings)
     {
       _multiWindow = multiWindow;
+      _warningsSettings = warningsSettings;
     }
     /// <summary>
     /// Открывает WebView2 со справочником к программе.
@@ -28,6 +30,11 @@ namespace MainWindowProgram.Services
     /// <returns>Задача, представляющая операцию открытия интерфейса протокола.</returns>
     public async Task OpenSettingsAsync() =>
       await _multiWindow.AddControlAsync("Параметры", new Mode.Settings.SettingsProgramm.SettingsProgrammControl(), TypeWindow.Settings);
+
+    /// <summary>
+    /// Открыть настройки предупреждений.
+    /// </summary>
+    public async Task OpenWarningsSettingsAsync() => await _warningsSettings.OpenWarningsSettingsAsync();
 
     /// <summary>
     /// Открывает справочник на нужной странице

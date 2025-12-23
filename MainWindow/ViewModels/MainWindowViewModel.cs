@@ -49,6 +49,7 @@ namespace MainWindowProgram.ViewModels
     public SelfTestViewModel SelfTest { get; }
     public TranslationViewModel Translation { get; }
     public RunViewModel Run { get; }
+    public WarningsSettingsViewModel WarningsSettings { get; }
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="MainWindowViewModel"/>, создавая все дочерние ViewModel.
@@ -70,14 +71,16 @@ namespace MainWindowProgram.ViewModels
       WindowService window,
       SelfTestServices selfTest,
       TranslationServices translationServices,
-      RunServices runServices
+      RunServices runServices,
+      WarningsSettingsService warningsSettings
       )
     {
       Metrology = new MetrologyViewModel(metrologyService);
       Service = new ServiceViewModel(serviceMode);
       Test = new TestViewModel(testService);
       File = new FileViewModel(fileService);
-      Settings = new SettingsViewModel(settingsService);
+      WarningsSettings = new WarningsSettingsViewModel(warningsSettings);
+      Settings = new SettingsViewModel(settingsService, warningsSettings);
       Admin = new AdminViewModel(adminServices);
       Window = new WindowViewModel(window);
       SelfTest = new SelfTestViewModel(selfTest);

@@ -9,6 +9,7 @@
              xmlns:Procol="clr-namespace:UI.Controls.Settings.Protocol;assembly=UI"
              xmlns:Config="clr-namespace:UI.Controls.Settings.DeviceConfig;assembly=UI"
              xmlns:UiSetting="clr-namespace:UI.Controls.Settings.UserInterface;assembly=UI"
+             xmlns:Warnings="clr-namespace:UI.Controls.Settings.Warnings;assembly=UI"
              xmlns:Icons="clr-namespace:UI.Icon;assembly=UI"
 
              mc:Ignorable="d" 
@@ -80,6 +81,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
                 <Grid >
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -165,6 +167,9 @@
                     <Procol:ProtocolControl Grid.Row="2" x:Name="ProtocolManager"/>
 
                     <UiSetting:UiSettingsControl Grid.Row="3" x:Name="InterfaceManager"/>
+
+                    <Warnings:WarningsSettingsControl Grid.Row="4" DataContext="{Binding WarningsSettings}" />
+
 
 
                 </Grid>

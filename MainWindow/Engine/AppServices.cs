@@ -1,5 +1,6 @@
 ﻿using MainWindowProgram.Services;
 using MainWindowProgram.ViewModels;
+using UI.Controls.Settings.Warnings;
 using Utilities.Help;
 
 namespace MainWindowProgram.Engine
@@ -23,11 +24,16 @@ namespace MainWindowProgram.Engine
       var admin = new AdminServices(window, multi);
       var test = new TestService(multi);
       var service = new ServiceMode(multi);
-      var settings = new SettingsService(multi);
       var windowService = new WindowService(window, window.mainMenu, window.ButtonsPanel, () => window.IsLocked);
       var selfTest = new SelfTestServices(multi);
       var translation = new TranslationServices(multi, file);
       var run = new RunServices(multi, file);
+
+      var warningsStorage = new WarningsSettingsStorage();
+      warningsStorage.Initialize();
+
+      var warningsSettings = new WarningsSettingsService(multi, warningsStorage);
+      var settings = new SettingsService(multi, warningsSettings);
 
       var viewModel = new MainWindowViewModel(
           metrology,
@@ -39,7 +45,8 @@ namespace MainWindowProgram.Engine
           windowService,
           selfTest,
           translation,
-          run
+          run,
+          warningsSettings
       );
 
       HelpProvider.RegisterHelp(window);

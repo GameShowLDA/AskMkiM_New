@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="UI.Controls.Settings.Warnings.WarningsSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.Controls.Settings.Warnings"
+             xmlns:Icons="clr-namespace:UI.Icon"    
+             xmlns:Components ="clr-namespace:UI.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border 
+    Margin="15,10" 
+    Style="{DynamicResource SettingPanelStyle}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock 
+                Text="Выполнение" 
+                Padding="10,10"
+                Style="{DynamicResource SettingsTitleStyle}"
+                Grid.Row="0"/>
+
+                <Grid Grid.Column="1"  Margin="20,0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Icons:SuccessIconControlV2 
+                    Grid.Column="1"
+                    x:Name="Success" 
+                    Width="30"
+                    Margin="10,0,0,0"
+                    Height="30" 
+                    CheckThickness="4"
+                    CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                    CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                    />
+
+                    <Icons:ErrorIconControlV2 
+                     x:Name="Error"
+                       Grid.Column="2"
+                     Width="30"
+                     Height="30" 
+                       Margin="10,0,0,0"
+                       CrossThickness="4"
+                     CircleBackground ="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                     CircleBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                     />
+
+                    <Icons:ArrowButton x:Name="ToggleSettingsButton" 
+                       Grid.Column="0"
+                       HorizontalAlignment="Right"
+                       Width="30" Height="30"
+                       ButtonBackground="{DynamicResource SettingsInteractiveBackgroundSolidColorBrush}"
+                       ButtonBorder="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                       ArrowBrush="{DynamicResource SettingsInteractiveBorderSolidColorBrush}"
+                       ArrowHoverBrush="{DynamicResource SettingsInteractivePressedSolidColorBrush}"
+                       VerticalAlignment="Center"/>
+                </Grid>
+            </Grid>
+
+            <WrapPanel Orientation="Horizontal" Grid.Row="1">
+                <WrapPanel.Style>
+                    <Style TargetType="WrapPanel">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ToggleSettingsButton, Path=IsArrowUp}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </WrapPanel.Style>
+                <DataGrid
+                     ItemsSource="{Binding WarningsSettings}"
+                     AutoGenerateColumns="False"
+                     HeadersVisibility="Column"
+                     CanUserAddRows="False"
+                     Margin="10"
+                     MinWidth="500">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn
+                            Header="Предупреждение"
+                            Binding="{Binding Title}"
+                            IsReadOnly="True"
+                            Width="*" />
+
+                        <DataGridCheckBoxColumn
+                            Header="Отображать"
+                            Binding="{Binding IsEnabled, Mode=TwoWay}"
+                            Width="150" />
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </WrapPanel>
+
+        </Grid>
+    </Border>
+</UserControl>

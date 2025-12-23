@@ -10,13 +10,15 @@ namespace MainWindowProgram.ViewModels
   public partial class SettingsViewModel
   {
     private readonly SettingsService _service;
+    public WarningsSettingsViewModel Warnings { get; }
 
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="SettingsViewModel"/>.
     /// </summary>
-    public SettingsViewModel(SettingsService service)
+    public SettingsViewModel(SettingsService service, WarningsSettingsService warningsService)
     {
       _service = service;
+      Warnings = new WarningsSettingsViewModel(warningsService);
     }
 
     /// <summary>Открыть раздел "Общие сведения" в справочнике.</summary>
@@ -42,5 +44,8 @@ namespace MainWindowProgram.ViewModels
     /// <summary>Открыть общие настройки приложения.</summary>
     [RelayCommand]
     private async Task Settings() => await _service.OpenSettingsAsync();
+
+    [RelayCommand]
+    private async Task OpenWarningsSettings() => await _service.OpenWarningsSettingsAsync();
   }
 }
