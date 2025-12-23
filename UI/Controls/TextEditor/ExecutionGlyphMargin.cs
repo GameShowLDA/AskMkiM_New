@@ -1,4 +1,6 @@
-﻿using ICSharpCode.AvalonEdit;
+﻿using EventCore.Adapters;
+using EventCore.Events;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 using System.Windows;
@@ -166,9 +168,15 @@ public class ExecutionGlyphMargin : AbstractMargin
     if (!_rightBreakpoints.Contains(lineNumber)) return;
 
     if (BreakpointLines.Contains(lineNumber))
+    {
       BreakpointLines.Remove(lineNumber);
+      BreakpointEventAdapter.RaiseBreakpointRemoved(lineNumber);
+    }
     else
+    {
       BreakpointLines.Add(lineNumber);
+      BreakpointEventAdapter.RaiseBreakpointSet(lineNumber);
+    }
 
     InvalidateVisual();
     e.Handled = true;
