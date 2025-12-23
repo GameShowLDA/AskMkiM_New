@@ -1,9 +1,11 @@
 ﻿using DTO.Base.Models;
 using DTO.Enum;
 using DTO.Service;
+using DTO.Settings.SettingsModels;
 using EventCore.Adapters;
 using EventCore.Events;
 using Message;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using WindowsInput;
@@ -183,6 +185,8 @@ namespace UI.Controls.ProtocolNew
       await DisplayCompletionMessage();
 
       StartProcessing?.Invoke(false);
+
+      await ProtocolSelfCheck.SaveProtocolAsync(ProtocolSelfCheck.Header, ".lstw");
     }
 
     /// <summary>
@@ -604,12 +608,12 @@ namespace UI.Controls.ProtocolNew
     {
       if (await GetSaveProtocol())
       {
-        await ProtocolSelfCheck.SaveProtocolAsync(name);
+        await ProtocolSelfCheck.SaveProtocolAsync(name, ".txt");
       }
 
       if (await GetPrintProtocol())
       {
-        ProtocolSelfCheck.PrintProtocol(ProtocolSelfCheck.GetShowMessageModels());
+        Utilities.FilesUtility.PrintUtility.PrintProtocol(ProtocolSelfCheck.GetShowMessageModels());
       }
 
       await SetIsLocked(false);

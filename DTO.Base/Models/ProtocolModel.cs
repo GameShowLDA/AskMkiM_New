@@ -106,60 +106,7 @@ namespace DTO.Base.Models
       ErrorsTemplate = templatePath;
     }
 
-    static public bool GetPathProtocol(ProtocolModel protocolModel, string protocolText)
-    {
-      try
-      {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        var parent1 = directory.Parent;
-        var parent2 = parent1?.Parent;
-
-        if (parent1 != null)
-        {
-          var historyPath = Path.Combine(parent1.FullName, FileLocations.DataSaveDirectory);
-          if (!Directory.Exists(historyPath))
-          {
-            Directory.CreateDirectory(historyPath);
-          }
-
-          var dateFolderName = DateTime.Now.ToString("yyyy-MM-dd");
-          var datePath = Path.Combine(historyPath, dateFolderName);
-
-          if (!Directory.Exists(datePath))
-          {
-            Directory.CreateDirectory(datePath);
-          }
-
-          var fileName = $"{protocolModel.ProgramName}_{DateTime.Now.ToString("HHmmss")}.lstw";
-          var fullFilePath = Path.Combine(datePath, fileName);
-
-          using (StreamWriter writer = new StreamWriter(fullFilePath))
-          {
-            writer.WriteLine(protocolText);
-          }
-
-          if (File.Exists(fullFilePath))
-          {
-            return true;
-          }
-          else
-          {
-            return false;
-          }
-        }
-        else
-        {
-          Console.WriteLine("Не удалось получить родительскую директорию");
-          return false;
-        }
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine($"Произошла ошибка: {ex.Message}");
-        return false;
-      }
-    }
-
+    
     static public string GetProtocolText(ProtocolModel protocolModel)
     {
       // Формируем финальный текст протокола

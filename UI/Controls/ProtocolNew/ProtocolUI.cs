@@ -416,11 +416,12 @@ namespace UI.Controls.ProtocolNew
     /// <summary>
     /// Сохраняет протокол в файл с автоматически сгенерированным именем в фоновом режиме асинхронно.
     /// </summary>
-    public async Task SaveProtocolAsync(string name)
+    public async Task SaveProtocolAsync(string name, string extention)
     {
       string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss", CultureInfo.CurrentCulture);
-      string filename = $"{name}_{dateTime}.txt";
-      string fullPath = Path.Combine($"..\\{FileLocations.DataSaveDirectory}", filename);
+      string filename = $"{name}_{dateTime}{extention}";
+      string datePath = $"{DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture)}";
+      string fullPath = Path.Combine($"..\\{FileLocations.DataSaveDirectory}", $"{datePath}", filename);
       if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
       {
         Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
@@ -430,53 +431,6 @@ namespace UI.Controls.ProtocolNew
           $"{m.Header}: {m.Message}");
 
       await File.WriteAllLinesAsync(fullPath, lines);
-    }
-
-    /// <summary>
-    /// Выводит протокол на печать.
-    /// </summary>
-    public void PrintProtocol(IEnumerable<ShowMessageModel> messages)
-    {
-      PrintDialog printDialog = new PrintDialog();
-      if (printDialog.ShowDialog() != true)
-        return;
-
-      FlowDocument document = new FlowDocument
-      {
-        PagePadding = new Thickness(50),
-        ColumnWidth = double.PositiveInfinity
-      };
-
-      foreach (var model in messages)
-      {
-        var paragraph = new Paragraph();
-
-        if (!string.IsNullOrWhiteSpace(model.Header))
-        {
-          paragraph.Inlines.Add(new Run(model.Header)
-          {
-            Foreground = new SolidColorBrush(model.HeaderColor ?? Colors.Black),
-            FontSize = 18,
-            FontWeight = FontWeights.Bold
-          });
-        }
-
-        if (!string.IsNullOrWhiteSpace(model.Message))
-        {
-          paragraph.Inlines.Add(new Run(": "));
-
-          paragraph.Inlines.Add(new Run(model.Message)
-          {
-            Foreground = new SolidColorBrush(model.MessageColor ?? Colors.Black),
-            FontSize = 18
-          });
-        }
-
-        document.Blocks.Add(paragraph);
-      }
-
-      IDocumentPaginatorSource source = document;
-      printDialog.PrintDocument(source.DocumentPaginator, "Печать протокола...");
     }
 
     #endregion
