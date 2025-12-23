@@ -183,7 +183,7 @@ namespace ControlCommandExecutor.Executors
 
       var result = await UserActionHelper.GetRunWithUserRepeatAsync(async () =>
       {
-        var answer = (await breadDown.IrManger.Measure.MeasureAsync(value, userMessageService: messageService)).value;
+        var answer = (await breadDown.IrManger.Measure.MeasureAsync(value)).value;
         var result = !await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled() ? answer >= value : !await AppConfiguration.Execution.ExecutionConfig.GetIsErrorSimulationEnabled();
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
@@ -213,7 +213,7 @@ namespace ControlCommandExecutor.Executors
 
         if (!await AppConfiguration.Execution.ExecutionConfig.GetIsIdleModeEnabled())
         {
-          answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000, userMessageService: messageService);
+          answer = await breadDown.IrManger.Measure.MeasureAsync(value, value, 60000);
         }
         else
         {
