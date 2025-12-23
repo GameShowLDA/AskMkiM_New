@@ -9,7 +9,7 @@
         ShowInTaskbar="False"
         Background="Transparent"
         Topmost="True">
-    
+
     <Window.Resources>
         <Storyboard x:Key="LoadingAnimation">
             <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
