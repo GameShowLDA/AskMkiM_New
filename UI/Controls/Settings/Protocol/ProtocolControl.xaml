@@ -129,6 +129,14 @@
                         VerticalAlignment="Top"/>
 
                     <Components:SettingsCard
+                        Title="Отображение заголовков действий"
+                        Description="Отображает краткое описание текущего шага выполнения в виде заголовка."
+                        IsChecked="{Binding IdleMode, Mode=TwoWay}"
+                        Margin="10,10"
+                        x:Name="Header"
+                        VerticalAlignment="Top"/>
+
+                    <Components:SettingsCard
                         Title="Сохранение протокола"
                         Description="Автоматически сохраняет протокол каждого запуска. Имя файла содержит дату, время и название выполняемых действий."
                         IsChecked="{Binding IdleMode, Mode=TwoWay}"

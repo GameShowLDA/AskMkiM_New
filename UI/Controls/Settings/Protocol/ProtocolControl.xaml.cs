@@ -50,6 +50,7 @@ namespace UI.Controls.Settings.Protocol
       OperationTime.CheckedChanged += CheckedChanged;
       ProtocolFromPO.CheckedChanged += CheckedChanged;
       ProtocolGeneration.CheckedChanged += CheckedChanged;
+      Header.CheckedChanged += CheckedChanged;
       BaseTextProtocol.TextChanged += (s, ev) => CheckedChanged(s, true);
       BaseTextProtocolErrors.TextChanged += (s, ev) => CheckedChanged(s, true);
 
@@ -181,6 +182,7 @@ namespace UI.Controls.Settings.Protocol
         DisplayOperationTime = OperationTime.IsChecked,
         ShowProtocolInSoftware = ProtocolFromPO.IsChecked,
         GenerateProtocol = ProtocolGeneration.IsChecked,
+        ShowHeaderInfo = Header.IsChecked,
         CleanTextProtocol = BaseTextProtocol.Text,
         CleanTextErrorsProtocol = BaseTextProtocolErrors.Text,
       };
@@ -193,6 +195,7 @@ namespace UI.Controls.Settings.Protocol
     /// </summary>
     private static bool ProtocolEquals(SettingsProtocolModel a, SettingsProtocolModel b) =>
       a.ShowDeviceInfo == b.ShowDeviceInfo &&
+      a.ShowHeaderInfo == b.ShowHeaderInfo &&
       a.AutoSaveProtocol == b.AutoSaveProtocol &&
       a.AutoPrintProtocol == b.AutoPrintProtocol &&
       a.ShowProtocolInSoftware == b.ShowProtocolInSoftware &&
@@ -211,6 +214,7 @@ namespace UI.Controls.Settings.Protocol
       OperationTime.IsChecked = _baseProtocolModel.DisplayOperationTime;
       ProtocolFromPO.IsChecked = _baseProtocolModel.ShowProtocolInSoftware;
       ProtocolGeneration.IsChecked = _baseProtocolModel.GenerateProtocol;
+      Header.IsChecked = _baseProtocolModel.ShowHeaderInfo;
       BaseTextProtocol.Text = _baseProtocolModel.CleanTextProtocol;
       BaseTextProtocolErrors.Text = _baseProtocolModel.CleanTextErrorsProtocol;
     }

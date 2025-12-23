@@ -247,13 +247,18 @@ namespace UI.Controls.ProtocolNew
           showMessageModel.Debug = $"{Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
         }
         else
-        { 
+        {
           showMessageModel.Debug += $"|| {Path.GetFileName(callerFile)} → {callerName} (строка {callerLine})";
         }
       }
 
       await ShouldShowDetailedProtocol(showMessageModel);
       await CheckStatus(showMessageModel);
+
+      if (string.IsNullOrEmpty(showMessageModel.Message) && !GetHeaderInfo())
+      {
+        return;
+      }
 
       await protocolTextBox.AppendLineAsync(showMessageModel);
 

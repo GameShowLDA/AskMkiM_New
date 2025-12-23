@@ -13,6 +13,11 @@ namespace DTO.SettingsModels
     public bool ShowDeviceInfo { get; set; }
 
     /// <summary>
+    /// Отображение заголовков при выполнении.
+    /// </summary>
+    public bool ShowHeaderInfo { get; set; }
+
+    /// <summary>
     /// Флаг, указывающий, нужно ли сохранять протокол.
     /// </summary>
     public bool AutoSaveProtocol { get; set; }

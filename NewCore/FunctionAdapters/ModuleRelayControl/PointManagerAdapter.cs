@@ -129,13 +129,13 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       var description = $"всех точек от всех шин";
 
       if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
-      { 
+      {
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(
-          _moduleRelayControl,
-          $"Отключение {description}",
-          result,
-          1, userMessageService);
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(
+            _moduleRelayControl,
+            $"Отключение {description}",
+            result,
+            1, userMessageService);
       }
 
       if (!result)
@@ -161,11 +161,14 @@ namespace NewCore.FunctionAdapters.ModuleRelayControl
       if (!result)
         result = await _pointManager.ConnectingPointToNewBus(bus, nubmerPoint);
 
-      await DeviceMessageBuilder.ShowConnectionMessageAsync(
+      if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetExecutionParametersVisibilityAsync())
+      {
+        await DeviceMessageBuilder.ShowConnectionMessageAsync(
         _moduleRelayControl,
         $"Переподключение точки {description}",
         result,
         1, userMessageService);
+      }
 
       if (!result)
       {

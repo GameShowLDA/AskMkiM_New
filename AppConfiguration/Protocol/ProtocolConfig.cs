@@ -26,6 +26,18 @@ namespace AppConfiguration.Protocol
     }
 
     /// <summary>
+    /// Устанавливает отображение информации об устройствах в протоколе.
+    /// </summary>
+    /// <param name="enable">true для отображения, false для скрытия.</param>
+    public static async Task SetHeaderInfo(bool enable)
+    {
+      await Task.Run(() =>
+      {
+        ProtocolModel.ShowHeaderInfo = enable;
+      });
+    }
+
+    /// <summary>
     /// Устанавливает режим подробного вывода информации в протокол.
     /// </summary>
     /// <param name="enable">true для включения, false для выключения.</param>
@@ -126,7 +138,6 @@ namespace AppConfiguration.Protocol
       await Task.Run(() =>
       {
         ProtocolModel = protocolModel;
-
       });
     }
 
@@ -141,6 +152,12 @@ namespace AppConfiguration.Protocol
     /// </summary>
     /// <returns>true, если отображается; false, если скрывается.</returns>
     public static async Task<bool> GetDeviceInfo() => await Task.Run(() => ProtocolModel.ShowDeviceInfo);
+
+    /// <summary>
+    /// Возвращает статус отоображения заголовков.
+    /// </summary>
+    /// <returns></returns>
+    public static bool GetHeaderInfo() => ProtocolModel.ShowHeaderInfo;
 
     /// <summary>
     /// Возвращает статус отображения подробной информации в протоколе.
@@ -178,6 +195,7 @@ namespace AppConfiguration.Protocol
       {
         SettingsProtocolModel protocolModel = new SettingsProtocolModel();
         protocolModel.ShowDeviceInfo = ProtocolModel.ShowDeviceInfo;
+        protocolModel.ShowHeaderInfo = ProtocolModel.ShowHeaderInfo;
         protocolModel.ShowDetailedProtocol = ProtocolModel.ShowDetailedProtocol;
         protocolModel.AutoSaveProtocol = ProtocolModel.AutoSaveProtocol;
         protocolModel.AutoPrintProtocol = ProtocolModel.AutoPrintProtocol;
@@ -197,6 +215,7 @@ namespace AppConfiguration.Protocol
       await Task.Run(() =>
       {
         ProtocolModel.ShowDeviceInfo = protocolModel.ShowDeviceInfo;
+        ProtocolModel.ShowHeaderInfo = protocolModel.ShowHeaderInfo;
         ProtocolModel.ShowDetailedProtocol = protocolModel.ShowDetailedProtocol;
         ProtocolModel.AutoSaveProtocol = protocolModel.AutoSaveProtocol;
         ProtocolModel.AutoPrintProtocol = protocolModel.AutoPrintProtocol;

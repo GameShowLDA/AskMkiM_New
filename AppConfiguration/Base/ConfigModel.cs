@@ -29,6 +29,7 @@ namespace AppConfiguration.Base
     static public async Task SetProtocolModelAsync(SettingsProtocolModel executionModel)
     {
       await ProtocolConfig.SetDeviceInfo(executionModel.ShowDeviceInfo);
+      await ProtocolConfig.SetHeaderInfo(executionModel.ShowHeaderInfo);
       await ProtocolConfig.SetSaveProtocol(executionModel.AutoSaveProtocol);
       await ProtocolConfig.SetPrintProtocol(executionModel.AutoPrintProtocol);
       await ProtocolConfig.SetTimeStart(executionModel.DisplayOperationTime);
