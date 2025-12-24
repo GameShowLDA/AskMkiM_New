@@ -18,7 +18,7 @@ namespace DTO.Attributes.Attributes
     /// <summary>
     /// Обозначение величины (например: R, U, I, C).
     /// </summary>
-    public QuantitySymbol Symbol { get; }
+    // public QuantitySymbol Symbol { get; }
 
     public UnitDisplayAttribute(string value)
     {

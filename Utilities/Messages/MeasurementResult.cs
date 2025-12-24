@@ -8,9 +8,9 @@ namespace Utilities.Messages
 {
   public static class MeasurementResult
   {
-    public string BuildMessage(string firstPart, string secondPart, double )
-    {
-
-    }
+    // public string BuildMessage(string firstPart, string secondPart, double )
+    // {
+    // 
+    // }
   }
 }

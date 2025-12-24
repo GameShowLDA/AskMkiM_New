@@ -12,16 +12,16 @@ namespace DTO.Enum.Unit
   /// </summary>
   public enum CurrentUnit
   {
-    /// <summary>
-    /// Ампер (А).
-    /// </summary>
-    [UnitDisplay("А, I")]
-    Ampere,
-
-    /// <summary>
-    /// Миллиампер (мА).
-    /// </summary>
-    [UnitDisplay("мА, I")]
-    MilliAmpere,
+    // /// <summary>
+    // /// Ампер (А).
+    // /// </summary>
+    // [UnitDisplay("А, I")]
+    // Ampere,
+    // 
+    // /// <summary>
+    // /// Миллиампер (мА).
+    // /// </summary>
+    // [UnitDisplay("мА, I")]
+    // MilliAmpere,
   }
 }

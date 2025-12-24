@@ -15,25 +15,25 @@ namespace DTO.Enum.Unit
     /// <summary>
     /// Ом (Ω).
     /// </summary>
-    [UnitDisplay("Ом, R")]
+    //[UnitDisplay("Ом, R")]
     Ohm,
 
     /// <summary>
     /// Килоом (кΩ).
     /// </summary>
-    [UnitDisplay("КОм, R")]
+    //[UnitDisplay("КОм, R")]
     KiloOhm,
 
     /// <summary>
     /// Мегаом (МΩ).
     /// </summary>
-    [UnitDisplay("МОм, R")]
+   // [UnitDisplay("МОм, R")]
     MegaOhm,
 
     /// <summary>
     /// Гигаом (ГΩ).
     /// </summary>
-    [UnitDisplay("ГОм, R")]
+   // [UnitDisplay("ГОм, R")]
     GigaOhm
   }
 }

@@ -12,22 +12,22 @@ namespace DTO.Enum.Unit
   /// </summary>
   public enum VoltageUnit
   {
-    /// <summary>
-    /// Вольт (В).
-    /// </summary>
-    [UnitDisplay("В")]
-    Volt,
-
-    /// <summary>
-    /// Милливольт (мВ).
-    /// </summary>
-    [UnitDisplay("мВ")]
-    MilliVolt,
-
-    /// <summary>
-    /// Киловольт (кВ).
-    /// </summary>
-    [UnitDisplay("кВ")]
-    KiloVolt
+    // /// <summary>
+    // /// Вольт (В).
+    // /// </summary>
+    // [UnitDisplay("В")]
+    // Volt,
+    // 
+    // /// <summary>
+    // /// Милливольт (мВ).
+    // /// </summary>
+    // [UnitDisplay("мВ")]
+    // MilliVolt,
+    // 
+    // /// <summary>
+    // /// Киловольт (кВ).
+    // /// </summary>
+    // [UnitDisplay("кВ")]
+    // KiloVolt
   }
 }

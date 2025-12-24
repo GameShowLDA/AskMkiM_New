@@ -12,22 +12,22 @@ namespace DTO.Enum.Unit
   /// </summary>
   public enum CapacitanceUnit
   {
-    /// <summary>
-    /// Пикофарад (пФ).
-    /// </summary>
-    [UnitDisplay("пФ, C")]
-    PicoFarad,
-
-    /// <summary>
-    /// Нанофарад (нФ).
-    /// </summary>
-    [UnitDisplay("нФ, C")]
-    NanoFarad,
-
-    /// <summary>
-    /// Микрофарад (мкФ).
-    /// </summary>
-    [UnitDisplay("мкФ, C")]
-    MicroFarad
+    // /// <summary>
+    // /// Пикофарад (пФ).
+    // /// </summary>
+    // [UnitDisplay("пФ, C")]
+    // PicoFarad,
+    // 
+    // /// <summary>
+    // /// Нанофарад (нФ).
+    // /// </summary>
+    // [UnitDisplay("нФ, C")]
+    // NanoFarad,
+    // 
+    // /// <summary>
+    // /// Микрофарад (мкФ).
+    // /// </summary>
+    // [UnitDisplay("мкФ, C")]
+    // MicroFarad
   }
 }
