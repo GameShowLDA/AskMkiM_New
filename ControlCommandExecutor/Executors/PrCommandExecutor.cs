@@ -249,13 +249,9 @@ namespace ControlCommandExecutor.Executors
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
         {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel($"Результат измерения сопротивления ({firstValue} - {secondValue} Ом)", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
 
-        if (!result)
-        {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Диапазон допускаемых значений", message: $"от {firstValue} до {secondValue} Ом") { IndentLevel = 2 }, skipPause: true);
-        }
         return (result, answer.ToString());
 
       }, messageService);
@@ -294,7 +290,7 @@ namespace ControlCommandExecutor.Executors
 
         if (!result || await AppConfiguration.DeviceDisplay.DeviceDisplayConfig.GetMeasurementResultsVisibilityAsync())
         {
-          await messageService.ShowMessageAsync(new ShowMessageModel("Результат измерения сопротивления", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
+          await messageService.ShowMessageAsync(new ShowMessageModel($"Результат измерения сопротивления ({firstValue} - {secondValue} Ом)", message: $"{answer} Ом", type: (result ? ShowMessageModel.MessageType.Success : ShowMessageModel.MessageType.Error)) { IndentLevel = 1 }, skipPause: true);
         }
 
         if (!result)
